@@ -6982,3 +6982,4 @@ SET PSZ2_2_Number_of_Stages =  1; ! PSZ2_2 Number of stages
 
   Schedule:Constant,PSZ2_2_Timestep_Econ_Eff_SCH,Fraction,0.7;
 
+Output:SQLite, SimpleAndTabular;        !- Option Type

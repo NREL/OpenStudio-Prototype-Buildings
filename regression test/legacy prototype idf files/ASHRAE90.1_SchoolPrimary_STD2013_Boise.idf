@@ -20103,3 +20103,4 @@ SET EtRated =  0.8, ! EMS Boiler Nominal Thermal Efficiency.  overriden by scrip
     BoilerCurveManager,      !- Name
     InsideHVACSystemIterationLoop,  !- EnergyPlus Model Calling Point
     SetBoilerCurve;          !- Program Name 1
+Output:SQLite, SimpleAndTabular;        !- Option Type

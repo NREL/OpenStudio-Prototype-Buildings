@@ -18257,3 +18257,4 @@ EnergyManagementSystem:ProgramCallingManager,
 
 
 
+Output:SQLite, SimpleAndTabular;        !- Option Type

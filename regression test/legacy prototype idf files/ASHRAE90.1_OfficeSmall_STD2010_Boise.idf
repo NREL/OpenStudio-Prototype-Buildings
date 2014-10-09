@@ -7491,3 +7491,4 @@ NoEconomizer, !- Economizer Control Type
 
 
 
+Output:SQLite, SimpleAndTabular;        !- Option Type

@@ -59253,3 +59253,4 @@ EnergyManagementSystem:Program,
     ENDIF;
 
 
+Output:SQLite, SimpleAndTabular;        !- Option Type

@@ -8557,3 +8557,4 @@ EnergyManagementSystem:Program,
 
 
 
+Output:SQLite, SimpleAndTabular;        !- Option Type

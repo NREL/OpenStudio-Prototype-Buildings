@@ -7196,3 +7196,4 @@ SET PSZ_FINE_Number_of_Stages =  2; ! PSZ_Fine Number of stages
 
   Schedule:Constant,PSZ_Fine_Timestep_Econ_Eff_SCH,Fraction,0.7;
 
+Output:SQLite, SimpleAndTabular;        !- Option Type

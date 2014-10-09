@@ -55472,3 +55472,4 @@ SET EtRated =  0.8, ! EMS Boiler Nominal Thermal Efficiency.  overriden by scrip
 
 
 
+Output:SQLite, SimpleAndTabular;        !- Option Type
