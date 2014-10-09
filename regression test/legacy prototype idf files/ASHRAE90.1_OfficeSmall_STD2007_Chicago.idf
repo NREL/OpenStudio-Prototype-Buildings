@@ -7338,3 +7338,4 @@ NoEconomizer, !- Economizer Control Type
 
 
 Output:SQLite, SimpleAndTabular;        !- Option Type
+ProgramControl, 1 ;        !- Number of Threads Allowed

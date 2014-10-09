@@ -18106,3 +18106,4 @@ EnergyManagementSystem:ProgramCallingManager,
 
 
 Output:SQLite, SimpleAndTabular;        !- Option Type
+ProgramControl, 1 ;        !- Number of Threads Allowed
