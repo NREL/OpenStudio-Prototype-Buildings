@@ -1,13 +1,22 @@
 
 # Load the initial model
-def add_geometry(geometry_osm_name)
+def add_geometry(model, geometry_osm_name)
   
-  puts("Started adding geometry")
+  OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started adding geometry")
   
-  #load geometry from the saved .osm
-  model = safe_load_model("#{File.dirname(__FILE__)}/#{geometry_osm_name}")
+  # Take the existing model and remove all the objects 
+  # (this is cheesy), but need to keep the same memory block
+  handles = OpenStudio::UUIDVector.new
+  model.objects.each {|o| handles << o.handle}
+  model.removeObjects(handles)
 
-  puts("Finished adding geometry")
+  # Load geometry from the saved geometry.osm
+  geom_model = safe_load_model("#{File.dirname(__FILE__)}/#{geometry_osm_name}")
+
+  # Add the objects from the geometry model to the working model
+  model.addObjects(geom_model.toIdfFile.objects)
+
+  OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding geometry")
   
   return model
   
@@ -30,7 +39,7 @@ class OpenStudio::Model::Model
         space = space.get
         space.setSpaceType(stub_space_type)
 
-        #puts("Setting #{space.name} to #{building_type}.#{space_type_name}")
+        #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Setting #{space.name} to #{building_type}.#{space_type_name}")
       end
     end
 
@@ -39,7 +48,7 @@ class OpenStudio::Model::Model
 
   def add_loads(building_vintage, climate_zone, standards_data_dir)
 
-    puts("Started applying space types (loads)")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying space types (loads)")
 
     path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
     path_to_master_schedules_library = "#{standards_data_dir}/Master_Schedules.osm"
@@ -59,7 +68,7 @@ class OpenStudio::Model::Model
       if old_space_type.standardsBuildingType.is_initialized
         stds_building_type = old_space_type.standardsBuildingType.get
       else
-        puts("Space type called '#{old_space_type.name}' has no standards building type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{old_space_type.name}' has no standards building type.")
         return false
       end
       
@@ -68,7 +77,7 @@ class OpenStudio::Model::Model
       if old_space_type.standardsSpaceType.is_initialized
         stds_spc_type = old_space_type.standardsSpaceType.get
       else
-        puts("Space type called '#{old_space_type.name}' has no standards space type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{old_space_type.name}' has no standards space type.")
         return false
       end
 
@@ -79,12 +88,12 @@ class OpenStudio::Model::Model
       #apply the new space type to the building      
       old_space_type.spaces.each do |space|
         space.setSpaceType(new_space_type)
-        #puts("Setting #{space.name} to #{new_space_type.name.get}")
+        #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Setting #{space.name} to #{new_space_type.name.get}")
       end
         
     end
     
-    puts("Finished applying space types (loads)")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying space types (loads)")
     
     return true
 
@@ -92,7 +101,7 @@ class OpenStudio::Model::Model
 
   def add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
 
-    puts("Started applying constructions")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying constructions")
     
     path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
     
@@ -154,7 +163,7 @@ class OpenStudio::Model::Model
       int_mass_def.setConstruction(construction)
     end
 
-    puts("Finished applying constructions")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying constructions")
     
     return true
 
@@ -162,7 +171,7 @@ class OpenStudio::Model::Model
 
   def create_thermal_zones
 
-    puts("Started creating thermal zones")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started creating thermal zones")
 
     # Create a thermal zone for each space in the self
     self.getSpaces.each do |space|
@@ -178,64 +187,24 @@ class OpenStudio::Model::Model
       thermostat_name = space_type_name + " Thermostat"
       thermostat = self.getThermostatSetpointDualSetpointByName(thermostat_name)
       if thermostat.empty?
-        puts("Thermostat #{thermostat_name} not found for space name: #{space.name}")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Thermostat #{thermostat_name} not found for space name: #{space.name}")
         return true
       end
       zone.setThermostatSetpointDualSetpoint(thermostat.get)
     end
 
-    puts("Finished creating thermal zones")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished creating thermal zones")
     
     return true
 
   end
-
-  def add_exterior_lights(building_type, building_vintage, climate_zone)
-   
-    puts("Started adding exterior lights")
-    
-    # Exterior lights A
-    ext_lights_a_name = "Exterior Lights A"
-    ext_lights_a_power = 353.47
-    ext_lights_a_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-    ext_lights_a_def.setName("#{ext_lights_a_name} Def")
-    ext_lights_a_def.setDesignLevel(ext_lights_a_power)
-    ext_lights_a_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    ext_lights_a_sch.setName("#{ext_lights_a_name} Sch")
-    ext_lights_a_sch.defaultDaySchedule.setName("#{ext_lights_a_name} Default Sch")
-    ext_lights_a_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-    ext_lights_a_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-    ext_lights_a = OpenStudio::Model::ExteriorLights.new(ext_lights_a_def, ext_lights_a_sch)
-    ext_lights_a.setName("#{ext_lights_a_name} Def")
-    ext_lights_a.setControlOption("AstronomicalClock")
-
-    # Exterior lights A
-    ext_lights_b_name = "Exterior Lights B"
-    ext_lights_b_power = 8427.85
-    ext_lights_b_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-    ext_lights_b_def.setName("#{ext_lights_b_name} Def")
-    ext_lights_b_def.setDesignLevel(ext_lights_b_power)
-    ext_lights_b_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    ext_lights_b_sch.setName("#{ext_lights_b_name} Sch")
-    ext_lights_b_sch.defaultDaySchedule.setName("#{ext_lights_b_name} Default Sch")
-    ext_lights_b_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-    ext_lights_b_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-    ext_lights_b = OpenStudio::Model::ExteriorLights.new(ext_lights_b_def, ext_lights_b_sch)
-    ext_lights_b.setName("#{ext_lights_b_name} Def")
-    ext_lights_b.setControlOption("AstronomicalClock")
-   
-    puts("Finished adding exterior lights")
-    
-    return true
-    
-  end #add exterior lights
 
   def add_occupancy_sensors(building_type, building_vintage, climate_zone)
    
     # Only add occupancy sensors for 90.1-2010
      return true unless building_vintage == "90.1-2010"
    
-    puts("Started Adding Occupancy Sensors")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding Occupancy Sensors")
 
     space_type_reduction_map = {
       "SecondarySchool" => {"Classroom" => 0.32}
@@ -324,16 +293,72 @@ class OpenStudio::Model::Model
         old_lights_sch_name = light.schedule.get.name.to_s
         if reduced_lights_schs[old_lights_sch_name]
           light.setSchedule(reduced_lights_schs[old_lights_sch_name])
-          puts("Occupancy sensor reduction added to '#{light.name}'")
+          OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Occupancy sensor reduction added to '#{light.name}'")
         end
       end
     
     end
     
-    puts("Finished Adding Occupancy Sensors")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished Adding Occupancy Sensors")
     
     return true
     
   end #add occupancy sensors
 
+  def add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
+   
+    # TODO Standards - translate w/linear foot of facade, door, parking, etc
+    # into lookup table and implement that way instead of hard-coding as
+    # inputs in the spreadsheet.
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started adding exterior lights")
+ 
+    # Occupancy Sensing Exterior Lights
+    # which reduce to 70% power when no one is around.
+    unless prototype_input["occ_sensing_exterior_lighting_power"].nil?
+      occ_sens_ext_lts_power = prototype_input["occ_sensing_exterior_lighting_power"]
+      occ_sens_ext_lts_name = "Occ Sensing Exterior Lights"
+      occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
+      occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
+      occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
+      occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
+      occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+      occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+      occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
+      occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
+      occ_sens_ext_lts.setControlOption("AstronomicalClock")
+    end
+    
+    # Building Facade and Landscape Lights
+    # that don't dim at all at night.    
+    unless prototype_input["nondimming_exterior_lighting_power"].nil?
+      nondimming_ext_lts_power = prototype_input["nondimming_exterior_lighting_power"]
+      nondimming_ext_lts_name = "NonDimming Exterior Lights"
+      nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
+      nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
+      # 
+      nondimming_ext_lts_sch = nil
+      if building_vintage == "90.1-2010"
+        nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+        nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
+        nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
+        nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+        nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+      elsif building_vintage == "DOE Ref Pre-1980" || building_vintage == "DOE Ref 1980-2004"
+        nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
+      end
+      nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
+      nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
+      nondimming_ext_lts.setControlOption("AstronomicalClock")
+    end
+   
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding exterior lights")
+    
+    return true
+    
+  end #add exterior lights  
+  
 end

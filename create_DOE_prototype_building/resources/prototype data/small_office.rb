@@ -1,5 +1,5 @@
 
-# open the class to add methods to size all HVAC equipment
+# Extend the class to add Small Office specific stuff
 class OpenStudio::Model::Model
  
   def define_space_type_map
@@ -58,7 +58,7 @@ class OpenStudio::Model::Model
      
   def add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
    
-    puts("Started Adding HVAC")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding HVAC")
     
     system_to_space_map = define_hvac_system_map()
     
@@ -69,13 +69,13 @@ class OpenStudio::Model::Model
       system['space_names'].each do |space_name|
         space = self.getSpaceByName(space_name)
         if space.empty?
-          puts("No space called #{space_name} was found in the model")
+          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "No space called #{space_name} was found in the model")
           return false
         end
         space = space.get
         zone = space.thermalZone
         if zone.empty?
-          puts("No thermal zone created for space called #{space_name} was found in the model")
+          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "No thermal zone was created for the space called #{space_name}")
           return false
         end
         thermal_zones << zone.get
@@ -87,8 +87,8 @@ class OpenStudio::Model::Model
       end
 
     end
-
-    puts("Finished adding HVAC")
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding HVAC")
     
     return true
     

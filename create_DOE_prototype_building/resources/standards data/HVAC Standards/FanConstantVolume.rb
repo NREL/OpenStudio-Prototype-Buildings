@@ -13,6 +13,7 @@ class OpenStudio::Model::FanConstantVolume
     if maximum_flow_rate_m3_per_s.is_initialized
       maximum_flow_rate_m3_per_s = maximum_flow_rate_m3_per_s.get
     else
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.FanConstantVolume", "For #{self.name} max flow rate is not hard sized, cannot apply efficiency standard.")
       return false
     end
     
@@ -38,7 +39,7 @@ class OpenStudio::Model::FanConstantVolume
     "type" => "Open Drip-Proof",
     }
     
-    motor_properties = find_objects(motors, search_criteria, allowed_hp)
+    motor_properties = find_object(motors, search_criteria, allowed_hp)
   
     # Get the nominal motor efficiency
     motor_eff = motor_properties["nominal_full_load_efficiency"]
@@ -50,7 +51,7 @@ class OpenStudio::Model::FanConstantVolume
     self.setFanEfficiency(total_fan_eff)
     self.setMotorEfficiency(motor_eff)
     
-    puts "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round}HP; motor eff = #{motor_eff*100}%; total fan eff = #{total_fan_eff*100}%"
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.FanConstantVolume", "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round}HP; motor eff = #{motor_eff*100}%; total fan eff = #{total_fan_eff*100}%")
     
     return true
     

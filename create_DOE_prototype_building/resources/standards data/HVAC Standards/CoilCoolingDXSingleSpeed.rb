@@ -6,9 +6,10 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
   def setStandardEfficiencyAndCurves(template, hvac_standards)
   
     unitary_acs = hvac_standards["unitary_acs"]
-    #curve_biquadratics = hvac_standards["curve_biquadratics"]
-    #curve_quadratics = hvac_standards["curve_quadratics"]
-    #curve_bicubics = hvac_standards["curve_bicubics"]
+    curve_biquadratics = hvac_standards["curve_biquadratics"]
+    curve_quadratics = hvac_standards["curve_quadratics"]
+    curve_bicubics = hvac_standards["curve_bicubics"]
+    curve_cubics = hvac_standards["curve_cubics"]
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -54,77 +55,81 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     capacity_btu_per_hr = OpenStudio.convert(capacity_w, "W", "Btu/hr").get
     capacity_kbtu_per_hr = OpenStudio.convert(capacity_w, "W", "kBtu/hr").get
     
-    
-    ac_props = find_objects(unitary_acs, search_criteria, capacity_btu_per_hr)
+    ac_props = find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
     return false if ac_props.nil?
-=begin
-    # Make the CAPFT curve
-    capft_properties = find_objects(curve_biquadratics, {"name"=>ac_props["capft"]})
-    return false if capft_properties.nil?
-    ccFofT = self.coolingCapacityFunctionOfTemperature
-    ccFofT.setName(capft_properties["name"])
-    ccFofT.setCoefficient1Constant(capft_properties["coeff_1"])
-    ccFofT.setCoefficient2x(capft_properties["coeff_2"])
-    ccFofT.setCoefficient3xPOW2(capft_properties["coeff_3"])
-    ccFofT.setCoefficient4y(capft_properties["coeff_4"])
-    ccFofT.setCoefficient5yPOW2(capft_properties["coeff_5"])
-    ccFofT.setCoefficient6xTIMESY(capft_properties["coeff_6"])
-    ccFofT.setMinimumValueofx(capft_properties["min_x"])
-    ccFofT.setMaximumValueofx(capft_properties["max_x"])
-    ccFofT.setMinimumValueofy(capft_properties["min_y"])
-    ccFofT.setMaximumValueofy(capft_properties["max_y"])
 
-    # Make the EIRFT curve
-    eirft_properties = find_objects(curve_biquadratics, {"name"=>ac_props["eirft"]})
-    return false if eirft_properties.nil?
-    eirToCorfOfT = self.electricInputToCoolingOutputRatioFunctionOfTemperature
-    eirToCorfOfT.setName(eirft_properties["name"])
-    eirToCorfOfT.setCoefficient1Constant(eirft_properties["coeff_1"])
-    eirToCorfOfT.setCoefficient2x(eirft_properties["coeff_2"])
-    eirToCorfOfT.setCoefficient3xPOW2(eirft_properties["coeff_3"])
-    eirToCorfOfT.setCoefficient4y(eirft_properties["coeff_4"])
-    eirToCorfOfT.setCoefficient5yPOW2(eirft_properties["coeff_5"])
-    eirToCorfOfT.setCoefficient6xTIMESY(eirft_properties["coeff_6"])
-    eirToCorfOfT.setMinimumValueofx(eirft_properties["min_x"])
-    eirToCorfOfT.setMaximumValueofx(eirft_properties["max_x"])
-    eirToCorfOfT.setMinimumValueofy(eirft_properties["min_y"])
-    eirToCorfOfT.setMaximumValueofy(eirft_properties["max_y"])
+    # Make the COOL-CAP-FT curve
+    cool_cap_ft_data = find_object(curve_biquadratics, {"name"=>ac_props["cool_cap_ft"]})
+    return false if cool_cap_ft_data.nil?
+    cool_cap_ft = OpenStudio::Model::CurveBiquadratic.new(self.model)
+    self.setTotalCoolingCapacityFunctionOfTemperatureCurve(cool_cap_ft)
+    cool_cap_ft.setName(cool_cap_ft_data["name"])
+    cool_cap_ft.setCoefficient1Constant(cool_cap_ft_data["coeff_1"])
+    cool_cap_ft.setCoefficient2x(cool_cap_ft_data["coeff_2"])
+    cool_cap_ft.setCoefficient3xPOW2(cool_cap_ft_data["coeff_3"])
+    cool_cap_ft.setCoefficient4y(cool_cap_ft_data["coeff_4"])
+    cool_cap_ft.setCoefficient5yPOW2(cool_cap_ft_data["coeff_5"])
+    cool_cap_ft.setCoefficient6xTIMESY(cool_cap_ft_data["coeff_6"])
+    cool_cap_ft.setMinimumValueofx(cool_cap_ft_data["min_x"])
+    cool_cap_ft.setMaximumValueofx(cool_cap_ft_data["max_x"])
+    cool_cap_ft.setMinimumValueofy(cool_cap_ft_data["min_y"])
+    cool_cap_ft.setMaximumValueofy(cool_cap_ft_data["max_y"])
 
-    # Make the EIRFPLR curve
-    # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
-    eirToCorfOfPlr = nil
-    eirfplr_properties = find_objects(curve_quadratics, {"name"=>ac_props["eirfplr"]})
-    if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveQuadratic.new(self.model)
-      eirToCorfOfPlr.setName(eirfplr_properties["name"])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties["coeff_1"])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties["coeff_2"])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties["coeff_3"])
-      eirToCorfOfPlr.setMinimumValueofx(eirfplr_properties["min_x"])
-      eirToCorfOfPlr.setMaximumValueofx(eirfplr_properties["max_x"])
-    end
+    # Make the COOL-CAP-FFLOW curve
+    cool_cap_fflow_data = find_object(curve_cubics, {"name"=>ac_props["cool_cap_fflow"]})
+    return false if cool_cap_fflow_data.nil?
+    cool_cap_fflow = OpenStudio::Model::CurveCubic.new(self.model)
+    self.setTotalCoolingCapacityFunctionOfFlowFractionCurve(cool_cap_fflow)
+    cool_cap_fflow.setName(cool_cap_fflow_data["name"])
+    cool_cap_fflow.setCoefficient1Constant(cool_cap_fflow_data["coeff_1"])
+    cool_cap_fflow.setCoefficient2x(cool_cap_fflow_data["coeff_2"])
+    cool_cap_fflow.setCoefficient3xPOW2(cool_cap_fflow_data["coeff_3"])
+    cool_cap_fflow.setCoefficient4xPOW3(cool_cap_fflow_data["coeff_4"])
+    cool_cap_fflow.setMinimumValueofx(cool_cap_fflow_data["min_x"])
+    cool_cap_fflow.setMaximumValueofx(cool_cap_fflow_data["max_x"])
     
-    eirfplr_properties = find_objects(curve_bicubics, {"name"=>ac_props["eirfplr"]})
-    if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveBicubic.new(self.model)
-      eirToCorfOfPlr.setName(eirft_properties["name"])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties["coeff_1"])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties["coeff_2"])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties["coeff_3"])
-      eirToCorfOfPlr.setCoefficient4y(eirfplr_properties["coeff_4"])
-      eirToCorfOfPlr.setCoefficient5yPOW2(eirfplr_properties["coeff_5"])
-      eirToCorfOfPlr.setCoefficient6xTIMESY(eirfplr_properties["coeff_6"])
-      eirToCorfOfPlr.setCoefficient7xPOW3 (eirfplr_properties["coeff_7"])
-      eirToCorfOfPlr.setCoefficient8yPOW3 (eirfplr_properties["coeff_8"])
-      eirToCorfOfPlr.setCoefficient9xPOW2TIMESY(eirfplr_properties["coeff_9"])
-      eirToCorfOfPlr.setCoefficient10xTIMESYPOW2 (eirfplr_properties["coeff_10"])
-      eirToCorfOfPlr.setMinimumValueofx(eirft_properties["min_x"])
-      eirToCorfOfPlr.setMaximumValueofx(eirft_properties["max_x"])
-      eirToCorfOfPlr.setMinimumValueofy(eirft_properties["min_y"])
-      eirToCorfOfPlr.setMaximumValueofy(eirft_properties["max_y"])
-    end  
-=end
-
+    # Make the COOL-EIR-FT curve
+    cool_eir_ft_data = find_object(curve_biquadratics, {"name"=>ac_props["cool_eir_ft"]})
+    return false if cool_eir_ft_data.nil?
+    cool_eir_ft = OpenStudio::Model::CurveBiquadratic.new(self.model)
+    self.setEnergyInputRatioFunctionOfTemperatureCurve(cool_eir_ft)
+    cool_eir_ft.setName(cool_eir_ft_data["name"])
+    cool_eir_ft.setCoefficient1Constant(cool_eir_ft_data["coeff_1"])
+    cool_eir_ft.setCoefficient2x(cool_eir_ft_data["coeff_2"])
+    cool_eir_ft.setCoefficient3xPOW2(cool_eir_ft_data["coeff_3"])
+    cool_eir_ft.setCoefficient4y(cool_eir_ft_data["coeff_4"])
+    cool_eir_ft.setCoefficient5yPOW2(cool_eir_ft_data["coeff_5"])
+    cool_eir_ft.setCoefficient6xTIMESY(cool_eir_ft_data["coeff_6"])
+    cool_eir_ft.setMinimumValueofx(cool_eir_ft_data["min_x"])
+    cool_eir_ft.setMaximumValueofx(cool_eir_ft_data["max_x"])
+    cool_eir_ft.setMinimumValueofy(cool_eir_ft_data["min_y"])
+    cool_eir_ft.setMaximumValueofy(cool_eir_ft_data["max_y"])    
+    
+    # Make the COOL-EIR-FFLOW curve
+    cool_eir_fflow_data = find_object(curve_cubics, {"name"=>ac_props["cool_eir_fflow"]})
+    return false if cool_eir_fflow_data.nil?
+    cool_eir_fflow = OpenStudio::Model::CurveCubic.new(self.model)
+    self.setEnergyInputRatioFunctionOfFlowFractionCurve(cool_eir_fflow)
+    cool_eir_fflow.setName(cool_eir_fflow_data["name"])
+    cool_eir_fflow.setCoefficient1Constant(cool_eir_fflow_data["coeff_1"])
+    cool_eir_fflow.setCoefficient2x(cool_eir_fflow_data["coeff_2"])
+    cool_eir_fflow.setCoefficient3xPOW2(cool_eir_fflow_data["coeff_3"])
+    cool_eir_fflow.setCoefficient4xPOW3(cool_eir_fflow_data["coeff_4"])
+    cool_eir_fflow.setMinimumValueofx(cool_eir_fflow_data["min_x"])
+    cool_eir_fflow.setMaximumValueofx(cool_eir_fflow_data["max_x"])
+    
+    # Make the COOL-PLF-FPLR curve
+    cool_plf_fplr_data = find_object(curve_quadratics, {"name"=>ac_props["cool_plf_fplr"]})
+    return false if cool_plf_fplr_data.nil?
+    cool_plf_fplr = OpenStudio::Model::CurveQuadratic.new(self.model)
+    self.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
+    cool_plf_fplr.setName(cool_plf_fplr_data["name"])
+    cool_plf_fplr.setCoefficient1Constant(cool_plf_fplr_data["coeff_1"])
+    cool_plf_fplr.setCoefficient2x(cool_plf_fplr_data["coeff_2"])
+    cool_plf_fplr.setCoefficient3xPOW2(cool_plf_fplr_data["coeff_3"])
+    cool_plf_fplr.setMinimumValueofx(cool_plf_fplr_data["min_x"])
+    cool_plf_fplr.setMaximumValueofx(cool_plf_fplr_data["max_x"])
+    
     # Get the minimum efficiency standards
     cop = nil
     
@@ -133,7 +138,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       min_seer = ac_props["minimum_seer"]
       cop = seer_to_cop(min_seer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
-      puts "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}"     
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed",  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")  
     end
     
     # If specified as EER
@@ -141,18 +146,11 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       min_eer = ac_props["minimum_eer"]
       cop = eer_to_cop(min_eer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER")
-      puts "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}"
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
     end
 
     # Set the efficiency values
     self.setRatedCOP(OpenStudio::OptionalDouble.new(cop))
-  
-    # Set the performance curves
-    #self.setCoolingCapacityFunctionOfTemperature(ccFofT)
-    #self.setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT)
-    #self.setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr)
-    
-    
     
     return true
 

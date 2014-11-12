@@ -1,11 +1,6 @@
 
-# open the class to add methods to size all HVAC equipment
+# open the class to add methods to apply HVAC efficiency standards
 class OpenStudio::Model::Model
-
-  # Let the model store and access its own template and hvac_standards
-  attr_accessor :template
-  attr_accessor :hvac_standards
-  attr_accessor :runner
 
   # Load the helper libraries for getting the autosized
   # values for each type of model object.
@@ -16,6 +11,8 @@ class OpenStudio::Model::Model
   require_relative 'CoilCoolingDXSingleSpeed'
   
   def applyHVACEfficiencyStandard
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying HVAC efficiency standards.")
     
     ##### Apply equipment efficiencies
     
@@ -32,7 +29,7 @@ class OpenStudio::Model::Model
     # Chillers
     self.getChillerElectricEIRs.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.hvac_standards)}
   
-  
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying HVAC efficiency standards.")
   
   end 
   

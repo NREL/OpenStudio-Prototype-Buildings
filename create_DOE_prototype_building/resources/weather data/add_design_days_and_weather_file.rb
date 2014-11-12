@@ -7,6 +7,8 @@ def add_design_days_and_weather_file(model, climate_zone)
 
   require_relative 'stat_file'
   
+  OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started adding weather file for climate zone: #{climate_zone}.")
+  
   # Define the weather file for each climate zone
   climate_zone_weather_file_map = {
     "ASHRAE 169-2006-1A" => "USA_FL_Miami.Intl.AP.722020_TMY3.epw",
@@ -37,7 +39,7 @@ def add_design_days_and_weather_file(model, climate_zone)
   # Get the weather file name from the hash
   weather_file_name = climate_zone_weather_file_map[climate_zone]
   if weather_file_name.nil?
-    @runner.registerError("Could not determine the weather file for climate zone: #{climate_zone}.")
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Could not determine the weather file for climate zone: #{climate_zone}.")
     return false
   end
   
@@ -85,10 +87,10 @@ def add_design_days_and_weather_file(model, climate_zone)
     water_temp = model.getSiteWaterMainsTemperature
     water_temp.setAnnualAverageOutdoorAirTemperature(stat_file.mean_dry_bulb)
     water_temp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(stat_file.delta_dry_bulb)
-    @runner.registerInfo("Mean dry bulb is #{stat_file.mean_dry_bulb}")
-    @runner.registerInfo("Delta dry bulb is #{stat_file.delta_dry_bulb}")
+    #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Mean dry bulb is #{stat_file.mean_dry_bulb}")
+    #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Delta dry bulb is #{stat_file.delta_dry_bulb}")
   else
-    @runner.registerError("Could not find .stat file for: #{stat_filename}.")
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Could not find .stat file for: #{stat_filename}.")
     return false
   end
 
@@ -105,14 +107,16 @@ def add_design_days_and_weather_file(model, climate_zone)
       ddy_list = /(Htg 99.6. Condns DB)|(Clg .4. Condns WB=>MDB)|(Clg .4% Condns DB=>MWB)/
       if d.name.get =~ ddy_list       
         model.addObject(d.clone)
-        @runner.registerInfo("Added #{d.name} design day.")
+        #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Added #{d.name} design day.")
       end
     end
   else
-    @runner.registerError("Could not find .stat file for: #{stat_filename}.")
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Could not find .stat file for: #{stat_filename}.")
     return false
   end
 
+  OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding weather file for climate zone: #{climate_zone}.")
+  
   return true
     
 end

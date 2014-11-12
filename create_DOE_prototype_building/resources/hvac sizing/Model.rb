@@ -31,6 +31,8 @@ class OpenStudio::Model::Model
   # autosizing back into the self.
   def runSizingRun(sizing_run_dir = "#{Dir.pwd}/SizingRun")
     
+    
+    
     # If the sizing run directory is not specified
     # run the sizing run in the current working directory
     
@@ -48,9 +50,7 @@ class OpenStudio::Model::Model
       self.addObject siz_params_idf
       siz_params = self.getSimulationControl.sizingParameters.get
     end
-    #self.runner.registerInfo("The heating sizing factor for the model is #{siz_params.heatingSizingFactor}.")
-    #self.runner.registerInfo("The cooling sizing factor for the model is #{siz_params.coolingSizingFactor}.")
-    
+
     # Change the simulation to only run the sizing days
     sim_control = self.getSimulationControl
     sim_control.setRunSimulationforSizingPeriods(true)
@@ -59,7 +59,7 @@ class OpenStudio::Model::Model
     # Save the model to energyplus idf
     idf_name = "sizing.idf"
     osm_name = "sizing.osm"
-    #runner.registerInfo("Saving sizing idf to #{sizing_run_dir} as '#{idf_name}'")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Starting sizing run here: #{sizing_run_dir}.")
     forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new()
     idf = forward_translator.translateModel(self)
     idf_path = OpenStudio::Path.new("#{sizing_run_dir}/#{idf_name}")  
@@ -76,15 +76,15 @@ class OpenStudio::Model::Model
         if File.exist?(epw_path.get.to_s)
           epw_path = epw_path.get
         else
-          #self.runner.registerError("Model has not been assigned a weather file.")
+          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
           return false
         end
       else
-        #self.runner.registerError("Model has a weather file assigned, but the file is not in the specified location.")
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the file is not in the specified location.")
         return false
       end
     else
-      #self.runner.registerError("Model has not been assigned a weather file.")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
       return false
     end
     
@@ -98,7 +98,7 @@ class OpenStudio::Model::Model
     
     # Make a run manager and queue up the sizing run
     run_manager_db_path = OpenStudio::Path.new("#{sizing_run_dir}/sizing_run.db")
-    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
+    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false)
     job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
                                                                  idd_path,
                                                                  idf_path,
@@ -112,7 +112,7 @@ class OpenStudio::Model::Model
       sleep 1
       OpenStudio::Application::instance.processEvents
     end
-    #self.runner.registerInfo("Finished sizing run.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run.")
     
     # Load the sql file created by the sizing run
     sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
@@ -121,7 +121,7 @@ class OpenStudio::Model::Model
       # Attach the sql file from the run to the sizing model
       self.setSqlFile(sql)
     else 
-      #self.runner.registerError("Results for the sizing run couldn't be found here: #{sql_path}.")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Results for the sizing run couldn't be found here: #{sql_path}.")
       return false
     end
     
@@ -140,7 +140,7 @@ class OpenStudio::Model::Model
 
     # Ensure that the model has a sql file associated with it
     if self.sqlFile.empty?
-      puts "failed to apply sizing values because sql file missing"
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Failed to apply sizing values because model is missing sql file containing sizing results.")
       return false
     end
   
@@ -262,11 +262,11 @@ class OpenStudio::Model::Model
       if val.is_initialized
         result = OpenStudio::OptionalDouble.new(val.get)
       else
-        puts "****Data not found for #{query}****"
+        OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Data not found for query: #{query}")
       end
 
     else
-      puts "****Model has no SQL file****"
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has no sql file containing results, cannot lookup data.")
     end
 
     return result

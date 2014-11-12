@@ -15,6 +15,8 @@ class OpenStudio::Model::Model
   
   def applyPrototypeHVACAssumptions
     
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying prototype HVAC assumptions.")
+    
     ##### Apply equipment efficiencies
     
     # Fans
@@ -23,6 +25,8 @@ class OpenStudio::Model::Model
 
     # Heat Exchangers
     self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying prototype HVAC assumptions.")
     
   end 
   

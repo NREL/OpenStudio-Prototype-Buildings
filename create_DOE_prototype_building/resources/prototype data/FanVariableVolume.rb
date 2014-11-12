@@ -52,7 +52,7 @@ class OpenStudio::Model::FanVariableVolume
     pressure_rise_pa = OpenStudio.convert(pressure_rise_in_h2o, "inH_{2}O","Pa").get
     self.setPressureRise(pressure_rise_pa)  
     
-    puts "For Prototype: #{self.name}: #{maximum_flow_rate_cfm.round}cfm; Pressure Rise = #{pressure_rise_in_h2o}in w.c."
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.FanVariableVolume", "For Prototype: #{self.name}: #{maximum_flow_rate_cfm.round}cfm; Pressure Rise = #{pressure_rise_in_h2o}in w.c.")
     
     return true
     

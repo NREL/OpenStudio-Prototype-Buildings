@@ -13,9 +13,9 @@ def set_fan_pressure_rises(model)
   # put them back into the model.
   apply_sizes_success = model.setFanPressureRise
   # if apply_sizes_success
-    # @runner.registerInfo("Successfully applied component sizing values.")
+    # OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Successfully applied component sizing values.")
   # else
-    # @runner.registerInfo("Failed to apply component sizing values.")
+    # OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Failed to apply component sizing values.")
   # end
   
   return true
@@ -34,9 +34,9 @@ def set_fan_motor_efficiencies(model, motors, template)
 
   apply_sizes_success = model.setFanMotorEfficiency(motors, template)
   # if apply_sizes_success
-    # @runner.registerInfo("Successfully applied component sizing values.")
+    # OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Successfully applied component sizing values.")
   # else
-    # @runner.registerInfo("Failed to apply component sizing values.")
+    # OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Failed to apply component sizing values.")
   # end
   
   return true

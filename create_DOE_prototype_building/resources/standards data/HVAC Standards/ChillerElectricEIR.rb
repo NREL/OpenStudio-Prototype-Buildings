@@ -49,11 +49,11 @@ class OpenStudio::Model::ChillerElectricEIR
     capacity_w = self.referenceCapacity.get
     capacity_tons = OpenStudio.convert(capacity_w, "W", "ton").get
 
-    chlr_props = find_objects(chillers, search_criteria, capacity_tons)
+    chlr_props = find_object(chillers, search_criteria, capacity_tons)
     return false if chlr_props.nil?
 
     # Make the CAPFT curve
-    capft_properties = find_objects(curve_biquadratics, {"name"=>chlr_props["capft"]})
+    capft_properties = find_object(curve_biquadratics, {"name"=>chlr_props["capft"]})
     return false if capft_properties.nil?
     ccFofT = self.coolingCapacityFunctionOfTemperature
     ccFofT.setName(capft_properties["name"])
@@ -69,7 +69,7 @@ class OpenStudio::Model::ChillerElectricEIR
     ccFofT.setMaximumValueofy(capft_properties["max_y"])
 
     # Make the EIRFT curve
-    eirft_properties = find_objects(curve_biquadratics, {"name"=>chlr_props["eirft"]})
+    eirft_properties = find_object(curve_biquadratics, {"name"=>chlr_props["eirft"]})
     return false if eirft_properties.nil?
     eirToCorfOfT = self.electricInputToCoolingOutputRatioFunctionOfTemperature
     eirToCorfOfT.setName(eirft_properties["name"])
@@ -87,7 +87,7 @@ class OpenStudio::Model::ChillerElectricEIR
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
     eirToCorfOfPlr = nil
-    eirfplr_properties = find_objects(curve_quadratics, {"name"=>chlr_props["eirfplr"]})
+    eirfplr_properties = find_object(curve_quadratics, {"name"=>chlr_props["eirfplr"]})
     if eirfplr_properties
       eirToCorfOfPlr = OpenStudio::Model::CurveQuadratic.new(self.model)
       eirToCorfOfPlr.setName(eirfplr_properties["name"])
@@ -98,7 +98,7 @@ class OpenStudio::Model::ChillerElectricEIR
       eirToCorfOfPlr.setMaximumValueofx(eirfplr_properties["max_x"])
     end
     
-    eirfplr_properties = find_objects(curve_bicubics, {"name"=>chlr_props["eirfplr"]})
+    eirfplr_properties = find_object(curve_bicubics, {"name"=>chlr_props["eirfplr"]})
     if eirfplr_properties
       eirToCorfOfPlr = OpenStudio::Model::CurveBicubic.new(self.model)
       eirToCorfOfPlr.setName(eirft_properties["name"])
@@ -130,7 +130,7 @@ class OpenStudio::Model::ChillerElectricEIR
     # Append the name with size and kw/ton
     kw_per_ton = cop_to_kw_per_ton(cop)
     chiller.setName("#{name} #{capacity_tons.round}tons #{kw_per_ton.round(1)}kW/ton")
-    puts "For #{template}: #{self.name}: #{cooling_type} #{condenser_type} #{compressor_type} Capacity = #{capacity_tons.round}tons; COP = #{cop} (#{kw_per_ton.round(1)}kW/ton)"
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.ChillerElectricEIR", "For #{template}: #{self.name}: #{cooling_type} #{condenser_type} #{compressor_type} Capacity = #{capacity_tons.round}tons; COP = #{cop} (#{kw_per_ton.round(1)}kW/ton)")
     
     return true
 

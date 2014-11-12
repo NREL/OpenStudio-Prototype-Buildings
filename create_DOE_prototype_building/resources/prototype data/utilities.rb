@@ -6,15 +6,13 @@ def safe_load_model(model_path_string)
     versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
     model = versionTranslator.loadModel(model_path)
     if model.empty?
-      puts("Version translation failed for #{model_path_string}")
-      @runner.registerError("Version translation failed for #{model_path_string}")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Version translation failed for #{model_path_string}")
       return false
     else
       model = model.get
     end
   else
-    puts("#{model_path_string} couldn't be found")
-    @runner.registerError("#{model_path_string} couldn't be found")
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "#{model_path_string} couldn't be found")
     return false
   end
   return model
@@ -26,8 +24,8 @@ def safe_load_sql(sql_path_string)
   if OpenStudio::exists(sql_path)
     sql = OpenStudio::SqlFile.new(sql_path)
   else 
-    puts("#{sql_path} couldn't be found")
-    @runner.registerError("#{sql_path} couldn't be found")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "#{sql_path} couldn't be found")
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "#{sql_path} couldn't be found")
     exit
   end
   return sql
@@ -116,11 +114,67 @@ def strip_model(model)
 
 end
 
+# A helper method to search through a hash for the objects that meets the
+# desired search criteria, as passed via a hash.  If capacity is supplied,
+# the objects will only be returned if the specified capacity is between
+# the minimum_capacity and maximum_capacity values.
+def find_objects(hash_of_objects, search_criteria, capacity = nil)
+  
+  desired_object = nil
+  search_criteria_matching_objects = []
+  matching_objects = []
+  
+  # Compare each of the objects against the search criteria
+  hash_of_objects.each do |object|
+    meets_all_search_criteria = true
+    search_criteria.each do |key, value|
+      # Don't check non-existent search criteria
+      next unless object.has_key?(key)
+      # Stop as soon as one of the search criteria is not met
+      if object[key] != value 
+        meets_all_search_criteria = false
+        break
+      end
+    end
+    # Skip objects that don't meet all search criteria
+    next if meets_all_search_criteria == false
+    # If made it here, object matches all search criteria
+    search_criteria_matching_objects << object
+  end
+ 
+  # If capacity was specified, narrow down the matching objects
+  if capacity.nil?
+    matching_objects = search_criteria_matching_objects
+  else
+    search_criteria_matching_objects.each do |object|
+      # Skip objects that don't have fields for minimum_capacity and maximum_capacity
+      next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
+      # Skip objects that don't have values specified for minimum_capacity and maximum_capacity
+      next if object['minimum_capacity'].nil? || object['maximum_capacity'].nil?
+      # Skip objects whose the minimum capacity is below the specified capacity
+      next if capacity <= object['minimum_capacity']
+      # Skip objects whose max
+      next if capacity > object['maximum_capacity']
+      # Found a matching object      
+      matching_objects << object
+    end
+  end
+
+  # Check the number of matching objects found
+  if matching_objects.size == 0
+    desired_object = nil
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
+  end
+  
+  return matching_objects
+ 
+end
+
 # A helper method to search through a hash for an object that meets the
 # desired search criteria, as passed via a hash.  If capacity is supplied,
 # the object will only be returned if the specified capacity is between
 # the minimum_capacity and maximum_capacity values.
-def find_objects(hash_of_objects, search_criteria, capacity = nil)
+def find_object(hash_of_objects, search_criteria, capacity = nil)
   
   desired_object = nil
   search_criteria_matching_objects = []
@@ -165,12 +219,12 @@ def find_objects(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    puts "ERROR - Search criteria returned #{matching_objects.size} results. \n Search criteria: #{search_criteria}, capacity = #{capacity}."
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
   elsif matching_objects.size == 1
     desired_object = matching_objects[0]
   else 
     desired_object = matching_objects[0]
-    puts "ERROR - Search criteria returned #{matching_objects.size} results, the first one will be returned. \n Search criteria: #{search_criteria} \n All results: \n #{matching_objects.join("\n")}"
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Find object search criteria returned #{matching_objects.size} results, the first one will be returned. Search criteria: #{search_criteria} Called from #{caller(0)[1]}.  All results: #{matching_objects.join("\n")}")
   end
  
   return desired_object
@@ -238,7 +292,7 @@ class OpenStudio::Model::Model
       Dir.mkdir(run_dir)
     end
     
-    puts "Started simulation in '#{run_dir}'"
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started simulation in '#{run_dir}'")
     
     # Change the simulation to only run the weather file
     # and not run the sizing day simulations
@@ -249,7 +303,6 @@ class OpenStudio::Model::Model
     # Save the model to energyplus idf
     idf_name = "in.idf"
     osm_name = "in.osm"
-    #runner.registerInfo("Saving sizing idf to #{run_dir} as '#{idf_name}'")
     forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new()
     idf = forward_translator.translateModel(self)
     idf_path = OpenStudio::Path.new("#{run_dir}/#{idf_name}")  
@@ -266,15 +319,15 @@ class OpenStudio::Model::Model
         if File.exist?(epw_path.get.to_s)
           epw_path = epw_path.get
         else
-          #self.runner.registerError("Model has not been assigned a weather file.")
+          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
           return false
         end
       else
-        #self.runner.registerError("Model has a weather file assigned, but the file is not in the specified location.")
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the file is not in the specified location.")
         return false
       end
     else
-      #self.runner.registerError("Model has not been assigned a weather file.")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
       return false
     end
     
@@ -302,7 +355,6 @@ class OpenStudio::Model::Model
       sleep 1
       OpenStudio::Application::instance.processEvents
     end
-    #self.runner.registerInfo("Finished sizing run.")
     
     # Load the sql file created by the sizing run
     sql_path = OpenStudio::Path.new("#{run_dir}/Energyplus/eplusout.sql")
@@ -311,11 +363,11 @@ class OpenStudio::Model::Model
       # Attach the sql file from the run to the sizing model
       self.setSqlFile(sql)
     else 
-      #self.runner.registerError("Results for the sizing run couldn't be found here: #{sql_path}.")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Results for the sizing run couldn't be found here: #{sql_path}.")
       return false
     end
     
-    puts "Finished simulation in '#{run_dir}'"
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished simulation in '#{run_dir}'")
     
     return true
 
@@ -348,4 +400,113 @@ class OpenStudio::Model::Model
     
   end  
   
+  # A helper method to make a schedule from the standards json data
+  def make_schedule(schedules, schedule_name)
+
+    require 'date'
+
+    # First, find all the schedules that match the name
+    rules = find_objects(schedules, {"name"=>schedule_name})
+    
+    # Make a schedule ruleset
+    sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
+    sch_ruleset.setName("#{schedule_name}")  
+
+    # Loop through the rules, making one for each row in the spreadsheet
+    rules.each do |rule|
+      day_types = rule["day_types"]
+      start_date = DateTime.parse(rule["start_date"])
+      end_date = DateTime.parse(rule["end_date"])
+      
+      #Day Type choices: Wkdy, Wknd, Mon, Tue, Wed, Thu, Fri, Sat, Sun, WntrDsn, SmrDsn, Hol
+      
+      # Default
+      if day_types.include?("Default")
+        day_sch = sch_ruleset.defaultDaySchedule
+        day_sch.setName("#{schedule_name} Default")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end  
+      end
+      
+      # Winter Design Day
+      if day_types.include?("WntrDsn")
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        sch_ruleset.setWinterDesignDaySchedule(day_sch)
+        day_sch = sch_ruleset.winterDesignDaySchedule
+        day_sch.setName("#{schedule_name} Winter Design Day")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end  
+      end    
+      
+      # Summer Design Day
+      if day_types.include?("SmrDsn")
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        sch_ruleset.setSummerDesignDaySchedule(day_sch)
+        day_sch = sch_ruleset.summerDesignDaySchedule
+        day_sch.setName("#{schedule_name} Summer Design Day")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end  
+      end
+      
+      # Other days (weekdays, weekends, etc)
+      if day_types.include?("Wknd") ||
+        day_types.include?("Wkdy") ||
+        day_types.include?("Sat") ||
+        day_types.include?("Sun") ||
+        day_types.include?("Mon") ||
+        day_types.include?("Tue") ||
+        day_types.include?("Wed") ||
+        day_types.include?("Thu") ||
+        day_types.include?("Fri")
+      
+        # Make the Rule
+        sch_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
+        day_sch = sch_rule.daySchedule
+        day_sch.setName("#{schedule_name} Summer Design Day")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end 
+        
+        # Set the dates when the rule applies
+        sch_rule.setStartDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_date.month.to_i), start_date.day.to_i))
+        sch_rule.setEndDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_date.month.to_i), end_date.day.to_i))
+        
+        # Set the days when the rule applies
+        # Weekends
+        if day_types.include?("Wknd")
+          sch_rule.setApplySaturday(true)
+          sch_rule.setApplySunday(true)
+        end
+        # Weekdays
+        if day_types.include?("Wkdy")
+          sch_rule.setApplyMonday(true)
+          sch_rule.setApplyTuesday(true)
+          sch_rule.setApplyWednesday(true)
+          sch_rule.setApplyThursday(true)
+          sch_rule.setApplyFriday(true)
+        end
+        # Individual Days
+        sch_rule.setApplyMonday(true) if day_types.include?("Mon")     
+        sch_rule.setApplyTuesday(true) if day_types.include?("Tue")
+        sch_rule.setApplyWednesday(true) if day_types.include?("Wed")
+        sch_rule.setApplyThursday(true) if day_types.include?("Thu")
+        sch_rule.setApplyFriday(true) if day_types.include?("Fri")
+        sch_rule.setApplySaturday(true) if day_types.include?("Sat")        
+        sch_rule.setApplySunday(true) if day_types.include?("Sun")
+
+      end
+      
+    end # Next rule  
+    
+    return sch_ruleset
+    
+  end
+   
 end

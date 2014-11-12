@@ -1,0 +1,120 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>create_dO_ePrototype_building</name>
+  <uid>be90fd0b-a651-467a-bc8d-29d310b0f937</uid>
+  <version_id>4c2e9426-4216-4617-8620-7248f89c5611</version_id>
+  <xml_checksum>057E8D9D</xml_checksum>
+  <class_name>CreateDOEPrototypeBuilding</class_name>
+  <display_name>Create DOE Prototype Building</display_name>
+  <description>Creates the DOE Reference Building Models as starting points for other analyses.</description>
+  <modeler_description></modeler_description>
+  <arguments>
+    <argument>
+      <name>building_type</name>
+      <display_name>Select a Building Type.</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>SmallOffice</default_value>
+      <choices>
+        <choice>
+          <value>SecondarySchool</value>
+          <display_name>SecondarySchool</display_name>
+        </choice>
+        <choice>
+          <value>SmallOffice</value>
+          <display_name>SmallOffice</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>building_vintage</name>
+      <display_name>Select a Vintage.</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>90.1-2010</default_value>
+      <choices>
+        <choice>
+          <value>DOE Ref Pre-1980</value>
+          <display_name>DOE Ref Pre-1980</display_name>
+        </choice>
+        <choice>
+          <value>DOE Ref 1980-2004</value>
+          <display_name>DOE Ref 1980-2004</display_name>
+        </choice>
+        <choice>
+          <value>90.1-2010</value>
+          <display_name>90.1-2010</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>climate_zone</name>
+      <display_name>Select a Climate Zone.</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>ASHRAE 169-2006-2A</default_value>
+      <choices>
+        <choice>
+          <value>ASHRAE 169-2006-2A</value>
+          <display_name>ASHRAE 169-2006-2A</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-3B</value>
+          <display_name>ASHRAE 169-2006-3B</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-4A</value>
+          <display_name>ASHRAE 169-2006-4A</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-5A</value>
+          <display_name>ASHRAE 169-2006-5A</display_name>
+        </choice>
+      </choices>
+    </argument>
+  </arguments>
+  <provenances/>
+  <tags>
+    <tag>Whole Building.Space Types</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>legacy_idf_results.json</filename>
+      <filetype>json</filetype>
+      <usage_type>test</usage_type>
+      <checksum>3667F5CA</checksum>
+    </file>
+    <file>
+      <filename>create_DOE_prototype_building_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>20FFC9D3</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.2.1</identifier>
+        <min_compatible>1.2.1</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>24AE9A8C</checksum>
+    </file>
+  </files>
+</measure>

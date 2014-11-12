@@ -54,11 +54,11 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
     capacity_kbtu_per_hr = OpenStudio.convert(capacity_w, "W", "kBtu/hr").get
     
     
-    ac_props = find_objects(unitary_acs, search_criteria, capacity_btu_per_hr)
+    ac_props = find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
     return false if ac_props.nil?
 =begin
     # Make the CAPFT curve
-    capft_properties = find_objects(curve_biquadratics, {"name"=>ac_props["capft"]})
+    capft_properties = find_object(curve_biquadratics, {"name"=>ac_props["capft"]})
     return false if capft_properties.nil?
     ccFofT = self.coolingCapacityFunctionOfTemperature
     ccFofT.setName(capft_properties["name"])
@@ -74,7 +74,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
     ccFofT.setMaximumValueofy(capft_properties["max_y"])
 
     # Make the EIRFT curve
-    eirft_properties = find_objects(curve_biquadratics, {"name"=>ac_props["eirft"]})
+    eirft_properties = find_object(curve_biquadratics, {"name"=>ac_props["eirft"]})
     return false if eirft_properties.nil?
     eirToCorfOfT = self.electricInputToCoolingOutputRatioFunctionOfTemperature
     eirToCorfOfT.setName(eirft_properties["name"])
@@ -92,7 +92,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
     eirToCorfOfPlr = nil
-    eirfplr_properties = find_objects(curve_quadratics, {"name"=>ac_props["eirfplr"]})
+    eirfplr_properties = find_object(curve_quadratics, {"name"=>ac_props["eirfplr"]})
     if eirfplr_properties
       eirToCorfOfPlr = OpenStudio::Model::CurveQuadratic.new(self.model)
       eirToCorfOfPlr.setName(eirfplr_properties["name"])
@@ -103,7 +103,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
       eirToCorfOfPlr.setMaximumValueofx(eirfplr_properties["max_x"])
     end
     
-    eirfplr_properties = find_objects(curve_bicubics, {"name"=>ac_props["eirfplr"]})
+    eirfplr_properties = find_object(curve_bicubics, {"name"=>ac_props["eirfplr"]})
     if eirfplr_properties
       eirToCorfOfPlr = OpenStudio::Model::CurveBicubic.new(self.model)
       eirToCorfOfPlr.setName(eirft_properties["name"])
@@ -132,7 +132,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
       min_seer = ac_props["minimum_seer"]
       cop = seer_to_cop(min_seer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
-      puts "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}"     
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.CoilCoolingDXTwoSpeed", "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
     end
     
     # If specified as EER
@@ -140,7 +140,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
       min_eer = ac_props["minimum_eer"]
       cop = eer_to_cop(min_eer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER")
-      puts "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}"
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.CoilCoolingDXTwoSpeed", "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
     end
 
     # Set the efficiency values
