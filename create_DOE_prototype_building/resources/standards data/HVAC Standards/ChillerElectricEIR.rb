@@ -129,7 +129,7 @@ class OpenStudio::Model::ChillerElectricEIR
     
     # Append the name with size and kw/ton
     kw_per_ton = cop_to_kw_per_ton(cop)
-    chiller.setName("#{name} #{capacity_tons.round}tons #{kw_per_ton.round(1)}kW/ton")
+    self.setName("#{name} #{capacity_tons.round}tons #{kw_per_ton.round(1)}kW/ton")
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.ChillerElectricEIR", "For #{template}: #{self.name}: #{cooling_type} #{condenser_type} #{compressor_type} Capacity = #{capacity_tons.round}tons; COP = #{cop} (#{kw_per_ton.round(1)}kW/ton)")
     
     return true

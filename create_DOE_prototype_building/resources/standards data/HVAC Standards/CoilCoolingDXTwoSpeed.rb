@@ -39,7 +39,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
       heating_type = "Electric Resistance or None"
     end
     unless heating_type.nil?
-      heating_type = heating_type
+      search_criteria["heating_type"] = heating_type
     end
     
     # TODO Standards - add split system vs single package to model
