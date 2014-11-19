@@ -98,7 +98,7 @@ class OpenStudio::Model::Model
     
     # Make a run manager and queue up the sizing run
     run_manager_db_path = OpenStudio::Path.new("#{sizing_run_dir}/sizing_run.db")
-    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false)
+    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
     job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
                                                                  idd_path,
                                                                  idf_path,
@@ -262,7 +262,7 @@ class OpenStudio::Model::Model
       if val.is_initialized
         result = OpenStudio::OptionalDouble.new(val.get)
       else
-        OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Data not found for query: #{query}")
+        #OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Data not found for query: #{query}")
       end
 
     else

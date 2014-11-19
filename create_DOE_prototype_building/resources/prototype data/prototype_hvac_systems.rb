@@ -154,7 +154,7 @@ class OpenStudio::Model::Model
     chiller_properties = find_object(chillers, search_criteria, prototype_input["chiller_capacity_guess"])
     
     # Make the correct type of chiller based these properties
-    chiller = add_chiller(self, chiller_properties)
+    chiller = add_chiller(hvac_standards, chiller_properties)
     chiller.setReferenceLeavingChilledWaterTemperature(chw_temp_c)
     ref_cond_wtr_temp_f = 95
     ref_cond_wtr_temp_c = OpenStudio.convert(ref_cond_wtr_temp_f,"F","C").get
@@ -303,7 +303,7 @@ class OpenStudio::Model::Model
     chilled_water_loop.addDemandBranchForComponent(clg_coil)
     
     #heating coil
-    htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,model.alwaysOnDiscreteSchedule)
+    htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
     htg_coil.setName("#{thermal_zones.size} Zone VAV Main Htg Coil")
     htg_coil.setRatedInletWaterTemperature(hw_temp_c)
     htg_coil.setRatedInletAirTemperature(prehtg_sa_temp_c)
@@ -349,7 +349,7 @@ class OpenStudio::Model::Model
     thermal_zones.each do |zone|
     
       #reheat coil
-      rht_coil = OpenStudio::Model::CoilHeatingWater.new(self,model.alwaysOnDiscreteSchedule)
+      rht_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
       rht_coil.setName("#{zone.name} Rht Coil")
       rht_coil.setRatedInletWaterTemperature(hw_temp_c)
       rht_coil.setRatedInletAirTemperature(htg_sa_temp_c)
@@ -358,7 +358,7 @@ class OpenStudio::Model::Model
       hot_water_loop.addDemandBranchForComponent(rht_coil)        
       
       #vav terminal
-      terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,model.alwaysOnDiscreteSchedule,rht_coil)
+      terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
       terminal.setZoneMinimumAirFlowMethod("Constant")
       terminal.setConstantMinimumAirFlowFraction(0.3)

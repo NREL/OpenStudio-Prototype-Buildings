@@ -206,7 +206,7 @@ class OpenStudio::Model::Model
 
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding HVAC")
     
-    return model
+    return true
     
   end #add hvac
 

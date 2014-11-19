@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>create_dO_ePrototype_building</name>
   <uid>be90fd0b-a651-467a-bc8d-29d310b0f937</uid>
-  <version_id>4c2e9426-4216-4617-8620-7248f89c5611</version_id>
+  <version_id>9af6f993-3b83-4a63-bcc8-a1ef4f20a1d4</version_id>
   <xml_checksum>057E8D9D</xml_checksum>
   <class_name>CreateDOEPrototypeBuilding</class_name>
   <display_name>Create DOE Prototype Building</display_name>
@@ -97,13 +97,13 @@
       <filename>legacy_idf_results.json</filename>
       <filetype>json</filetype>
       <usage_type>test</usage_type>
-      <checksum>3667F5CA</checksum>
+      <checksum>2C34006A</checksum>
     </file>
     <file>
       <filename>create_DOE_prototype_building_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>20FFC9D3</checksum>
+      <checksum>C545C669</checksum>
     </file>
     <file>
       <version>
@@ -114,7 +114,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>24AE9A8C</checksum>
+      <checksum>7552B2F2</checksum>
+    </file>
+    <file>
+      <filename>.gitignore</filename>
+      <filetype>gitignore</filetype>
+      <usage_type>test</usage_type>
+      <checksum>5A778125</checksum>
+    </file>
+    <file>
+      <filename>run.db</filename>
+      <filetype>db</filetype>
+      <usage_type>test</usage_type>
+      <checksum>C403B4AE</checksum>
     </file>
   </files>
 </measure>

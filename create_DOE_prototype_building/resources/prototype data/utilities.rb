@@ -23,10 +23,9 @@ def safe_load_sql(sql_path_string)
   sql_path = OpenStudio::Path.new(sql_path_string)
   if OpenStudio::exists(sql_path)
     sql = OpenStudio::SqlFile.new(sql_path)
-  else 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "#{sql_path} couldn't be found")
+  else
     OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "#{sql_path} couldn't be found")
-    exit
+    return false
   end
   return sql
 end
@@ -163,7 +162,7 @@ def find_objects(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
+    OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
   end
   
   return matching_objects
@@ -219,12 +218,12 @@ def find_object(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
+    OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
   elsif matching_objects.size == 1
     desired_object = matching_objects[0]
   else 
     desired_object = matching_objects[0]
-    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Find object search criteria returned #{matching_objects.size} results, the first one will be returned. Search criteria: #{search_criteria} Called from #{caller(0)[1]}.  All results: #{matching_objects.join("\n")}")
+    OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Find object search criteria returned #{matching_objects.size} results, the first one will be returned. Search criteria: #{search_criteria} Called from #{caller(0)[1]}.  All results: \n #{matching_objects.join("\n")}")
   end
  
   return desired_object
@@ -341,7 +340,7 @@ class OpenStudio::Model::Model
     
     # Make a run manager and queue up the sizing run
     run_manager_db_path = OpenStudio::Path.new("#{run_dir}/run.db")
-    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
+    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
     job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
                                                                  idd_path,
                                                                  idf_path,

@@ -121,7 +121,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     prototype_input = find_object(hvac_standards["prototype_inputs"], search_criteria)
     if prototype_input.nil?
       OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Could not find prototype inputs for #{search_criteria}.")
-      exit
+      return false
     end 
       
     # Map from the standard space type to the one used by the space
@@ -163,15 +163,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     case building_type
     when "SecondarySchool"
       require_relative 'resources/prototype data/secondary_school'
-      model = add_geometry(model)
-      space_type_map = define_space_type_map
-      model = assign_space_type_stubs(model, building_type, space_type_map)
-      model = add_loads(model, building_vintage, climate_zone) 
-      model = add_constructions(model, building_type, building_vintage, climate_zone)
-      model = create_thermal_zones(model)
-      model = add_hvac(model, building_type, building_vintage, climate_zone)
-      model = add_exterior_lights(model, building_type, building_vintage, climate_zone)
-      model = add_occupancy_sensors(model, building_type, building_vintage, climate_zone)
+      model = add_geometry(model, "secondary_school_geometry.osm")
+      space_type_map = model.define_space_type_map
+      model.assign_space_type_stubs(building_type, space_type_map)
+      model.add_loads(building_vintage, climate_zone, standards_data_dir) 
+      model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
+      model.create_thermal_zones
+      model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+      #swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
+      #model.add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
+      model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
+      model.add_occupancy_sensors(building_type, building_vintage, climate_zone)     
     when "SmallOffice"
       require_relative 'resources/prototype data/small_office'
       model = add_geometry(model, "small_office_geometry.osm")
