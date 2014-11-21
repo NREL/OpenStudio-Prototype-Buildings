@@ -37,7 +37,7 @@ The OpenStudio models that are created by this Measure have been run and the res
 2. Modify `run_legacy_idf_files.rb` to specify the building types/vintages/climate zones you want to run.
 3. Open a command prompt in the `/regression test` directory
 4. run `ruby run_legacy_idf_files.rb` to run the simulations. Note: this will take a long time.
-4. After the simulations are complete, run `ruby store_legacy_idf_results.rb1`.  This will store the simulation results in a file called `legacy_idf_results.json`.  Copy this file into the `/create_DOE_prototype_building/tests` directory.
+4. After the simulations are complete, run `ruby store_legacy_idf_results.rb`.  This will store the simulation results in a file called `legacy_idf_results.json`, which is in the `/create_DOE_prototype_building/tests` directory.
 
 ### Run the OpenStudio Measure and compare results to legacy IDF files
 1. Open a command prompt in the `/create_DOE_prototype_building/tests` directory.

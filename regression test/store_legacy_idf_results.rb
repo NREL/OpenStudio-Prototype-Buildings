@@ -4,7 +4,7 @@
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
 # Specify the building types to run.
-bldg_types = ["OfficeSmall"] #["OfficeSmall", "SchoolSecondary"]
+bldg_types = ["OfficeSmall", "SchoolSecondary"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
@@ -12,7 +12,7 @@ vintages = ["Pre1980", "Post1980", "STD2010"] #["Pre1980", "Post1980", "STD2010"
 
 # Specify the climate zones you want to run.
 # for PTool: Los Angeles, Houston, Chicago, and Baltimore
-climate_zones = ["Houston"]#, "Chicago", "Baltimore"]
+climate_zones = ["El Paso", "Houston", "Chicago", "Baltimore"]
 
 ################################################################################
 
@@ -35,6 +35,20 @@ bldg_types.sort.each do |bldg_type|
     climate_zones.sort.each do |climate_zone|
       puts "#{bldg_type}-#{vintage}-#{climate_zone}"
 
+      # Change the bldg_type based on the vintage since the naming
+      # conventions are different between Prototype and Reference buildings.
+      if vintage == "Pre1980" || vintage == "Post1980"
+        case climate_zone
+        when "El Paso"
+          climate_zone = "Las.Vegas"
+        end
+      else
+        case climate_zone
+        when "El Paso"
+          climate_zone = "El.Paso"
+        end
+      end      
+      
       # Open the sql file, skipping if not found
       sql_path_string = "#{Dir.pwd}/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}/EnergyPlus/eplusout.sql"
       sql_path = OpenStudio::Path.new(sql_path_string)
@@ -109,7 +123,10 @@ bldg_types.sort.each do |bldg_type|
 end
 
 # Save the results to JSON
-File.open("#{Dir.pwd}/legacy_idf_results.json", 'w') do |file|
+#puts "***********DEBUG #{Dir.pwd}../create_DOE_prototype_building/tests/legacy_idf_results.json
+
+#File.open("#{Dir.pwd}/legacy_idf_results.json", 'w') do |file|
+File.open("#{Dir.pwd}/../create_DOE_prototype_building/tests/legacy_idf_results.json", 'w') do |file|
   #file << results_hash.to_json
   file << JSON::pretty_generate(results_hash)
 end
