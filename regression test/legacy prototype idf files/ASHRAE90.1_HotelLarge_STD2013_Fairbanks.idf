@@ -15826,7 +15826,7 @@ Curve:Quadratic,
 !-   ===========  ALL OBJECTS IN CLASS: OUTPUT:TABLE:SUMMARYREPORTS ===========
 
   Output:Table:SummaryReports,
-    AnnualBuildingUtilityPerformanceSummary,  !- Report 1 Name
+    AllSummary,  !- Report 1 Name
     InputVerificationandResultsSummary,  !- Report 2 Name
     ClimaticDataSummary,     !- Report 3 Name
     EnvelopeSummary,         !- Report 4 Name

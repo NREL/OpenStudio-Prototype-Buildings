@@ -34710,7 +34710,7 @@ EnergyManagementSystem:Program,
 
 
   Output:Table:SummaryReports,
-    AnnualBuildingUtilityPerformanceSummary,  !- Report 1 Name
+    AllSummary,  !- Report 1 Name
     ComponentCostEconomicsSummary,  !- Report 2 Name
     InputVerificationandResultsSummary,  !- Report 3 Name
     ClimaticDataSummary,         !- Report 4 Name

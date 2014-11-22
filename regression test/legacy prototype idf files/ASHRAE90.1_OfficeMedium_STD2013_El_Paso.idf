@@ -10877,7 +10877,7 @@ MinOA_MotorizedDamper_Sched, !- Minimum Outdoor Air Schedule Name
 
 
   Output:Table:SummaryReports,
-    AnnualBuildingUtilityPerformanceSummary,  !- Report 1 Name
+    AllSummary,  !- Report 1 Name
     InputVerificationandResultsSummary,  !- Report 2 Name
     ClimaticDataSummary,         !- Report 3 Name
     EquipmentSummary,        !- Report 4 Name
