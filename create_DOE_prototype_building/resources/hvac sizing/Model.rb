@@ -31,24 +31,12 @@ class OpenStudio::Model::Model
   # autosizing back into the self.
   def runSizingRun(sizing_run_dir = "#{Dir.pwd}/SizingRun")
     
-    
-    
     # If the sizing run directory is not specified
     # run the sizing run in the current working directory
     
     # Make the directory if it doesn't exist
     if !Dir.exists?(sizing_run_dir)
       Dir.mkdir(sizing_run_dir)
-    end
-
-    # Report the sizing factors being used
-    siz_params = self.getSimulationControl.sizingParameters
-    if siz_params.is_initialized
-      siz_params = siz_params.get
-    else
-      siz_params_idf = OpenStudio::IdfObject.new OpenStudio::Model::SizingParameters::iddObjectType
-      self.addObject siz_params_idf
-      siz_params = self.getSimulationControl.sizingParameters.get
     end
 
     # Change the simulation to only run the sizing days
@@ -88,34 +76,70 @@ class OpenStudio::Model::Model
       return false
     end
     
-    # Find EnergyPlus
-    require 'openstudio/energyplus/find_energyplus'
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
-    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-    ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-    idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
-    output_path = OpenStudio::Path.new("#{sizing_run_dir}/")
+    # If running on a regular desktop, use RunManager.
+    # If running on OpenStudio Server, use WorkFlowMananger
+    # to avoid slowdown from the sizing run.   
+    use_runmanager = true
     
-    # Make a run manager and queue up the sizing run
-    run_manager_db_path = OpenStudio::Path.new("#{sizing_run_dir}/sizing_run.db")
-    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
-    job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
-                                                                 idd_path,
-                                                                 idf_path,
-                                                                 epw_path,
-                                                                 output_path)
-    
-    run_manager.enqueue(job, true)
-
-    # Start the sizing run and wait for it to finish.
-    while run_manager.workPending
-      sleep 1
-      OpenStudio::Application::instance.processEvents
+    begin
+      require 'openstudio-workflow'
+      use_runmanager = false
+    rescue LoadError
+      use_runmanager = true
     end
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run.")
+
+    sql_path = nil
+    if use_runmanager == true
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with RunManager.")
+
+      # Find EnergyPlus
+      require 'openstudio/energyplus/find_energyplus'
+      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+      ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+      ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
+      idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+      output_path = OpenStudio::Path.new("#{sizing_run_dir}/")
+      
+      # Make a run manager and queue up the sizing run
+      run_manager_db_path = OpenStudio::Path.new("#{sizing_run_dir}/sizing_run.db")
+      run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
+      job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
+                                                                   idd_path,
+                                                                   idf_path,
+                                                                   epw_path,
+                                                                   output_path)
+      
+      run_manager.enqueue(job, true)
+
+      # Start the sizing run and wait for it to finish.
+      while run_manager.workPending
+        sleep 1
+        OpenStudio::Application::instance.processEvents
+      end
+      
+      sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
+      
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run.")
+      
+    else # Use the openstudio-workflow gem
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with openstudio-workflow gem.")
+      
+      # Copy the weather file to this directory
+      FileUtils.copy(epw_path.to_s, sizing_run_dir)
+
+      # Run the simulation
+      sim = OpenStudio::Workflow.run_energyplus('Local', sizing_run_dir)
+      final_state = sim.run
+
+      if final_state == :finished
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run.")
+      end
+    
+      sql_path = OpenStudio::Path.new("#{sizing_run_dir}/run/eplusout.sql")
+    
+    end
     
     # Load the sql file created by the sizing run
-    sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
     if OpenStudio::exists(sql_path)
       sql = OpenStudio::SqlFile.new(sql_path)
       # Attach the sql file from the run to the sizing model
