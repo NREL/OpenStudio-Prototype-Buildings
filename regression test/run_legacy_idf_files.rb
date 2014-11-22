@@ -7,15 +7,15 @@
 # Both sets of buildings contain 2004.  The Prototype Buildings will be used.
 
 # Specify the building types to run.
-bldg_types = ["OfficeSmall"] #["OfficeSmall", "SchoolSecondary"]
+bldg_types = ["OfficeSmall"]#["OfficeSmall", "SchoolSecondary"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["Pre1980", "Post1980"]#, "STD2010"]
+vintages = ["STD2010"]#["Pre1980", "Post1980", "STD2010"]
 
 # Specify the climate zones you want to run.
-# for PTool: Los Angeles, Houston, Chicago, and Baltimore
-climate_zones = ["Houston"] #["Houston", "Chicago", "Baltimore"]
+# for PTool: El Paso, Houston, Chicago, and Baltimore
+climate_zones = ["Houston", "Chicago", "Baltimore", "El Paso"]#["Houston", "Chicago", "Baltimore", "El Paso"]
 
 ################################################################################
 
@@ -65,7 +65,15 @@ bldg_types.each do |bldg_type|
         else
           bldg_type_search = bldg_type
         end
+        case climate_zone
+        when "El Paso"
+          climate_zone = "Las.Vegas"
+        end
       else
+        case climate_zone
+        when "El Paso"
+          climate_zone = "El.Paso"
+        end
         bldg_type_search = bldg_type
       end
       

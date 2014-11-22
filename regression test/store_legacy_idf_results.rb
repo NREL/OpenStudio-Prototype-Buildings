@@ -105,7 +105,9 @@ bldg_types.sort.each do |bldg_type|
           climate_zone_map = {
           "Houston" => "ASHRAE 169-2006-2A",
           "Baltimore" => "ASHRAE 169-2006-4A",
-          "Chicago" => "ASHRAE 169-2006-5A"
+          "Chicago" => "ASHRAE 169-2006-5A",
+          "Las.Vegas" => "ASHRAE 169-2006-3B",
+          "El.Paso" => "ASHRAE 169-2006-3B"
           }
 
           new_bldg_type = bldg_type_map[bldg_type]
