@@ -61,23 +61,23 @@ class OpenStudio::Model::Model
     #loop through all the space types currently in the self
     #which are placeholders, and replace with actual space types
     #that have loads
-    self.getSpaceTypes.each do |old_space_type|
+    self.getSpaceTypes.each do |stub_space_type|
 
       #get the building type
       stds_building_type = nil
-      if old_space_type.standardsBuildingType.is_initialized
-        stds_building_type = old_space_type.standardsBuildingType.get
+      if stub_space_type.standardsBuildingType.is_initialized
+        stds_building_type = stub_space_type.standardsBuildingType.get
       else
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{old_space_type.name}' has no standards building type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{stub_space_type.name}' has no standards building type.")
         return false
       end
       
       #get the space type
       stds_spc_type = nil
-      if old_space_type.standardsSpaceType.is_initialized
-        stds_spc_type = old_space_type.standardsSpaceType.get
+      if stub_space_type.standardsSpaceType.is_initialized
+        stds_spc_type = stub_space_type.standardsSpaceType.get
       else
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{old_space_type.name}' has no standards space type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{stub_space_type.name}' has no standards space type.")
         return false
       end
 
@@ -86,11 +86,14 @@ class OpenStudio::Model::Model
       new_space_type = space_type_generator.generate_space_type(building_vintage, "ClimateZone 1-8", stds_building_type, stds_spc_type, self)[0]
 
       #apply the new space type to the building      
-      old_space_type.spaces.each do |space|
+      stub_space_type.spaces.each do |space|
         space.setSpaceType(new_space_type)
         #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Setting #{space.name} to #{new_space_type.name.get}")
       end
         
+      # Remove the stub space type
+      stub_space_type.remove
+
     end
     
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying space types (loads)")
@@ -114,33 +117,62 @@ class OpenStudio::Model::Model
     
     require_relative '../standards data/ConstructionSetGenerator'
     construction_set_generator = ConstructionSetGenerator.new(path_to_standards_json)
+ 
+    # get climate zone set from specific climate zone for construction set
+    climate_zone_set = construction_set_generator.find_climate_zone_set(building_vintage, climate_zone, building_type, "")
 
-      # get climate zone set from specific climate zone for construction set
-      climateConst = construction_set_generator.find_climate_zone_set(building_vintage, climate_zone, building_type, "")
+    # Make the default contruction set for the building
+    bldg_def_const_set = construction_set_generator.generate_construction_set(building_vintage, climate_zone_set, building_type, "", self)
+    if bldg_def_const_set[0].nil?
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Could not create default construction set for the building.")
+      return false
+    else
+      self.getBuilding.setDefaultConstructionSet(bldg_def_const_set[0])
+    end
+    
+    # Make a construction set for each space type, if one is specified
+    self.getSpaceTypes.each do |space_type|
+    
+      # Get the standards building type
+      stds_building_type = nil
+      if space_type.standardsBuildingType.is_initialized
+        stds_building_type = space_type.standardsBuildingType.get
+      else
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{space_type.name}' has no standards building type.")
+      end
+      
+      # Get the standards space type
+      stds_spc_type = nil
+      if space_type.standardsSpaceType.is_initialized
+        stds_spc_type = space_type.standardsSpaceType.get
+      else
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{space_type.name}' has no standards space type.")
+      end    
+    
+      # If the standards space type is Attic,
+      # the building type should be blank.
+      if stds_spc_type == "Attic"
+        stds_building_type = ""
+      end
 
-      # add construction set
-      for t in construction_sets.keys.sort
-        next if not t == building_vintage
-        for c in construction_sets[building_vintage].keys.sort
-          next if not c == climateConst
-          for b in construction_sets[building_vintage][climateConst].keys.sort
-            next if not b == building_type
-            for space_type in construction_sets[building_vintage][climateConst][building_type].keys.sort
-              #generate construction set
-              result = construction_set_generator.generate_construction_set(building_vintage, climateConst, building_type, space_type, self)
-
-              # set default construction set
-              self.getBuilding.setDefaultConstructionSet(result[0])
-
-            end #next space type
-          end #next building type
-        end #next climate_zone
-      end #next building_vintage
-
+      climate_zone_set = construction_set_generator.find_climate_zone_set(building_vintage, climate_zone, stds_building_type, stds_spc_type)      
+      #puts "Climate Zone Set for #{building_vintage}-#{climate_zone}-#{stds_building_type}-#{stds_spc_type} = '#{climate_zone_set}'"
+      
+      # Attempt to make a construction set for this space type
+      # and assign it if it can be created.
+      spc_type_const_set = construction_set_generator.generate_construction_set(building_vintage, climate_zone_set, stds_building_type, stds_spc_type, self)
+      if !spc_type_const_set[0].nil?
+        space_type.setDefaultConstructionSet(spc_type_const_set[0])
+      end
+    
+    end
+    
+    # Make skylights have the same construction as fixed windows
     sub_surface = self.getBuilding.defaultConstructionSet.get.defaultExteriorSubSurfaceConstructions.get
     window_construction = sub_surface.fixedWindowConstruction.get
     sub_surface.setSkylightConstruction(window_construction)
 
+    # Assign a material to all internal mass objects
     material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
     material.setName("Std Wood 6inch")
     material.setRoughness("MediumSmooth")
@@ -151,14 +183,11 @@ class OpenStudio::Model::Model
     material.setThermalAbsorptance(0.9)
     material.setSolarAbsorptance(0.7)
     material.setVisibleAbsorptance(0.7)
-
     construction = OpenStudio::Model::Construction.new(self)
     construction.setName("InteriorFurnishings")
-    
     layers = OpenStudio::Model::MaterialVector.new
     layers << material
     construction.setLayers(layers)
-
     self.getInternalMassDefinitions.each do |int_mass_def|
       int_mass_def.setConstruction(construction)
     end
