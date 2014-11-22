@@ -166,27 +166,36 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       model = add_geometry(model, "secondary_school_geometry.osm")
       space_type_map = model.define_space_type_map
       model.assign_space_type_stubs(building_type, space_type_map)
-      model.add_loads(building_vintage, climate_zone, standards_data_dir) 
+      model.add_loads(building_vintage, climate_zone, standards_data_dir)
+      model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
       model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
       model.create_thermal_zones
       model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
       #swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
       #model.add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
       model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
-      model.add_occupancy_sensors(building_type, building_vintage, climate_zone)     
+      model.add_occupancy_sensors(building_type, building_vintage, climate_zone)    
     when "SmallOffice"
       require_relative 'resources/prototype data/small_office'
-      model = add_geometry(model, "small_office_geometry.osm")
+      # Small Office geometry is different for pre-1980
+      # if has no attic, which means infiltration is way higher
+      # since infiltration is specified per exposed exterior area.
+      if building_vintage == "DOE Ref Pre-1980"
+        model = add_geometry(model, "small_office_geometry_pre_1980.osm")
+      else
+        model = add_geometry(model, "small_office_geometry.osm")
+      end
       space_type_map = model.define_space_type_map
       model.assign_space_type_stubs("Office", space_type_map)
-      model.add_loads(building_vintage, climate_zone, standards_data_dir) 
+      model.add_loads(building_vintage, climate_zone, standards_data_dir)
+      model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
       model.add_constructions("Office", building_vintage, climate_zone, standards_data_dir)
       model.create_thermal_zones
       model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
       swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
       model.add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
       model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
-      model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
+      model.add_occupancy_sensors(building_type, building_vintage, climate_zone)     
     else
       OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model","Building Type = #{building_type} not recognized")
       return false

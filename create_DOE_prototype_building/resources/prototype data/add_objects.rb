@@ -361,4 +361,62 @@ class OpenStudio::Model::Model
     
   end #add exterior lights  
   
+  def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
+  
+    # Only modify the infiltration coefficients for 90.1-2010
+    return true unless building_vintage == "90.1-2010"
+  
+    # The pre-1980 and 1980-2004 buildings have this:
+    # 1.0000,                  !- Constant Term Coefficient
+    # 0.0000,                  !- Temperature Term Coefficient
+    # 0.0000,                  !- Velocity Term Coefficient
+    # 0.0000;                  !- Velocity Squared Term Coefficient
+    # The 90.1-2010 buildings have this:
+    # 0.0000,                  !- Constant Term Coefficient
+    # 0.0000,                  !- Temperature Term Coefficient
+    # 0.224,                   !- Velocity Term Coefficient
+    # 0.0000;                  !- Velocity Squared Term Coefficient
+    self.getSpaceInfiltrationDesignFlowRates.each do |infiltration|
+      infiltration.setConstantTermCoefficient(0.0)
+      infiltration.setTemperatureTermCoefficient (0.0)
+      infiltration.setVelocityTermCoefficient(0.224)
+      infiltration.setVelocitySquaredTermCoefficient(0.0)
+    end
+    
+  end
+    
+  def add_debugging_variables(type)
+  
+    # "detailed"
+    # "timestep"
+    # "hourly"
+    # "daily"
+    # "monthly"
+  
+    vars = []
+    case type
+    when "service_water_heating"
+      var_names << ["Water Heater Water Volume Flow Rate","timestep"]
+      var_names << ["Water Use Equipment Hot Water Volume Flow Rate","timestep"]
+      var_names << ["Water Use Equipment Cold Water Volume Flow Rate","timestep"]
+      var_names << ["Water Use Equipment Hot Water Temperature","timestep"]
+      var_names << ["Water Use Equipment Cold Water Temperature","timestep"]
+      var_names << ["Water Use Equipment Mains Water Volume","timestep"]
+      var_names << ["Water Use Equipment Target Water Temperature","timestep"]
+      var_names << ["Water Use Equipment Mixed Water Temperature","timestep"]
+      var_names << ["Water Heater Tank Temperature","timestep"]
+      var_names << ["Water Heater Use Side Mass Flow Rate","timestep"]
+      var_names << ["Water Heater Heating Rate","timestep"]
+      var_names << ["Water Heater Water Volume Flow Rate","timestep"]
+      var_names << ["Water Heater Water Volume","timestep"]
+    end
+  
+    var_names.each do |var_name, reporting_frequency|
+      outputVariable = OpenStudio::Model::OutputVariable.new(var_name,self)
+      outputVariable.setReportingFrequency(reporting_frequency)
+    end
+  
+  
+  end
+  
 end
