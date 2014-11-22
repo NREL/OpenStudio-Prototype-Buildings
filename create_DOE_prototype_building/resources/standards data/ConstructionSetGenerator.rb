@@ -286,7 +286,7 @@ def generate_construction_set(template, clim, building_type, spc_type, model = n
     model = OpenStudio::Model::Model.new
   end
 
-  puts "generating construction set: #{template}-#{clim}-#{building_type}-#{spc_type}"
+  OpenStudio::logFree(OpenStudio::Info, "openstudio.model.constructionsetgenerator", "Generating construction set for #{template}-#{clim}-#{building_type}-#{spc_type}")
 
   data = nil
   if tmp1 = @construction_sets[template]
@@ -297,14 +297,14 @@ def generate_construction_set(template, clim, building_type, spc_type, model = n
     end
   end
   
-  if not data
-    puts "Cannot find construction set for #{template} #{clim} #{building_type} #{spc_type}"
-    exit
+  if data.nil?
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.constructionsetgenerator", "No construction set specified for #{template} #{clim} #{building_type} #{spc_type}")
+    return [nil, nil]
   end
   
   name = make_name(template, clim, building_type, spc_type)
 
-  #create a new space type and name it
+  # create a new construction set and name it
   construction_set = OpenStudio::Model::DefaultConstructionSet.new(model)
   construction_set.setName(name)
   
