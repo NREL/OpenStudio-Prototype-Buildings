@@ -69,6 +69,8 @@ def getPrototypeInputs(workbook)
   service_water_peak_flowrate_col = 18
   water_use_temperature_col = 19
   service_water_temperature_at_fixture_col = 20
+  unitary_ac_fan_type_col = 21
+  unitary_ac_supplemental_heating_type_col = 22
   
   # Create an array of Prototype Inputs
   prototype_inputs = []
@@ -92,6 +94,8 @@ def getPrototypeInputs(workbook)
     # Unitary AC
     prototype_input["unitary_ac_cooling_type"] = row[unitary_ac_cooling_type_col]
     prototype_input["unitary_ac_heating_type"] = row[unitary_ac_heating_type_col]
+    prototype_input["unitary_ac_fan_type"] = row[unitary_ac_fan_type_col]
+    prototype_input["unitary_ac_supplemental_heating_type"] = row[unitary_ac_supplemental_heating_type_col]
     
     # HX
     prototype_input["hx"] = row[hx_col]
