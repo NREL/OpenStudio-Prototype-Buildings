@@ -5,7 +5,8 @@ class OpenStudio::Model::Model
   def define_space_type_map
 
     space_type_map = {
-      'WholeBuilding - Sm Office' => ['Perimeter_ZN_1', 'Perimeter_ZN_2', 'Perimeter_ZN_3', 'Perimeter_ZN_4', 'Core_ZN'] #TODO what to do about the attic?
+      'WholeBuilding - Sm Office' => ['Perimeter_ZN_1', 'Perimeter_ZN_2', 'Perimeter_ZN_3', 'Perimeter_ZN_4', 'Core_ZN'],
+      'Attic' => ['Attic']
     }
 
     return space_type_map
