@@ -189,7 +189,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       model.assign_space_type_stubs("Office", space_type_map)
       model.add_loads(building_vintage, climate_zone, standards_data_dir)
       model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
-      model.add_constructions("Office", building_vintage, climate_zone, standards_data_dir)
+      model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
       model.create_thermal_zones
       model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
       swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
