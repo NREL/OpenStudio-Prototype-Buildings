@@ -1,13 +1,18 @@
-### TODO
-- NREL Blue
-- ORNL Green
-- LBL Background yellow
+## TODO
 
-Each lab will create a branch(es) for new features.
-If you make a change to any spreadsheet, do a pull request to Master branch ASAP.
-Make sure that we have clear commit messages.
+### Workflow
 
-#### Building Types
+- Create a branch for each new feature
+- Pull request to Master after feature is complete
+- Pull request to Master ASAP after changing a spreadsheet
+- When spreadsheet, color the cells for later conflict resolution purposes
+	- NREL- Blue
+	- ORNL - Green
+	- LBL - Background yellow
+- Make commit messages clear, favoring clarity over brevity
+
+### Building Type Assignments
+
 ##### NREL
 - Small Office
 - Secondary School
@@ -32,7 +37,16 @@ Make sure that we have clear commit messages.
 - Mid-rise Apartment
 - High-rise Apartment
 
-##### SmallOffice:
+#### General TODO
+- [ ] Generalize spreadsheet export
+- [ ] Flatten file structure to meet Measure requirements
+- [ ] Chillers for Pre-1980 and 1980-2004
+- [ ] DX Heating coil efficiency
+
+
+#### Building Specific TODO
+
+##### SmallOffice
 
 - [ ] DX Cooling Coil Efficiency Lookup for 90.1-2010
   - [ ] COP 3.91 in legacy vs. 3.0 in mine
