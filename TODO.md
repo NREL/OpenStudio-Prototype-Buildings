@@ -38,7 +38,7 @@
 - High-rise Apartment
 
 #### General TODO
-- [ ] Generalize spreadsheet export
+- [x] Generalize spreadsheet export
 - [ ] Flatten file structure to meet Measure requirements
 - [ ] Chillers for Pre-1980 and 1980-2004
 - [ ] DX Heating coil efficiency
