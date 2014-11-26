@@ -1,6 +1,38 @@
 ### TODO
+- NREL Blue
+- ORNL Green
+- LBL Background yellow
 
-#####SmallOffice:
+Each lab will create a branch(es) for new features.
+If you make a change to any spreadsheet, do a pull request to Master branch ASAP.
+Make sure that we have clear commit messages.
+
+#### Building Types
+##### NREL
+- Small Office
+- Secondary School
+- Primary School
+
+##### ORNL
+- Medium Office
+- Large Office
+- Warehouse (non-refrigerated)
+
+##### LBL
+- Small Hotel
+- Large Hotel
+
+##### Unassigned
+- Stand-alone Retail
+- Strip Mall
+- Outpatient Healthcare
+- Hospital
+- Quick Service Restaurant
+- Full Service Restaurant
+- Mid-rise Apartment
+- High-rise Apartment
+
+##### SmallOffice:
 
 - [ ] DX Cooling Coil Efficiency Lookup for 90.1-2010
   - [ ] COP 3.91 in legacy vs. 3.0 in mine
