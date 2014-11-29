@@ -4,11 +4,11 @@ class OpenStudio::Model::Model
 
   # Load the helper libraries for getting the autosized
   # values for each type of model object.
-  require_relative 'FanConstantVolume'
-  require_relative 'FanVariableVolume'
-  require_relative 'ChillerElectricEIR'
-  require_relative 'CoilCoolingDXTwoSpeed'
-  require_relative 'CoilCoolingDXSingleSpeed'
+  require_relative 'Standards.FanConstantVolume'
+  require_relative 'Standards.FanVariableVolume'
+  require_relative 'Standards.ChillerElectricEIR'
+  require_relative 'Standards.CoilCoolingDXTwoSpeed'
+  require_relative 'Standards.CoilCoolingDXSingleSpeed'
   
   def applyHVACEfficiencyStandard
     
@@ -33,4 +33,4 @@ class OpenStudio::Model::Model
   
   end 
   
-end  
+end

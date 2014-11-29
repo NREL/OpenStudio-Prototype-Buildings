@@ -1078,7 +1078,7 @@ class OpenStudio::Model::Model
     # Water use equipment
     #make the initial copy of the water fixture
     water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
-    schedule = self.make_schedule(schedules, prototype_input["service_water_flowrate_schedule"])
+    schedule = self.add_schedule(schedules, prototype_input["service_water_flowrate_schedule"])
     water_fixture.setFlowRateFractionSchedule(schedule)
     swh_connection.addWaterUseEquipment(water_fixture)
     

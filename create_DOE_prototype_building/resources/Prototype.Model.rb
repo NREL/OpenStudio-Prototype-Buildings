@@ -1,29 +1,33 @@
 
-# Load the initial model
-def add_geometry(model, geometry_osm_name)
-  
-  OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started adding geometry")
-  
-  # Take the existing model and remove all the objects 
-  # (this is cheesy), but need to keep the same memory block
-  handles = OpenStudio::UUIDVector.new
-  model.objects.each {|o| handles << o.handle}
-  model.removeObjects(handles)
-
-  # Load geometry from the saved geometry.osm
-  geom_model = safe_load_model("#{File.dirname(__FILE__)}/#{geometry_osm_name}")
-
-  # Add the objects from the geometry model to the working model
-  model.addObjects(geom_model.toIdfFile.objects)
-
-  OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding geometry")
-  
-  return model
-  
-end
-
 # open the class to add methods to size all HVAC equipment
 class OpenStudio::Model::Model
+
+  # Let the model store and access its own template and hvac_standards
+  attr_accessor :template
+  attr_accessor :hvac_standards
+  #attr_accessor :runner
+ 
+  def add_geometry(geometry_osm_name)
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started adding geometry")
+    
+    # Take the existing model and remove all the objects 
+    # (this is cheesy), but need to keep the same memory block
+    handles = OpenStudio::UUIDVector.new
+    self.objects.each {|o| handles << o.handle}
+    self.removeObjects(handles)
+
+    # Load geometry from the saved geometry.osm
+    geom_model = safe_load_model("#{File.dirname(__FILE__)}/#{geometry_osm_name}")
+
+    # Add the objects from the geometry model to the working model
+    self.addObjects(geom_model.toIdfFile.objects)
+
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding geometry")
+    
+    return true
+    
+  end
 
   def assign_space_type_stubs(building_type, space_type_map)
 
@@ -53,7 +57,7 @@ class OpenStudio::Model::Model
     path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
     path_to_master_schedules_library = "#{standards_data_dir}/Master_Schedules.osm"
 
-    require_relative '../standards data/SpaceTypeGenerator'
+    require_relative 'Standards.SpaceTypeGenerator'
 
     #create generators
     space_type_generator = SpaceTypeGenerator.new(path_to_standards_json, path_to_master_schedules_library)
@@ -115,7 +119,7 @@ class OpenStudio::Model::Model
     space_types = standards["space_types"]
     construction_sets = standards["construction_sets"]
     
-    require_relative '../standards data/ConstructionSetGenerator'
+    require_relative 'Standards.ConstructionSetGenerator'
     construction_set_generator = ConstructionSetGenerator.new(path_to_standards_json)
  
     # get climate zone set from specific climate zone for construction set
@@ -413,7 +417,30 @@ class OpenStudio::Model::Model
     end
     
   end
+
+  def applyPrototypeHVACAssumptions
     
+    # Load the helper libraries for getting the autosized
+    # values for each type of model object.
+    require_relative 'Prototype.FanConstantVolume'
+    require_relative 'Prototype.FanVariableVolume'
+    require_relative 'Prototype.HeatExchangerAirToAirSensibleAndLatent'
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying prototype HVAC assumptions.")
+    
+    ##### Apply equipment efficiencies
+    
+    # Fans
+    self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
+
+    # Heat Exchangers
+    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying prototype HVAC assumptions.")
+    
+  end 
+
   def add_debugging_variables(type)
   
     # "detailed"
@@ -446,6 +473,231 @@ class OpenStudio::Model::Model
     end
   
   
+  end
+
+  def run(run_dir = "#{Dir.pwd}/Run")
+    
+    # If the run directory is not specified
+    # run in the current working directory
+    
+    # Make the directory if it doesn't exist
+    if !Dir.exists?(run_dir)
+      Dir.mkdir(run_dir)
+    end
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started simulation in '#{run_dir}'")
+    
+    # Change the simulation to only run the weather file
+    # and not run the sizing day simulations
+    sim_control = self.getSimulationControl
+    sim_control.setRunSimulationforSizingPeriods(false)
+    sim_control.setRunSimulationforWeatherFileRunPeriods(true)
+    
+    # Save the model to energyplus idf
+    idf_name = "in.idf"
+    osm_name = "in.osm"
+    forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new()
+    idf = forward_translator.translateModel(self)
+    idf_path = OpenStudio::Path.new("#{run_dir}/#{idf_name}")  
+    osm_path = OpenStudio::Path.new("#{run_dir}/#{osm_name}")
+    idf.save(idf_path,true)
+    self.save(osm_path,true)
+    
+    # Set up the sizing simulation
+    # Find the weather file
+    epw_path = nil
+    if self.weatherFile.is_initialized
+      epw_path = self.weatherFile.get.path
+      if epw_path.is_initialized
+        if File.exist?(epw_path.get.to_s)
+          epw_path = epw_path.get
+        else
+          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
+          return false
+        end
+      else
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the file is not in the specified location.")
+        return false
+      end
+    else
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
+      return false
+    end
+    
+    # Find EnergyPlus
+    require 'openstudio/energyplus/find_energyplus'
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+    ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
+    idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+    output_path = OpenStudio::Path.new("#{run_dir}/")
+    
+    # Make a run manager and queue up the sizing run
+    run_manager_db_path = OpenStudio::Path.new("#{run_dir}/run.db")
+    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
+    job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
+                                                                 idd_path,
+                                                                 idf_path,
+                                                                 epw_path,
+                                                                 output_path)
+    
+    run_manager.enqueue(job, true)
+
+    # Start the sizing run and wait for it to finish.
+    while run_manager.workPending
+      sleep 1
+      OpenStudio::Application::instance.processEvents
+    end
+    
+    # Load the sql file created by the sizing run
+    sql_path = OpenStudio::Path.new("#{run_dir}/Energyplus/eplusout.sql")
+    if OpenStudio::exists(sql_path)
+      sql = OpenStudio::SqlFile.new(sql_path)
+      # Attach the sql file from the run to the sizing model
+      self.setSqlFile(sql)
+    else 
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Results for the sizing run couldn't be found here: #{sql_path}.")
+      return false
+    end
+    
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished simulation in '#{run_dir}'")
+    
+    return true
+
+  end
+
+  def request_timeseries_outputs
+   
+    # "detailed"
+    # "timestep"
+    # "hourly"
+    # "daily"
+    # "monthly"
+   
+    vars = []
+    vars << ["Heating Coil Gas Rate", "detailed"]
+    vars << ["Zone Thermostat Air Temperature", "detailed"]
+    vars << ["Zone Thermostat Heating Setpoint Temperature", "detailed"]
+    vars << ["Zone Thermostat Cooling Setpoint Temperature", "detailed"]
+    vars << ["Zone Air System Sensible Heating Rate", "detailed"]
+    vars << ["Zone Air System Sensible Cooling Rate", "detailed"]
+    vars << ["Fan Electric Power", "detailed"]
+    vars << ["Zone Mechanical Ventilation Standard Density Volume Flow Rate", "detailed"]
+    vars << ["Air System Outdoor Air Mass Flow Rate", "detailed"]
+    
+    vars.each do |var, freq|  
+      outputVariable = OpenStudio::Model::OutputVariable.new(var, self)
+      outputVariable.setReportingFrequency(freq)
+    end
+    
+  end  
+  
+  def add_schedule(schedules, schedule_name)
+
+    require 'date'
+
+    # First, find all the schedules that match the name
+    rules = find_objects(schedules, {"name"=>schedule_name})
+    
+    # Make a schedule ruleset
+    sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
+    sch_ruleset.setName("#{schedule_name}")  
+
+    # Loop through the rules, making one for each row in the spreadsheet
+    rules.each do |rule|
+      day_types = rule["day_types"]
+      start_date = DateTime.parse(rule["start_date"])
+      end_date = DateTime.parse(rule["end_date"])
+      
+      #Day Type choices: Wkdy, Wknd, Mon, Tue, Wed, Thu, Fri, Sat, Sun, WntrDsn, SmrDsn, Hol
+      
+      # Default
+      if day_types.include?("Default")
+        day_sch = sch_ruleset.defaultDaySchedule
+        day_sch.setName("#{schedule_name} Default")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end  
+      end
+      
+      # Winter Design Day
+      if day_types.include?("WntrDsn")
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        sch_ruleset.setWinterDesignDaySchedule(day_sch)
+        day_sch = sch_ruleset.winterDesignDaySchedule
+        day_sch.setName("#{schedule_name} Winter Design Day")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end  
+      end    
+      
+      # Summer Design Day
+      if day_types.include?("SmrDsn")
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        sch_ruleset.setSummerDesignDaySchedule(day_sch)
+        day_sch = sch_ruleset.summerDesignDaySchedule
+        day_sch.setName("#{schedule_name} Summer Design Day")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end  
+      end
+      
+      # Other days (weekdays, weekends, etc)
+      if day_types.include?("Wknd") ||
+        day_types.include?("Wkdy") ||
+        day_types.include?("Sat") ||
+        day_types.include?("Sun") ||
+        day_types.include?("Mon") ||
+        day_types.include?("Tue") ||
+        day_types.include?("Wed") ||
+        day_types.include?("Thu") ||
+        day_types.include?("Fri")
+      
+        # Make the Rule
+        sch_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
+        day_sch = sch_rule.daySchedule
+        day_sch.setName("#{schedule_name} Summer Design Day")
+        for i in 1..24
+          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
+          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
+        end 
+        
+        # Set the dates when the rule applies
+        sch_rule.setStartDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_date.month.to_i), start_date.day.to_i))
+        sch_rule.setEndDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_date.month.to_i), end_date.day.to_i))
+        
+        # Set the days when the rule applies
+        # Weekends
+        if day_types.include?("Wknd")
+          sch_rule.setApplySaturday(true)
+          sch_rule.setApplySunday(true)
+        end
+        # Weekdays
+        if day_types.include?("Wkdy")
+          sch_rule.setApplyMonday(true)
+          sch_rule.setApplyTuesday(true)
+          sch_rule.setApplyWednesday(true)
+          sch_rule.setApplyThursday(true)
+          sch_rule.setApplyFriday(true)
+        end
+        # Individual Days
+        sch_rule.setApplyMonday(true) if day_types.include?("Mon")     
+        sch_rule.setApplyTuesday(true) if day_types.include?("Tue")
+        sch_rule.setApplyWednesday(true) if day_types.include?("Wed")
+        sch_rule.setApplyThursday(true) if day_types.include?("Thu")
+        sch_rule.setApplyFriday(true) if day_types.include?("Fri")
+        sch_rule.setApplySaturday(true) if day_types.include?("Sat")        
+        sch_rule.setApplySunday(true) if day_types.include?("Sun")
+
+      end
+      
+    end # Next rule  
+    
+    return sch_ruleset
+    
   end
   
 end

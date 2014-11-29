@@ -21,7 +21,7 @@ class Hash
       if recursive && seed[key].is_a?(Hash)
         seed[key] = seed[key].sort_by_key(true, &block)
       end
-      return seed
+      seed
     end
   end
   
