@@ -45,24 +45,36 @@ The OpenStudio models that are created by this Measure have been run and the res
 3. run `ruby create_DOE_prototype_building_Test.rb`.  This will create the models, run them, and compare the simulation results to the results stored in `legacy_idf_results.json`.  The simulations will all be run and stored in: `/create_DOE_prototype_building/tests/build`.  This `/build` directory should not be committed to the repository.
 
 ## Structure of Code
+
 ### /regression test
 This directory contains IDFs of the original Prototype and Reference buildings, which are used for testing purposes.
 
 ### /create DOE prototype building
 This directory is the Measure itself.  Everything under this directory helps the measure run.
 
-#### /resources/hvac sizing
-This is a library that extends OpenStudio classes to enable a Measure to run a sizing run and pull autosized component values back into the Measure.
+#### /resources
+This directory contains libraries of methods to build up the prototype building, run sizing runs, apply standards, etc.  It must be a flat directory because of the design of BCL, which will be used to distribute the final Measure.  Because of this limitation, the purpose of each file is defined by the file prefix instead of a subdirectory.  The meaning of each file prefix is as follows:
 
-#### /resources/prototype
-This is a library that extends OpenStudio classes to build up the prototype buildings using assumptions that are not governed by any standard.  For example, the configuration of the HVAC systems.
+##### /resources/Geometry.*
+These files contain the 3D building geometry used as a starting point for the model.
 
-#### /resources/standards data
-This is a library that extends OpenStudio classes to modify model objects and settings per a specific standard.  For example, a chiller gets a method that sets its COP and performance curves based on the standard, the capacity, and the compressor type.
+##### /resources/HVACSizing.*
+These files extend OpenStudio classes to enable a Measure to run a sizing run and pull autosized component values back into the model.  This library also gives each model object access to it's individual values once a sizing run has been performed.
 
-#### /resources/weather data
-This directory contains the weather files for each of the representative locations for each of the climate zones covered.
+##### /resources/OpenStudio_*.xlsx/json
+These JSON files are libraries of Standards information that the Measure pulls information like HVAC efficiency values, default performance curves, etc. from.  The input mechanism is the spreadsheet of the same name, and there is file called `Standards.export_OpenStudio_HVAC_Standards.rb` that is run to export the spreadsheet to JSON format.  The `OpenStudio_Standards.json` comes from the [openstudio-standards](https://github.com/NREL/openstudio-standards) repository.  Eventually, the information from `OpenStudio_HVAC_Standards` will be moved into this same repository.
 
+##### /resources/Prototype.*
+These files extends OpenStudio classes to build up the prototype buildings using assumptions that are not governed by any standard.  For example, the configuration of the HVAC systems, assumptions for fan pressure drops, etc.
+
+##### /resources/Standards.*
+These files extend OpenStudio classes to enable them to modify their inputs to meet a specific standard.  For example, the Chiller:Electric:EIR object gets a method that sets its COP and performance curves based on the standard, the capacity, and the compressor type.  These methods rely on the information in `OpenStudio_Standards.json` and `OpenStudio_HVAC_Standards.json`.
+
+##### /resources/USA...*
+The *.epw, *.ddy, and *.stat files contain weather information for the representative city for each of the ASHRAE climate zones.d
+
+##### /resources/Weather.*
+These files extend the OpenStudio classes to allow a model to import design days, pull water mains temperature from the .stat file, and assign the correct weather file to the model.
 
 #### /tests
 This directory contains the simulation results from the legacy IDF files, as well as test fixtures which will run the Measure, create the models, and then compare the model results against the legacy IDF files.

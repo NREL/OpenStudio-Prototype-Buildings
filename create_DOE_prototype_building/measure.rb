@@ -90,24 +90,26 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     msg_log = OpenStudio::StringStreamLogSink.new
     msg_log.setLogLevel(OpenStudio::Info)
     
-    # Load some libraries to use
+    # Load the libraries
     # HVAC sizing
-    require_relative 'resources/prototype data/utilities'
-    require_relative 'resources/prototype data/add_objects'
-    require_relative 'resources/hvac sizing/Model'
+    require_relative 'resources/HVACSizing.Model'
     # Prototype Inputs
-    require_relative 'resources/prototype data/prototype_hvac_systems'
-    require_relative 'resources/prototype data/Model'
+    require_relative 'resources/Prototype.utilities'
+    require_relative 'resources/Prototype.add_objects'
+    require_relative 'resources/Prototype.hvac_systems'
+    require_relative 'resources/Prototype.Model'
     # Weather data
-    require_relative 'resources/weather data/add_design_days_and_weather_file'  
+    require_relative 'resources/Weather.Model'  
     # HVAC standards
-    require_relative 'resources/standards data/HVAC Standards/Model'
+    require_relative 'resources/Standards.Model'
     
-    # Make the standards data available globally
-    standards_data_dir = "#{File.dirname(__FILE__)}/resources/standards data"
+    # Create a variable for the standard data directory
+    # TODO Extend the OpenStudio::Model::Model class to store this
+    # as an instance variable?
+    standards_data_dir = "#{File.dirname(__FILE__)}/resources"
     
-    # Make the prototype input available globally
-    hvac_standards_path = "#{File.dirname(__FILE__)}/resources/standards data/HVAC Standards/OpenStudio_HVAC_Standards.json"
+    # Load the hvac standards from JSON
+    hvac_standards_path = "#{File.dirname(__FILE__)}/resources/OpenStudio_HVAC_Standards.json"
     hvac_standards = {}
     temp = File.read(hvac_standards_path.to_s)
     hvac_standards = JSON.parse(temp)
@@ -117,36 +119,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       "building_type" => building_type,
     }
     
-    # Find the inputs for this prototype building, and fail if not found
+    # Load the Prototype Inputs from JSON
     prototype_input = find_object(hvac_standards["prototype_inputs"], search_criteria)
     if prototype_input.nil?
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Could not find prototype inputs for #{search_criteria}.")
+      runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
       return false
-    end 
-      
-    # Map from the standard space type to the one used by the space
-    # type generator and the contructions generators.
-    # ["189.1-2009"]["ClimateZone 1-3"]["Hospital"]["Radiology"]["lighting_w_per_area"]
-    space_type_generator_map = {
-      "1A" => "ClimateZone 5b",
-      "1B" => "TODO Riyadh",
-      "2A" => "USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3",
-      "2B" => "USA_AZ_Phoenix-Sky.Harbor.Intl.AP.722780_TMY3",
-      "3A" => "USA_TN_Memphis.Intl.AP.723340_TMY3",
-      "3B" => "USA_TX_El.Paso.Intl.AP.722700_TMY3",
-      "3C" => "USA_CA_San.Francisco.Intl.AP.724940_TMY3",
-      "4A" => "USA_MD_Baltimore-Washington.Intl.AP.724060_TMY3",
-      "4B" => "USA_NM_Albuquerque.Intl.AP.723650_TMY3",
-      "4C" => "USA_OR_Salem-McNary.Field.726940_TMY3",
-      "5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",
-      "5B" => "USA_ID_Boise.Air.Terminal.726810_TMY3",
-      "5C" => "TODO Vancouver",
-      "6A" => "USA_VT_Burlington.Intl.AP.726170_TMY3",
-      "6B" => "USA_MT_Helena.Rgnl.AP.727720_TMY3",
-      "7" => "USA_MN_Duluth.Intl.AP.727450_TMY3",
-      "8" => "USA_AK_Fairbanks.Intl.AP.702610_TMY3"
-    }
-    
+    end
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
+    prototype_input.each do |key, value|
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "  #{key} = #{value}")
+    end
+     
     # Make a directory to save the resulting models for debugging
     build_dir = "#{Dir.pwd}/build"
     if !Dir.exists?(build_dir)
@@ -158,12 +141,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       Dir.mkdir(osm_directory)
     end
     
-    # Make the building
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Creating #{building_type}-#{building_vintage}-#{climate_zone}")
+    # Make the prototype building
     case building_type
     when "SecondarySchool"
-      require_relative 'resources/prototype data/secondary_school'
-      model = add_geometry(model, "secondary_school_geometry.osm")
+      require_relative 'resources/Prototype.secondary_school'
+      model.add_geometry("Geometry.secondary_school.osm")
       space_type_map = model.define_space_type_map
       model.assign_space_type_stubs(building_type, space_type_map)
       model.add_loads(building_vintage, climate_zone, standards_data_dir)
@@ -176,14 +158,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
       model.add_occupancy_sensors(building_type, building_vintage, climate_zone)    
     when "SmallOffice"
-      require_relative 'resources/prototype data/small_office'
+      require_relative 'resources/Prototype.small_office'
       # Small Office geometry is different for pre-1980
       # if has no attic, which means infiltration is way higher
       # since infiltration is specified per exposed exterior area.
       if building_vintage == "DOE Ref Pre-1980"
-        model = add_geometry(model, "small_office_geometry_pre_1980.osm")
+        model.add_geometry("Geometry.small_office_pre_1980.osm")
       else
-        model = add_geometry(model, "small_office_geometry.osm")
+        model.add_geometry("Geometry.small_office.osm")
       end
       space_type_map = model.define_space_type_map
       model.assign_space_type_stubs("Office", space_type_map)
@@ -202,7 +184,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
 
     # Set the building location, weather files, ddy files, etc.
-    added_ddy = add_design_days_and_weather_file(model, climate_zone)
+    model.add_design_days_and_weather_file(climate_zone)
 
     # Assign the standards to the model
     model.template = building_vintage
