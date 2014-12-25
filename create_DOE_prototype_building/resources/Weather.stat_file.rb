@@ -60,7 +60,7 @@ module EnergyPlus
         @monthly_dry_bulb.each { |db| sum += db }
         mean = sum/@monthly_dry_bulb.size
       else
-        mean = ""
+        mean = ''
       end
 
       mean
@@ -71,7 +71,7 @@ module EnergyPlus
       if not @monthly_dry_bulb.empty? then
         delta_t = @monthly_dry_bulb.max-@monthly_dry_bulb.min
       else
-        delta_t = ""
+        delta_t = ''
       end
 
       delta_t
@@ -83,7 +83,7 @@ module EnergyPlus
     def init
       if @path.exist?
         File.open(@path) do |f|
-          text = f.read.force_encoding("iso-8859-1")
+          text = f.read.force_encoding('iso-8859-1')
           parse(text)
         end
       end

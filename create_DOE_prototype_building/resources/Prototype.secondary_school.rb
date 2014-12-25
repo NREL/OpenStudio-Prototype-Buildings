@@ -161,9 +161,9 @@ class OpenStudio::Model::Model
     
   def add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
    
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding HVAC")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
     
-    system_to_space_map = define_hvac_system_map()
+    system_to_space_map = define_hvac_system_map
 
     chilled_water_loop = self.add_chw_loop(prototype_input, hvac_standards)
 
@@ -178,13 +178,13 @@ class OpenStudio::Model::Model
       system['space_names'].each do |space_name|
         space = self.getSpaceByName(space_name)
         if space.empty?
-          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "No space called #{space_name} was found in the model")
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No space called #{space_name} was found in the model")
           return false
         end
         space = space.get
         zone = space.thermalZone
         if zone.empty?
-          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "No thermal zone created for space called #{space_name} was found in the model")
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No thermal zone created for space called #{space_name} was found in the model")
           return false
         end
         thermal_zones << zone.get
@@ -195,16 +195,16 @@ class OpenStudio::Model::Model
         if hot_water_loop && chilled_water_loop
           self.add_vav(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
         else
-          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "No hot water and chilled water plant loops in model")
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false
         end
-      when "PSZ-AC"
+      when 'PSZ-AC'
         self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
       end
 
     end
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding HVAC")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
     
     return true
     

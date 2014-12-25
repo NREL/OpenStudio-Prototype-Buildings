@@ -47,20 +47,20 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
           argument_map = OpenStudio::Ruleset::OSArgumentMap.new
           building_type_arg = arguments[0].clone
           assert(building_type_arg.setValue(building_type))
-          argument_map["building_type"] = building_type_arg
+          argument_map['building_type'] = building_type_arg
           
           building_vintage_arg = arguments[1].clone
           assert(building_vintage_arg.setValue(building_vintage))
-          argument_map["building_vintage"] = building_vintage_arg
+          argument_map['building_vintage'] = building_vintage_arg
 
           climate_zone_arg = arguments[2].clone
           assert(climate_zone_arg.setValue(climate_zone))
-          argument_map["climate_zone"] = climate_zone_arg
+          argument_map['climate_zone'] = climate_zone_arg
 
           measure.run(model, runner, argument_map)
           result = runner.result
           show_output(result)
-          if !result.value.valueName == "Success"
+          if result.value.valueName != 'Success'
             failures << "Error - #{model_name} - Model was not created successfully."
           end
           
@@ -102,8 +102,8 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
           model_path_string = "#{model_directory}/final.osm"
           model_path = OpenStudio::Path.new(model_path_string)
           if OpenStudio::exists(model_path)
-            versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
-            model = versionTranslator.loadModel(model_path)
+            version_translator = OpenStudio::OSVersion::VersionTranslator.new
+            model = version_translator.loadModel(model_path)
             if model.empty?
               failures << "Error - #{model_name} - Version translation failed"
               return failures
@@ -181,10 +181,10 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
     legacy_idf_results = JSON.parse(temp)    
          
     # List of all fuel types
-    fuel_types = ["Electricity", "Natural Gas", "Additional Fuel", "District Cooling", "District Heating", "Water"]
+    fuel_types = ['Electricity', 'Natural Gas', 'Additional Fuel', 'District Cooling', 'District Heating', 'Water']
 
     # List of all end uses
-    end_uses = ["Heating", "Cooling", "Interior Lighting", "Exterior Lighting", "Interior Equipment", "Exterior Equipment", "Fans", "Pumps", "Heat Rejection","Humidification", "Heat Recovery", "Water Systems", "Refrigeration", "Generators"]
+    end_uses = ['Heating', 'Cooling', 'Interior Lighting', 'Exterior Lighting', 'Interior Equipment', 'Exterior Equipment', 'Fans', 'Pumps', 'Heat Rejection','Humidification', 'Heat Recovery', 'Water Systems', 'Refrigeration', 'Generators']
 
     # Create a CSV to store the results
     ### Junk csv_string = CSV.generate do |csv| end
@@ -225,9 +225,9 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
                 end
                 
                 # Select the correct units based on fuel type
-                units = "GJ"
-                if fuel_type == "Water"
-                  units = "m3"
+                units = 'GJ'
+                if fuel_type == 'Water'
+                  units = 'm3'
                 end
                 
                 # End use breakdown query
@@ -264,9 +264,9 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
                 end
                 
                 # Record the values
-                results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]["Legacy Val"] = legacy_val.round(2)
-                results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]["OpenStudio Val"] = osm_val.round(2)
-                results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]["Percent Error"] = percent_error.round(2)
+                results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val'] = legacy_val.round(2)
+                results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['OpenStudio Val'] = osm_val.round(2)
+                results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Percent Error'] = percent_error.round(2)
                 
               end # Next end use
             end # Next fuel type
@@ -288,9 +288,9 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   # Test the Secondary School in the PTool vintages and climate zones
   def dont_test_secondary_school_ptool
 
-    bldg_types = ["SecondarySchool"]
-    vintages = ["90.1-2010"] #, "DOE Ref Pre-1980", "DOE Ref 1980-2004"]
-    climate_zones = ["ASHRAE 169-2006-2A"]#, "ASHRAE 169-2006-3B", "ASHRAE 169-2006-4A", "ASHRAE 169-2006-5A"]
+    bldg_types = ['SecondarySchool']
+    vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
     
@@ -317,9 +317,9 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   # Test the Small Office in the PTool vintages and climate zones
   def test_small_office_ptool
 
-    bldg_types = ["SmallOffice"]#,"SecondarySchool"]
-    vintages = ["90.1-2010", "DOE Ref Pre-1980", "DOE Ref 1980-2004"]
-    climate_zones = ["ASHRAE 169-2006-2A"]#, "ASHRAE 169-2006-3B", "ASHRAE 169-2006-4A", "ASHRAE 169-2006-5A"]
+    bldg_types = ['SmallOffice']#,'SecondarySchool']
+    vintages = ['90.1-2010', 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
     

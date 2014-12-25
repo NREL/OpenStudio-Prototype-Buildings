@@ -9,7 +9,7 @@ class OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent
     
     # Get the nominal supply air flow rate
     supply_air_flow_m3_per_s = self.nominalSupplyAirFlowRate.get
-    supply_air_flow_cfm = OpenStudio.convert(supply_air_flow_m3_per_s, "m^3/s", "cfm").get
+    supply_air_flow_cfm = OpenStudio.convert(supply_air_flow_m3_per_s, 'm^3/s', 'cfm').get
     
     # Calculate the motor power for the rotatry wheel per:
     # Power (W) = (Nominal Supply Air Flow Rate (CFM) * 0.3386) + 49.5
