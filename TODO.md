@@ -43,7 +43,11 @@
 - [ ] Chillers for Pre-1980 and 1980-2004
 - [ ] DX Heating coil efficiency
 - [ ] Check if two sizing runs necessary and remove one if not
-
+- [ ] Merge spreadsheet with standards spreadsheet
+- [ ] Generalize standards spreadsheet JSON export to match hvac standards spreadsheet and add units to headers
+- [ ] Make 90.1-2004-2010 space type templates use schedules pulled from prototype bldgs
+- [ ] Scrape constructions and materials from prototype IDFs for 90.1-2004-2010
+- [ ] Put standards R-values in for Constructions instead of building up layer-by-layer in spreadsheet?
 
 #### Building Specific TODO
 
