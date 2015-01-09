@@ -24,9 +24,9 @@ def safe_load_model(model_path_string)
 end
 
 model_paths = []
-model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/standards data/Master_Schedules.osm"
-model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
-
+#model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/standards data/Master_Schedules.osm"
+#model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
+model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
 
 def get_hr_vals(day_sch,unit_type)
   type = "Hourly"
@@ -57,6 +57,100 @@ def get_hr_vals(day_sch,unit_type)
   
   return [type,vals]
   
+end
+
+def get_half_hr_vals(day_sch,unit_type,hoo_start,hoo_finish)
+  type = "formula"
+  floor = nil
+  ceiling = nil
+  vals = []
+  time_val_hash = {}
+
+  # get ceiling and floor
+  # todo - run through in reverse and create a hash of unique time/value pairs
+  (1..48).each do |i|
+
+    # alter to go through backwards
+    i = 48.5 - i
+
+    hr =  (i/2).truncate
+    if (i/2) == (i/2).truncate then min = 0 else min = 30 end
+
+    time = OpenStudio::Time.new(0, hr, min, 0)
+    val = day_sch.getValue(time)
+
+    # Convert from C to F if necessary
+    if unit_type == "Temperature"
+      val = OpenStudio.convert(val, "C", "F").get
+    end
+
+    # populate hash
+    time_val_hash[hr + min/60.0] = val # just want double for time, not openstudio time
+
+    # set ceiling and floor
+    if ceiling.nil? or ceiling < val
+      ceiling = val
+    end
+    if floor.nil? or floor > val
+      floor = val
+    end
+  end
+
+  # populate vals
+  val_old = nil # this is from previous datapoint going backwards
+  time_val_hash.each do |time,val|
+
+    # if value is same as previous then skip until there is a new value
+    next if val == val_old
+
+    # adjust value relative to floor or ceiling
+    if ceiling - val < val - floor
+      if ceiling > 0
+        adj_val_in = (val/ceiling).round(2)
+      else
+        adj_val_in = 0
+      end
+      val_in_string = "opp_val*#{adj_val_in}"
+    else
+      if ceiling > 0
+        adj_val_in = (val/floor).round(2)
+      else
+        adj_val_in = 0
+      end
+      val_in_string = "non_opp_val*#{adj_val_in}"
+    end
+
+    time_string = time # todo - update this to use hours of operation to create formula relative opp_range or non_opp_range. Don't use mutliplier so times say exactly on 30min.
+
+    # turn value into formula
+    if val_old.nil?
+      vals << "[#{time_string};#{val_in_string}]" # should only hit this the first time
+    else
+      if ceiling - val < val - floor
+        if ceiling > 0
+          adj_val_out = (val/ceiling).round(2)
+        else
+          adj_val_out = 0
+        end
+        val_out_string = "opp_val*#{adj_val_in}"
+      else
+        if floor > 0
+          adj_val_out = (val/floor).round(2)
+        else
+          adj_val_out = 0
+        end
+        val_out_string = "non_opp_val*#{adj_val_out}"
+      end
+      vals << "[#{time_string};#{val_in_string};#{val_out_string}]"
+    end
+
+    # set val_out for next item to use
+    val_old = val
+
+  end
+
+  return [type,vals,ceiling,floor]
+
 end
 
 all_schs = []
@@ -110,8 +204,47 @@ model_paths.each do |model_path|
       category = "OA Air"  
     elsif uc_sch_name.include?("OPERATION")
       category = "Operation"
-    end  
-      
+    end
+
+    # Determine the name and hoo for the schedule
+    array = nil
+    if sch_name.include?("ApartmentMidRise")
+      array = ["MidriseApartment",8,18]
+    elsif sch_name.include?("Hospital")
+      array = ["Hospital",4,22]
+    elsif sch_name.include?("HotelLarge")
+      array = ["LargeHotel",6,22]
+    elsif sch_name.include?("HotelSmall")
+      array = ["SmallHotel",6,22]
+    elsif sch_name.include?("OfficeMedium")
+      array = ["OfficeMedium",8,17]
+    elsif sch_name.include?("OfficeSmall")
+      array = ["OfficeSmall",8,17]
+    elsif sch_name.include?("OfficeLarge")
+      array = ["OfficeLarge",8,17]
+    elsif sch_name.include?("OutPatientHealthCare")
+      array = ["Outpatient",4,22]
+    elsif sch_name.include?("RestaurantFastFood")
+      array = ["QuickServiceRestaurant",7,23]
+    elsif sch_name.include?("RestaurantSitDown")
+      array = ["FullServiceRestaurant",7,23]
+    elsif sch_name.include?("RetailStandalone")
+      array = ["Retail",7,21]
+    elsif sch_name.include?("RetailStripmall")
+      array = ["StripMall",6,22]
+    elsif sch_name.include?("SchoolPrimary")
+      array = ["PrimarySchool",8,16]
+    elsif sch_name.include?("SchoolSecondary")
+      array = ["SecondarySchool",0,0]
+    elsif sch_name.include?("Warehouse")
+      array = ["Warehouse",7,17]
+    else
+      array = ["Unknown",8,17]
+    end
+    building_type = array[0]
+    hoo_start = array[1]
+    hoo_finish = array[2]
+
     # Determine the schedule type from the type limits
     sch_day_types_limits = sch_ruleset.scheduleTypeLimits
     units = "Unknown"
@@ -128,12 +261,14 @@ model_paths.each do |model_path|
     day_types << "WntrDsn" if sch_ruleset.isWinterDesignDayScheduleDefaulted == true
     day_types << "SmrDsn" if sch_ruleset.isSummerDesignDayScheduleDefaulted == true
     row["day_types"] = day_types
-    vals = get_hr_vals(sch_ruleset.defaultDaySchedule, units)
+    vals = get_half_hr_vals(sch_ruleset.defaultDaySchedule, units,hoo_start,hoo_finish)
     row["data"] = {}
     row["data"]["start_date"] = year_start_date
     row["data"]["end_date"] = year_end_date
+    row["data"]["opp_value"] = vals[2]
+    row["data"]["non_opp_value"] = vals[3]
     row["data"]["type"] = vals[0]
-    row["data"]["vals"] = vals[1]
+    row["data"]["vals"] = vals[1].reverse
     sch_rows << row
     
     # Winter Design Day
@@ -143,12 +278,14 @@ model_paths.each do |model_path|
       row["category"] = category
       row["units"] = units
       row["day_types"] = ["WntrDsn"]
-      vals = get_hr_vals(sch_ruleset.winterDesignDaySchedule, units)
+      vals = get_half_hr_vals(sch_ruleset.defaultDaySchedule, units,hoo_start,hoo_finish)
       row["data"] = {}
       row["data"]["start_date"] = year_start_date
-      row["data"]["end_date"] = year_end_date    
+      row["data"]["end_date"] = year_end_date
+      row["data"]["opp_value"] = vals[2]
+      row["data"]["non_opp_value"] = vals[3]
       row["data"]["type"] = vals[0]
-      row["data"]["vals"] = vals[1]
+      row["data"]["vals"] = vals[1].reverse
       sch_rows << row    
     end
     
@@ -159,12 +296,14 @@ model_paths.each do |model_path|
       row["category"] = category
       row["units"] = units
       row["day_types"] = ["SmrDsn"]
-      vals = get_hr_vals(sch_ruleset.summerDesignDaySchedule, units)
+      vals = get_half_hr_vals(sch_ruleset.defaultDaySchedule, units,hoo_start,hoo_finish)
       row["data"] = {}
       row["data"]["start_date"] = year_start_date
       row["data"]["end_date"] = year_end_date
+      row["data"]["opp_value"] = vals[2]
+      row["data"]["non_opp_value"] = vals[3]
       row["data"]["type"] = vals[0]
-      row["data"]["vals"] = vals[1]
+      row["data"]["vals"] = vals[1].reverse
       sch_rows << row    
     end
 
@@ -172,6 +311,7 @@ model_paths.each do |model_path|
     sch_ruleset.scheduleRules.each do |rule|
       row = {}
       row["name"] = sch_name
+      row["building_type"] = building_type
       row["category"] = category
       row["units"] = units
       day_types = []
@@ -191,12 +331,14 @@ model_paths.each do |model_path|
         day_types << "Fri" if rule.applyFriday     
       end      
       row["day_types"] = day_types
-      vals = get_hr_vals(rule.daySchedule, units)
+      vals = get_half_hr_vals(sch_ruleset.defaultDaySchedule, units,hoo_start,hoo_finish)
       row["data"] = {}
       row["data"]["start_date"] = "#{rule.startDate.get.monthOfYear.value}/#{rule.startDate.get.dayOfMonth}"
       row["data"]["end_date"] = "#{rule.endDate.get.monthOfYear.value}/#{rule.endDate.get.dayOfMonth}"
+      row["data"]["opp_value"] = vals[2]
+      row["data"]["non_opp_value"] = vals[3]
       row["data"]["type"] = vals[0]
-      row["data"]["vals"] = vals[1]
+      row["data"]["vals"] = vals[1].reverse
       sch_rows << row    
     end 
 
@@ -249,7 +391,7 @@ File.open("#{Dir.pwd}/OpenStudioSchedules.csv", 'w') do |file|
      
     # Put the collapsed rows into the file  
     collapsed_srs.each do |csr|
-      line = "#{csr["name"]},#{csr["category"]},#{csr["units"]},#{csr["day_types"].join('|')},#{csr["data"]["start_date"]},#{csr["data"]["end_date"]},#{csr["data"]["type"]},#{csr["data"]["vals"].join(',')}"
+      line = "#{csr["name"]},#{csr["building_type"]},#{csr["category"]},#{csr["units"]},#{csr["day_types"].join('|')},#{csr["data"]["start_date"]},#{csr["data"]["end_date"]},#{csr["data"]["opp_value"]},#{csr["data"]["non_opp_value"]},#{csr["data"]["type"]},#{csr["data"]["vals"].join(',')}"
       puts line
       file.puts line
     end
