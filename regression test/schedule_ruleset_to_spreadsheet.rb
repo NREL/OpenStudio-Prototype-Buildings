@@ -67,14 +67,14 @@ def get_half_hr_vals(day_sch,unit_type,hoo_start,hoo_finish)
   time_val_hash = {}
 
   # get ceiling and floor
-  # todo - run through in reverse and create a hash of unique time/value pairs
+  old = nil
   (1..48).each do |i|
 
     # alter to go through backwards
-    i = 48.5 - i
+    t = 49.0 - i
 
-    hr =  (i/2).truncate
-    if (i/2) == (i/2).truncate then min = 0 else min = 30 end
+    hr =  (t/2).truncate
+    if (t/2) == (t/2).truncate then min = 0 else min = 30 end
 
     time = OpenStudio::Time.new(0, hr, min, 0)
     val = day_sch.getValue(time)
@@ -85,7 +85,13 @@ def get_half_hr_vals(day_sch,unit_type,hoo_start,hoo_finish)
     end
 
     # populate hash
-    time_val_hash[hr + min/60.0] = val # just want double for time, not openstudio time
+    if old.nil?
+      time_val_hash[hr + min/60.0] = val # just want double for time, not openstudio time
+    else old != val
+      time_val_hash[hr + min/60.0] = val
+    end
+
+    old = val
 
     # set ceiling and floor
     if ceiling.nil? or ceiling < val
@@ -112,7 +118,7 @@ def get_half_hr_vals(day_sch,unit_type,hoo_start,hoo_finish)
       end
       val_in_string = "opp_val*#{adj_val_in}"
     else
-      if ceiling > 0
+      if floor > 0
         adj_val_in = (val/floor).round(2)
       else
         adj_val_in = 0
@@ -120,7 +126,18 @@ def get_half_hr_vals(day_sch,unit_type,hoo_start,hoo_finish)
       val_in_string = "non_opp_val*#{adj_val_in}"
     end
 
-    time_string = time # todo - update this to use hours of operation to create formula relative opp_range or non_opp_range. Don't use mutliplier so times say exactly on 30min.
+    # create time_string
+    if ceiling == floor
+      time_string = time
+    elsif time < hoo_start
+      time_string = "hoo_start-#{hoo_start-time}"
+    elsif time > hoo_finish
+      time_string = "hoo_finish+#{time-hoo_finish}"
+    elsif time - hoo_start < hoo_finish - time
+      time_string = "hoo_start+#{time-hoo_finish}"
+    else
+      time_string = "hoo_finish-#{hoo_finish-time}"
+    end
 
     # turn value into formula
     if val_old.nil?
@@ -174,36 +191,37 @@ model_paths.each do |model_path|
     uc_sch_name = sch_name.upcase
     if uc_sch_name.include?("INFIL")
       category = "Infiltration"
-    elsif uc_sch_name.include?("CLGSETP") || 
-          uc_sch_name.include?("HTGSETP") ||
+    elsif uc_sch_name.include?("CLGSETP") ||
           uc_sch_name.include?("CLGSP") ||
-          uc_sch_name.include?("HTGSP")
-      category = "Thermostat Setpoint"
+      category = "clg_setpoint"
+    elsif uc_sch_name.include?("HTGSETP") ||
+        uc_sch_name.include?("HTGSP")
+      category = "htg_setpoint"
     elsif uc_sch_name.include?("OCC")
-      category = "Occupancy" 
+      category = "occ"
     elsif uc_sch_name.include?("LIGHT")
-      category = "Lighting"  
+      category = "lighting"
     elsif uc_sch_name.include?("EQUIP") ||
           uc_sch_name.include?("EQP") ||
           uc_sch_name.include?("LAUNDRY") ||
           uc_sch_name.include?("KITCHEN")
-      category = "Equipment"    
+      category = "elec_equip"
     elsif uc_sch_name.include?("ACTIVITY")
-      category = "Activity" 
+      category = "activity"
     elsif uc_sch_name.include?("CLOTHING")
-      category = "Clothing"
+      category = "clothing"
     elsif uc_sch_name.include?("SWH") ||
           uc_sch_name.include?("SHW")
-      category = "Service Water Heating"    
+      category = "swh"
     elsif uc_sch_name.include?("ELEV")
-      category = "Elevator"  
+      category = "elevator"
     elsif uc_sch_name.include?("EXH")
-      category = "Exhaust"  
+      category = "exhaust"
     elsif uc_sch_name.include?("DAMPER") ||
           uc_sch_name.include?("OA")
-      category = "OA Air"  
+      category = "oa_air"
     elsif uc_sch_name.include?("OPERATION")
-      category = "Operation"
+      category = "operation"
     end
 
     # Determine the name and hoo for the schedule
@@ -255,6 +273,9 @@ model_paths.each do |model_path|
     # Default day
     row = {}
     row["name"] = sch_name
+    row["hoo_start"] = hoo_start
+    row["hoo_finish"] = hoo_finish
+    row["building_type"] = building_type
     row["category"] = category
     row["units"] = units
     day_types = ["Default"]
@@ -275,6 +296,9 @@ model_paths.each do |model_path|
     if sch_ruleset.isWinterDesignDayScheduleDefaulted == false
       row = {}
       row["name"] = sch_name
+      row["hoo_start"] = hoo_start
+      row["hoo_finish"] = hoo_finish
+      row["building_type"] = building_type
       row["category"] = category
       row["units"] = units
       row["day_types"] = ["WntrDsn"]
@@ -293,6 +317,9 @@ model_paths.each do |model_path|
     if sch_ruleset.isSummerDesignDayScheduleDefaulted == false
       row = {}
       row["name"] = sch_name
+      row["hoo_start"] = hoo_start
+      row["hoo_finish"] = hoo_finish
+      row["building_type"] = building_type
       row["category"] = category
       row["units"] = units
       row["day_types"] = ["SmrDsn"]
@@ -311,6 +338,8 @@ model_paths.each do |model_path|
     sch_ruleset.scheduleRules.each do |rule|
       row = {}
       row["name"] = sch_name
+      row["hoo_start"] = hoo_start
+      row["hoo_finish"] = hoo_finish
       row["building_type"] = building_type
       row["category"] = category
       row["units"] = units
@@ -391,7 +420,7 @@ File.open("#{Dir.pwd}/OpenStudioSchedules.csv", 'w') do |file|
      
     # Put the collapsed rows into the file  
     collapsed_srs.each do |csr|
-      line = "#{csr["name"]},#{csr["building_type"]},#{csr["category"]},#{csr["units"]},#{csr["day_types"].join('|')},#{csr["data"]["start_date"]},#{csr["data"]["end_date"]},#{csr["data"]["opp_value"]},#{csr["data"]["non_opp_value"]},#{csr["data"]["type"]},#{csr["data"]["vals"].join(',')}"
+      line = "#{csr["hoo_start"]},#{csr["hoo_finish"]},#{csr["building_type"]},#{csr["name"]},#{csr["category"]},#{csr["day_types"].join('|')},#{csr["data"]["start_date"]}#{"-"}#{csr["data"]["end_date"]},#{csr["units"]},#{csr["data"]["type"]},#{csr["data"]["opp_value"]},#{csr["data"]["non_opp_value"]},#{0.5},#{csr["data"]["vals"].join(',')}"
       puts line
       file.puts line
     end
