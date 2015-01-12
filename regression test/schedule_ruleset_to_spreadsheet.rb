@@ -26,8 +26,8 @@ end
 model_paths = []
 #model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/standards data/Master_Schedules.osm"
 #model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
-#model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
-model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Master_Schedules.osm"
+model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
+#model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Master_Schedules.osm"
 
 def get_hr_vals(day_sch,unit_type)
   type = "Hourly"
@@ -37,7 +37,7 @@ def get_hr_vals(day_sch,unit_type)
     val = day_sch.getValue(time)
     
     # Convert from C to F if necessary
-    if unit_type == "Temperature"
+    if unit_type == "degrees F"
       val = OpenStudio.convert(val, "C", "F").get
     end
     
@@ -81,7 +81,7 @@ def get_half_hr_vals(day_sch,unit_type,hoo_start,hoo_finish)
     val = day_sch.getValue(time)
 
     # Convert from C to F if necessary
-    if unit_type == "Temperature"
+    if unit_type == "degrees F"
       val = OpenStudio.convert(val, "C", "F").get
     end
 
@@ -330,7 +330,7 @@ model_paths.each do |model_path|
     if units.nil? and sch_day_types_limits.is_initialized
       units = sch_day_types_limits.get.unitType
     elsif units.nil?
-      units = "Unkown"
+      units = "Knknown"
     end
 
     # Default day
