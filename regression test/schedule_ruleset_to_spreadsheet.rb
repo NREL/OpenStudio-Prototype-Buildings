@@ -192,7 +192,7 @@ model_paths.each do |model_path|
     if uc_sch_name.include?("INFIL")
       category = "Infiltration"
     elsif uc_sch_name.include?("CLGSETP") ||
-          uc_sch_name.include?("CLGSP") ||
+          uc_sch_name.include?("CLGSP")
       category = "clg_setpoint"
     elsif uc_sch_name.include?("HTGSETP") ||
         uc_sch_name.include?("HTGSP")
@@ -253,7 +253,7 @@ model_paths.each do |model_path|
     elsif sch_name.include?("SchoolPrimary")
       array = ["PrimarySchool",8,16]
     elsif sch_name.include?("SchoolSecondary")
-      array = ["SecondarySchool",0,0]
+      array = ["SecondarySchool",8,16]
     elsif sch_name.include?("Warehouse")
       array = ["Warehouse",7,17]
     else
@@ -262,6 +262,18 @@ model_paths.each do |model_path|
     building_type = array[0]
     hoo_start = array[1]
     hoo_finish = array[2]
+
+    # make display hoo for export
+    hh_start = hoo_start.truncate
+    if hh_start >= 10 then hh_start = hh_start.to_s else hh_start = "0#{hh_start}" end
+    mm_start = ((hoo_start - hoo_start.truncate)*60).round
+    if mm_start >= 10 then mm_start = mm_start.to_s else mm_start = "0#{mm_start}" end
+    hhmm_start = "#'{hh_start}#{mm_start}'"
+    hh_finish = hoo_finish.truncate
+    if hh_finish >= 10 then hh_finish = hh_finish.to_s else hh_finish = "0#{hh_finish}" end
+    mm_finish = ((hoo_finish - hoo_finish.truncate)*60).round
+    if mm_finish >= 10 then mm_finish = mm_finish.to_s else mm_finish = "0#{mm_finish}" end
+    hhmm_finish = "'#{hh_finish}#{mm_finish}'"
 
     # Determine the schedule type from the type limits
     sch_day_types_limits = sch_ruleset.scheduleTypeLimits
@@ -273,8 +285,8 @@ model_paths.each do |model_path|
     # Default day
     row = {}
     row["name"] = sch_name
-    row["hoo_start"] = hoo_start
-    row["hoo_finish"] = hoo_finish
+    row["hoo_start"] = hhmm_start
+    row["hoo_finish"] = hhmm_finish
     row["building_type"] = building_type
     row["category"] = category
     row["units"] = units
@@ -296,13 +308,13 @@ model_paths.each do |model_path|
     if sch_ruleset.isWinterDesignDayScheduleDefaulted == false
       row = {}
       row["name"] = sch_name
-      row["hoo_start"] = hoo_start
-      row["hoo_finish"] = hoo_finish
+      row["hoo_start"] = hhmm_start
+      row["hoo_finish"] = hhmm_finish
       row["building_type"] = building_type
       row["category"] = category
       row["units"] = units
       row["day_types"] = ["WntrDsn"]
-      vals = get_half_hr_vals(sch_ruleset.defaultDaySchedule, units,hoo_start,hoo_finish)
+      vals = get_half_hr_vals(sch_ruleset.winterDesignDaySchedule, units,hoo_start,hoo_finish)
       row["data"] = {}
       row["data"]["start_date"] = year_start_date
       row["data"]["end_date"] = year_end_date
@@ -317,13 +329,13 @@ model_paths.each do |model_path|
     if sch_ruleset.isSummerDesignDayScheduleDefaulted == false
       row = {}
       row["name"] = sch_name
-      row["hoo_start"] = hoo_start
-      row["hoo_finish"] = hoo_finish
+      row["hoo_start"] = hhmm_start
+      row["hoo_finish"] = hhmm_finish
       row["building_type"] = building_type
       row["category"] = category
       row["units"] = units
       row["day_types"] = ["SmrDsn"]
-      vals = get_half_hr_vals(sch_ruleset.defaultDaySchedule, units,hoo_start,hoo_finish)
+      vals = get_half_hr_vals(sch_ruleset.summerDesignDaySchedule, units,hoo_start,hoo_finish)
       row["data"] = {}
       row["data"]["start_date"] = year_start_date
       row["data"]["end_date"] = year_end_date
@@ -338,8 +350,8 @@ model_paths.each do |model_path|
     sch_ruleset.scheduleRules.each do |rule|
       row = {}
       row["name"] = sch_name
-      row["hoo_start"] = hoo_start
-      row["hoo_finish"] = hoo_finish
+      row["hoo_start"] = hhmm_start
+      row["hoo_finish"] = hhmm_finish
       row["building_type"] = building_type
       row["category"] = category
       row["units"] = units
@@ -360,7 +372,7 @@ model_paths.each do |model_path|
         day_types << "Fri" if rule.applyFriday     
       end      
       row["day_types"] = day_types
-      vals = get_half_hr_vals(sch_ruleset.defaultDaySchedule, units,hoo_start,hoo_finish)
+      vals = get_half_hr_vals(rule.daySchedule, units,hoo_start,hoo_finish)
       row["data"] = {}
       row["data"]["start_date"] = "#{rule.startDate.get.monthOfYear.value}/#{rule.startDate.get.dayOfMonth}"
       row["data"]["end_date"] = "#{rule.endDate.get.monthOfYear.value}/#{rule.endDate.get.dayOfMonth}"
