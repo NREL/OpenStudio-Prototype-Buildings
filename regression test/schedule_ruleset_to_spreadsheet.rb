@@ -268,7 +268,7 @@ model_paths.each do |model_path|
     if hh_start >= 10 then hh_start = hh_start.to_s else hh_start = "0#{hh_start}" end
     mm_start = ((hoo_start - hoo_start.truncate)*60).round
     if mm_start >= 10 then mm_start = mm_start.to_s else mm_start = "0#{mm_start}" end
-    hhmm_start = "#'{hh_start}#{mm_start}'"
+    hhmm_start = "'#{hh_start}#{mm_start}'"
     hh_finish = hoo_finish.truncate
     if hh_finish >= 10 then hh_finish = hh_finish.to_s else hh_finish = "0#{hh_finish}" end
     mm_finish = ((hoo_finish - hoo_finish.truncate)*60).round

@@ -54,7 +54,7 @@
         <entry file="file://$PROJECT_DIR$/regression test/schedule_ruleset_to_spreadsheet.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.29047072" vertical-offset="4337" max-vertical-offset="7650">
-              <caret line="270" column="41" selection-start-line="270" selection-start-column="20" selection-end-line="270" selection-end-column="41" />
+              <caret line="270" column="19" selection-start-line="270" selection-start-column="19" selection-end-line="270" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -390,7 +390,7 @@
     <entry file="file://$PROJECT_DIR$/regression test/schedule_ruleset_to_spreadsheet.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.29047072" vertical-offset="4337" max-vertical-offset="7650">
-          <caret line="270" column="41" selection-start-line="270" selection-start-column="20" selection-end-line="270" selection-end-column="41" />
+          <caret line="270" column="19" selection-start-line="270" selection-start-column="19" selection-end-line="270" selection-end-column="19" />
           <folding />
         </state>
       </provider>
