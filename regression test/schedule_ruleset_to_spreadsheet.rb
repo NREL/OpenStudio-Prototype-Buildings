@@ -198,37 +198,49 @@ model_paths.each do |model_path|
     uc_sch_name = sch_name.upcase
     if uc_sch_name.include?("INFIL")
       category = "Infiltration"
+      units = "fraction"
     elsif uc_sch_name.include?("CLGSETP") ||
           uc_sch_name.include?("CLGSP")
       category = "clg_setpoint"
+      units = "degrees F"
     elsif uc_sch_name.include?("HTGSETP") ||
         uc_sch_name.include?("HTGSP")
       category = "htg_setpoint"
+      units = "degrees F"
     elsif uc_sch_name.include?("OCC")
       category = "occ"
+      units = "fraction"
     elsif uc_sch_name.include?("LIGHT")
       category = "lighting"
+      units = "fraction"
     elsif uc_sch_name.include?("EQUIP") ||
           uc_sch_name.include?("EQP") ||
           uc_sch_name.include?("LAUNDRY") ||
           uc_sch_name.include?("KITCHEN")
       category = "elec_equip"
+      units = "fraction"
     elsif uc_sch_name.include?("ACTIVITY")
       category = "activity"
+      units = "W/person"
     elsif uc_sch_name.include?("CLOTHING")
       category = "clothing"
+      units = "clo"
     elsif uc_sch_name.include?("SWH") ||
           uc_sch_name.include?("SHW")
       category = "swh"
+      units = "fraction"
     elsif uc_sch_name.include?("ELEV")
       category = "elevator"
+      units = "fraction"
     elsif uc_sch_name.include?("EXH")
       category = "exhaust"
+      units = "fraction"
     elsif uc_sch_name.include?("DAMPER") ||
           uc_sch_name.include?("OA")
       category = "oa_air"
     elsif uc_sch_name.include?("OPERATION")
       category = "operation"
+      units = "on/off"
     end
 
     # Determine the name and hoo for the schedule
@@ -314,9 +326,11 @@ model_paths.each do |model_path|
 
     # Determine the schedule type from the type limits
     sch_day_types_limits = sch_ruleset.scheduleTypeLimits
-    units = "Unknown"
-    if sch_day_types_limits.is_initialized
+    # units = "Unknown"
+    if units.nil? and sch_day_types_limits.is_initialized
       units = sch_day_types_limits.get.unitType
+    elsif units.nil?
+      units = "Unkown"
     end
 
     # Default day
