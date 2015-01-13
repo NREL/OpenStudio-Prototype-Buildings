@@ -26,8 +26,8 @@ end
 model_paths = []
 #model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/standards data/Master_Schedules.osm"
 #model_paths << "C:/GitRepos/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
-#model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
-model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Master_Schedules.osm"
+model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Prototype_Schedule_Library.osm"
+#model_paths << "C:/Users/dgoldwas/Documents/GitHub/OpenStudio-Prototype-Buildings/regression test/Master_Schedules.osm"
 
 def get_hr_vals(day_sch,unit_type)
   type = "Hourly"
