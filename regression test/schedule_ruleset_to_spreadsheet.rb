@@ -301,7 +301,7 @@ model_paths.each do |model_path|
     elsif sch_name.include?("Retail")
       array = ["Retail",7,21]
     elsif sch_name.include?("StripMall")
-      array = ["StripMall",6,22]
+      array = ["StripMall",7,21]
     elsif sch_name.include?("PrimarySchool")
       array = ["PrimarySchool",8,16]
     elsif sch_name.include?("SecondarySchool")
