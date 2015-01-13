@@ -104,17 +104,14 @@ def get_half_hr_vals(day_sch,unit_type,hoo_start,hoo_finish)
   end
 
   # populate vals
-  val_old = nil # this is from previous datapoint going backwards
-
-  # really ugly way to get last value - todo change this
-  time_val_hash.each do |time,val|
-    val_old = val
-  end
-
+  lowest_key = time_val_hash.keys.min
+  val_old = time_val_hash[lowest_key]
+  count = 0
   time_val_hash.each do |time,val|
 
     # if value is same as previous then skip until there is a new value
-    next if val == val_old
+    next if val == val_old and count > 0
+    count += 1
 
     # adjust value relative to floor or ceiling
     if ceiling - val < val - floor
