@@ -147,7 +147,7 @@ class OpenStudio::Model::Model
     # Find the initial Chiller properties based on initial inputs
     search_criteria = {
       "cooling_type" => prototype_input["chiller_cooling_type"],
-      "condenser_type" => prototype_input["chller_condenser_type"],
+      "condenser_type" => prototype_input["chiller_condenser_type"],
       "compressor_type" => prototype_input["chiller_compressor_type"],
     }
     
