@@ -110,7 +110,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Load the hvac standards from JSON
     hvac_standards_path = "#{File.dirname(__FILE__)}/resources/OpenStudio_HVAC_Standards.json"
-    hvac_standards = {}
     temp = File.read(hvac_standards_path.to_s)
     hvac_standards = JSON.parse(temp)
     search_criteria = {
@@ -120,7 +119,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     }
 
     # Load the Prototype Inputs from JSON
-    prototype_input = find_object(hvac_standards["prototype_inputs"], search_criteria)
+    prototype_input = find_object(hvac_standards['prototype_inputs'], search_criteria)
     if prototype_input.nil?
       runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
       return false
@@ -142,7 +141,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
 
     # Make the prototype building
-    building_type_search = building_type
+    space_building_type_search = building_type
     has_swh = true
 
     case building_type
@@ -160,7 +159,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_office.osm'
       end
-      building_type_search = 'Office'
+      space_building_type_search = 'Office'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
@@ -168,7 +167,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     model.add_geometry(geometry_file)
     space_type_map = model.define_space_type_map
-    model.assign_space_type_stubs(building_type_search, space_type_map)
+    model.assign_space_type_stubs(space_building_type_search, space_type_map)
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
     model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)

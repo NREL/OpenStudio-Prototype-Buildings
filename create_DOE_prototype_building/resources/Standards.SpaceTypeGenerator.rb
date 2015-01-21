@@ -194,10 +194,12 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   if @spc_types[template][clim][building_type][spc_type].nil?
     puts "Error - Space Type #{template}:#{clim}:#{building_type}:#{spc_type} Not Found."
     return false
+  else
+    space_types = @spc_types[template][clim][building_type][spc_type]
   end
   
   #set the rendering color of the space type  
-  rgb = @spc_types[template][clim][building_type][spc_type]['rgb']
+  rgb = space_types['rgb']
   rgb = rgb.split('_')
   r = rgb[0].to_i
   g = rgb[1].to_i
@@ -216,8 +218,8 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   #lighting  
     
     make_lighting = false
-    lighting_per_area = @spc_types[template][clim][building_type][spc_type]['lighting_w_per_area']
-    lighting_per_person = @spc_types[template][clim][building_type][spc_type]['lighting_w_per_person']
+    lighting_per_area = space_types['lighting_w_per_area']
+    lighting_per_person = space_types['lighting_w_per_person']
     unless (lighting_per_area == 0 or lighting_per_area.nil?) then make_lighting = true end
     unless (lighting_per_person == 0 or lighting_per_person.nil?) then make_lighting = true end
     
@@ -239,7 +241,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
       lights.setSpaceType(space_type)  
       
       #get the lighting schedule and set it as the default
-      lighting_sch = @spc_types[template][clim][building_type][spc_type]['lighting_sch']
+      lighting_sch = space_types['lighting_sch']
       unless lighting_sch.nil?
         default_sch_set.setLightingSchedule(get_sch_from_lib(lighting_sch, model))
       end    
@@ -249,9 +251,9 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   #ventilation
 
     make_ventilation = false
-    ventilation_per_area = @spc_types[template][clim][building_type][spc_type]['ventilation_per_area']
-    ventilation_per_person = @spc_types[template][clim][building_type][spc_type]['ventilation_per_person']
-    ventilation_ach = @spc_types[template][clim][building_type][spc_type]['ventilation_ach']
+    ventilation_per_area = space_types['ventilation_per_area']
+    ventilation_per_person = space_types['ventilation_per_person']
+    ventilation_ach = space_types['ventilation_ach']
     unless (ventilation_per_area  == 0 or ventilation_per_area.nil?) then make_ventilation = true  end
     unless(ventilation_per_person == 0 or ventilation_per_person.nil?) then make_ventilation = true end
     unless(ventilation_ach == 0 or ventilation_ach.nil?) then make_ventilation = true end
@@ -278,7 +280,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   #occupancy
 
     make_people = false
-    occupancy_per_area = @spc_types[template][clim][building_type][spc_type]['occupancy_per_area']
+    occupancy_per_area = space_types['occupancy_per_area']
     unless(occupancy_per_area == 0 or occupancy_per_area.nil?) then make_people = true end
     
     if make_people == true
@@ -296,11 +298,11 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
       people.setSpaceType(space_type)
       
       #get the occupancy and occupant activity schedules from the library and set as the default
-      occupancy_sch = @spc_types[template][clim][building_type][spc_type]['occupancy_sch']
+      occupancy_sch = space_types['occupancy_sch']
       unless occupancy_sch.nil?
         default_sch_set.setNumberofPeopleSchedule(get_sch_from_lib(occupancy_sch, model))
       end
-      occupancy_activity_sch = @spc_types[template][clim][building_type][spc_type]['occupancy_activity_sch']
+      occupancy_activity_sch = space_types['occupancy_activity_sch']
       unless occupancy_activity_sch.nil?
         default_sch_set.setPeopleActivityLevelSchedule(get_sch_from_lib(occupancy_activity_sch, model))
       end
@@ -310,7 +312,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   #infiltration
 
     make_infiltration = false
-    infiltration_per_area_ext = @spc_types[template][clim][building_type][spc_type]['infiltration_per_area_ext']
+    infiltration_per_area_ext = space_types['infiltration_per_area_ext']
     unless(infiltration_per_area_ext == 0 or infiltration_per_area_ext.nil?) then make_infiltration = true end
 
     if make_infiltration == true
@@ -324,7 +326,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
       end
       
       #get the infiltration schedule from the library and set as the default
-      infiltration_sch = @spc_types[template][clim][building_type][spc_type]['infiltration_sch']
+      infiltration_sch = space_types['infiltration_sch']
       unless infiltration_sch.nil?
         default_sch_set.setInfiltrationSchedule(get_sch_from_lib(infiltration_sch, model))
       end
@@ -334,7 +336,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   #electric equipment
 
     make_electric_equipment = false
-    elec_equip_per_area = @spc_types[template][clim][building_type][spc_type]['elec_equip_per_area']
+    elec_equip_per_area = space_types['elec_equip_per_area']
     unless(elec_equip_per_area == 0 or elec_equip_per_area.nil?) then make_electric_equipment = true end
     
     if make_electric_equipment == true
@@ -352,7 +354,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
       elec_equip.setSpaceType(space_type)
       
       #get the electric equipment schedule from the library and set as the default
-      elec_equip_sch = @spc_types[template][clim][building_type][spc_type]['elec_equip_sch']
+      elec_equip_sch = space_types['elec_equip_sch']
       unless elec_equip_sch.nil?
         default_sch_set.setElectricEquipmentSchedule(get_sch_from_lib(elec_equip_sch, model))
       end
@@ -362,7 +364,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   #gas equipment
     
     make_gas_equipment = false
-    gas_equip_per_area = @spc_types[template][clim][building_type][spc_type]['gas_equip_per_area']
+    gas_equip_per_area = space_types['gas_equip_per_area']
     unless  (gas_equip_per_area == 0 or gas_equip_per_area.nil?) then make_gas_equipment = true end
     
     if make_gas_equipment == true
@@ -380,7 +382,7 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
       gas_equip.setSpaceType(space_type)
       
       #get the gas equipment schedule from the library and set as the default
-      gas_equip_sch = @spc_types[template][clim][building_type][spc_type]['gas_equip_sch']
+      gas_equip_sch = space_types['gas_equip_sch']
       unless gas_equip_sch.nil?
         default_sch_set.setGasEquipmentSchedule(get_sch_from_lib(gas_equip_sch, model))
       end
@@ -390,12 +392,12 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
     thermostat = OpenStudio::Model::ThermostatSetpointDualSetpoint.new(model)
     thermostat.setName("#{name} Thermostat")
     
-    heating_setpoint_sch = @spc_types[template][clim][building_type][spc_type]['heating_setpoint_sch']
+    heating_setpoint_sch = space_types['heating_setpoint_sch']
     unless heating_setpoint_sch.nil?
       thermostat.setHeatingSetpointTemperatureSchedule(get_sch_from_lib(heating_setpoint_sch, model))
     end
    
-    cooling_setpoint_sch = @spc_types[template][clim][building_type][spc_type]['cooling_setpoint_sch']
+    cooling_setpoint_sch = space_types['cooling_setpoint_sch']
     unless cooling_setpoint_sch.nil?
       thermostat.setCoolingSetpointTemperatureSchedule(get_sch_from_lib(cooling_setpoint_sch, model))
     end
@@ -451,13 +453,13 @@ def generate_space_type(template, clim, building_type, spc_type, model = nil)
   component.add_attribute("OpenStudio Type", space_type.iddObjectType.valueDescription, "")
               
   #add other attributes
-  component.add_attribute("Lighting Standard",  @spc_types[template][clim][building_type][spc_type]["lighting_standard"], "")
-  component.add_attribute("Lighting Primary Space Type",  @spc_types[template][clim][building_type][spc_type]["lighting_pri_spc_type"], "")
-  component.add_attribute("Lighting Secondary Space Type",  @spc_types[template][clim][building_type][spc_type]["lighting_sec_spc_type"], "")
+  component.add_attribute("Lighting Standard",  space_types["lighting_standard"], "")
+  component.add_attribute("Lighting Primary Space Type",  space_types["lighting_pri_spc_type"], "")
+  component.add_attribute("Lighting Secondary Space Type",  space_types["lighting_sec_spc_type"], "")
 
-  component.add_attribute("Ventilation Standard",  @spc_types[template][clim][building_type][spc_type]["ventilation_standard"], "")
-  component.add_attribute("Ventilation Primary Space Type",  @spc_types[template][clim][building_type][spc_type]["ventilation_pri_spc_type"], "")
-  component.add_attribute("Ventilation Secondary Space Type",  @spc_types[template][clim][building_type][spc_type]["ventilation_sec_spc_type"], "")
+  component.add_attribute("Ventilation Standard",  space_types["ventilation_standard"], "")
+  component.add_attribute("Ventilation Primary Space Type",  space_types["ventilation_pri_spc_type"], "")
+  component.add_attribute("Ventilation Secondary Space Type",  space_types["ventilation_sec_spc_type"], "")
 
   component.add_attribute("Occupancy Standard",  "NREL reference buildings", "")
   component.add_attribute("Occupancy Primary Space Type",  building_type, "")

@@ -176,7 +176,6 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
     failures = []
     
     # Load the legacy idf results JSON file into a ruby hash
-    legacy_idf_results = {}
     temp = File.read("#{Dir.pwd}/legacy_idf_results.json")
     legacy_idf_results = JSON.parse(temp)    
          

@@ -385,7 +385,7 @@ class OpenStudio::Model::Model
       end
       nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
       nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
-      nondimming_ext_lts.setControlOption("AstronomicalClock")
+      nondimming_ext_lts.setControlOption('AstronomicalClock')
     end
    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding exterior lights')
@@ -498,7 +498,7 @@ class OpenStudio::Model::Model
     osm_name = 'in.osm'
     forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
     idf = forward_translator.translateModel(self)
-    idf_path = OpenStudio::Path.new("#{run_dir}/#{idf_name}")  
+    idf_path = OpenStudio::Path.new("#{run_dir}/#{idf_name}")
     osm_path = OpenStudio::Path.new("#{run_dir}/#{osm_name}")
     idf.save(idf_path,true)
     self.save(osm_path,true)

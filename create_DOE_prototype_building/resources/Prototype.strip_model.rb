@@ -1,13 +1,19 @@
 
 require 'openstudio'
-require_relative 'utilities'
+require_relative 'Prototype.utilities'
 
-model = safe_load_model('C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/prototype data/small_office_pret_1980_raw.osm')
+full_filename = ARGV[0]
 
-model = strip_model(model)
+if full_filename && (File.file?(full_filename) || File.file?(File.join(Dir.pwd, full_filename)))
+	model = safe_load_model(full_filename)
 
-new_path = OpenStudio::Path.new("#{Dir.pwd}/stripped_model.osm")
+	model = strip_model(model)
 
-model.save(new_path, true)
+	new_path = OpenStudio::Path.new("#{Dir.pwd}/stripped_model.osm")
 
-puts "Stripped model was saved to #{new_path}"
+	model.save(new_path, true)
+
+	puts "Stripped model was saved to #{new_path}"
+else
+	puts "Pass a valid file path to this script"
+end
