@@ -6,13 +6,13 @@ def safe_load_model(model_path_string)
     versionTranslator = OpenStudio::OSVersion::VersionTranslator.new 
     model = versionTranslator.loadModel(model_path)
     if model.empty?
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Version translation failed for #{model_path_string}")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Version translation failed for #{model_path_string}")
       return false
     else
       model = model.get
     end
   else
-    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "#{model_path_string} couldn't be found")
+    OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "#{model_path_string} couldn't be found")
     return false
   end
   return model
@@ -24,7 +24,7 @@ def safe_load_sql(sql_path_string)
   if OpenStudio::exists(sql_path)
     sql = OpenStudio::SqlFile.new(sql_path)
   else
-    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "#{sql_path} couldn't be found")
+    OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "#{sql_path} couldn't be found")
     return false
   end
   return sql
@@ -162,7 +162,7 @@ def find_objects(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
+    OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
   end
   
   return matching_objects
@@ -192,7 +192,7 @@ def find_object(hash_of_objects, search_criteria, capacity = nil)
       end
     end
     # Skip objects that don't meet all search criteria
-    next if meets_all_search_criteria == false
+    next if !meets_all_search_criteria
     # If made it here, object matches all search criteria
     search_criteria_matching_objects << object
   end
@@ -218,12 +218,12 @@ def find_object(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
+    OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
   elsif matching_objects.size == 1
     desired_object = matching_objects[0]
   else 
     desired_object = matching_objects[0]
-    OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Find object search criteria returned #{matching_objects.size} results, the first one will be returned. Search criteria: #{search_criteria} Called from #{caller(0)[1]}.  All results: \n #{matching_objects.join("\n")}")
+    OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find object search criteria returned #{matching_objects.size} results, the first one will be returned. Search criteria: #{search_criteria} Called from #{caller(0)[1]}.  All results: \n #{matching_objects.join("\n")}")
   end
  
   return desired_object
