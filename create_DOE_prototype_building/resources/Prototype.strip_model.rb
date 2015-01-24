@@ -1,6 +1,6 @@
 
 require 'openstudio'
-require_relative 'utilities'
+require_relative 'Prototype.utilities'
 
 model = safe_load_model("C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/prototype data/small_office_pret_1980_raw.osm")
 
