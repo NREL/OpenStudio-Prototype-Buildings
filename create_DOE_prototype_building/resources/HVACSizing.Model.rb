@@ -50,7 +50,6 @@ class OpenStudio::Model::Model
     osm_name = "sizing.osm"
     start_time = Time.new
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started sizing run.")
-    #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Starting sizing run here: #{sizing_run_dir}.")
     forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new()
     idf = forward_translator.translateModel(self)
     idf_path = OpenStudio::Path.new("#{sizing_run_dir}/#{idf_name}")  
@@ -126,17 +125,7 @@ class OpenStudio::Model::Model
         sleep 1
         OpenStudio::Application::instance.processEvents
       end
-      
-      # Get the errors from the job, and fail if any errors
-      # errs = job.errors.errors
-      # if errs.size > 0
-        # OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "The sizing run did not complete successfully, see the following errors for a possible cause.")
-        # errs.each do |err|
-          # OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "***#{err}")
-        # end
-        # return false
-      # end
-      
+        
       sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
       
       OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")

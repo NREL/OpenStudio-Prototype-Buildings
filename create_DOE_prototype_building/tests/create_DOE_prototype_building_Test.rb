@@ -17,7 +17,7 @@ class Hash
   end
 end
 
-class CreateDOEPrototypeBuildingTest < MiniTest::Test
+class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   # Create a set of models, return a list of failures
   def create_models(bldg_types, vintages, climate_zones)
@@ -76,20 +76,22 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   # Create a set of models, return a list of failures  
   def run_models(bldg_types, vintages, climate_zones)
   
+    # Open a channel to log info/warning/error messages
+    msg_log = OpenStudio::StringStreamLogSink.new
+    msg_log.setLogLevel(OpenStudio::Info)
+  
     #### Run the specified models
     failures = []
-    
-    # Find EnergyPlus
-    require 'openstudio/energyplus/find_energyplus'
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
-    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-    ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-    idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
     
     # Make a run manager and queue up the sizing run
     run_manager_db_path = OpenStudio::Path.new("#{Dir.pwd}/run.db")
     run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
-    
+
+    # Configure the run manager with the correct versions of Ruby and E+
+    config_opts = OpenStudio::Runmanager::ConfigOptions.new
+    config_opts.findTools(false, false, false, false)
+    run_manager.setConfigOptions(config_opts)
+
     # Loop through all of the given combinations
     bldg_types.sort.each do |building_type|
       vintages.sort.each do |building_vintage|
@@ -145,12 +147,15 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
           # Set the output path
           output_path = OpenStudio::Path.new("#{model_directory}/")
           
-          # Queue up the simulation
-          job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
-                                                                       idd_path,
-                                                                       idf_path,
-                                                                       epw_path,
-                                                                       output_path)
+          # Create a new workflow for the model to go through
+          workflow = OpenStudio::Runmanager::Workflow.new
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("ModelToIdf"))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("ExpandObjects"))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlusPreProcess"))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlus"))
+          workflow.add(config_opts.getTools)
+          job = workflow.create(output_path, model_path, epw_path)
+
           run_manager.enqueue(job, true)
           
         end
@@ -197,12 +202,12 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
             puts "**********#{building_type}-#{building_vintage}-#{climate_zone}******************"
             # Open the sql file, skipping if not found
             model_name = "#{building_type}-#{building_vintage}-#{climate_zone}"
-            sql_path_string = "#{Dir.pwd}/build/#{model_name}/EnergyPlus/eplusout.sql"
+            sql_path_string = "#{Dir.pwd}/build/#{model_name}/ModelToIdf/ExpandObjects-0/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
             sql_path = OpenStudio::Path.new(sql_path_string)
             sql = nil
             if OpenStudio.exists(sql_path)
               sql = OpenStudio::SqlFile.new(sql_path)
-            else 
+            else
               failures << "****Error - #{model_name} - Could not find sql file"
               puts "**********no sql here #{sql_path}******************"
               next
@@ -289,7 +294,7 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   def dont_test_secondary_school_ptool
 
     bldg_types = ["SecondarySchool"]
-    vintages = ["90.1-2010"] #, "DOE Ref Pre-1980", "DOE Ref 1980-2004"]
+    vintages = ["DOE Ref Pre-1980"] #, "DOE Ref Pre-1980", "DOE Ref 1980-2004"]
     climate_zones = ["ASHRAE 169-2006-2A"]#, "ASHRAE 169-2006-3B", "ASHRAE 169-2006-4A", "ASHRAE 169-2006-5A"]
 
     all_failures = []
@@ -315,11 +320,35 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",    
   
   # Test the Small Office in the PTool vintages and climate zones
-  def test_small_office_ptool
+  def dont_test_small_office_ptool
 
-    bldg_types = ["SmallOffice"]#,"SecondarySchool"]
-    vintages = ["90.1-2010", "DOE Ref Pre-1980", "DOE Ref 1980-2004"]
-    climate_zones = ["ASHRAE 169-2006-2A"]#, "ASHRAE 169-2006-3B", "ASHRAE 169-2006-4A", "ASHRAE 169-2006-5A"]
+    bldg_types = ["SecondarySchool"] #"SmallOffice"
+    vintages = ["90.1-2010"]#, "DOE Ref Pre-1980", "DOE Ref 1980-2004"]"90.1-2010"
+    climate_zones = ["ASHRAE 169-2006-2A"] #, "ASHRAE 169-2006-3B", "ASHRAE 169-2006-4A", "ASHRAE 169-2006-5A"]
+
+    all_failures = []
+    
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
+
+  # Test the Small Office in the QTR vintages and climate zones
+  def test_small_office_qtr
+
+    bldg_types = ["SmallOffice"]
+    vintages = ["90.1-2010"]#, "DOE Ref Pre-1980", ""]"90.1-2010"
+    climate_zones = ["ASHRAE 169-2006-2A"]# "ASHRAE 169-2006-3B", "ASHRAE 169-2006-4A", "ASHRAE 169-2006-5A"]
 
     all_failures = []
     

@@ -424,6 +424,7 @@ class OpenStudio::Model::Model
     # values for each type of model object.
     require_relative 'Prototype.FanConstantVolume'
     require_relative 'Prototype.FanVariableVolume'
+    require_relative 'Prototype.FanOnOff'
     require_relative 'Prototype.HeatExchangerAirToAirSensibleAndLatent'
     
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying prototype HVAC assumptions.")
@@ -433,6 +434,7 @@ class OpenStudio::Model::Model
     # Fans
     self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
     # Heat Exchangers
     self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
@@ -485,8 +487,6 @@ class OpenStudio::Model::Model
       Dir.mkdir(run_dir)
     end
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started simulation in '#{run_dir}'")
-    
     # Change the simulation to only run the weather file
     # and not run the sizing day simulations
     sim_control = self.getSimulationControl
@@ -512,11 +512,18 @@ class OpenStudio::Model::Model
         if File.exist?(epw_path.get.to_s)
           epw_path = epw_path.get
         else
-          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
-          return false
+          # If this is an always-run Measure, need to check a different path
+          alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), "../../../resources"))
+          alt_epw_path = File.expand_path(File.join(alt_weath_path, epw_path.get.to_s))
+          if File.exist?(alt_epw_path)
+            epw_path = OpenStudio::Path.new(alt_epw_path)
+          else
+            OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has been assigned a weather file, but the file is not in the specified location of '#{epw_path.get}'.")
+            return false
+          end
         end
       else
-        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the file is not in the specified location.")
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the weather file path has been deleted.")
         return false
       end
     else
@@ -524,29 +531,67 @@ class OpenStudio::Model::Model
       return false
     end
     
-    # Find EnergyPlus
-    require 'openstudio/energyplus/find_energyplus'
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
-    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-    ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-    idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
-    output_path = OpenStudio::Path.new("#{run_dir}/")
+    # If running on a regular desktop, use RunManager.
+    # If running on OpenStudio Server, use WorkFlowMananger
+    # to avoid slowdown from the sizing run.   
+    use_runmanager = true
     
-    # Make a run manager and queue up the sizing run
-    run_manager_db_path = OpenStudio::Path.new("#{run_dir}/run.db")
-    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
-    job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
-                                                                 idd_path,
-                                                                 idf_path,
-                                                                 epw_path,
-                                                                 output_path)
-    
-    run_manager.enqueue(job, true)
+    begin
+      require 'openstudio-workflow'
+      use_runmanager = false
+    rescue LoadError
+      use_runmanager = true
+    end
 
-    # Start the sizing run and wait for it to finish.
-    while run_manager.workPending
-      sleep 1
-      OpenStudio::Application::instance.processEvents
+    sql_path = nil
+    if use_runmanager == true
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with RunManager.")
+
+      # Find EnergyPlus
+      require 'openstudio/energyplus/find_energyplus'
+      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
+      ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+      ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
+      idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+      output_path = OpenStudio::Path.new("#{run_dir}/")
+      
+      # Make a run manager and queue up the sizing run
+      run_manager_db_path = OpenStudio::Path.new("#{run_dir}/run.db")
+      run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
+      job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
+                                                                   idd_path,
+                                                                   idf_path,
+                                                                   epw_path,
+                                                                   output_path)
+      
+      run_manager.enqueue(job, true)
+
+      # Start the sizing run and wait for it to finish.
+      while run_manager.workPending
+        sleep 1
+        OpenStudio::Application::instance.processEvents
+      end
+        
+      sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
+      
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+      
+    else # Use the openstudio-workflow gem
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with openstudio-workflow gem.")
+      
+      # Copy the weather file to this directory
+      FileUtils.copy(epw_path.to_s, sizing_run_dir)
+
+      # Run the simulation
+      sim = OpenStudio::Workflow.run_energyplus('Local', sizing_run_dir)
+      final_state = sim.run
+
+      if final_state == :finished
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+      end
+    
+      sql_path = OpenStudio::Path.new("#{sizing_run_dir}/run/eplusout.sql")
+    
     end
     
     # Load the sql file created by the sizing run
