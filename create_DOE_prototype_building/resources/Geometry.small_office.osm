@@ -573,44 +573,6 @@ OS:Schedule:Compact,
   Until: 24:00,                           !- Field 3
   1.0;                                    !- Field 4
 
-OS:Daylighting:Control,
-  {375f0b53-c269-498c-92a7-9dcba590b69b}, !- Handle
-  {0706e5af-924c-45dc-9244-dd9677cec08e}, !- Name
-  {f9fb4430-2ed2-4cfb-bf10-1172712402a2}, !- Space Name
-  1.6002,                                 !- Position X-Coordinate {m}
-  15.1364,                                !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -4.71238898038469,                      !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
-
-OS:Daylighting:Control,
-  {d7b7eeee-920c-40bd-9153-57701b17aaca}, !- Handle
-  {74fc97eb-9ff0-47f3-ac4e-794e7b9fe38b}, !- Name
-  {f9fb4430-2ed2-4cfb-bf10-1172712402a2}, !- Space Name
-  1.6002,                                 !- Position X-Coordinate {m}
-  9.2446,                                 !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -4.71238898038469,                      !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
-
 OS:ScheduleTypeLimits,
   {50748b4b-d8bf-47f5-9450-3430fad5c333}, !- Handle
   {e256cd5b-201e-4a05-9941-365ac9242d70}; !- Name
@@ -1258,44 +1220,6 @@ OS:ScheduleTypeLimits,
   {d2afa8fd-9281-44da-b613-80d8f1a3ec64}, !- Handle
   {3c1edbb0-1ff3-497c-843f-05820997cd6e}; !- Name
 
-OS:Daylighting:Control,
-  {76d163eb-2576-42f5-a784-93d9bed05f7a}, !- Handle
-  {234c7767-bebf-47e8-aeae-9cd0d6ee6fea}, !- Name
-  {72459874-7e2c-4ecd-ae58-b2d96c368b31}, !- Space Name
-  3.3236,                                 !- Position X-Coordinate {m}
-  1.6002,                                 !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -3.14159265358979,                      !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
-
-OS:Daylighting:Control,
-  {73a915af-82b4-42ca-a0f5-387cbba956f1}, !- Handle
-  {64359ccf-056c-49c4-9fad-620e3e345414}, !- Name
-  {72459874-7e2c-4ecd-ae58-b2d96c368b31}, !- Space Name
-  8.9611,                                 !- Position X-Coordinate {m}
-  1.6002,                                 !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -3.14159265358979,                      !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
-
 OS:Surface,
   {b6ff9519-a9c1-41bb-a9a2-a8a38ed021e1}, !- Handle
   Perimeter_ZN_2_wall_east,               !- Name
@@ -1646,44 +1570,6 @@ OS:SubSurface,
   12.45, 18.46, 0.9,                      !- X,Y,Z Vertex 2 {m}
   10.62, 18.46, 0.9,                      !- X,Y,Z Vertex 3 {m}
   10.62, 18.46, 2.424;                    !- X,Y,Z Vertex 4 {m}
-
-OS:Daylighting:Control,
-  {6b08e667-2d47-4dc7-81be-d85419d8e78e}, !- Handle
-  {e9e501b5-9c99-4423-9379-5b856c45f534}, !- Name
-  {0ebdaea7-c6cb-452f-b121-7bbfcb1d95b8}, !- Space Name
-  26.0898,                                !- Position X-Coordinate {m}
-  3.3236,                                 !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -1.5707963267949,                       !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
-
-OS:Daylighting:Control,
-  {3738872f-235f-4f0e-9812-0d6a5cfbc2d4}, !- Handle
-  {7d8bfe53-a019-4ee5-847c-c03ef99912a7}, !- Name
-  {0ebdaea7-c6cb-452f-b121-7bbfcb1d95b8}, !- Space Name
-  26.0898,                                !- Position X-Coordinate {m}
-  9.23,                                   !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -1.5707963267949,                       !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
 
 OS:Timestep,
   {eb583d9a-28e0-49c6-8519-cae0088b5073}, !- Handle
@@ -2300,44 +2186,6 @@ OS:Building,
   ,                                       !- Standards Number of Stories
   ,                                       !- Standards Number of Above Ground Stories
   ;                                       !- Standards Building Type
-
-OS:Daylighting:Control,
-  {f20c3384-8503-4092-9f1c-30d5632dc05f}, !- Handle
-  {ff288f01-ddc5-49ff-befe-845731eb54c9}, !- Name
-  {bb97cae6-ab6e-4ca9-a862-a3e532ee5e5d}, !- Space Name
-  13.8684,                                !- Position X-Coordinate {m}
-  16.8598,                                !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -0,                                     !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
-
-OS:Daylighting:Control,
-  {cdac9ac7-593e-4bde-84aa-a076135c01d2}, !- Handle
-  {326943dc-3f2a-449a-ab9c-dc161fc2715e}, !- Name
-  {bb97cae6-ab6e-4ca9-a862-a3e532ee5e5d}, !- Space Name
-  24.3664,                                !- Position X-Coordinate {m}
-  16.8598,                                !- Position Y-Coordinate {m}
-  0.762,                                  !- Position Z-Coordinate {m}
-  ,                                       !- Psi Rotation Around X-Axis {deg}
-  -0,                                     !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
-  500,                                    !- Illuminance Setpoint {lux}
-  Stepped,                                !- Lighting Control Type
-  0.3,                                    !- Minimum Input Power Fraction for Continuous Dimming Control
-  0.2,                                    !- Minimum Light Output Fraction for Continuous Dimming Control
-  3,                                      !- Number of Stepped Control Steps
-  1,                                      !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                       !- Number of Daylighting Views
-  22;                                     !- Maximum Allowable Discomfort Glare Index
 
 OS:Schedule:Compact,
   {5a161056-5162-4354-ae40-99a2a542b354}, !- Handle
