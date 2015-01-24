@@ -10,6 +10,7 @@ class OpenStudio::Model::Model
   require_relative 'HVACSizing.AirLoopHVAC'
   require_relative 'HVACSizing.FanConstantVolume'
   require_relative 'HVACSizing.FanVariableVolume'
+  require_relative 'HVACSizing.FanOnOff'
   require_relative 'HVACSizing.CoilHeatingElectric'
   require_relative 'HVACSizing.CoilHeatingGas'
   require_relative 'HVACSizing.CoilHeatingWater'
@@ -47,7 +48,9 @@ class OpenStudio::Model::Model
     # Save the model to energyplus idf
     idf_name = "sizing.idf"
     osm_name = "sizing.osm"
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Starting sizing run here: #{sizing_run_dir}.")
+    start_time = Time.new
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started sizing run.")
+    #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Starting sizing run here: #{sizing_run_dir}.")
     forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new()
     idf = forward_translator.translateModel(self)
     idf_path = OpenStudio::Path.new("#{sizing_run_dir}/#{idf_name}")  
@@ -64,11 +67,18 @@ class OpenStudio::Model::Model
         if File.exist?(epw_path.get.to_s)
           epw_path = epw_path.get
         else
-          OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
-          return false
+          # If this is an always-run Measure, need to check a different path
+          alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), "../../../resources"))
+          alt_epw_path = File.expand_path(File.join(alt_weath_path, epw_path.get.to_s))
+          if File.exist?(alt_epw_path)
+            epw_path = OpenStudio::Path.new(alt_epw_path)
+          else
+            OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has been assigned a weather file, but the file is not in the specified location of '#{epw_path.get}'.")
+            return false
+          end
         end
       else
-        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the file is not in the specified location.")
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the weather file path has been deleted.")
         return false
       end
     else
@@ -94,7 +104,7 @@ class OpenStudio::Model::Model
 
       # Find EnergyPlus
       require 'openstudio/energyplus/find_energyplus'
-      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
       ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
       ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
       idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
@@ -117,9 +127,19 @@ class OpenStudio::Model::Model
         OpenStudio::Application::instance.processEvents
       end
       
+      # Get the errors from the job, and fail if any errors
+      # errs = job.errors.errors
+      # if errs.size > 0
+        # OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "The sizing run did not complete successfully, see the following errors for a possible cause.")
+        # errs.each do |err|
+          # OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "***#{err}")
+        # end
+        # return false
+      # end
+      
       sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
       
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run.")
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
       
     else # Use the openstudio-workflow gem
       OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with openstudio-workflow gem.")
@@ -132,7 +152,7 @@ class OpenStudio::Model::Model
       final_state = sim.run
 
       if final_state == :finished
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
       end
     
       sql_path = OpenStudio::Path.new("#{sizing_run_dir}/run/eplusout.sql")
@@ -201,6 +221,7 @@ class OpenStudio::Model::Model
     # Fans
     self.getFanConstantVolumes.sort.each {|obj| obj.applySizingValues}
     self.getFanVariableVolumes.sort.each {|obj| obj.applySizingValues}
+    self.getFanOnOffs.sort.each {|obj| obj.applySizingValues}
     
     # Heating coils
     self.getCoilHeatingElectrics.sort.each {|obj| obj.applySizingValues}
