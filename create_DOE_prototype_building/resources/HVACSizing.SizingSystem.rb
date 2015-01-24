@@ -17,6 +17,9 @@ class OpenStudio::Model::SizingSystem
       maximum_outdoor_air_flow_rate = controller_oa.autosizedMaximumOutdoorAirFlowRate
       if maximum_outdoor_air_flow_rate.is_initialized
         self.setDesignOutdoorAirFlowRate(maximum_outdoor_air_flow_rate.get)
+        # Set the OA flow method to "ZoneSum" to avoid severe errors
+        # in the fully hard-sized model.
+        self.setSystemOutdoorAirMethod("ZoneSum")
       end
     end
     
