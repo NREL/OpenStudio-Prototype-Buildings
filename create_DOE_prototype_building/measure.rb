@@ -2,6 +2,8 @@
 # Start the measure
 class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
   
+  require 'json'
+  
   # Define the name of the Measure.
   def name
     return "Create DOE Prototype Building"
@@ -87,8 +89,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     climate_zone = runner.getStringArgumentValue("climate_zone",user_arguments)
 
     # Open a channel to log info/warning/error messages
-    msg_log = OpenStudio::StringStreamLogSink.new
-    msg_log.setLogLevel(OpenStudio::Info)
+    @msg_log = OpenStudio::StringStreamLogSink.new
+    @msg_log.setLogLevel(OpenStudio::Info)
+    @start_time = Time.new
+    @runner = runner
     
     # Load the libraries
     # HVAC sizing
@@ -122,7 +126,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Load the Prototype Inputs from JSON
     prototype_input = find_object(hvac_standards["prototype_inputs"], search_criteria)
     if prototype_input.nil?
-      runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
+      @runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
+      log_msgs
       return false
     end
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
@@ -180,6 +185,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       model.add_occupancy_sensors(building_type, building_vintage, climate_zone)     
     else
       OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model","Building Type = #{building_type} not recognized")
+      log_msgs
       return false
     end
 
@@ -191,22 +197,26 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.hvac_standards = hvac_standards
     model_status = "1_initial_creation"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
     # Perform a sizing run
-    model.runSizingRun("#{osm_directory}/SizingRun1")
+    if model.runSizingRun("#{osm_directory}/SizingRun1") == false
+      log_msgs
+      return false
+    end
     model_status = "2_after_first_sz_run"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
     # Retrieve only the fan flow rates and HX flow rates from the sizing run
     # and apply to the model.
     model.getFanConstantVolumes.sort.each {|obj| obj.applySizingValues}
     model.getFanVariableVolumes.sort.each {|obj| obj.applySizingValues}
+    model.getFanOnOffs.sort.each {|obj| obj.applySizingValues}
     model.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.applySizingValues}
     model_status = "3_after_apply_fan_flows"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
@@ -214,27 +224,30 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.applyPrototypeHVACAssumptions
     model_status = "4_after_proto_hvac_assumptions"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
     # Perform a second sizing run. The adjusted fan pressure rises
     # impact the sizes of the heating coils.
-    model.runSizingRun("#{osm_directory}/SizingRun2")    
-    
+    if model.runSizingRun("#{osm_directory}/SizingRun2") == false
+      log_msgs
+      return false
+    end
+
     # Get the equipment sizes from the sizing run
     # and hard-assign them back to the model
     model.applySizingValues
     model_status = "5_after_apply_sizes"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
     # Apply the HVAC efficiency standard
     model.applyHVACEfficiencyStandard
     model_status = "6_after_apply_hvac_std"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
     # Add output variables for debugging
-    model.request_timeseries_outputs
+    #model.request_timeseries_outputs
     
     # Finished
     model_status = "final"
@@ -243,21 +256,30 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Get all the log messages and put into output
     # for users to see.
-    msg_log.logMessages.each do |msg|
-      # DLM: you can filter on log channel here for now 
-      if /openstudio\.model\..*/.match(msg.logChannel)
-        # Skip the annoying/bogus "Skipping layer" warnings
-        next if msg.logMessage.include?("Skipping layer")
-        if msg.logLevel == OpenStudio::Info
-          runner.registerInfo(msg.logMessage)  
-        elsif msg.logLevel == OpenStudio::Warn
-          runner.registerWarning(msg.logMessage)
-        elsif msg.logLevel == OpenStudio::Error
-          runner.registerError(msg.logMessage)
+    def log_msgs()
+      @msg_log.logMessages.each do |msg|
+        # DLM: you can filter on log channel here for now
+        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+          # Skip certain messages that are irrelevant/misleading
+          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+                  msg.logChannel.include?("runmanager") || # RunManager messages
+                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
+                  
+          # Report the message in the correct way
+          if msg.logLevel == OpenStudio::Info
+            @runner.registerInfo(msg.logMessage)  
+          elsif msg.logLevel == OpenStudio::Warn
+            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+          elsif msg.logLevel == OpenStudio::Error
+            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+          end
         end
       end
+      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
     end
     
+    log_msgs
     return true
  
   end #end the run method
