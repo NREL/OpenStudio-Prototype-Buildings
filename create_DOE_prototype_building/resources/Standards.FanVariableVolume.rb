@@ -25,7 +25,7 @@ class OpenStudio::Model::FanVariableVolume
     pressure_rise_in_h2o = OpenStudio.convert(pressure_rise_pa, "Pa","inH_{2}O").get
     
     # Assume that the fan efficiency is 65% based on
-    #TODO need reference
+    # TODO need reference
     fan_eff = 0.65
     
     # Calculate the Brake Horsepower
