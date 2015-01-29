@@ -32,7 +32,6 @@ end
 
 def strip_model(model)
 
-
   #remove all materials
   model.getMaterials.each do |mat|
     mat.remove
@@ -102,12 +101,44 @@ def strip_model(model)
     infil.remove
   end
 
+  # Remove all internal mass
+  model.getInternalMasss.each do |tm|
+    tm.remove
+  end
+
+  # Remove all internal mass defs
+  model.getInternalMassDefinitions.each do |tmd|
+    tmd.remove
+  end
+  
   # Remove all thermal zones
   model.getThermalZones.each do |zone|
     zone.remove
   end
   
+  # Remove all schedules
+  model.getSchedules.each do |sch|
+    sch.remove
+  end
+  
+  # Remove all schedule type limits
+  model.getScheduleTypeLimitss.each do |typ_lim|
+    typ_lim.remove
+  end
+  
+  # Remove the sizing parameters
+  model.getSizingParameters.remove
+  
+  # Remove the design days
+  model.getDesignDays.each do |dd|
+    dd.remove
+  end
 
+  # Remove the rendering colors
+  model.getRenderingColors.each do |rc|
+    rc.remove
+  end
+  
   return model
 
 
