@@ -216,7 +216,7 @@ class OpenStudio::Model::Model
     self.getCoilHeatingElectrics.sort.each {|obj| obj.applySizingValues}
     self.getCoilHeatingGass.sort.each {|obj| obj.applySizingValues}
     self.getCoilHeatingWaters.sort.each {|obj| obj.applySizingValues}
-    # TODO dx heat pump coils
+    self.getCoilHeatingDXSingleSpeeds.sort.each {|obj| obj.applySizingValues}
     # TODO water to air HP heating coils
     # TODO multi stage gas heating coils
     
@@ -268,6 +268,101 @@ class OpenStudio::Model::Model
     
   end
 
+  # Changes all hard-sized HVAC values to Autosized
+  def autosize
+  
+    # Zone equipment
+    # TODO unit heater
+    # TODO low temp radiant electric
+    # TODO var flow radiant
+    # TODO const flow radiant
+    # TODO PTAC
+    # TODO Water to Air HP
+    # TODO PTHP
+    # TODO Zone Exhaust Fan
+    # TODO four pipe fan coil
+    # TODO water baseboard heating
+    # TODO electric baseboard
+    
+    # Air terminals
+    #self.getAirTerminalSingleDuctParallelPIUReheats.sort.each {|obj| obj.autosize}
+    #self.getAirTerminalSingleDuctVAVReheats.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctUncontrolleds.sort.each {|obj| obj.autosize}
+    # TODO VAV no reheat
+    # TODO CAV reheat
+    # TODO Series PIU
+    # TODO HeatCool Reheat
+    # TODO HeatCool No Reheat
+    # TODO Cooled beam
+     
+    # AirLoopHVAC components
+    #self.getAirLoopHVACs.sort.each {|obj| obj.autosize}
+    #self.getSizingSystems.sort.each {|obj| obj.autosize}
+    # TODO AirloopHVAC Unitary System
+    # TODO AirloopHVAC Unitary Changeover Bypass
+    
+    # Fans
+    #self.getFanConstantVolumes.sort.each {|obj| obj.autosize}
+    #self.getFanVariableVolumes.sort.each {|obj| obj.autosize}
+    self.getFanOnOffs.sort.each {|obj| obj.autosize}
+    
+    # Heating coils
+    #self.getCoilHeatingElectrics.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingGass.sort.each {|obj| obj.autosize}
+    #self.getCoilHeatingWaters.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingDXSingleSpeeds.sort.each {|obj| obj.autosize}
+    # TODO water to air HP heating coils
+    # TODO multi stage gas heating coils
+    
+    # Cooling coils
+    self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.autosize}
+    #self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.autosize}
+    #self.getCoilCoolingWaters.sort.each {|obj| obj.autosize}
+    # TODO dx heat pump coils
+    # TODO water to air HP cooling coils
+    # TODO multi stage DX cooling coils
+    
+    # Outdoor air
+    #self.getControllerOutdoorAirs.sort.each {|obj| obj.autosize}
+    #self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.autosize}
+    # TODO direct evap cooler
+    # TODO indirect evap cooler
+    # TODO heat exchanger sensbile and latent
+    
+    # PlantLoop components
+    #self.getPlantLoops.sort.each {|obj| obj.autosize}
+    # TODO fluid to fluid HX
+    
+    # Pumps
+    #self.getPumpConstantSpeeds.sort.each {|obj| obj.autosize}
+    #self.getPumpVariableSpeeds.sort.each {|obj| obj.autosize}
+    
+    # Heating equipment
+    #self.getBoilerHotWaters.sort.each {|obj| obj.autosize}
+    
+    # Cooling equipment
+    #self.getChillerElectricEIRs.sort.each {|obj| obj.autosize}
+    
+    # Condenser equipment
+    #self.getCoolingTowerSingleSpeeds.sort.each {|obj| obj.autosize}
+    # TODO evap fluid cooler
+    # TODO two speed cooling tower
+    # TODO var speed cooling tower
+    
+    # Controls
+    #self.getControllerWaterCoils.sort.each {|obj| obj.autosize}
+    
+    # VRF components
+    # TODO VRF system
+    # TODO VRF terminal
+    
+    # Refrigeration components
+    
+    return true
+    
+  end
+  
+  
   # A helper method to get component sizes from the model
   # returns the autosized value as an optional double
   def getAutosizedValue(object, value_name, units)
