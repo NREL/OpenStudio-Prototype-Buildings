@@ -208,16 +208,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
-    # Retrieve only the fan flow rates and HX flow rates from the sizing run
-    # and apply to the model.
-    model.getFanConstantVolumes.sort.each {|obj| obj.applySizingValues}
-    model.getFanVariableVolumes.sort.each {|obj| obj.applySizingValues}
-    model.getFanOnOffs.sort.each {|obj| obj.applySizingValues}
-    model.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.applySizingValues}
-    model_status = "3_after_apply_fan_flows"
-    #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
     # on the flow rate of the system.
@@ -235,8 +225,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Get the equipment sizes from the sizing run
     # and hard-assign them back to the model
-    model.applySizingValues
-    model_status = "5_after_apply_sizes"
+    #model.applySizingValues
+    #model_status = "5_after_apply_sizes"
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
@@ -244,10 +234,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.applyHVACEfficiencyStandard
     model_status = "6_after_apply_hvac_std"
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
+   
     # Add output variables for debugging
-    #model.request_timeseries_outputs
+    model.request_timeseries_outputs
     
     # Finished
     model_status = "final"
