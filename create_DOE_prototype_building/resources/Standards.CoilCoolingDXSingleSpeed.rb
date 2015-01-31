@@ -38,7 +38,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     
     # Determine the heating type if on an airloop
     if self.airLoopHVAC.is_initialized
-      air_loop = self.airLoopHVAC
+      air_loop = self.airLoopHVAC.get
       if air_loop.supplyComponents("Coil:Heating:Electric".to_IddObjectType).size > 0
         heating_type = "Electric Resistance or None"
       elsif air_loop.supplyComponents("Coil:Heating:Gas".to_IddObjectType).size > 0
