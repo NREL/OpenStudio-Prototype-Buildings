@@ -19,7 +19,7 @@ class OpenStudio::Model::FanVariableVolume
     end
     
     # Convert max flow rate to cfm
-    maximum_flow_rate_cfm = OpenStudio.convert(maximum_flow_rate_m3_per_s, "m^3/s", "cfm").get
+    maximum_flow_rate_cfm = OpenStudio.convert(maximum_flow_rate_m3_per_s, 'm^3/s', 'cfm').get
     
     # Pressure rise will be determined based on the 
     # following logic.
@@ -51,10 +51,10 @@ class OpenStudio::Model::FanVariableVolume
     end
     
     # Set the fan pressure rise
-    pressure_rise_pa = OpenStudio.convert(pressure_rise_in_h2o, "inH_{2}O","Pa").get
+    pressure_rise_pa = OpenStudio.convert(pressure_rise_in_h2o, 'inH_{2}O','Pa').get
     self.setPressureRise(pressure_rise_pa)  
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.FanVariableVolume", "For Prototype: #{self.name}: #{maximum_flow_rate_cfm.round}cfm; Pressure Rise = #{pressure_rise_in_h2o}in w.c.")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.FanVariableVolume', "For Prototype: #{self.name}: #{maximum_flow_rate_cfm.round}cfm; Pressure Rise = #{pressure_rise_in_h2o}in w.c.")
     
     return true
     

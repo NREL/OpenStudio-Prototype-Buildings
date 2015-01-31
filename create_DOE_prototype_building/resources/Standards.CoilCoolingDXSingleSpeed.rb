@@ -17,9 +17,9 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
     search_criteria = {}
-    search_criteria["template"] = template
+    search_criteria['template'] = template
     cooling_type = self.condenserType
-    search_criteria["cooling_type"] = cooling_type
+    search_criteria['cooling_type'] = cooling_type
     
     # Determine the heating type
     # TODO deal with zone hvac and unitary equipment
@@ -60,13 +60,13 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     
     # Add the heating type to the search criteria
     unless heating_type.nil?
-      search_criteria["heating_type"] = heating_type
+      search_criteria['heating_type'] = heating_type
     end
     
     # TODO Standards - add split system vs single package to model
     # For now, assume single package
-    subcategory = "Single Package"
-    search_criteria["subcategory"] = subcategory
+    subcategory = 'Single Package'
+    search_criteria['subcategory'] = subcategory
 
     # Get the coil capacity
     capacity_w = nil
@@ -148,19 +148,19 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     cop = nil
     
     # If specified as SEER
-    unless ac_props["minimum_seasonal_efficiency"].nil?
-      min_seer = ac_props["minimum_seasonal_efficiency"]
+    unless ac_props['minimum_seer'].nil?
+      min_seer = ac_props['minimum_seer']
       cop = seer_to_cop(min_seer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed",  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")  
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
     end
     
     # If specified as EER
-    unless ac_props["minimum_full_load_efficiency"].nil?
-      min_eer = ac_props["minimum_full_load_efficiency"]
+    unless ac_props['minimum_eer'].nil?
+      min_eer = ac_props['minimum_eer']
       cop = eer_to_cop(min_eer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER")
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
     end
 
     # Set the efficiency values

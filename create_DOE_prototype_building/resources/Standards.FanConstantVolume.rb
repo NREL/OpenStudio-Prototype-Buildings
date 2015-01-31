@@ -5,7 +5,7 @@ class OpenStudio::Model::FanConstantVolume
   # Sets the fan motor efficiency based on the standard
   def setStandardEfficiency(template, hvac_standards)
     
-    motors = hvac_standards["motors"]
+    motors = hvac_standards['motors']
     
     # Get the max flow rate from the fan.
     maximum_flow_rate_m3_per_s = nil
@@ -14,16 +14,16 @@ class OpenStudio::Model::FanConstantVolume
     elsif self.autosizedMaximumFlowRate.is_initialized
       maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.FanConstantVolume", "For #{self.name} max flow rate is not available, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.FanConstantVolume', "For #{self.name} max flow rate is not hard sized, cannot apply efficiency standard.")
       return false
     end
     
     # Convert max flow rate to cfm
-    maximum_flow_rate_cfm = OpenStudio.convert(maximum_flow_rate_m3_per_s, "m^3/s", "cfm").get
+    maximum_flow_rate_cfm = OpenStudio.convert(maximum_flow_rate_m3_per_s, 'm^3/s', 'cfm').get
     
     # Get the pressure rise from the fan
     pressure_rise_pa = self.pressureRise
-    pressure_rise_in_h2o = OpenStudio.convert(pressure_rise_pa, "Pa","inH_{2}O").get
+    pressure_rise_in_h2o = OpenStudio.convert(pressure_rise_pa, 'Pa','inH_{2}O').get
     
     # Assume that the fan efficiency is 65% based on
     #TODO need reference
@@ -35,15 +35,15 @@ class OpenStudio::Model::FanConstantVolume
     
     # Find the motor that meets these size criteria
     search_criteria = {
-    "template" => template,
-    "number_of_poles" => 4.0,
-    "type" => "Open Drip-Proof",
+    'template' => template,
+    'number_of_poles' => 4.0,
+    'type' => 'Open Drip-Proof',
     }
     
     motor_properties = find_object(motors, search_criteria, allowed_hp)
   
     # Get the nominal motor efficiency
-    motor_eff = motor_properties["nominal_full_load_efficiency"]
+    motor_eff = motor_properties['nominal_full_load_efficiency']
   
     # Calculate the total fan efficiency
     total_fan_eff = fan_eff * motor_eff
@@ -52,7 +52,7 @@ class OpenStudio::Model::FanConstantVolume
     self.setFanEfficiency(total_fan_eff)
     self.setMotorEfficiency(motor_eff)
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.FanConstantVolume", "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round}HP; motor eff = #{motor_eff*100}%; total fan eff = #{(total_fan_eff*100).round}%")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.FanConstantVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round}HP; motor eff = #{motor_eff*100}%; total fan eff = #{total_fan_eff*100}%")
     
     return true
     

@@ -13,7 +13,7 @@ class OpenStudio::Model::Model
   
   def applyHVACEfficiencyStandard
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying HVAC efficiency standards.")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
     
     ##### Apply equipment efficiencies
     
@@ -31,7 +31,7 @@ class OpenStudio::Model::Model
     # Chillers
     self.getChillerElectricEIRs.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.hvac_standards)}
   
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying HVAC efficiency standards.")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying HVAC efficiency standards.')
   
   end
   

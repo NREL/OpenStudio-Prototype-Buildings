@@ -60,11 +60,10 @@ class OpenStudio::Model::Model
     sim_control.setRunSimulationforWeatherFileRunPeriods(false)
     
     # Save the model to energyplus idf
-    idf_name = "sizing.idf"
-    osm_name = "sizing.osm"
-    start_time = Time.new
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started sizing run.")
-    forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new()
+    idf_name = 'sizing.idf'
+    osm_name = 'sizing.osm'
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Starting sizing run here: #{sizing_run_dir}.")
+    forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
     idf = forward_translator.translateModel(self)
     idf_path = OpenStudio::Path.new("#{sizing_run_dir}/#{idf_name}")  
     osm_path = OpenStudio::Path.new("#{sizing_run_dir}/#{osm_name}")
@@ -95,7 +94,7 @@ class OpenStudio::Model::Model
         return false
       end
     else
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has not been assigned a weather file.')
       return false
     end
     
@@ -112,8 +111,8 @@ class OpenStudio::Model::Model
     end
 
     sql_path = nil
-    if use_runmanager == true
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with RunManager.")
+    if use_runmanager
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Running sizing run with RunManager.')
 
       # Find EnergyPlus
       require 'openstudio/energyplus/find_energyplus'
@@ -142,10 +141,10 @@ class OpenStudio::Model::Model
         
       sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
       
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished sizing run.')
       
     else # Use the openstudio-workflow gem
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with openstudio-workflow gem.")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Running sizing run with openstudio-workflow gem.')
       
       # Copy the weather file to this directory
       FileUtils.copy(epw_path.to_s, sizing_run_dir)
@@ -155,7 +154,7 @@ class OpenStudio::Model::Model
       final_state = sim.run
 
       if final_state == :finished
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+        OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished sizing run.')
       end
     
       sql_path = OpenStudio::Path.new("#{sizing_run_dir}/run/eplusout.sql")
@@ -171,7 +170,7 @@ class OpenStudio::Model::Model
       # Attach the sql file from the run to the sizing model
       self.setSqlFile(sql)
     else 
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Results for the sizing run couldn't be found here: #{sql_path}.")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Results for the sizing run couldn't be found here: #{sql_path}.")
       return false
     end
     
@@ -190,7 +189,7 @@ class OpenStudio::Model::Model
 
     # Ensure that the model has a sql file associated with it
     if self.sqlFile.empty?
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Failed to apply sizing values because model is missing sql file containing sizing results.")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Failed to apply sizing values because model is missing sql file containing sizing results.')
       return false
     end
   
@@ -398,7 +397,7 @@ class OpenStudio::Model::Model
   # returns the autosized value as an optional double
   def getAutosizedValue(object, value_name, units)
 
-    result = OpenStudio::OptionalDouble.new()
+    result = OpenStudio::OptionalDouble.new
 
     name = object.name.get.upcase
     
@@ -426,7 +425,7 @@ class OpenStudio::Model::Model
       end
 
     else
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has no sql file containing results, cannot lookup data.")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has no sql file containing results, cannot lookup data.')
     end
 
     return result
