@@ -8,12 +8,13 @@ class OpenStudio::Model::FanOnOff
     motors = hvac_standards["motors"]
     
     # Get the max flow rate from the fan.
-    # This expects that the fan is hard sized.
-    maximum_flow_rate_m3_per_s = self.maximumFlowRate
-    if maximum_flow_rate_m3_per_s.is_initialized
-      maximum_flow_rate_m3_per_s = maximum_flow_rate_m3_per_s.get
+    maximum_flow_rate_m3_per_s = nil
+    if self.maximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.maximumFlowRate.get
+    elsif self.autosizedMaximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.FanOnOff", "For #{self.name} max flow rate is not hard sized, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.FanOnOff", "For #{self.name} max flow rate is not available, cannot apply efficiency standard.")
       return false
     end
     
@@ -55,10 +56,9 @@ class OpenStudio::Model::FanOnOff
     # flat number per the IDFs.  Not sure how this invalid input affects
     # the simulation, but it is in the Prototype IDF files.
     # TODO check if this is just for small office or every building type
-    fan_eff_curve = fan.fanEfficiencyRatioFunctionofSpeedRatioCurve
-    fan_eff_curve.setName("asdfasd")
-    fan_eff_curve = fan_eff_curve.to_CurveCubic.get
-    fan_eff_curve.setCoefficient1Constant(total_fan_eff)
+    #fan_eff_curve = self.fanEfficiencyRatioFunctionofSpeedRatioCurve
+    #fan_eff_curve = fan_eff_curve.to_CurveCubic.get
+    #fan_eff_curve.setCoefficient1Constant(total_fan_eff)
     
     OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.FanOnOff", "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(1)}HP; motor eff = #{motor_eff*100}%; total fan eff = #{(total_fan_eff*100).round}%")
     

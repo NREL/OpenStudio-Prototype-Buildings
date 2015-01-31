@@ -9,7 +9,7 @@ class OpenStudio::Model::Model
  
   def add_geometry(geometry_osm_name)
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started adding geometry")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Started adding geometry")
     
     # Take the existing model and remove all the objects 
     # (this is cheesy), but need to keep the same memory block
@@ -23,7 +23,7 @@ class OpenStudio::Model::Model
     # Add the objects from the geometry model to the working model
     self.addObjects(geom_model.toIdfFile.objects)
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding geometry")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished adding geometry")
     
     return true
     
@@ -43,7 +43,7 @@ class OpenStudio::Model::Model
         space = space.get
         space.setSpaceType(stub_space_type)
 
-        #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Setting #{space.name} to #{building_type}.#{space_type_name}")
+        #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Setting #{space.name} to #{building_type}.#{space_type_name}")
       end
     end
 
@@ -52,7 +52,7 @@ class OpenStudio::Model::Model
 
   def add_loads(building_vintage, climate_zone, standards_data_dir)
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying space types (loads)")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Started applying space types (loads)")
 
     path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
     path_to_master_schedules_library = "#{standards_data_dir}/Master_Schedules.osm"
@@ -72,7 +72,7 @@ class OpenStudio::Model::Model
       if stub_space_type.standardsBuildingType.is_initialized
         stds_building_type = stub_space_type.standardsBuildingType.get
       else
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{stub_space_type.name}' has no standards building type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Space type called '#{stub_space_type.name}' has no standards building type.")
         return false
       end
       
@@ -81,7 +81,7 @@ class OpenStudio::Model::Model
       if stub_space_type.standardsSpaceType.is_initialized
         stds_spc_type = stub_space_type.standardsSpaceType.get
       else
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{stub_space_type.name}' has no standards space type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Space type called '#{stub_space_type.name}' has no standards space type.")
         return false
       end
 
@@ -92,7 +92,7 @@ class OpenStudio::Model::Model
       #apply the new space type to the building      
       stub_space_type.spaces.each do |space|
         space.setSpaceType(new_space_type)
-        #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Setting #{space.name} to #{new_space_type.name.get}")
+        #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Setting #{space.name} to #{new_space_type.name.get}")
       end
         
       # Remove the stub space type
@@ -100,7 +100,7 @@ class OpenStudio::Model::Model
 
     end
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying space types (loads)")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished applying space types (loads)")
     
     return true
 
@@ -108,7 +108,7 @@ class OpenStudio::Model::Model
 
   def add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying constructions")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Started applying constructions")
     
     path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
     
@@ -128,7 +128,7 @@ class OpenStudio::Model::Model
     # Make the default contruction set for the building
     bldg_def_const_set = construction_set_generator.generate_construction_set(building_vintage, climate_zone_set, building_type, "", self)
     if bldg_def_const_set[0].nil?
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Could not create default construction set for the building.")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Could not create default construction set for the building.")
       return false
     else
       self.getBuilding.setDefaultConstructionSet(bldg_def_const_set[0])
@@ -142,7 +142,7 @@ class OpenStudio::Model::Model
       if space_type.standardsBuildingType.is_initialized
         stds_building_type = space_type.standardsBuildingType.get
       else
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{space_type.name}' has no standards building type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Space type called '#{space_type.name}' has no standards building type.")
       end
       
       # Get the standards space type
@@ -150,7 +150,7 @@ class OpenStudio::Model::Model
       if space_type.standardsSpaceType.is_initialized
         stds_spc_type = space_type.standardsSpaceType.get
       else
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Space type called '#{space_type.name}' has no standards space type.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Space type called '#{space_type.name}' has no standards space type.")
       end    
     
       # If the standards space type is Attic,
@@ -196,7 +196,7 @@ class OpenStudio::Model::Model
       int_mass_def.setConstruction(construction)
     end
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying constructions")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished applying constructions")
     
     return true
 
@@ -204,7 +204,7 @@ class OpenStudio::Model::Model
 
   def create_thermal_zones
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started creating thermal zones")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Started creating thermal zones")
 
     # Create a thermal zone for each space in the self
     self.getSpaces.each do |space|
@@ -220,13 +220,13 @@ class OpenStudio::Model::Model
       thermostat_name = space_type_name + " Thermostat"
       thermostat = self.getThermostatSetpointDualSetpointByName(thermostat_name)
       if thermostat.empty?
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Thermostat #{thermostat_name} not found for space name: #{space.name}")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Thermostat #{thermostat_name} not found for space name: #{space.name}")
         return true
       end
       zone.setThermostatSetpointDualSetpoint(thermostat.get)
     end
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished creating thermal zones")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished creating thermal zones")
     
     return true
 
@@ -237,7 +237,7 @@ class OpenStudio::Model::Model
     # Only add occupancy sensors for 90.1-2010
      return true unless building_vintage == "90.1-2010"
    
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding Occupancy Sensors")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Started Adding Occupancy Sensors")
 
     space_type_reduction_map = {
       "SecondarySchool" => {"Classroom" => 0.32}
@@ -326,13 +326,13 @@ class OpenStudio::Model::Model
         old_lights_sch_name = light.schedule.get.name.to_s
         if reduced_lights_schs[old_lights_sch_name]
           light.setSchedule(reduced_lights_schs[old_lights_sch_name])
-          OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Occupancy sensor reduction added to '#{light.name}'")
+          OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Occupancy sensor reduction added to '#{light.name}'")
         end
       end
     
     end
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished Adding Occupancy Sensors")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished Adding Occupancy Sensors")
     
     return true
     
@@ -344,7 +344,7 @@ class OpenStudio::Model::Model
     # into lookup table and implement that way instead of hard-coding as
     # inputs in the spreadsheet.
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started adding exterior lights")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Started adding exterior lights")
  
     # Occupancy Sensing Exterior Lights
     # which reduce to 70% power when no one is around.
@@ -388,7 +388,7 @@ class OpenStudio::Model::Model
       nondimming_ext_lts.setControlOption("AstronomicalClock")
     end
    
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding exterior lights")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished adding exterior lights")
     
     return true
     
@@ -427,7 +427,7 @@ class OpenStudio::Model::Model
     require_relative 'Prototype.FanOnOff'
     require_relative 'Prototype.HeatExchangerAirToAirSensibleAndLatent'
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started applying prototype HVAC assumptions.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Started applying prototype HVAC assumptions.")
     
     ##### Apply equipment efficiencies
     
@@ -439,7 +439,7 @@ class OpenStudio::Model::Model
     # Heat Exchangers
     self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying prototype HVAC assumptions.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished applying prototype HVAC assumptions.")
     
   end 
 
@@ -496,6 +496,7 @@ class OpenStudio::Model::Model
     # Save the model to energyplus idf
     idf_name = "in.idf"
     osm_name = "in.osm"
+    start_time = Time.new
     forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new()
     idf = forward_translator.translateModel(self)
     idf_path = OpenStudio::Path.new("#{run_dir}/#{idf_name}")  
@@ -518,16 +519,16 @@ class OpenStudio::Model::Model
           if File.exist?(alt_epw_path)
             epw_path = OpenStudio::Path.new(alt_epw_path)
           else
-            OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has been assigned a weather file, but the file is not in the specified location of '#{epw_path.get}'.")
+            OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Model has been assigned a weather file, but the file is not in the specified location of '#{epw_path.get}'.")
             return false
           end
         end
       else
-        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the weather file path has been deleted.")
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Model has a weather file assigned, but the weather file path has been deleted.")
         return false
       end
     else
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has not been assigned a weather file.")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Model has not been assigned a weather file.")
       return false
     end
     
@@ -545,7 +546,7 @@ class OpenStudio::Model::Model
 
     sql_path = nil
     if use_runmanager == true
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with RunManager.")
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Running sizing run with RunManager.")
 
       # Find EnergyPlus
       require 'openstudio/energyplus/find_energyplus'
@@ -572,25 +573,25 @@ class OpenStudio::Model::Model
         OpenStudio::Application::instance.processEvents
       end
         
-      sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
+      sql_path = OpenStudio::Path.new("#{run_dir}/Energyplus/eplusout.sql")
       
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
       
     else # Use the openstudio-workflow gem
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Running sizing run with openstudio-workflow gem.")
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Running sizing run with openstudio-workflow gem.")
       
       # Copy the weather file to this directory
-      FileUtils.copy(epw_path.to_s, sizing_run_dir)
+      FileUtils.copy(epw_path.to_s, run_dir)
 
       # Run the simulation
-      sim = OpenStudio::Workflow.run_energyplus('Local', sizing_run_dir)
+      sim = OpenStudio::Workflow.run_energyplus('Local', run_dir)
       final_state = sim.run
 
       if final_state == :finished
-        OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
       end
     
-      sql_path = OpenStudio::Path.new("#{sizing_run_dir}/run/eplusout.sql")
+      sql_path = OpenStudio::Path.new("#{run_dir}/run/eplusout.sql")
     
     end
     
@@ -601,11 +602,11 @@ class OpenStudio::Model::Model
       # Attach the sql file from the run to the sizing model
       self.setSqlFile(sql)
     else 
-      OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Results for the sizing run couldn't be found here: #{sql_path}.")
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Results for the sizing run couldn't be found here: #{sql_path}.")
       return false
     end
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished simulation in '#{run_dir}'")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished simulation in '#{run_dir}'")
     
     return true
 
@@ -742,6 +743,96 @@ class OpenStudio::Model::Model
     end # Next rule  
     
     return sch_ruleset
+    
+  end
+  
+  def add_curve(curve_name, hvac_standards)
+    
+    #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.addCurve", "Adding curve '#{curve_name}' to the model.")
+    
+    success = false
+    
+    curve_biquadratics = hvac_standards["curve_biquadratics"]
+    curve_quadratics = hvac_standards["curve_quadratics"]
+    curve_bicubics = hvac_standards["curve_bicubics"]
+    curve_cubics = hvac_standards["curve_cubics"]
+    
+    # Make biquadratic curves
+    curve_data = find_object(curve_biquadratics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveBiquadratic.new(self)
+      curve.setName(curve_data["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setCoefficient4y(curve_data["coeff_4"])
+      curve.setCoefficient5yPOW2(curve_data["coeff_5"])
+      curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
+      curve.setMinimumValueofx(curve_data["min_x"])
+      curve.setMaximumValueofx(curve_data["max_x"])
+      curve.setMinimumValueofy(curve_data["min_y"])
+      curve.setMaximumValueofy(curve_data["max_y"])
+      success = true
+      return curve
+    end
+    
+    # Make quadratic curves
+    curve_data = find_object(curve_quadratics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveQuadratic.new(self)
+      curve.setName(curve_data["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setMinimumValueofx(curve_data["min_x"])
+      curve.setMaximumValueofx(curve_data["max_x"])
+      success = true
+      return curve
+    end
+    
+    # Make cubic curves
+    curve_data = find_object(curve_cubics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveCubic.new(self)
+      curve.setName(curve_data["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setCoefficient4xPOW3(curve_data["coeff_4"])
+      curve.setMinimumValueofx(curve_data["min_x"])
+      curve.setMaximumValueofx(curve_data["max_x"])
+      success = true
+      return curve
+    end
+  
+    # Make bicubic curves
+    curve_data = find_object(curve_bicubics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveBicubic.new(self)
+      curve.setName(eirft_properties["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setCoefficient4y(curve_data["coeff_4"])
+      curve.setCoefficient5yPOW2(curve_data["coeff_5"])
+      curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
+      curve.setCoefficient7xPOW3 (curve_data["coeff_7"])
+      curve.setCoefficient8yPOW3 (curve_data["coeff_8"])
+      curve.setCoefficient9xPOW2TIMESY(curve_data["coeff_9"])
+      curve.setCoefficient10xTIMESYPOW2 (curve_data["coeff_10"])
+      curve.setMinimumValueofx(eirft_properties["min_x"])
+      curve.setMaximumValueofx(eirft_properties["max_x"])
+      curve.setMinimumValueofy(eirft_properties["min_y"])
+      curve.setMaximumValueofy(eirft_properties["max_y"])
+      success = true
+      return curve
+    end
+  
+    # Return false if the curve was not created
+    if success == false
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.addCurve", "Could not find a curve called '#{curve_name}' in the hvac_standards.")
+      return nil
+    end
     
   end
   

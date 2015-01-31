@@ -8,11 +8,13 @@ class OpenStudio::Model::FanOnOff
   def setPrototypeFanPressureRise
     
     # Get the max flow rate from the fan.
-    # This expects that the fan is hard sized.
-    maximum_flow_rate_m3_per_s = self.maximumFlowRate
-    if maximum_flow_rate_m3_per_s.is_initialized
-      maximum_flow_rate_m3_per_s = maximum_flow_rate_m3_per_s.get
+    maximum_flow_rate_m3_per_s = nil
+    if self.maximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.maximumFlowRate.get
+    elsif self.autosizedMaximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.FanOnOff", "For #{self.name} max flow rate is not available, cannot apply prototype assumptions.")
       return false
     end
     
@@ -63,7 +65,7 @@ class OpenStudio::Model::FanOnOff
     pressure_rise_pa = OpenStudio.convert(pressure_rise_in_h2o, "inH_{2}O","Pa").get
     self.setPressureRise(pressure_rise_pa)  
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.FanOnOff", "For Prototype: #{self.name}: #{maximum_flow_rate_cfm.round}cfm; Pressure Rise = #{pressure_rise_in_h2o}in w.c.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.FanOnOff", "For Prototype: #{self.name}: #{maximum_flow_rate_cfm.round}cfm; Pressure Rise = #{pressure_rise_in_h2o}in w.c.")
     
     return true
     

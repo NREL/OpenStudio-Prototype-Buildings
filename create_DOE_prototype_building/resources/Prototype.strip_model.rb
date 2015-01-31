@@ -2,7 +2,7 @@
 require 'openstudio'
 require_relative 'Prototype.utilities'
 
-model = safe_load_model("C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/prototype data/small_office_pret_1980_raw.osm")
+model = safe_load_model("C:/GitRepos/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/Geometry.secondary_school.osm")
 
 model = strip_model(model)
 

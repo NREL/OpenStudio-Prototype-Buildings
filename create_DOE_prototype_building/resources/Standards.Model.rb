@@ -33,6 +33,6 @@ class OpenStudio::Model::Model
   
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished applying HVAC efficiency standards.")
   
-  end 
+  end
   
 end
