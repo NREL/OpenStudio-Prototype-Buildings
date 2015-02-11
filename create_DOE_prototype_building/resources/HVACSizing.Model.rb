@@ -8,11 +8,14 @@ class OpenStudio::Model::Model
   require_relative 'HVACSizing.AirTerminalSingleDuctVAVReheat'
   require_relative 'HVACSizing.AirTerminalSingleDuctUncontrolled'
   require_relative 'HVACSizing.AirLoopHVAC'
+  require_relative 'HVACSizing.AirLoopHVACUnitaryHeatPumpAirToAir'
   require_relative 'HVACSizing.FanConstantVolume'
   require_relative 'HVACSizing.FanVariableVolume'
+  require_relative 'HVACSizing.FanOnOff'
   require_relative 'HVACSizing.CoilHeatingElectric'
   require_relative 'HVACSizing.CoilHeatingGas'
   require_relative 'HVACSizing.CoilHeatingWater'
+  require_relative 'HVACSizing.CoilHeatingDXSingleSpeed'
   require_relative 'HVACSizing.CoilCoolingDXSingleSpeed'
   require_relative 'HVACSizing.CoilCoolingDXTwoSpeed'
   require_relative 'HVACSizing.CoilCoolingWater'
@@ -27,6 +30,18 @@ class OpenStudio::Model::Model
   require_relative 'HVACSizing.ControllerWaterCoil'
   require_relative 'HVACSizing.SizingSystem'
 
+  # Methods not yet implemented
+  require_relative 'HVACSizing.AirConditionerVariableRefrigerantFlow'
+  require_relative 'HVACSizing.AirTerminalSingleDuctVAVReheat'
+  require_relative 'HVACSizing.AirTerminalSingleDuctUncontrolled'
+  require_relative 'HVACSizing.AirLoopHVAC'
+  require_relative 'HVACSizing.AirLoopHVACUnitaryHeatPumpAirToAir'
+  require_relative 'HVACSizing.FanConstantVolume'
+  require_relative 'HVACSizing.FanVariableVolume'
+  require_relative 'HVACSizing.FanOnOff'  
+  
+  
+  
   # A helper method to run a sizing run and pull any values calculated during
   # autosizing back into the self.
   def runSizingRun(sizing_run_dir = "#{Dir.pwd}/SizingRun")
@@ -64,11 +79,18 @@ class OpenStudio::Model::Model
         if File.exist?(epw_path.get.to_s)
           epw_path = epw_path.get
         else
-          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has not been assigned a weather file.')
-          return false
+          # If this is an always-run Measure, need to check a different path
+          alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), "../../../resources"))
+          alt_epw_path = File.expand_path(File.join(alt_weath_path, epw_path.get.to_s))
+          if File.exist?(alt_epw_path)
+            epw_path = OpenStudio::Path.new(alt_epw_path)
+          else
+            OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has been assigned a weather file, but the file is not in the specified location of '#{epw_path.get}'.")
+            return false
+          end
         end
       else
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has a weather file assigned, but the file is not in the specified location.')
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "Model has a weather file assigned, but the weather file path has been deleted.")
         return false
       end
     else
@@ -94,7 +116,7 @@ class OpenStudio::Model::Model
 
       # Find EnergyPlus
       require 'openstudio/energyplus/find_energyplus'
-      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
       ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
       ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
       idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
@@ -116,7 +138,7 @@ class OpenStudio::Model::Model
         sleep 1
         OpenStudio::Application::instance.processEvents
       end
-      
+        
       sql_path = OpenStudio::Path.new("#{sizing_run_dir}/Energyplus/eplusout.sql")
       
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished sizing run.')
@@ -138,6 +160,9 @@ class OpenStudio::Model::Model
       sql_path = OpenStudio::Path.new("#{sizing_run_dir}/run/eplusout.sql")
     
     end
+    
+    # TODO Delete the eplustbl.htm and other files created
+    # by the sizing run for cleanliness.
     
     # Load the sql file created by the sizing run
     if OpenStudio::exists(sql_path)
@@ -168,66 +193,79 @@ class OpenStudio::Model::Model
       return false
     end
   
+    # TODO Sizing methods for these types of equipment are
+    # currently only stubs that need to be filled in.
+    self.getAirConditionerVariableRefrigerantFlows.sort.each {|obj| obj.applySizingValues}
+    self.getAirLoopHVACUnitaryHeatCoolVAVChangeoverBypasss.sort.each {|obj| obj.applySizingValues}
+    self.getAirLoopHVACUnitarySystems.sort.each {|obj| obj.applySizingValues}
+    self.getAirTerminalSingleDuctConstantVolumeCooledBeams.sort.each {|obj| obj.applySizingValues}
+    self.getAirTerminalSingleDuctConstantVolumeFourPipeInductions.sort.each {|obj| obj.applySizingValues}
+    self.getAirTerminalSingleDuctConstantVolumeReheats.sort.each {|obj| obj.applySizingValues}
+    self.getAirTerminalSingleDuctSeriesPIUReheats.sort.each {|obj| obj.applySizingValues}
+    self.getAirTerminalSingleDuctVAVHeatAndCoolNoReheats.sort.each {|obj| obj.applySizingValues}
+    self.getAirTerminalSingleDuctVAVHeatAndCoolReheats.sort.each {|obj| obj.applySizingValues}
+    self.getBoilerSteams.sort.each {|obj| obj.applySizingValues}
+    self.getCoilCoolingDXMultiSpeeds.sort.each {|obj| obj.applySizingValues}
+    self.getCoilCoolingDXVariableRefrigerantFlows.sort.each {|obj| obj.applySizingValues}
+    self.getCoilCoolingWaterToAirHeatPumpEquationFits.sort.each {|obj| obj.applySizingValues}
+    self.getCoilHeatingWaterToAirHeatPumpEquationFits.sort.each {|obj| obj.applySizingValues}
+    self.getCoilHeatingGasMultiStages.sort.each {|obj| obj.applySizingValues}
+    self.getCoilHeatingDesuperheaters.sort.each {|obj| obj.applySizingValues}
+    self.getCoilHeatingDXVariableRefrigerantFlows.sort.each {|obj| obj.applySizingValues}
+    self.getCoilWaterHeatingDesuperheaters.sort.each {|obj| obj.applySizingValues}
+    self.getCoolingTowerTwoSpeeds.sort.each {|obj| obj.applySizingValues}
+    self.getCoolingTowerVariableSpeeds.sort.each {|obj| obj.applySizingValues}
+    self.getEvaporativeCoolerDirectResearchSpecials.sort.each {|obj| obj.applySizingValues}
+    self.getEvaporativeCoolerIndirectResearchSpecials.sort.each {|obj| obj.applySizingValues}
+    self.getEvaporativeFluidCoolerSingleSpeeds.sort.each {|obj| obj.applySizingValues}
+    self.getHeatExchangerFluidToFluids.sort.each {|obj| obj.applySizingValues}
+    self.getHumidifierSteamElectrics.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACBaseboardConvectiveElectrics.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACBaseboardConvectiveWaters.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACFourPipeFanCoils.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACHighTemperatureRadiants.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACIdealLoadsAirSystems.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACLowTemperatureRadiantElectrics.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACLowTempRadiantConstFlows.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACLowTempRadiantVarFlows.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACPackagedTerminalAirConditioners.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACPackagedTerminalHeatPumps.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACTerminalUnitVariableRefrigerantFlows.sort.each {|obj| obj.applySizingValues}
+    self.getZoneHVACWaterToAirHeatPumps.sort.each {|obj| obj.applySizingValues}
+    
     # Zone equipment
-    # TODO unit heater
-    # TODO low temp radiant electric
-    # TODO var flow radiant
-    # TODO const flow radiant
-    # TODO PTAC
-    # TODO Water to Air HP
-    # TODO PTHP
-    # TODO Zone Exhaust Fan
-    # TODO four pipe fan coil
-    # TODO water baseboard heating
-    # TODO electric baseboard
     
     # Air terminals
     self.getAirTerminalSingleDuctParallelPIUReheats.sort.each {|obj| obj.applySizingValues}
     self.getAirTerminalSingleDuctVAVReheats.sort.each {|obj| obj.applySizingValues}
     self.getAirTerminalSingleDuctUncontrolleds.sort.each {|obj| obj.applySizingValues}
-    # TODO VAV no reheat
-    # TODO CAV reheat
-    # TODO Series PIU
-    # TODO HeatCool Reheat
-    # TODO HeatCool No Reheat
-    # TODO Cooled beam
      
     # AirLoopHVAC components
     self.getAirLoopHVACs.sort.each {|obj| obj.applySizingValues}
     self.getSizingSystems.sort.each {|obj| obj.applySizingValues}
-    # TODO AirloopHVAC Unitary System
-    # TODO AirloopHVAC Unitary Changeover Bypass
     
     # Fans
     self.getFanConstantVolumes.sort.each {|obj| obj.applySizingValues}
     self.getFanVariableVolumes.sort.each {|obj| obj.applySizingValues}
+    self.getFanOnOffs.sort.each {|obj| obj.applySizingValues}
     
     # Heating coils
     self.getCoilHeatingElectrics.sort.each {|obj| obj.applySizingValues}
     self.getCoilHeatingGass.sort.each {|obj| obj.applySizingValues}
     self.getCoilHeatingWaters.sort.each {|obj| obj.applySizingValues}
-    # TODO dx heat pump coils
-    # TODO water to air HP heating coils
-    # TODO multi stage gas heating coils
+    self.getCoilHeatingDXSingleSpeeds.sort.each {|obj| obj.applySizingValues}
     
     # Cooling coils
     self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.applySizingValues}
     self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.applySizingValues}
     self.getCoilCoolingWaters.sort.each {|obj| obj.applySizingValues}
-    # TODO dx heat pump coils
-    # TODO water to air HP cooling coils
-    # TODO multi stage DX cooling coils
     
     # Outdoor air
     self.getControllerOutdoorAirs.sort.each {|obj| obj.applySizingValues}
     self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.applySizingValues}
-    # TODO direct evap cooler
-    # TODO indirect evap cooler
-    # TODO heat exchanger sensbile and latent
     
     # PlantLoop components
     self.getPlantLoops.sort.each {|obj| obj.applySizingValues}
-    # TODO fluid to fluid HX
     
     # Pumps
     self.getPumpConstantSpeeds.sort.each {|obj| obj.applySizingValues}
@@ -241,16 +279,11 @@ class OpenStudio::Model::Model
     
     # Condenser equipment
     self.getCoolingTowerSingleSpeeds.sort.each {|obj| obj.applySizingValues}
-    # TODO evap fluid cooler
-    # TODO two speed cooling tower
-    # TODO var speed cooling tower
     
     # Controls
     self.getControllerWaterCoils.sort.each {|obj| obj.applySizingValues}
     
     # VRF components
-    # TODO VRF system
-    # TODO VRF terminal
     
     # Refrigeration components
     
@@ -258,6 +291,108 @@ class OpenStudio::Model::Model
     
   end
 
+  # Changes all hard-sized HVAC values to Autosized
+  def autosize
+  
+    # TODO Sizing methods for these types of equipment are
+    # currently only stubs that need to be filled in.
+    self.getAirConditionerVariableRefrigerantFlows.sort.each {|obj| obj.autosize}
+    self.getAirLoopHVACUnitaryHeatCoolVAVChangeoverBypasss.sort.each {|obj| obj.autosize}
+    self.getAirLoopHVACUnitarySystems.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctConstantVolumeCooledBeams.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctConstantVolumeFourPipeInductions.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctConstantVolumeReheats.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctSeriesPIUReheats.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctVAVHeatAndCoolNoReheats.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctVAVHeatAndCoolReheats.sort.each {|obj| obj.autosize}
+    self.getBoilerSteams.sort.each {|obj| obj.autosize}
+    self.getCoilCoolingDXMultiSpeeds.sort.each {|obj| obj.autosize}
+    self.getCoilCoolingDXVariableRefrigerantFlows.sort.each {|obj| obj.autosize}
+    self.getCoilCoolingWaterToAirHeatPumpEquationFits.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingWaterToAirHeatPumpEquationFits.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingGasMultiStages.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingDesuperheaters.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingDXVariableRefrigerantFlows.sort.each {|obj| obj.autosize}
+    self.getCoilWaterHeatingDesuperheaters.sort.each {|obj| obj.autosize}
+    self.getCoolingTowerTwoSpeeds.sort.each {|obj| obj.autosize}
+    self.getCoolingTowerVariableSpeeds.sort.each {|obj| obj.autosize}
+    self.getEvaporativeCoolerDirectResearchSpecials.sort.each {|obj| obj.autosize}
+    self.getEvaporativeCoolerIndirectResearchSpecials.sort.each {|obj| obj.autosize}
+    self.getEvaporativeFluidCoolerSingleSpeeds.sort.each {|obj| obj.autosize}
+    self.getHeatExchangerFluidToFluids.sort.each {|obj| obj.autosize}
+    self.getHumidifierSteamElectrics.sort.each {|obj| obj.autosize}
+    self.getZoneHVACBaseboardConvectiveElectrics.sort.each {|obj| obj.autosize}
+    self.getZoneHVACBaseboardConvectiveWaters.sort.each {|obj| obj.autosize}
+    self.getZoneHVACFourPipeFanCoils.sort.each {|obj| obj.autosize}
+    self.getZoneHVACHighTemperatureRadiants.sort.each {|obj| obj.autosize}
+    self.getZoneHVACIdealLoadsAirSystems.sort.each {|obj| obj.autosize}
+    self.getZoneHVACLowTemperatureRadiantElectrics.sort.each {|obj| obj.autosize}
+    self.getZoneHVACLowTempRadiantConstFlows.sort.each {|obj| obj.autosize}
+    self.getZoneHVACLowTempRadiantVarFlows.sort.each {|obj| obj.autosize}
+    self.getZoneHVACPackagedTerminalAirConditioners.sort.each {|obj| obj.autosize}
+    self.getZoneHVACPackagedTerminalHeatPumps.sort.each {|obj| obj.autosize}
+    self.getZoneHVACTerminalUnitVariableRefrigerantFlows.sort.each {|obj| obj.autosize}
+    self.getZoneHVACWaterToAirHeatPumps.sort.each {|obj| obj.autosize}
+    
+    # Zone equipment
+    
+    # Air terminals
+    self.getAirTerminalSingleDuctParallelPIUReheats.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctVAVReheats.sort.each {|obj| obj.autosize}
+    self.getAirTerminalSingleDuctUncontrolleds.sort.each {|obj| obj.autosize}
+     
+    # AirLoopHVAC components
+    self.getAirLoopHVACs.sort.each {|obj| obj.autosize}
+    self.getSizingSystems.sort.each {|obj| obj.autosize}
+    
+    # Fans
+    self.getFanConstantVolumes.sort.each {|obj| obj.autosize}
+    self.getFanVariableVolumes.sort.each {|obj| obj.autosize}
+    self.getFanOnOffs.sort.each {|obj| obj.autosize}
+    
+    # Heating coils
+    self.getCoilHeatingElectrics.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingGass.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingWaters.sort.each {|obj| obj.autosize}
+    self.getCoilHeatingDXSingleSpeeds.sort.each {|obj| obj.autosize}
+    
+    # Cooling coils
+    self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.autosize}
+    self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.autosize}
+    self.getCoilCoolingWaters.sort.each {|obj| obj.autosize}
+    
+    # Outdoor air
+    self.getControllerOutdoorAirs.sort.each {|obj| obj.autosize}
+    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.autosize}
+    
+    # PlantLoop components
+    self.getPlantLoops.sort.each {|obj| obj.autosize}
+    
+    # Pumps
+    self.getPumpConstantSpeeds.sort.each {|obj| obj.autosize}
+    self.getPumpVariableSpeeds.sort.each {|obj| obj.autosize}
+    
+    # Heating equipment
+    self.getBoilerHotWaters.sort.each {|obj| obj.autosize}
+    
+    # Cooling equipment
+    self.getChillerElectricEIRs.sort.each {|obj| obj.autosize}
+    
+    # Condenser equipment
+    self.getCoolingTowerSingleSpeeds.sort.each {|obj| obj.autosize}
+    
+    # Controls
+    self.getControllerWaterCoils.sort.each {|obj| obj.autosize}
+    
+    # VRF components
+    
+    # Refrigeration components
+    
+    return true
+    
+  end
+  
+  
   # A helper method to get component sizes from the model
   # returns the autosized value as an optional double
   def getAutosizedValue(object, value_name, units)

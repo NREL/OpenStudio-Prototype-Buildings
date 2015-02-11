@@ -384,7 +384,7 @@ class OpenStudio::Model::Model
     hvac_op_sch.setName('HVAC Operation Schedule')
     hvac_op_sch.defaultDaySchedule.setName('HVAC Operation Schedule Weekdays')
     hvac_op_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0), 0.0)
-    hvac_op_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,22,0,0), 1.0)
+    hvac_op_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,19,0,0), 1.0)
     hvac_op_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
     hvac_op_sch.setSummerDesignDaySchedule(hvac_op_sch.defaultDaySchedule)
     #saturdays and winter design days
@@ -392,10 +392,10 @@ class OpenStudio::Model::Model
     saturday_rule.setName('HVAC Operation Schedule Saturday Rule')
     saturday_rule.setApplySaturday(true)   
     saturday = saturday_rule.daySchedule  
-    saturday.setName('HVAC Operation Schedule Saturday')
-    saturday.addValue(OpenStudio::Time.new(0,6,0,0), 0.0)
-    saturday.addValue(OpenStudio::Time.new(0,18,0,0), 1.0)
-    saturday.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
+    saturday.setName("HVAC Operation Schedule Saturday")
+    #saturday.addValue(OpenStudio::Time.new(0,6,0,0), 0.0)
+    saturday.addValue(OpenStudio::Time.new(0,19,0,0), 0.0) # TODO Reference and Prototype disagree here
+    #saturday.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
     hvac_op_sch.setWinterDesignDaySchedule(saturday)
     #sundays
     sunday_rule = OpenStudio::Model::ScheduleRule.new(hvac_op_sch)
@@ -487,7 +487,7 @@ class OpenStudio::Model::Model
         fan.setMotorEfficiency(0.90)
       elsif prototype_input['unitary_ac_fan_type'] == 'Cycling'
       
-        fan = OpenStudio::Model::FanOnOff.new(self,self.alwaysOnDiscreteSchedule)
+        fan = OpenStudio::Model::FanOnOff.new(self,hvac_op_sch) # Set fan op sch manually since fwd translator doesn't
         fan.setName("#{zone.name} PSZ-AC Fan")
         fan_static_pressure_in_h2o = 2.5    
         fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
@@ -549,6 +549,28 @@ class OpenStudio::Model::Model
                                                                   htg_part_load_fraction) 
 
         htg_coil.setName("#{zone.name} PSZ-AC HP Htg Coil")                                                          
+        htg_coil.setRatedCOP(3.3) # TODO add this to standards
+        htg_coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-12.2)
+        htg_coil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(1.67)
+        htg_coil.setCrankcaseHeaterCapacity(50.0)
+        htg_coil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(4.4)
+        
+        htg_coil.setDefrostStrategy('ReverseCycle')
+        htg_coil.setDefrostControl('OnDemand')
+
+        def_eir_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(self)
+        def_eir_f_of_temp.setCoefficient1Constant(0.297145)
+        def_eir_f_of_temp.setCoefficient2x(0.0430933)
+        def_eir_f_of_temp.setCoefficient3xPOW2(-0.000748766)
+        def_eir_f_of_temp.setCoefficient4y(0.00597727)
+        def_eir_f_of_temp.setCoefficient5yPOW2(0.000482112)
+        def_eir_f_of_temp.setCoefficient6xTIMESY(-0.000956448)
+        def_eir_f_of_temp.setMinimumValueofx(12.77778)
+        def_eir_f_of_temp.setMaximumValueofx(23.88889)
+        def_eir_f_of_temp.setMinimumValueofy(21.11111)
+        def_eir_f_of_temp.setMaximumValueofy(46.11111)
+        
+        htg_coil.setDefrostEnergyInputRatioFunctionofTemperatureCurve(def_eir_f_of_temp)
         
       end
       
@@ -764,6 +786,7 @@ class OpenStudio::Model::Model
                                                         clg_part_load_ratio)
 
         clg_coil.setName("#{zone.name} PSZ-AC 1spd DX HP Clg Coil")
+        #clg_coil.setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(OpenStudio::OptionalDouble.new(10.0))
         #clg_coil.setRatedSensibleHeatRatio(0.69)
         #clg_coil.setBasinHeaterCapacity(10)
         #clg_coil.setBasinHeaterSetpointTemperature(2.0)

@@ -102,12 +102,44 @@ def strip_model(model)
     infil.remove
   end
 
+  # Remove all internal mass
+  model.getInternalMasss.each do |tm|
+    tm.remove
+  end
+
+  # Remove all internal mass defs
+  model.getInternalMassDefinitions.each do |tmd|
+    tmd.remove
+  end
+  
   # Remove all thermal zones
   model.getThermalZones.each do |zone|
     zone.remove
   end
   
+  # Remove all schedules
+  model.getSchedules.each do |sch|
+    sch.remove
+  end
+  
+  # Remove all schedule type limits
+  model.getScheduleTypeLimitss.each do |typ_lim|
+    typ_lim.remove
+  end
+  
+  # Remove the sizing parameters
+  model.getSizingParameters.remove
+  
+  # Remove the design days
+  model.getDesignDays.each do |dd|
+    dd.remove
+  end
 
+  # Remove the rendering colors
+  model.getRenderingColors.each do |rc|
+    rc.remove
+  end
+  
   return model
 
 
@@ -218,7 +250,7 @@ def find_object(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
+    #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
   elsif matching_objects.size == 1
     desired_object = matching_objects[0]
   else 
@@ -269,10 +301,13 @@ end
 # A helper method to convert from COP to kW/ton
 def cop_to_kw_per_ton(cop)
   
-  kw_per_ton = nil
+  return 3.517/cop
+ 
+end
 
-  kw_per_ton = 3.517/cop
+# A helper method to convert from kW/ton to COP
+def kw_per_ton_to_cop(kw_per_ton)
   
-  return kw_per_ton
+  return 3.517/kw_per_ton
  
 end
