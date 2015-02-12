@@ -51,14 +51,18 @@ begin
     # Get the header row data
     header_data = all_data[header_row]
 
-    # Rename the headers and parse out units
+    # Format the headers and parse out units (in parentheses)
     headers = []
     header_data.each do |header_string|
       break if header_string.nil?
-      # TODO parse out header units
-      #
       header = {}
-      header["name"] = header_string.gsub(/\(.*\)/,'').strip.snake_case  
+      header["name"] = header_string.gsub(/\(.*\)/,'').strip.snake_case
+      header_unit_parens = header_string.scan(/\(.*\)/)[0]
+      if header_unit_parens.nil?
+        header["units"] = nil
+      else
+        header["units"] = header_unit_parens.gsub(/\(|\)/,'').strip
+      end
       headers << header
     end
     puts "--found #{headers.size} columns"
@@ -76,6 +80,9 @@ begin
           all_null = false
         end
         obj[headers[j]["name"]] = val
+        # Skip recording units for unitless values
+        next if headers[j]["units"].nil?
+        obj["#{headers[j]["name"]}_units"] = headers[j]["units"]
       end
       
       # Skip recording empty rows
