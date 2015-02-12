@@ -308,6 +308,8 @@ model_paths.each do |model_path|
       array = ["SecondarySchool",8,16]
     elsif sch_name.include?("Warehouse")
       array = ["Warehouse",7,17]
+    elsif sch_name.include?("SuperMarket")
+      array = ["SuperMarket",6,22]
     else
       array = ["Unknown",8,17]
     end
