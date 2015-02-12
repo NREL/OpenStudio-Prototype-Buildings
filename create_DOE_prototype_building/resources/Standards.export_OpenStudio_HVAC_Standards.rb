@@ -3,7 +3,7 @@
 
 require 'rubygems'
 require 'json'
-require 'win32ole'
+require 'rubyXL'
 
 class String
 
@@ -27,46 +27,29 @@ class Hash
   
 end
 
-def getNumRoworksheet(worksheet, column, begin_row)
-  # find number of roworksheet
-  max_row = 12000
-  end_row = begin_row
-  data = worksheet.range("#{column}#{begin_row}:#{column}#{max_row}").value
-  data.each do |row|
-    if row[0].nil?
-      end_row -= 1
-      break
-    end
-    end_row += 1
-  end
-  return end_row
-end
-
 begin
 
   # Path to the xlsx file
   xlsx_path = "#{Dir.pwd}/OpenStudio_HVAC_Standards.xlsx"
-  # Enable Excel
-  xl = WIN32OLE::new('Excel.Application')
+
   # Open workbook
-  workbook = xl.workbooks.open(xlsx_path)
+  workbook = RubyXL::Parser.parse(xlsx_path)
 
   standards_data = {}
   workbook.worksheets.each do |worksheet|
-    
-    sheet_name = worksheet.name.snake_case
+    #puts worksheet.methods.sort
+    sheet_name = worksheet.sheet_name.snake_case
     puts "Exporting #{sheet_name}"
     
     # All spreadsheets must have headers in row 3
     # and data from roworksheet 4 onward.
-    header_row = 3
-    begin_column = "A"
-    end_column = "ZZ"
-    begin_data_row = 4
-    end_data_row = getNumRoworksheet(worksheet, begin_column, begin_data_row)
+    header_row = 2 # Base 0
+
+    # Get all data
+    all_data = worksheet.extract_data
     
-    # Get the headers
-    header_data = worksheet.range("#{begin_column}#{header_row}:#{end_column}#{header_row}").value[0]
+    # Get the header row data
+    header_data = all_data[header_row]
 
     # Rename the headers and parse out units
     headers = []
@@ -80,23 +63,30 @@ begin
     end
     puts "--found #{headers.size} columns"
     
-    # Get the data
-    data = worksheet.range("#{begin_column}#{begin_data_row}:#{end_column}#{end_data_row}").value
-    puts "--found #{data.size} rows"
-
     # Loop through all rows and export
     # data for the row to a hash.
     objs = []
-    data.each do |row|
+    for i in (header_row + 1)..(all_data.size - 1)
+      row = all_data[i]     
       obj = {}
-      for i in 0..headers.size - 1
-        val = row[i]
-        # Don't store nil values in the JSON
-        # next if val.nil?
-        obj[headers[i]["name"]] = val
+      all_null = true
+      for j in 0..headers.size - 1
+        val = row[j]
+        if !val.nil?
+          all_null = false
+        end
+        obj[headers[j]["name"]] = val
       end
+      
+      # Skip recording empty rows
+      next if all_null == true
+      
       objs << obj
+
     end
+    
+    # Report how many objects were found
+    puts "--found #{objs.size} rows" 
     
     # Save this hash 
     standards_data[sheet_name] = objs
@@ -114,9 +104,5 @@ begin
   
 ensure
 
-  # Close workbook
-  workbook.Close(1)
-  # Quit Excel
-  xl.Quit
 
 end
