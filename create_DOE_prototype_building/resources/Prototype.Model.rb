@@ -92,7 +92,7 @@ class OpenStudio::Model::Model
       #apply the new space type to the building      
       stub_space_type.spaces.each do |space|
         space.setSpaceType(new_space_type)
-        #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Setting #{space.name} to #{new_space_type.name.get}")
+        #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Setting #{space.name} to #{new_space_type.name.get}")
       end
         
       # Remove the stub space type
@@ -424,6 +424,7 @@ class OpenStudio::Model::Model
     # values for each type of model object.
     require_relative 'Prototype.FanConstantVolume'
     require_relative 'Prototype.FanVariableVolume'
+    require_relative 'Prototype.FanOnOff'
     require_relative 'Prototype.HeatExchangerAirToAirSensibleAndLatent'
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying prototype HVAC assumptions.')
@@ -433,6 +434,7 @@ class OpenStudio::Model::Model
     # Fans
     self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
     # Heat Exchangers
     self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
@@ -512,41 +514,86 @@ class OpenStudio::Model::Model
         if File.exist?(epw_path.get.to_s)
           epw_path = epw_path.get
         else
-          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has not been assigned a weather file.')
-          return false
+          # If this is an always-run Measure, need to check a different path
+          alt_weath_path = File.expand_path(File.join(File.dirname(__FILE__), "../../../resources"))
+          alt_epw_path = File.expand_path(File.join(alt_weath_path, epw_path.get.to_s))
+          if File.exist?(alt_epw_path)
+            epw_path = OpenStudio::Path.new(alt_epw_path)
+          else
+            OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Model has been assigned a weather file, but the file is not in the specified location of '#{epw_path.get}'.")
+            return false
+          end
         end
       else
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has a weather file assigned, but the file is not in the specified location.')
+        OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Model has a weather file assigned, but the weather file path has been deleted.")
         return false
       end
     else
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has not been assigned a weather file.')
+      OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "Model has not been assigned a weather file.")
       return false
     end
     
-    # Find EnergyPlus
-    require 'openstudio/energyplus/find_energyplus'
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
-    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-    ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-    idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
-    output_path = OpenStudio::Path.new("#{run_dir}/")
+    # If running on a regular desktop, use RunManager.
+    # If running on OpenStudio Server, use WorkFlowMananger
+    # to avoid slowdown from the sizing run.   
+    use_runmanager = true
     
-    # Make a run manager and queue up the sizing run
-    run_manager_db_path = OpenStudio::Path.new("#{run_dir}/run.db")
-    run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
-    job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
-                                                                 idd_path,
-                                                                 idf_path,
-                                                                 epw_path,
-                                                                 output_path)
-    
-    run_manager.enqueue(job, true)
+    begin
+      require 'openstudio-workflow'
+      use_runmanager = false
+    rescue LoadError
+      use_runmanager = true
+    end
 
-    # Start the sizing run and wait for it to finish.
-    while run_manager.workPending
-      sleep 1
-      OpenStudio::Application::instance.processEvents
+    sql_path = nil
+    if use_runmanager == true
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Running sizing run with RunManager.")
+
+      # Find EnergyPlus
+      require 'openstudio/energyplus/find_energyplus'
+      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
+      ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+      ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
+      idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+      output_path = OpenStudio::Path.new("#{run_dir}/")
+      
+      # Make a run manager and queue up the sizing run
+      run_manager_db_path = OpenStudio::Path.new("#{run_dir}/run.db")
+      run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
+      job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
+                                                                   idd_path,
+                                                                   idf_path,
+                                                                   epw_path,
+                                                                   output_path)
+      
+      run_manager.enqueue(job, true)
+
+      # Start the sizing run and wait for it to finish.
+      while run_manager.workPending
+        sleep 1
+        OpenStudio::Application::instance.processEvents
+      end
+        
+      sql_path = OpenStudio::Path.new("#{run_dir}/Energyplus/eplusout.sql")
+      
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+      
+    else # Use the openstudio-workflow gem
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Running sizing run with openstudio-workflow gem.")
+      
+      # Copy the weather file to this directory
+      FileUtils.copy(epw_path.to_s, run_dir)
+
+      # Run the simulation
+      sim = OpenStudio::Workflow.run_energyplus('Local', run_dir)
+      final_state = sim.run
+
+      if final_state == :finished
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Finished sizing run in #{(Time.new - start_time).round}sec.")
+      end
+    
+      sql_path = OpenStudio::Path.new("#{run_dir}/run/eplusout.sql")
+    
     end
     
     # Load the sql file created by the sizing run
@@ -697,6 +744,96 @@ class OpenStudio::Model::Model
     end # Next rule  
     
     return sch_ruleset
+    
+  end
+  
+  def add_curve(curve_name, hvac_standards)
+    
+    #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.addCurve", "Adding curve '#{curve_name}' to the model.")
+    
+    success = false
+    
+    curve_biquadratics = hvac_standards["curve_biquadratics"]
+    curve_quadratics = hvac_standards["curve_quadratics"]
+    curve_bicubics = hvac_standards["curve_bicubics"]
+    curve_cubics = hvac_standards["curve_cubics"]
+    
+    # Make biquadratic curves
+    curve_data = find_object(curve_biquadratics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveBiquadratic.new(self)
+      curve.setName(curve_data["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setCoefficient4y(curve_data["coeff_4"])
+      curve.setCoefficient5yPOW2(curve_data["coeff_5"])
+      curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
+      curve.setMinimumValueofx(curve_data["min_x"])
+      curve.setMaximumValueofx(curve_data["max_x"])
+      curve.setMinimumValueofy(curve_data["min_y"])
+      curve.setMaximumValueofy(curve_data["max_y"])
+      success = true
+      return curve
+    end
+    
+    # Make quadratic curves
+    curve_data = find_object(curve_quadratics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveQuadratic.new(self)
+      curve.setName(curve_data["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setMinimumValueofx(curve_data["min_x"])
+      curve.setMaximumValueofx(curve_data["max_x"])
+      success = true
+      return curve
+    end
+    
+    # Make cubic curves
+    curve_data = find_object(curve_cubics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveCubic.new(self)
+      curve.setName(curve_data["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setCoefficient4xPOW3(curve_data["coeff_4"])
+      curve.setMinimumValueofx(curve_data["min_x"])
+      curve.setMaximumValueofx(curve_data["max_x"])
+      success = true
+      return curve
+    end
+  
+    # Make bicubic curves
+    curve_data = find_object(curve_bicubics, {"name"=>curve_name})
+    if curve_data
+      curve = OpenStudio::Model::CurveBicubic.new(self)
+      curve.setName(eirft_properties["name"])
+      curve.setCoefficient1Constant(curve_data["coeff_1"])
+      curve.setCoefficient2x(curve_data["coeff_2"])
+      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
+      curve.setCoefficient4y(curve_data["coeff_4"])
+      curve.setCoefficient5yPOW2(curve_data["coeff_5"])
+      curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
+      curve.setCoefficient7xPOW3 (curve_data["coeff_7"])
+      curve.setCoefficient8yPOW3 (curve_data["coeff_8"])
+      curve.setCoefficient9xPOW2TIMESY(curve_data["coeff_9"])
+      curve.setCoefficient10xTIMESYPOW2 (curve_data["coeff_10"])
+      curve.setMinimumValueofx(eirft_properties["min_x"])
+      curve.setMaximumValueofx(eirft_properties["max_x"])
+      curve.setMinimumValueofy(eirft_properties["min_y"])
+      curve.setMaximumValueofy(eirft_properties["max_y"])
+      success = true
+      return curve
+    end
+  
+    # Return false if the curve was not created
+    if success == false
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.addCurve", "Could not find a curve called '#{curve_name}' in the hvac_standards.")
+      return nil
+    end
     
   end
   

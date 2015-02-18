@@ -8,10 +8,11 @@ class OpenStudio::Model::FanVariableVolume
     motors = hvac_standards['motors']
     
     # Get the max flow rate from the fan.
-    # This expects that the fan is hard sized.
-    maximum_flow_rate_m3_per_s = self.maximumFlowRate
-    if maximum_flow_rate_m3_per_s.is_initialized
-      maximum_flow_rate_m3_per_s = maximum_flow_rate_m3_per_s.get
+    maximum_flow_rate_m3_per_s = nil
+    if self.maximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.maximumFlowRate.get
+    elsif self.autosizedMaximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.FanVariableVolume', "For #{self.name} max flow rate is not hard sized, cannot apply efficiency standard.")
       return false
@@ -25,7 +26,7 @@ class OpenStudio::Model::FanVariableVolume
     pressure_rise_in_h2o = OpenStudio.convert(pressure_rise_pa, 'Pa','inH_{2}O').get
     
     # Assume that the fan efficiency is 65% based on
-    #TODO need reference
+    # TODO need reference
     fan_eff = 0.65
     
     # Calculate the Brake Horsepower

@@ -41,17 +41,36 @@ class OpenStudio::Model::ChillerElectricEIR
       search_criteria['condenser_type'] = condenser_type
     end
     unless compressor_type.nil?
-      search_criteria['compressor_type'] = compressor_type
-    end    
+      search_criteria["compressor_type"] = compressor_type
+    end
     
     # Get the chiller capacity
-    return false if self.referenceCapacity.empty?
-    capacity_w = self.referenceCapacity.get
-    capacity_tons = OpenStudio.convert(capacity_w, 'W', 'ton').get
+    capacity_w = nil
+    if self.referenceCapacity.is_initialized
+      capacity_w = self.referenceCapacity.get
+    elsif self.autosizedReferenceCapacity.is_initialized
+      capacity_w = self.autosizedReferenceCapacity.get
+    else
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name} capacity is not available, cannot apply efficiency standard.")
+      successfully_set_all_properties = false
+      return successfully_set_all_properties
+    end
+ 
+    # Convert capacity to tons
+    capacity_tons = OpenStudio.convert(capacity_w, "W", "ton").get
 
+    # Get the chiller minimum efficiency
+    kw_per_ton = nil
+    cop = nil
     chlr_props = find_object(chillers, search_criteria, capacity_tons)
-    return false if chlr_props.nil?
-
+    if chlr_props
+      kw_per_ton = chlr_props["minimum_full_load_efficiency"]
+      cop = kw_per_ton_to_cop(kw_per_ton)
+    else
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name}, cannot find minimum full load eff, will not be set.")
+      successfully_set_all_properties = false
+    end
+    
     # Make the CAPFT curve
     capft_properties = find_object(curve_biquadratics, {'name'=>chlr_props['capft']})
     return false if capft_properties.nil?
@@ -127,12 +146,17 @@ class OpenStudio::Model::ChillerElectricEIR
     self.setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT)
     self.setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr)
     
+    # Set the performance curves if they exist
+    self.setCoolingCapacityFunctionOfTemperature(ccFofT) if ccFofT
+    self.setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT) if eirToCorfOfT
+    self.setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr) if eirToCorfOfPlr
+    
     # Append the name with size and kw/ton
     kw_per_ton = cop_to_kw_per_ton(cop)
     self.setName("#{name} #{capacity_tons.round}tons #{kw_per_ton.round(1)}kW/ton")
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.ChillerElectricEIR', "For #{template}: #{self.name}: #{cooling_type} #{condenser_type} #{compressor_type} Capacity = #{capacity_tons.round}tons; COP = #{cop} (#{kw_per_ton.round(1)}kW/ton)")
     
-    return true
+    return successfully_set_all_properties
 
   end
   
