@@ -27,6 +27,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs = OpenStudio::StringVector.new
     building_type_chs << 'SecondarySchool'
     building_type_chs << 'SmallOffice'
+    building_type_chs << 'MediumOffice'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -164,6 +165,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_office.osm'
       end
+      space_building_type_search = 'Office'
+    when 'MediumOffice'
+      require_relative 'resources/Prototype.medium_office'
+      geometry_file = 'Geometry.medium_office.osm'
       space_building_type_search = 'Office'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
