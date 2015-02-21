@@ -54,20 +54,17 @@ class OpenStudio::Model::Model
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying space types (loads)')
 
-    path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
-    path_to_master_schedules_library = "#{standards_data_dir}/Master_Schedules.osm"
+    path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
 
-    require_relative 'Standards.SpaceTypeGenerator'
+    # Load the openstudio_standards.json file
+    self.load_openstudio_standards_json(path_to_standards_json)
 
-    #create generators
-    space_type_generator = SpaceTypeGenerator.new(path_to_standards_json, path_to_master_schedules_library)
-
-    #loop through all the space types currently in the self
-    #which are placeholders, and replace with actual space types
-    #that have loads
+    # Loop through all the space types currently in the model,
+    # which are placeholders, and generate actual space types for them.
     self.getSpaceTypes.each do |stub_space_type|
 
-      #get the building type
+      # Get the standard building type
+      # from the stub
       stds_building_type = nil
       if stub_space_type.standardsBuildingType.is_initialized
         stds_building_type = stub_space_type.standardsBuildingType.get
@@ -76,7 +73,8 @@ class OpenStudio::Model::Model
         return false
       end
       
-      #get the space type
+      # Get the standards space type
+      # from the stub
       stds_spc_type = nil
       if stub_space_type.standardsSpaceType.is_initialized
         stds_spc_type = stub_space_type.standardsSpaceType.get
@@ -85,11 +83,9 @@ class OpenStudio::Model::Model
         return false
       end
 
-      # climate_const = space_type_generator.find_climate_zone_set(building_vintage, climate_zone, stds_building_type, stds_spc_type)
+      new_space_type = self.add_space_type(building_vintage, 'ClimateZone 1-8', stds_building_type, stds_spc_type)
 
-      new_space_type = space_type_generator.generate_space_type(building_vintage, 'ClimateZone 1-8', stds_building_type, stds_spc_type, self)[0]
-
-      #apply the new space type to the building      
+      # Apply the new space type to the building      
       stub_space_type.spaces.each do |space|
         space.setSpaceType(new_space_type)
         #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Setting #{space.name} to #{new_space_type.name.get}")
@@ -109,29 +105,19 @@ class OpenStudio::Model::Model
   def add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
-    
-    path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
-    
-    #load the data from the JSON file into a ruby hash
-    standards = {}
-    temp = File.read(path_to_standards_json)
-    standards = JSON.parse(temp)
-    space_types = standards['space_types']
-    construction_sets = standards['construction_sets']
-    
-    require_relative 'Standards.ConstructionSetGenerator'
-    construction_set_generator = ConstructionSetGenerator.new(path_to_standards_json)
- 
-    # get climate zone set from specific climate zone for construction set
-    climate_zone_set = construction_set_generator.find_climate_zone_set(building_vintage, climate_zone, building_type, '')
+
+    path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
+
+    # Load the openstudio_standards.json file
+    self.load_openstudio_standards_json(path_to_standards_json)
 
     # Make the default contruction set for the building
-    bldg_def_const_set = construction_set_generator.generate_construction_set(building_vintage, climate_zone_set, building_type, '', self)
-    if bldg_def_const_set[0].nil?
+    bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil)
+    if bldg_def_const_set.is_initialized
+      self.getBuilding.setDefaultConstructionSet(bldg_def_const_set.get)
+    else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Could not create default construction set for the building.')
       return false
-    else
-      self.getBuilding.setDefaultConstructionSet(bldg_def_const_set[0])
     end
     
     # Make a construction set for each space type, if one is specified
@@ -159,14 +145,11 @@ class OpenStudio::Model::Model
         stds_building_type = ''
       end
 
-      climate_zone_set = construction_set_generator.find_climate_zone_set(building_vintage, climate_zone, stds_building_type, stds_spc_type)      
-      #puts "Climate Zone Set for #{building_vintage}-#{climate_zone}-#{stds_building_type}-#{stds_spc_type} = '#{climate_zone_set}'"
-      
       # Attempt to make a construction set for this space type
       # and assign it if it can be created.
-      spc_type_const_set = construction_set_generator.generate_construction_set(building_vintage, climate_zone_set, stds_building_type, stds_spc_type, self)
-      if !spc_type_const_set[0].nil?
-        space_type.setDefaultConstructionSet(spc_type_const_set[0])
+      spc_type_const_set = self.add_construction_set(building_vintage, climate_zone, stds_building_type, stds_spc_type)
+      if spc_type_const_set.is_initialized
+        space_type.setDefaultConstructionSet(spc_type_const_set.get)
       end
     
     end
@@ -638,115 +621,7 @@ class OpenStudio::Model::Model
     end
     
   end  
-  
-  def add_schedule(schedules, schedule_name)
 
-    require 'date'
-
-    # First, find all the schedules that match the name
-    rules = find_objects(schedules, {'name'=>schedule_name})
-    
-    # Make a schedule ruleset
-    sch_ruleset = OpenStudio::Model::ScheduleRuleset.new(self)
-    sch_ruleset.setName("#{schedule_name}")  
-
-    # Loop through the rules, making one for each row in the spreadsheet
-    rules.each do |rule|
-      day_types = rule['day_types']
-      start_date = DateTime.parse(rule['start_date'])
-      end_date = DateTime.parse(rule['end_date'])
-      
-      #Day Type choices: Wkdy, Wknd, Mon, Tue, Wed, Thu, Fri, Sat, Sun, WntrDsn, SmrDsn, Hol
-      
-      # Default
-      if day_types.include?('Default')
-        day_sch = sch_ruleset.defaultDaySchedule
-        day_sch.setName("#{schedule_name} Default")
-        for i in 1..24
-          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
-          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
-        end  
-      end
-      
-      # Winter Design Day
-      if day_types.include?('WntrDsn')
-        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
-        sch_ruleset.setWinterDesignDaySchedule(day_sch)
-        day_sch = sch_ruleset.winterDesignDaySchedule
-        day_sch.setName("#{schedule_name} Winter Design Day")
-        for i in 1..24
-          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
-          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
-        end  
-      end    
-      
-      # Summer Design Day
-      if day_types.include?('SmrDsn')
-        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
-        sch_ruleset.setSummerDesignDaySchedule(day_sch)
-        day_sch = sch_ruleset.summerDesignDaySchedule
-        day_sch.setName("#{schedule_name} Summer Design Day")
-        for i in 1..24
-          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
-          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
-        end  
-      end
-      
-      # Other days (weekdays, weekends, etc)
-      if day_types.include?('Wknd') ||
-        day_types.include?('Wkdy') ||
-        day_types.include?('Sat') ||
-        day_types.include?('Sun') ||
-        day_types.include?('Mon') ||
-        day_types.include?('Tue') ||
-        day_types.include?('Wed') ||
-        day_types.include?('Thu') ||
-        day_types.include?('Fri')
-      
-        # Make the Rule
-        sch_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
-        day_sch = sch_rule.daySchedule
-        day_sch.setName("#{schedule_name} Summer Design Day")
-        for i in 1..24
-          next if rule["hr_#{i}"] == rule["hr_#{i+1}"]
-          day_sch.addValue(OpenStudio::Time.new(0, i, 0, 0), rule["hr_#{i}"])     
-        end 
-        
-        # Set the dates when the rule applies
-        sch_rule.setStartDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_date.month.to_i), start_date.day.to_i))
-        sch_rule.setEndDate(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_date.month.to_i), end_date.day.to_i))
-        
-        # Set the days when the rule applies
-        # Weekends
-        if day_types.include?('Wknd')
-          sch_rule.setApplySaturday(true)
-          sch_rule.setApplySunday(true)
-        end
-        # Weekdays
-        if day_types.include?('Wkdy')
-          sch_rule.setApplyMonday(true)
-          sch_rule.setApplyTuesday(true)
-          sch_rule.setApplyWednesday(true)
-          sch_rule.setApplyThursday(true)
-          sch_rule.setApplyFriday(true)
-        end
-        # Individual Days
-        sch_rule.setApplyMonday(true) if day_types.include?('Mon')
-        sch_rule.setApplyTuesday(true) if day_types.include?('Tue')
-        sch_rule.setApplyWednesday(true) if day_types.include?('Wed')
-        sch_rule.setApplyThursday(true) if day_types.include?('Thu')
-        sch_rule.setApplyFriday(true) if day_types.include?('Fri')
-        sch_rule.setApplySaturday(true) if day_types.include?('Sat')
-        sch_rule.setApplySunday(true) if day_types.include?('Sun')
-
-      end
-      
-    end # Next rule  
-    
-    return sch_ruleset
-    
-  end
-  
   def add_curve(curve_name, hvac_standards)
     
     #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.addCurve", "Adding curve '#{curve_name}' to the model.")
