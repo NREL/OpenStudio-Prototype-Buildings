@@ -152,6 +152,11 @@ class OpenStudio::Model::Model
     }
     
     chiller_properties = find_object(chillers, search_criteria, prototype_input['chiller_capacity_guess'])
+    if !chiller_properties
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Could not find chiller with prototype inputs of:  #{prototype_input}")
+      return chilled_water_loop
+    end
+    
     
     # Make the correct type of chiller based these properties
     chiller = add_chiller(hvac_standards, chiller_properties)
@@ -893,78 +898,45 @@ class OpenStudio::Model::Model
   end
 
   def add_chiller(hvac_standards, chlr_props)
-    
-    curve_biquadratics = hvac_standards['curve_biquadratics']
-    curve_quadratics = hvac_standards['curve_quadratics']
-    curve_bicubics = hvac_standards['curve_bicubics']
+
+    all_curves_found = true
   
     # Make the CAPFT curve
-    capft_properties = find_object(curve_biquadratics, {'name'=>chlr_props['capft']})
-    ccFofT = OpenStudio::Model::CurveBiquadratic.new(self)
-    ccFofT.setName(capft_properties['name'])
-    ccFofT.setCoefficient1Constant(capft_properties['coeff_1'])
-    ccFofT.setCoefficient2x(capft_properties['coeff_2'])
-    ccFofT.setCoefficient3xPOW2(capft_properties['coeff_3'])
-    ccFofT.setCoefficient4y(capft_properties['coeff_4'])
-    ccFofT.setCoefficient5yPOW2(capft_properties['coeff_5'])
-    ccFofT.setCoefficient6xTIMESY(capft_properties['coeff_6'])
-    ccFofT.setMinimumValueofx(capft_properties['min_x'])
-    ccFofT.setMaximumValueofx(capft_properties['max_x'])
-    ccFofT.setMinimumValueofy(capft_properties['min_y'])
-    ccFofT.setMaximumValueofy(capft_properties['max_y'])
-
+    cool_cap_ft = self.add_curve(chlr_props['capft'], hvac_standards)
+    if cool_cap_ft.nil?
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "Cannot find curve #{chlr_props['capft']} curve, will not be set.")
+      all_curves_found = false
+    end    
+    
     # Make the EIRFT curve
-    eirft_properties = find_object(curve_biquadratics, {'name'=>chlr_props['eirft']})
-    eirToCorfOfT = OpenStudio::Model::CurveBiquadratic.new(self)
-    eirToCorfOfT.setName(eirft_properties['name'])
-    eirToCorfOfT.setCoefficient1Constant(eirft_properties['coeff_1'])
-    eirToCorfOfT.setCoefficient2x(eirft_properties['coeff_2'])
-    eirToCorfOfT.setCoefficient3xPOW2(eirft_properties['coeff_3'])
-    eirToCorfOfT.setCoefficient4y(eirft_properties['coeff_4'])
-    eirToCorfOfT.setCoefficient5yPOW2(eirft_properties['coeff_5'])
-    eirToCorfOfT.setCoefficient6xTIMESY(eirft_properties['coeff_6'])
-    eirToCorfOfT.setMinimumValueofx(eirft_properties['min_x'])
-    eirToCorfOfT.setMaximumValueofx(eirft_properties['max_x'])
-    eirToCorfOfT.setMinimumValueofy(eirft_properties['min_y'])
-    eirToCorfOfT.setMaximumValueofy(eirft_properties['max_y'])
-
+    cool_eir_ft = self.add_curve(chlr_props['eirft'], hvac_standards)
+    if cool_eir_ft.nil?
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "Cannot find curve #{chlr_props['eirft']} curve, will not be set.")
+      all_curves_found = false
+    end    
+    
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
-    eirToCorfOfPlr = nil
-    eirfplr_properties = find_object(curve_quadratics, {'name'=>chlr_props['eirfplr']})
-    if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveQuadratic.new(self)
-      eirToCorfOfPlr.setName(eirfplr_properties['name'])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
-      eirToCorfOfPlr.setMinimumValueofx(eirfplr_properties['min_x'])
-      eirToCorfOfPlr.setMaximumValueofx(eirfplr_properties['max_x'])
-    end
-    
-    eirfplr_properties = find_object(curve_bicubics, {'name'=>chlr_props['eirfplr']})
-    if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveBicubic.new(self)
-      eirToCorfOfPlr.setName(eirft_properties['name'])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
-      eirToCorfOfPlr.setCoefficient4y(eirfplr_properties['coeff_4'])
-      eirToCorfOfPlr.setCoefficient5yPOW2(eirfplr_properties['coeff_5'])
-      eirToCorfOfPlr.setCoefficient6xTIMESY(eirfplr_properties['coeff_6'])
-      eirToCorfOfPlr.setCoefficient7xPOW3 (eirfplr_properties['coeff_7'])
-      eirToCorfOfPlr.setCoefficient8yPOW3 (eirfplr_properties['coeff_8'])
-      eirToCorfOfPlr.setCoefficient9xPOW2TIMESY(eirfplr_properties['coeff_9'])
-      eirToCorfOfPlr.setCoefficient10xTIMESYPOW2 (eirfplr_properties['coeff_10'])
-      eirToCorfOfPlr.setMinimumValueofx(eirft_properties['min_x'])
-      eirToCorfOfPlr.setMaximumValueofx(eirft_properties['max_x'])
-      eirToCorfOfPlr.setMinimumValueofy(eirft_properties['min_y'])
-      eirToCorfOfPlr.setMaximumValueofy(eirft_properties['max_y'])
+    cool_plf_fplr = self.add_curve(chlr_props['eirfplr'], hvac_standards)
+    if cool_plf_fplr.nil?
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "Cannot find curve #{chlr_props['eirfplr']} curve, will not be set.")
+      all_curves_found = false
     end  
 
-    chiller = OpenStudio::Model::ChillerElectricEIR.new(self,ccFofT,eirToCorfOfT,eirToCorfOfPlr)
+    # Create the chiller
+    chiller = nil
+    if all_curves_found == true
+      chiller = OpenStudio::Model::ChillerElectricEIR.new(self,cool_cap_ft,cool_eir_ft,cool_plf_fplr)
+    else
+      chiller = OpenStudio::Model::ChillerElectricEIR.new(self)
+    end
+    
     chiller.setName("#{chlr_props['template']} #{chlr_props['cooling_type']} #{chlr_props['condenser_type']} #{chlr_props['compressor_type']} Chiller")
-    chiller.setReferenceCOP(chlr_props['minimum_cop'])
+
+    # Set the efficiency value
+    kw_per_ton = chlr_props['minimum_full_load_efficiency']
+    cop = kw_per_ton_to_cop(kw_per_ton)
+    chiller.setReferenceCOP(cop)
     
     return chiller
 
@@ -1101,7 +1073,7 @@ class OpenStudio::Model::Model
     # Water use equipment
     #make the initial copy of the water fixture
     water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
-    schedule = self.add_schedule(schedules, prototype_input['service_water_flowrate_schedule'])
+    schedule = self.add_schedule(prototype_input['service_water_flowrate_schedule'])
     water_fixture.setFlowRateFractionSchedule(schedule)
     swh_connection.addWaterUseEquipment(water_fixture)
     
