@@ -106,6 +106,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     require_relative 'resources/Weather.Model'
     # HVAC standards
     require_relative 'resources/Standards.Model'
+    require_relative 'resources/Standards.Model.2' # TODO merge these two Standards.Model files after changes calm down
 
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
