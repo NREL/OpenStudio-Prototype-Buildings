@@ -164,7 +164,9 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     end
 
     # Set the efficiency values
-    self.setRatedCOP(OpenStudio::OptionalDouble.new(cop))
+    unless cop.nil?
+      self.setRatedCOP(OpenStudio::OptionalDouble.new(cop))
+    end
     
     return true
 
