@@ -212,13 +212,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = '4_after_proto_hvac_assumptions'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
-    # Perform a second sizing run. The adjusted fan pressure rises
-    # impact the sizes of the heating coils.
-    if model.runSizingRun("#{osm_directory}/SizingRun2") == false
-      log_msgs
-      return false
-    end
 
     # Get the equipment sizes from the sizing run
     # and hard-assign them back to the model
