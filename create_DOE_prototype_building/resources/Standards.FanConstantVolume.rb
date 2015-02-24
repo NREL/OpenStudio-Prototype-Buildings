@@ -52,7 +52,7 @@ class OpenStudio::Model::FanConstantVolume
     self.setFanEfficiency(total_fan_eff)
     self.setMotorEfficiency(motor_eff)
     
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.FanConstantVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round}HP; motor eff = #{motor_eff*100}%; total fan eff = #{total_fan_eff*100}%")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.FanConstantVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
     
     return true
     

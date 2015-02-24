@@ -87,9 +87,7 @@ class OpenStudio::Model::Model
     sizing_plant.setLoopType('Cooling')
     sizing_plant.setDesignLoopExitTemperature(chw_temp_c)
     sizing_plant.setLoopDesignTemperatureDifference(chw_delta_t_k)         
-    
-    puts prototype_input['chw_pumping_type']
-    
+
     # Chilled water pumps
     if prototype_input['chw_pumping_type'] == 'const_pri'
       # Primary chilled water pump
@@ -146,6 +144,7 @@ class OpenStudio::Model::Model
     
     # Find the initial Chiller properties based on initial inputs
     search_criteria = {
+      'template' => prototype_input['template'],
       'cooling_type' => prototype_input['chiller_cooling_type'],
       'condenser_type' => prototype_input['chiller_condenser_type'],
       'compressor_type' => prototype_input['chiller_compressor_type'],
@@ -904,14 +903,14 @@ class OpenStudio::Model::Model
     # Make the CAPFT curve
     cool_cap_ft = self.add_curve(chlr_props['capft'], hvac_standards)
     if cool_cap_ft.nil?
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "Cannot find curve #{chlr_props['capft']} curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Cannot find cool_cap_ft curve '#{chlr_props['capft']}', will not be set.")
       all_curves_found = false
     end    
     
     # Make the EIRFT curve
     cool_eir_ft = self.add_curve(chlr_props['eirft'], hvac_standards)
     if cool_eir_ft.nil?
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "Cannot find curve #{chlr_props['eirft']} curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Cannot find cool_eir_ft curve '#{chlr_props['eirft']}', will not be set.")
       all_curves_found = false
     end    
     
@@ -919,7 +918,7 @@ class OpenStudio::Model::Model
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
     cool_plf_fplr = self.add_curve(chlr_props['eirfplr'], hvac_standards)
     if cool_plf_fplr.nil?
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "Cannot find curve #{chlr_props['eirfplr']} curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Cannot find cool_plf_fplr curve '#{chlr_props['eirfplr']}', will not be set.")
       all_curves_found = false
     end  
 

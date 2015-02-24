@@ -706,7 +706,7 @@ class OpenStudio::Model::Model
   
     # Return false if the curve was not created
     if success == false
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.addCurve", "Could not find a curve called '#{curve_name}' in the hvac_standards.")
+      #OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.addCurve", "Could not find a curve called '#{curve_name}' in the hvac_standards.")
       return nil
     end
     
