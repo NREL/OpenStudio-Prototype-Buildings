@@ -357,8 +357,12 @@ class OpenStudio::Model::Model
       occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
       occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
       occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
-      occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-      occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+      if building_type == "SmallHotel"
+        occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+      else
+        occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+        occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+      end
       occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
       occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
       occ_sens_ext_lts.setControlOption('AstronomicalClock')
@@ -378,8 +382,12 @@ class OpenStudio::Model::Model
         nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
         nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
         nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
-        nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-        nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+        if building_type == "SmallHotel"
+          nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+        else
+          nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+          nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+        end
       elsif building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
         nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
       end

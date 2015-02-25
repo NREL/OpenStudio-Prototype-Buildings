@@ -27,7 +27,7 @@ class OpenStudio::Model::FanConstantVolume
     
     # If the fan lives inside of a zone hvac equipment
     if self.containingZoneHVACComponent.is_initialized
-      zone_hvac = self.ZoneHVACComponent.get
+      zone_hvac = self.containingZoneHVACComponent.get
       if zone_hvac.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
         pressure_rise_in_h2o = 1.33
       elsif zone_hvac.to_ZoneHVACFourPipeFanCoil.is_initialized
