@@ -32,6 +32,9 @@ class OpenStudio::Model::FanConstantVolume
     # Calculate the Brake Horsepower
     brake_hp = (pressure_rise_in_h2o * maximum_flow_rate_cfm)/(fan_eff * 6356) 
     allowed_hp = brake_hp * 1.1 # Per PNNL document #TODO add reference
+    if allowed_hp > 0.1
+      allowed_hp = allowed_hp.round(2)
+    end
     
     # Find the motor that meets these size criteria
     search_criteria = {
