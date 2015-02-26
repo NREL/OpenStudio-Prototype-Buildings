@@ -154,7 +154,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     when 'SecondarySchool'
       require_relative 'resources/Prototype.secondary_school'
       geometry_file = 'Geometry.secondary_school.osm'
-      has_swh = false
     when 'SmallOffice'
       require_relative 'resources/Prototype.small_office'
       # Small Office geometry is different for pre-1980
