@@ -325,28 +325,32 @@ class OpenStudio::Model::Model
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
     oa_intake.addToNode(air_loop.supplyInletNode)
 
-    #heat exchanger on oa system
-    heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-    heat_exchanger.setName("#{thermal_zones.size} Zone VAV HX")
-    heat_exchanger.setHeatExchangerType('Rotary')
-    heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.7)
-    heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.6)
-    heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.7)
-    heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-    heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.75)
-    heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.6)
-    heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.75)
-    heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-    heat_exchanger.setNominalElectricPower(6240.0734)
-    heat_exchanger.setEconomizerLockout(true)
-    heat_exchanger.setSupplyAirOutletTemperatureControl(false)
+    
+    
+    #heat exchanger on oa system' for some vintages
+    if prototype_input['template'] == '90.1-2010'
+      heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
+      heat_exchanger.setName("#{thermal_zones.size} Zone VAV HX")
+      heat_exchanger.setHeatExchangerType('Rotary')
+      heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.7)
+      heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.6)
+      heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.7)
+      heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
+      heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.75)
+      heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.6)
+      heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.75)
+      heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
+      heat_exchanger.setNominalElectricPower(6240.0734)
+      heat_exchanger.setEconomizerLockout(true)
+      heat_exchanger.setSupplyAirOutletTemperatureControl(false)
 
-    oa_node = oa_intake.outboardOANode
-    if oa_node.is_initialized
-      heat_exchanger.addToNode(oa_node.get)
-    else
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
-      return false
+      oa_node = oa_intake.outboardOANode
+      if oa_node.is_initialized
+        heat_exchanger.addToNode(oa_node.get)
+      else
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
+        return false
+      end
     end
     
     #hook the VAV system to each zone
