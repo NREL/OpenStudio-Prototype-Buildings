@@ -82,7 +82,7 @@ begin
         obj[headers[j]["name"]] = val
         # Skip recording units for unitless values
         next if headers[j]["units"].nil?
-        obj["#{headers[j]["name"]}_units"] = headers[j]["units"]
+        #obj["#{headers[j]["name"]}_units"] = headers[j]["units"]
       end
       
       # Skip recording empty rows
