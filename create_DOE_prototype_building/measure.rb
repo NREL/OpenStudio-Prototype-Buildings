@@ -157,6 +157,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
     prototype_input.each do |key, value|
+      next if value.nil?
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "  #{key} = #{value}")
     end
 

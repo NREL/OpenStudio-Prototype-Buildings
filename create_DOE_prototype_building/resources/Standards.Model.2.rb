@@ -149,14 +149,14 @@ class OpenStudio::Model::Model
     # First check model and return schedule if it already exists
     self.getSchedules.each do |schedule|
       if schedule.name.get.to_s == schedule_name
-        OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added schedule: #{schedule_name}")
+        #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added schedule: #{schedule_name}")
         return schedule
       end
     end 
  
     require 'date'
 
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding schedule: #{schedule_name}")   
+    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding schedule: #{schedule_name}")   
     
     # Find all the schedule rules that match the name
     rules = self.find_objects(@standards['schedules'], {'name'=>schedule_name})
@@ -274,7 +274,7 @@ class OpenStudio::Model::Model
   # TODO make return an OptionalSpaceType
   def add_space_type(template, clim, building_type, spc_type)
 
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
+    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
 
     # Get the space type data
     data = self.find_object(@standards['space_types'], {'template'=>template, 'building_type'=>building_type, 'space_type'=>spc_type})
@@ -583,12 +583,12 @@ class OpenStudio::Model::Model
     # First check model and return material if it already exists
     self.getMaterials.each do |material|
       if material.name.get.to_s == material_name
-        OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added material: #{material_name}")
+        #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added material: #{material_name}")
         return material
       end
     end
     
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding material: #{material_name}")
+    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding material: #{material_name}")
 
     # Get the object data
     data = self.find_object(@standards['materials'], {'name'=>material_name})
@@ -684,12 +684,12 @@ class OpenStudio::Model::Model
     # First check model and return construction if it already exists
     self.getConstructions.each do |construction|
       if construction.name.get.to_s == construction_name
-        OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added construction: #{construction_name}")
+        #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added construction: #{construction_name}")
         return construction
       end
     end
     
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction: #{construction_name}")  
+    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction: #{construction_name}")  
 
     # Get the object data
     data = self.find_object(@standards['constructions'], {'name'=>construction_name})
