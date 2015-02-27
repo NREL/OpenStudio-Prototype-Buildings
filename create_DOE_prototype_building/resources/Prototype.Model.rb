@@ -591,11 +591,32 @@ class OpenStudio::Model::Model
     sql_path = OpenStudio::Path.new("#{run_dir}/Energyplus/eplusout.sql")
     if OpenStudio::exists(sql_path)
       sql = OpenStudio::SqlFile.new(sql_path)
+      # Check to make sure the sql file is readable,
+      # which won't be true if EnergyPlus crashed during simulation.
+      if !sql.connectionOpen
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "The run failed.  Look at the eplusout.err file in #{File.dirname(sql_path.to_s)} to see the cause.")
+        return false
+      end
       # Attach the sql file from the run to the sizing model
       self.setSqlFile(sql)
     else 
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Results for the sizing run couldn't be found here: #{sql_path}.")
       return false
+    end
+
+    # Check that the run finished without severe errors
+    error_query = "SELECT ErrorMessage 
+        FROM Errors 
+        WHERE ErrorType='1'"
+
+    errs = self.sqlFile.get.execAndReturnVectorOfString(error_query)
+    if errs.is_initialized
+      errs = errs.get
+      if errs.size > 0
+        errs = errs.get
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "The run failed with the following severe errors: #{errs.join('\n')}.")
+        return false
+      end
     end
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Finished simulation in '#{run_dir}'")
