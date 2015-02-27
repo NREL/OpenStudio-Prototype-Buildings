@@ -328,8 +328,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   
   end
   
-
-=begin  
   # Test the Secondary School in the PTool vintages and climate zones
   def test_secondary_school
 
@@ -360,7 +358,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",    
   
   # Test the Small Office in the PTool vintages and climate zones
-  def dont_test_small_office
+  def test_small_office
 
     bldg_types = ['SmallOffice']
     vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010'] 
@@ -382,14 +380,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-
-=end
-  
   
   def test_small_hotel_ptool
     
-    bldg_types = ['SmallHotel']#,'SecondarySchool']
-    vintages = ['90.1-2010'] #['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
+    bldg_types = ['SmallHotel']
+    vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
