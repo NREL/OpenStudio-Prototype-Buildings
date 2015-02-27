@@ -32,6 +32,11 @@ begin
   # Path to the xlsx file
   xlsx_path = "#{Dir.pwd}/OpenStudio_HVAC_Standards.xlsx"
 
+  # List of columns that are boolean
+  # (rubyXL returns 0 or 1, will translate to true/false)
+  bool_cols = []
+  bool_cols << 'hx'  
+  
   # Open workbook
   workbook = RubyXL::Parser.parse(xlsx_path)
 
@@ -78,6 +83,16 @@ begin
         val = row[j]
         if !val.nil?
           all_null = false
+        end
+        # Convert specified columns to boolean
+        if bool_cols.include?(headers[j]['name'])
+          if val == 1
+            val = true
+          elsif val == 0
+            val = false
+          else
+            val = nil
+          end
         end
         obj[headers[j]["name"]] = val
         # Skip recording units for unitless values
