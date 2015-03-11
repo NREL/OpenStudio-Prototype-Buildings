@@ -103,12 +103,35 @@ begin
       # Skip recording empty rows
       next if all_null == true
       
-      objs << obj
+        # Store the array of objects
+        # special cases for some types
+        if sheet_name == 'schedules'
+          new_obj = {}
+          new_obj['name'] = obj['name']
+          items = []
+          obj.each do |key, val|
+            # Skip the key
+            next if key == 'name'
+            # Put materials into an array,
+            # record other fields normally
+            if key.include?('hr')
+              # Skip blank hourly values
+              next if val.nil?
+              items << val
+            else
+              new_obj[key] = val
+            end
+          end
+          new_obj['values'] = items
+          objs << new_obj
+        else
+          objs << obj
+        end
 
     end
     
     # Report how many objects were found
-    puts "--found #{objs.size} rows" 
+    puts "--found #{objs.size} rows"
     
     # Save this hash 
     standards_data[sheet_name] = objs
