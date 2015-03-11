@@ -28,11 +28,20 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     if self.airLoopHVAC.empty?
       if self.containingHVACComponent.is_initialized
         containing_comp = containingHVACComponent.get
-        if containing_comp.to_AirLoopHVACUnitaryHeatPumpAirToAir
+        if containing_comp.to_AirLoopHVACUnitaryHeatPumpAirToAir.is_initialized
           heat_pump = true
           heating_type = "Electric Resistance or None"
-          #OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "****************** #{self.name} is the DX clg part of a Heat Pump.")
         end # TODO Add other unitary systems
+      elsif self.containingZoneHVACComponent.is_initialized
+        containing_comp = containingZoneHVACComponent.get
+        if containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
+          htg_coil = containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.get.heatingCoil
+          if htg_coil.to_CoilHeatingElectric.is_initialized
+            heating_type = "Electric Resistance or None"          
+          elsif htg_coil.to_CoilHeatingWater.is_initialized || htg_coil.to_CoilHeatingGas.is_initialized
+            heating_type = "All Other"
+          end 
+        end # TODO Add other zone hvac systems
       end
     end
     
@@ -57,7 +66,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
         heating_type = "Electric Resistance or None"
       end
     end
-    
+
     # Add the heating type to the search criteria
     unless heating_type.nil?
       search_criteria['heating_type'] = heating_type
