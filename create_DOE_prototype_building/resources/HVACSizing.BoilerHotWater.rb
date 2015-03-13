@@ -27,14 +27,14 @@ class OpenStudio::Model::BoilerHotWater
   # returns the autosized nominal capacity as an optional double
   def autosizedNominalCapacity
 
-    return self.model.getAutosizedValue(self, 'Nominal Capacity', 'W')
+    return self.model.getAutosizedValue(self, 'Design Size Nominal Capacity', 'W')
     
   end
   
   # returns the autosized design water flow rate as an optional double
   def autosizedDesignWaterFlowRate
 
-    return self.model.getAutosizedValue(self, 'Design Water Flow Rate', 'm3/s')
+    return self.model.getAutosizedValue(self, 'Design Size Design Water Flow Rate', 'm3/s')
     
   end
   

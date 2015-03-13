@@ -27,6 +27,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs = OpenStudio::StringVector.new
     building_type_chs << 'SecondarySchool'
     building_type_chs << 'SmallOffice'
+    building_type_chs << 'SmallHotel'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -94,152 +95,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     @start_time = Time.new
     @runner = runner
     
-    # Load the libraries
-    # HVAC sizing
-    require_relative 'resources/HVACSizing.Model'
-    # Prototype Inputs
-    require_relative 'resources/Prototype.utilities'
-    require_relative 'resources/Prototype.add_objects'
-    require_relative 'resources/Prototype.hvac_systems'
-    require_relative 'resources/Prototype.Model'
-    # Weather data
-    require_relative 'resources/Weather.Model'
-    # HVAC standards
-    require_relative 'resources/Standards.Model'
-
-    # Create a variable for the standard data directory
-    # TODO Extend the OpenStudio::Model::Model class to store this
-    # as an instance variable?
-    standards_data_dir = "#{File.dirname(__FILE__)}/resources"
-
-    # Load the hvac standards from JSON
-    hvac_standards_path = "#{File.dirname(__FILE__)}/resources/OpenStudio_HVAC_Standards.json"
-    temp = File.read(hvac_standards_path.to_s)
-    hvac_standards = JSON.parse(temp)
-    search_criteria = {
-      'template' => building_vintage,
-      'climate_zone' => climate_zone,
-      'building_type' => building_type,
-    }
-
-    # Load the Prototype Inputs from JSON
-    prototype_input = find_object(hvac_standards['prototype_inputs'], search_criteria)
-    if prototype_input.nil?
-      @runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
-      log_msgs
-      return false
-    end
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
-    prototype_input.each do |key, value|
-      OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "  #{key} = #{value}")
-    end
-
-    # Make a directory to save the resulting models for debugging
-    build_dir = "#{Dir.pwd}/build"
-    if !Dir.exists?(build_dir)
-      Dir.mkdir(build_dir)
-    end
-
-    osm_directory = "#{build_dir}/#{building_type}-#{building_vintage}-#{climate_zone}"
-    if !Dir.exists?(osm_directory)
-      Dir.mkdir(osm_directory)
-    end
-
-    # Make the prototype building
-    space_building_type_search = building_type
-    has_swh = true
-
-    case building_type
-    when 'SecondarySchool'
-      require_relative 'resources/Prototype.secondary_school'
-      geometry_file = 'Geometry.secondary_school.osm'
-      has_swh = false
-    when 'SmallOffice'
-      require_relative 'resources/Prototype.small_office'
-      # Small Office geometry is different for pre-1980
-      # if has no attic, which means infiltration is way higher
-      # since infiltration is specified per exposed exterior area.
-      if building_vintage == 'DOE Ref Pre-1980'
-        geometry_file = 'Geometry.small_office_pre_1980.osm'
-      else
-        geometry_file = 'Geometry.small_office.osm'
-      end
-      space_building_type_search = 'Office'
-    else
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
-      return false
-    end
-
-    model.add_geometry(geometry_file)
-    space_type_map = model.define_space_type_map
-    model.assign_space_type_stubs(space_building_type_search, space_type_map)
-    model.add_loads(building_vintage, climate_zone, standards_data_dir)
-    model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
-    model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
-    model.create_thermal_zones
-    model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-    if has_swh
-      swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
-      model.add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
-    end
-    model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
-    model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
-
-    # Set the building location, weather files, ddy files, etc.
-    model.add_design_days_and_weather_file(climate_zone)
-
-    # Assign the standards to the model
-    model.template = building_vintage
-    model.hvac_standards = hvac_standards
-    model_status = '1_initial_creation'
-    #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
-    # Perform a sizing run
-    if model.runSizingRun("#{osm_directory}/SizingRun1") == false
-      log_msgs
-      return false
-    end
-    model_status = "2_after_first_sz_run"
-    #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
-    # Apply the prototype HVAC assumptions
-    # which include sizing the fan pressure rises based
-    # on the flow rate of the system.
-    model.applyPrototypeHVACAssumptions
-    model_status = '4_after_proto_hvac_assumptions'
-    #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
-    # Perform a second sizing run. The adjusted fan pressure rises
-    # impact the sizes of the heating coils.
-    if model.runSizingRun("#{osm_directory}/SizingRun2") == false
-      log_msgs
-      return false
-    end
-
-    # Get the equipment sizes from the sizing run
-    # and hard-assign them back to the model
-    #model.applySizingValues
-    #model_status = "5_after_apply_sizes"
-    #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
-    # Apply the HVAC efficiency standard
-    model.applyHVACEfficiencyStandard
-    model_status = '6_after_apply_hvac_std'
-    #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
-   
-    # Add output variables for debugging
-    model.request_timeseries_outputs
-
-    # Finished
-    model_status = 'final'
-    #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
     # Get all the log messages and put into output
     # for users to see.
     def log_msgs()
@@ -263,7 +118,156 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         end
       end
       @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+    end    
+    
+    # Load the libraries
+    # HVAC sizing
+    require_relative 'resources/HVACSizing.Model'
+    # Prototype Inputs
+    require_relative 'resources/Prototype.utilities'
+    require_relative 'resources/Prototype.add_objects'
+    require_relative 'resources/Prototype.hvac_systems'
+    require_relative 'resources/Prototype.Model'
+    # Weather data
+    require_relative 'resources/Weather.Model'
+    # HVAC standards
+    require_relative 'resources/Standards.Model'
+    require_relative 'resources/Standards.Model.2' # TODO merge these two Standards.Model files after changes calm down
+
+    # Create a variable for the standard data directory
+    # TODO Extend the OpenStudio::Model::Model class to store this
+    # as an instance variable?
+    standards_data_dir = "#{File.dirname(__FILE__)}/resources"
+
+    # Load the hvac standards from JSON
+    hvac_standards_path = "#{File.dirname(__FILE__)}/resources/OpenStudio_HVAC_Standards.json"
+    temp = File.read(hvac_standards_path.to_s)
+    hvac_standards = JSON.parse(temp)
+    search_criteria = {
+      'template' => building_vintage,
+      'climate_zone' => climate_zone,
+      'building_type' => building_type,
+    }
+    model.hvac_standards = hvac_standards
+
+    # Load the Prototype Inputs from JSON
+    prototype_input = find_object(hvac_standards['prototype_inputs'], search_criteria)
+    if prototype_input.nil?
+      @runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
+      log_msgs
+      return false
     end
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
+    prototype_input.each do |key, value|
+      next if value.nil?
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "  #{key} = #{value}")
+    end
+
+    # Make a directory to save the resulting models for debugging
+    build_dir = "#{Dir.pwd}/build"
+    if !Dir.exists?(build_dir)
+      Dir.mkdir(build_dir)
+    end
+
+    osm_directory = "#{build_dir}/#{building_type}-#{building_vintage}-#{climate_zone}"
+    if !Dir.exists?(osm_directory)
+      Dir.mkdir(osm_directory)
+    end
+
+    # Make the prototype building
+    space_building_type_search = building_type
+    has_swh = true
+
+    case building_type
+    when 'SecondarySchool'
+      require_relative 'resources/Prototype.secondary_school'
+      geometry_file = 'Geometry.secondary_school.osm'
+    when 'SmallOffice'
+      require_relative 'resources/Prototype.small_office'
+      # Small Office geometry is different for pre-1980
+      # if has no attic, which means infiltration is way higher
+      # since infiltration is specified per exposed exterior area.
+      if building_vintage == 'DOE Ref Pre-1980'
+        geometry_file = 'Geometry.small_office_pre_1980.osm'
+      else
+        geometry_file = 'Geometry.small_office.osm'
+      end
+      space_building_type_search = 'Office'
+    when 'SmallHotel'
+      require_relative 'resources/Prototype.small_hotel'
+      # Small Hotel geometry is different between
+      # Reference and Prototype vintages
+      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+        geometry_file = 'Geometry.small_hotel_doe.osm'
+      else
+        geometry_file = 'Geometry.small_hotel_pnnl.osm'
+      end
+    else
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
+      return false
+    end
+
+    model.add_geometry(geometry_file)
+    space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
+    model.assign_space_type_stubs(space_building_type_search, space_type_map)
+    model.add_loads(building_vintage, climate_zone, standards_data_dir)
+    model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
+    model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
+    model.create_thermal_zones
+    model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+    if has_swh
+      swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
+      model.add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
+    end
+    model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
+    model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
+
+    # Set the building location, weather files, ddy files, etc.
+    model.add_design_days_and_weather_file(climate_zone)
+
+    # Assign the standards to the model
+    model.template = building_vintage
+    model_status = '1_initial_creation'
+    #model.run("#{osm_directory}/#{model_status}")
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    
+    # Perform a sizing run
+    if model.runSizingRun("#{osm_directory}/SizingRun1") == false
+      log_msgs
+      return false
+    end
+    model_status = "2_after_first_sz_run"
+    #model.run("#{osm_directory}/#{model_status}")
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    
+    # Apply the prototype HVAC assumptions
+    # which include sizing the fan pressure rises based
+    # on the flow rate of the system.
+    model.applyPrototypeHVACAssumptions
+    model_status = '4_after_proto_hvac_assumptions'
+    #model.run("#{osm_directory}/#{model_status}")
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+
+    # Get the equipment sizes from the sizing run
+    # and hard-assign them back to the model
+    #model.applySizingValues
+    #model_status = "5_after_apply_sizes"
+    #model.run("#{osm_directory}/#{model_status}")
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    
+    # Apply the HVAC efficiency standard
+    model.applyHVACEfficiencyStandard
+    model_status = '6_after_apply_hvac_std'
+    #model.run("#{osm_directory}/#{model_status}")
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
+   
+    # Add output variables for debugging
+    model.request_timeseries_outputs
+
+    # Finished
+    model_status = 'final'
+    #model.run("#{osm_directory}/#{model_status}")
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     
     log_msgs
     return true
