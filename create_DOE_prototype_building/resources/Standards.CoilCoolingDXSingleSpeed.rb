@@ -7,12 +7,12 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
   
     successfully_set_all_properties = true
   
-    unitary_acs = hvac_standards["unitary_acs"]
-    heat_pumps = hvac_standards["heat_pumps"]
-    curve_biquadratics = hvac_standards["curve_biquadratics"]
-    curve_quadratics = hvac_standards["curve_quadratics"]
-    curve_bicubics = hvac_standards["curve_bicubics"]
-    curve_cubics = hvac_standards["curve_cubics"]
+    unitary_acs = hvac_standards['unitary_acs']
+    heat_pumps = hvac_standards['heat_pumps']
+    curve_biquadratics = hvac_standards['curve_biquadratics']
+    curve_quadratics = hvac_standards['curve_quadratics']
+    curve_bicubics = hvac_standards['curve_bicubics']
+    curve_cubics = hvac_standards['curve_cubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -21,8 +21,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     cooling_type = self.condenserType
     search_criteria['cooling_type'] = cooling_type
     
-    # Determine the heating type
-    # TODO deal with zone hvac and unitary equipment
+    # Determine the heating type if unitary or zone hvac
     heat_pump = false
     heating_type = nil
     if self.airLoopHVAC.empty?
@@ -30,16 +29,16 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
         containing_comp = containingHVACComponent.get
         if containing_comp.to_AirLoopHVACUnitaryHeatPumpAirToAir.is_initialized
           heat_pump = true
-          heating_type = "Electric Resistance or None"
+          heating_type = 'Electric Resistance or None'
         end # TODO Add other unitary systems
       elsif self.containingZoneHVACComponent.is_initialized
         containing_comp = containingZoneHVACComponent.get
         if containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
           htg_coil = containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.get.heatingCoil
           if htg_coil.to_CoilHeatingElectric.is_initialized
-            heating_type = "Electric Resistance or None"          
+            heating_type = 'Electric Resistance or None'          
           elsif htg_coil.to_CoilHeatingWater.is_initialized || htg_coil.to_CoilHeatingGas.is_initialized
-            heating_type = "All Other"
+            heating_type = 'All Other'
           end 
         end # TODO Add other zone hvac systems
       end
@@ -48,22 +47,22 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     # Determine the heating type if on an airloop
     if self.airLoopHVAC.is_initialized
       air_loop = self.airLoopHVAC.get
-      if air_loop.supplyComponents("Coil:Heating:Electric".to_IddObjectType).size > 0
-        heating_type = "Electric Resistance or None"
-      elsif air_loop.supplyComponents("Coil:Heating:Gas".to_IddObjectType).size > 0
-        heating_type = "All Other"
-      elsif air_loop.supplyComponents("Coil:Heating:Water".to_IddObjectType).size > 0
-        heating_type = "All Other"
-      elsif air_loop.supplyComponents("Coil:Heating:DX:SingleSpeed".to_IddObjectType).size > 0
-        heating_type = "All Other"
-      elsif air_loop.supplyComponents("Coil:Heating:Gas:MultiStage".to_IddObjectType).size > 0
-        heating_type = "All Other"
-      elsif air_loop.supplyComponents("Coil:Heating:Desuperheater".to_IddObjectType).size > 0
-        heating_type = "All Other"
-      elsif air_loop.supplyComponents("Coil:Heating:WaterToAirHeatPump:EquationFit".to_IddObjectType).size > 0
-        heating_type = "All Other"  
+      if air_loop.supplyComponents('Coil:Heating:Electric'.to_IddObjectType).size > 0
+        heating_type = 'Electric Resistance or None'
+      elsif air_loop.supplyComponents('Coil:Heating:Gas'.to_IddObjectType).size > 0
+        heating_type = 'All Other'
+      elsif air_loop.supplyComponents('Coil:Heating:Water'.to_IddObjectType).size > 0
+        heating_type = 'All Other'
+      elsif air_loop.supplyComponents('Coil:Heating:DX:SingleSpeed'.to_IddObjectType).size > 0
+        heating_type = 'All Other'
+      elsif air_loop.supplyComponents('Coil:Heating:Gas:MultiStage'.to_IddObjectType).size > 0
+        heating_type = 'All Other'
+      elsif air_loop.supplyComponents('Coil:Heating:Desuperheater'.to_IddObjectType).size > 0
+        heating_type = 'All Other'
+      elsif air_loop.supplyComponents('Coil:Heating:WaterToAirHeatPump:EquationFit'.to_IddObjectType).size > 0
+        heating_type = 'All Other'  
       else
-        heating_type = "Electric Resistance or None"
+        heating_type = 'Electric Resistance or None'
       end
     end
 
@@ -84,7 +83,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     elsif self.autosizedRatedTotalCoolingCapacity.is_initialized
       capacity_w = self.autosizedRatedTotalCoolingCapacity.get
     else
-      #OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{self.name} capacity is not available, cannot apply efficiency standard.")
+      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end    
@@ -103,7 +102,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
    
     # Check to make sure properties were found
     if ac_props.nil?
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{self.name}, cannot find efficiency info, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find efficiency info, cannot apply efficiency standard.")
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end
@@ -113,7 +112,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     if cool_cap_ft
       self.setTotalCoolingCapacityFunctionOfTemperatureCurve(cool_cap_ft)
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
@@ -122,7 +121,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     if cool_cap_fflow
       self.setTotalCoolingCapacityFunctionOfFlowFractionCurve(cool_cap_fflow)
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{self.name}, cannot find cool_cap_fflow curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_cap_fflow curve, will not be set.")
       successfully_set_all_properties = false
     end
     
@@ -131,7 +130,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     if cool_eir_ft
       self.setEnergyInputRatioFunctionOfTemperatureCurve(cool_eir_ft)  
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
@@ -140,7 +139,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     if cool_eir_fflow
       self.setEnergyInputRatioFunctionOfFlowFractionCurve(cool_eir_fflow)
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{self.name}, cannot find cool_eir_fflow curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_eir_fflow curve, will not be set.")
       successfully_set_all_properties = false
     end
     
@@ -149,7 +148,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     if cool_plf_fplr
       self.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.CoilCoolingDXSingleSpeed", "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
       successfully_set_all_properties = false
     end 
  
