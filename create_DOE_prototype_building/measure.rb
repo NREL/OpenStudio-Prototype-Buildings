@@ -27,6 +27,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs = OpenStudio::StringVector.new
     building_type_chs << 'SecondarySchool'
     building_type_chs << 'SmallOffice'
+    building_type_chs << 'SmallHotel'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -147,6 +148,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       'climate_zone' => climate_zone,
       'building_type' => building_type,
     }
+    model.hvac_standards = hvac_standards
 
     # Load the Prototype Inputs from JSON
     prototype_input = find_object(hvac_standards['prototype_inputs'], search_criteria)
@@ -191,13 +193,22 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         geometry_file = 'Geometry.small_office.osm'
       end
       space_building_type_search = 'Office'
+    when 'SmallHotel'
+      require_relative 'resources/Prototype.small_hotel'
+      # Small Hotel geometry is different between
+      # Reference and Prototype vintages
+      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+        geometry_file = 'Geometry.small_hotel_doe.osm'
+      else
+        geometry_file = 'Geometry.small_hotel_pnnl.osm'
+      end
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
     end
 
     model.add_geometry(geometry_file)
-    space_type_map = model.define_space_type_map
+    space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
     model.assign_space_type_stubs(space_building_type_search, space_type_map)
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
@@ -216,7 +227,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Assign the standards to the model
     model.template = building_vintage
-    model.hvac_standards = hvac_standards
     model_status = '1_initial_creation'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
