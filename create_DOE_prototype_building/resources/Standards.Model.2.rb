@@ -135,7 +135,7 @@ class OpenStudio::Model::Model
       desired_object = matching_objects[0]
     else 
       desired_object = matching_objects[0]
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find object search criteria returned #{matching_objects.size} results, the first one will be returned. Search criteria: #{search_criteria} Called from #{caller(0)[1]}.  All results: \n #{matching_objects.join("\n")}")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find object search criteria returned #{matching_objects.size} results, the first one will be returned. Called from #{caller(0)[1]}. \n Search criteria: \n #{search_criteria} \n  All results: \n #{matching_objects.join("\n")}")
     end
    
     return desired_object
@@ -161,8 +161,13 @@ class OpenStudio::Model::Model
     # Find all the schedule rules that match the name
     rules = self.find_objects(@standards['schedules'], {'name'=>schedule_name})
     if rules.size == 0
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Cannot find data for schedule: #{schedule_name}, will not be created.")
-      return false #TODO change to return empty optional schedule:ruleset?
+      # Check the second spreadsheet.
+      # TODO Remove this once openstudio_hvac_standards info is merged to openstudio_standards
+      rules = self.find_objects(self.hvac_standards['schedules'], {'name'=>schedule_name})
+      if rules.size == 0
+        OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Cannot find data for schedule: #{schedule_name}, will not be created.")
+        return false #TODO change to return empty optional schedule:ruleset?
+      end
     end
     
     # Helper method to fill in hourly values
