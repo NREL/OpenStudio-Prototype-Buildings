@@ -42,15 +42,14 @@ class OpenStudio::Model::Model
               'Basement',
               'Storage_Flr_1'
           ]
+      },
+      {
+          'type' => 'DOAS',
+          'space_names' =>
+          [
+              'Room_1_Flr_3','Room_2_Flr_3','Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3','Room_5_Flr_3','Room_6_Flr_3','Room_1_Flr_6','Room_2_Flr_6','Room_3_Mult9_Flr_6'
+          ]
       }
-    ,
-      # {
-      #     'type' => 'DOAS',
-      #     'space_names' =>
-      #     [
-      #         'Room_1_Flr_3','Room_2_Flr_3','Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3','Room_5_Flr_3','Room_6_Flr_3','Room_1_Flr_6','Room_2_Flr_6','Room_3_Mult9_Flr_6'
-      #     ]
-      # }
   ]
 
     return system_to_space_map

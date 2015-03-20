@@ -318,24 +318,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             File.open("#{Dir.pwd}/build/#{model_name}/comparison.json", 'w') do |file|
               file << JSON::pretty_generate(results_hash)
             end
-
-            # Save the results to CSV
-            File.open("#{Dir.pwd}/build/#{model_name}/comparison.csv", 'w') do |file|
-              file.write("building_type,building_vintage,climate_zone,fuel_type,end_use,Legacy Val,OpenStudio Val,Percent Error\n")
-              results_hash.each_pair do |key1, value1|
-                value1.each_pair do |key2, value2|
-                  value2.each_pair do |key3, value3|
-                    value3.each_pair do |key4, value4|
-                      value4.each_pair do |key5, value5|
-                        if value5['Percent Error'].to_i != 0
-                          file.write("#{key1},#{key2},#{key3},#{key4},#{key5},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
-                        end
-                      end
-                    end
-                  end
-                end
-              end
-            end
+        
           end
         end
       end
@@ -398,7 +381,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   end
   
-  def test_small_hotel
+  def test_small_hotel_ptool
     
     bldg_types = ['SmallHotel']
     vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
@@ -420,28 +403,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-
-  # Test the large hotel in the PTool vintages and climate zones
-  def test_large_hotel
-
-    bldg_types = ['LargeHotel']
-    vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
-    climate_zones = ['ASHRAE 169-2006-3B']
-
-    all_failures = []
-
-    # Create the models
-    #all_failures += create_models(bldg_types, vintages, climate_zones)
-
-    # Run the models
-    #all_failures += run_models(bldg_types, vintages, climate_zones)
-
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-
-  end
+  
+  
 end

@@ -91,45 +91,14 @@ class OpenStudio::Model::ChillerElectricEIR
     
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
-    eirToCorfOfPlr = nil
-    eirfplr_properties = find_object(curve_quadratics, {'name'=>chlr_props['eirfplr']})
-    if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveQuadratic.new(self.model)
-      eirToCorfOfPlr.setName(eirfplr_properties['name'])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
-      eirToCorfOfPlr.setMinimumValueofx(eirfplr_properties['min_x'])
-      eirToCorfOfPlr.setMaximumValueofx(eirfplr_properties['max_x'])
-    end
-    
-    eirfplr_properties = find_object(curve_bicubics, {'name'=>chlr_props['eirfplr']})
-    if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveBicubic.new(self.model)
-      eirToCorfOfPlr.setName(eirft_properties['name'])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
-      eirToCorfOfPlr.setCoefficient4y(eirfplr_properties['coeff_4'])
-      eirToCorfOfPlr.setCoefficient5yPOW2(eirfplr_properties['coeff_5'])
-      eirToCorfOfPlr.setCoefficient6xTIMESY(eirfplr_properties['coeff_6'])
-      eirToCorfOfPlr.setCoefficient7xPOW3 (eirfplr_properties['coeff_7'])
-      eirToCorfOfPlr.setCoefficient8yPOW3 (eirfplr_properties['coeff_8'])
-      eirToCorfOfPlr.setCoefficient9xPOW2TIMESY(eirfplr_properties['coeff_9'])
-      eirToCorfOfPlr.setCoefficient10xTIMESYPOW2 (eirfplr_properties['coeff_10'])
-      eirToCorfOfPlr.setMinimumValueofx(eirft_properties['min_x'])
-      eirToCorfOfPlr.setMaximumValueofx(eirft_properties['max_x'])
-      eirToCorfOfPlr.setMinimumValueofy(eirft_properties['min_y'])
-      eirToCorfOfPlr.setMaximumValueofy(eirft_properties['max_y'])
-    end
-
     cool_plf_fplr = self.model.add_curve(chlr_props['eirfplr'], hvac_standards)
     if cool_plf_fplr
       self.setElectricInputToCoolingOutputRatioFunctionOfPLR(cool_plf_fplr)
     else
       OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
       successfully_set_all_properties = false
-    end
+    end     
+
     # Set the efficiency value
     kw_per_ton = chlr_props['minimum_full_load_efficiency']
     cop = kw_per_ton_to_cop(kw_per_ton)

@@ -106,47 +106,6 @@ class OpenStudio::Model::Model
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
 
-    # Assign construction to adiabatic construction
-    # Assign a material to all internal mass objects
-    material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
-    material.setName('Adiabatic Material 2')
-    material.setRoughness('MediumSmooth')
-    material.setThickness(0.80)
-    material.setConductivity(0.12)
-    material.setDensity(540)
-    material.setSpecificHeat(1210)
-    material.setThermalAbsorptance(0.9)
-    material.setSolarAbsorptance(0.7)
-    material.setVisibleAbsorptance(0.7)
-    construction = OpenStudio::Model::Construction.new(self)
-    construction.setName('adiabatic construction')
-    layers = OpenStudio::Model::MaterialVector.new
-    layers << material
-    construction.setLayers(layers)
-    self.getSurfaces.each do |surface|
-      if surface.outsideBoundaryCondition.to_s == "Adiabatic"
-        surface.setConstruction(construction)
-      elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
-        surface.setOutsideBoundaryCondition("Adiabatic")
-        surface.setConstruction(construction)
-      end
-    end
-    
-    path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
-    
-    #load the data from the JSON file into a ruby hash
-    standards = {}
-    temp = File.read(path_to_standards_json)
-    standards = JSON.parse(temp)
-    space_types = standards['space_types']
-    construction_sets = standards['construction_sets']
-    
-    require_relative 'Standards.ConstructionSetGenerator'
-    construction_set_generator = ConstructionSetGenerator.new(path_to_standards_json)
- 
-    # get climate zone set from specific climate zone for construction set
-    climate_zone_set = construction_set_generator.find_climate_zone_set(building_vintage, climate_zone, building_type, '')
-
     path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
 
     # Load the openstudio_standards.json file
@@ -219,8 +178,6 @@ class OpenStudio::Model::Model
     self.getInternalMassDefinitions.each do |int_mass_def|
       int_mass_def.setConstruction(construction)
     end
-
-
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying constructions')
     
