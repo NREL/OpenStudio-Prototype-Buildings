@@ -375,9 +375,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",    
   
   # Test the Small Office in the PTool vintages and climate zones
-<<<<<<< HEAD
-  def dont_test_small_office_ptool
-=======
   def test_small_office
 
     bldg_types = ['SmallOffice']
@@ -394,7 +391,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
     # Compare the results to the legacy idf results
     all_failures += compare_results(bldg_types, vintages, climate_zones)
->>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
 
     # Assert if there are any errors
     puts "There were #{all_failures.size} failures"
@@ -402,7 +398,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   end
   
-  def test_small_hotel_ptool
+  def test_small_hotel
     
     bldg_types = ['SmallHotel']
     vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
@@ -424,10 +420,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-<<<<<<< HEAD
 
   # Test the large hotel in the PTool vintages and climate zones
-  def test_large_hotel_ptool
+  def test_large_hotel
 
     bldg_types = ['LargeHotel']
     vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
@@ -449,9 +444,4 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
 
   end
-
-=======
-  
-  
->>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
 end

@@ -27,11 +27,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs = OpenStudio::StringVector.new
     building_type_chs << 'SecondarySchool'
     building_type_chs << 'SmallOffice'
-<<<<<<< HEAD
     building_type_chs << 'LargeHotel'
-=======
     building_type_chs << 'SmallHotel'
->>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -197,7 +194,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         geometry_file = 'Geometry.small_office.osm'
       end
       space_building_type_search = 'Office'
-<<<<<<< HEAD
     when 'LargeHotel'
       require_relative 'resources/Prototype.large_hotel'
 
@@ -212,7 +208,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
           geometry_file = 'Geometry.large_hotel.2013.osm'
       end
       space_building_type_search = 'LargeHotel'
-=======
     when 'SmallHotel'
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
@@ -222,7 +217,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_hotel_pnnl.osm'
       end
->>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
