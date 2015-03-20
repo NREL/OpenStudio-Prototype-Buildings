@@ -1,7 +1,4 @@
 {
-<<<<<<< HEAD
-  "LargeHotel": {
-=======
   "SmallOffice": {
     "DOE Ref 1980-2004": {
       "ASHRAE 169-2006-4A": {
@@ -3158,8 +3155,9 @@
           "Generators": 0.0
         }
       }
-    },
->>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
+    }
+  },
+  "LargeHotel": {
     "90.1-2010": {
       "ASHRAE 169-2006-3B": {
         "Electricity": {

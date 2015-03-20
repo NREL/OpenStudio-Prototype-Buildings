@@ -106,7 +106,6 @@ class OpenStudio::Model::Model
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
 
-<<<<<<< HEAD
     # Assign construction to adiabatic construction
     # Assign a material to all internal mass objects
     material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
@@ -147,12 +146,11 @@ class OpenStudio::Model::Model
  
     # get climate zone set from specific climate zone for construction set
     climate_zone_set = construction_set_generator.find_climate_zone_set(building_vintage, climate_zone, building_type, '')
-=======
+
     path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
 
     # Load the openstudio_standards.json file
     self.load_openstudio_standards_json(path_to_standards_json)
->>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
 
     # Make the default contruction set for the building
     bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil)

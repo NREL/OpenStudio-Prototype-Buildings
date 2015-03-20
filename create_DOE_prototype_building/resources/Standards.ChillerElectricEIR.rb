@@ -91,7 +91,6 @@ class OpenStudio::Model::ChillerElectricEIR
     
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
-<<<<<<< HEAD
     eirToCorfOfPlr = nil
     eirfplr_properties = find_object(curve_quadratics, {'name'=>chlr_props['eirfplr']})
     if eirfplr_properties
@@ -123,16 +122,14 @@ class OpenStudio::Model::ChillerElectricEIR
       eirToCorfOfPlr.setMinimumValueofy(eirft_properties['min_y'])
       eirToCorfOfPlr.setMaximumValueofy(eirft_properties['max_y'])
     end
-=======
+
     cool_plf_fplr = self.model.add_curve(chlr_props['eirfplr'], hvac_standards)
     if cool_plf_fplr
       self.setElectricInputToCoolingOutputRatioFunctionOfPLR(cool_plf_fplr)
     else
       OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
       successfully_set_all_properties = false
-    end     
->>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
-
+    end
     # Set the efficiency value
     kw_per_ton = chlr_props['minimum_full_load_efficiency']
     cop = kw_per_ton_to_cop(kw_per_ton)
