@@ -116,7 +116,7 @@ class OpenStudio::Model::ChillerElectricEIR
       eirToCorfOfPlr.setMaximumValueofx(eirft_properties['max_x'])
       eirToCorfOfPlr.setMinimumValueofy(eirft_properties['min_y'])
       eirToCorfOfPlr.setMaximumValueofy(eirft_properties['max_y'])
-    end  
+    end
 
     # Set the efficiency value
     cop = chlr_props['minimum_cop']

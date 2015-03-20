@@ -109,6 +109,32 @@ class OpenStudio::Model::Model
   def add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
+
+    # Assign construction to adiabatic construction
+    # Assign a material to all internal mass objects
+    material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    material.setName('Adiabatic Material 2')
+    material.setRoughness('MediumSmooth')
+    material.setThickness(0.80)
+    material.setConductivity(0.12)
+    material.setDensity(540)
+    material.setSpecificHeat(1210)
+    material.setThermalAbsorptance(0.9)
+    material.setSolarAbsorptance(0.7)
+    material.setVisibleAbsorptance(0.7)
+    construction = OpenStudio::Model::Construction.new(self)
+    construction.setName('adiabatic construction')
+    layers = OpenStudio::Model::MaterialVector.new
+    layers << material
+    construction.setLayers(layers)
+    self.getSurfaces.each do |surface|
+      if surface.outsideBoundaryCondition.to_s == "Adiabatic"
+        surface.setConstruction(construction)
+      elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
+        surface.setOutsideBoundaryCondition("Adiabatic")
+        surface.setConstruction(construction)
+      end
+    end
     
     path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
     
@@ -195,6 +221,8 @@ class OpenStudio::Model::Model
     self.getInternalMassDefinitions.each do |int_mass_def|
       int_mass_def.setConstruction(construction)
     end
+
+
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying constructions')
     

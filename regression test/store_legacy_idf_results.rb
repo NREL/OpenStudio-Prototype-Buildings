@@ -4,15 +4,15 @@
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
 # Specify the building types to run.
-bldg_types = ["OfficeSmall", "SchoolSecondary"]
+bldg_types = ["HotelLarge"]# "OfficeSmall", "SchoolSecondary"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["Pre1980", "Post1980", "STD2010"] #["Pre1980", "Post1980", "STD2010"]
+vintages = ["STD2010"]# "Pre1980", "Post1980", "STD2010"] #["Pre1980", "Post1980", "STD2010"]
 
 # Specify the climate zones you want to run.
 # for PTool: Los Angeles, Houston, Chicago, and Baltimore
-climate_zones = ["El Paso", "Houston", "Chicago", "Baltimore"]
+climate_zones = ["San_Francisco"]# "El Paso", "Houston", "Chicago", "Baltimore"]
 
 ################################################################################
 
@@ -41,11 +41,15 @@ bldg_types.sort.each do |bldg_type|
         case climate_zone
         when "El Paso"
           climate_zone = "Las.Vegas"
+        when "San_Francisco"
+          climate_zone = "San.Francisco"
         end
       else
         case climate_zone
         when "El Paso"
           climate_zone = "El.Paso"
+        when "San_Francisco"
+          climate_zone = "San.Francisco"
         end
       end      
       
@@ -93,7 +97,8 @@ bldg_types.sort.each do |bldg_type|
           # conventions that will be used for the prototype buildings
           bldg_type_map = {
           "SchoolSecondary" => "SecondarySchool",
-          "OfficeSmall" => "SmallOffice"
+          "OfficeSmall" => "SmallOffice",
+          "HotelLarge"=> "LargeHotel"
           }
 
           vintage_map = {
@@ -107,7 +112,8 @@ bldg_types.sort.each do |bldg_type|
           "Baltimore" => "ASHRAE 169-2006-4A",
           "Chicago" => "ASHRAE 169-2006-5A",
           "Las.Vegas" => "ASHRAE 169-2006-3B",
-          "El.Paso" => "ASHRAE 169-2006-3B"
+          "El.Paso" => "ASHRAE 169-2006-3B",
+          "San.Francisco" => "ASHRAE 169-2006-3B"
           }
 
           new_bldg_type = bldg_type_map[bldg_type]
