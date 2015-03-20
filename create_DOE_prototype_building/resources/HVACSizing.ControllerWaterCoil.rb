@@ -2,6 +2,11 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::ControllerWaterCoil
 
+  # Sets all auto-sizeable fields to autosize
+  def autosize
+    OpenStudio::logFree(OpenStudio::Warn, "openstudio.sizing.ControllerWaterCoil", ".autosize not yet implemented for #{self.iddObject.type.valueDescription}.")
+  end
+
   # Takes the values calculated by the EnergyPlus sizing routines
   # and puts them into this object model in place of the autosized fields.
   # Must have previously completed a run with sql output for this to work.

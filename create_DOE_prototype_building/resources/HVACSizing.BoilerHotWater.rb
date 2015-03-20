@@ -2,6 +2,11 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::BoilerHotWater
 
+  # Sets all auto-sizeable fields to autosize
+  def autosize
+    OpenStudio::logFree(OpenStudio::Warn, "openstudio.sizing.BoilerHotWater", ".autosize not yet implemented for #{self.iddObject.type.valueDescription}.")
+  end
+
   # Takes the values calculated by the EnergyPlus sizing routines
   # and puts them into this object model in place of the autosized fields.
   # Must have previously completed a run with sql output for this to work.
@@ -22,14 +27,14 @@ class OpenStudio::Model::BoilerHotWater
   # returns the autosized nominal capacity as an optional double
   def autosizedNominalCapacity
 
-    return self.model.getAutosizedValue(self, 'Nominal Capacity', 'W')
+    return self.model.getAutosizedValue(self, 'Design Size Nominal Capacity', 'W')
     
   end
   
   # returns the autosized design water flow rate as an optional double
   def autosizedDesignWaterFlowRate
 
-    return self.model.getAutosizedValue(self, 'Design Water Flow Rate', 'm3/s')
+    return self.model.getAutosizedValue(self, 'Design Size Design Water Flow Rate', 'm3/s')
     
   end
   

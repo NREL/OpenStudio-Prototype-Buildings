@@ -8,13 +8,15 @@ class OpenStudio::Model::FanConstantVolume
   def setPrototypeFanPressureRise
     
     # Get the max flow rate from the fan.
-    # This expects that the fan is hard sized.
-    maximum_flow_rate_m3_per_s = self.maximumFlowRate
-    if maximum_flow_rate_m3_per_s.is_initialized
-      maximum_flow_rate_m3_per_s = maximum_flow_rate_m3_per_s.get
+    maximum_flow_rate_m3_per_s = nil
+    if self.maximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.maximumFlowRate.get
+    elsif self.autosizedMaximumFlowRate.is_initialized
+      maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.FanConstantVolume", "For #{self.name} max flow rate is not available, cannot apply prototype assumptions.")
       return false
-    end
+    end    
     
     # Convert max flow rate to cfm
     maximum_flow_rate_cfm = OpenStudio.convert(maximum_flow_rate_m3_per_s, 'm^3/s', 'cfm').get
@@ -25,7 +27,7 @@ class OpenStudio::Model::FanConstantVolume
     
     # If the fan lives inside of a zone hvac equipment
     if self.containingZoneHVACComponent.is_initialized
-      zone_hvac = self.ZoneHVACComponent.get
+      zone_hvac = self.containingZoneHVACComponent.get
       if zone_hvac.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
         pressure_rise_in_h2o = 1.33
       elsif zone_hvac.to_ZoneHVACFourPipeFanCoil.is_initialized

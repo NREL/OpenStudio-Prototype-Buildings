@@ -10004,13 +10004,13 @@ OS:Schedule:Day,
 OS:Schedule:Ruleset,
   {ed529778-abf5-416c-9fe3-cd55f39833e8}, ! Handle
   MidriseApartment UnitHeater ClgSP Sch,  ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   {00de0576-e55f-499d-8eb9-a711d68b6554}; ! Default Day Schedule Name
 
 OS:Schedule:Day,
   {00de0576-e55f-499d-8eb9-a711d68b6554}, ! Handle
   MidriseApartment UnitHeater ClgSP Sch Default Schedule, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     ! Hour 1
   0,                                      ! Minute 1
@@ -12634,7 +12634,7 @@ OS:Schedule:Day,
 OS:Schedule:Ruleset,
   {9021e802-ed9f-4bb2-9423-ec9e87ea9994}, ! Handle
   SmallHotel UnitHeater ClgSP Sch,        ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   {07f5b698-0a3e-4a56-bc13-b14c3545fba1}, ! Default Day Schedule Name
   {46851b8e-3130-4bab-b8ff-13611ff22e65}, ! Summer Design Day Schedule Name
   {91930c78-965f-4b6a-b111-a2b60f2565f4}; ! Winter Design Day Schedule Name
@@ -12642,7 +12642,7 @@ OS:Schedule:Ruleset,
 OS:Schedule:Day,
   {07f5b698-0a3e-4a56-bc13-b14c3545fba1}, ! Handle
   SmallHotel UnitHeater ClgSP Sch Default Schedule, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     !- Hour 1
   0,                                      !- Minute 1
@@ -12651,7 +12651,7 @@ OS:Schedule:Day,
 OS:Schedule:Day,
   {91930c78-965f-4b6a-b111-a2b60f2565f4}, ! Handle
   SmallHotel UnitHeater ClgSP Sch Winter Design Day, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     ! Hour 1
   0,                                      ! Minute 1
@@ -12660,7 +12660,7 @@ OS:Schedule:Day,
 OS:Schedule:Day,
   {46851b8e-3130-4bab-b8ff-13611ff22e65}, ! Handle
   SmallHotel UnitHeater ClgSP Sch Summer Design Day, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     ! Hour 1
   0,                                      ! Minute 1
@@ -12669,13 +12669,13 @@ OS:Schedule:Day,
 OS:Schedule:Ruleset,
   {cb17c419-bc96-4fdc-b414-30532a18acb8}, ! Handle
   MidriseApartment UnitHeater HtgSP Sch,  ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   {ebfcbec9-b2e4-49cf-9c1a-0153869424bf}; ! Default Day Schedule Name
 
 OS:Schedule:Day,
   {ebfcbec9-b2e4-49cf-9c1a-0153869424bf}, ! Handle
   MidriseApartment UnitHeater HtgSP Sch Default Schedule, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     ! Hour 1
   0,                                      ! Minute 1
@@ -26557,7 +26557,7 @@ OS:Schedule:Day,
 OS:Schedule:Ruleset,
   {a80248e2-f77b-4745-b2e2-8b953b9c9b40}, ! Handle
   SmallHotel UnitHeater HtgSP Sch,        ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   {2f2dd4f1-a443-45dd-8daf-1e04a8ce686c}, ! Default Day Schedule Name
   {0bcee554-cb6b-4834-9af9-2b096844301e}, ! Summer Design Day Schedule Name
   {c7b024d8-d4f1-46c7-bec3-19e0a060f76f}; ! Winter Design Day Schedule Name
@@ -26565,7 +26565,7 @@ OS:Schedule:Ruleset,
 OS:Schedule:Day,
   {2f2dd4f1-a443-45dd-8daf-1e04a8ce686c}, ! Handle
   SmallHotel UnitHeater HtgSP Sch Default Schedule, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     !- Hour 1
   0,                                      !- Minute 1
@@ -26574,7 +26574,7 @@ OS:Schedule:Day,
 OS:Schedule:Day,
   {c7b024d8-d4f1-46c7-bec3-19e0a060f76f}, ! Handle
   SmallHotel UnitHeater HtgSP Sch Winter Design Day, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     ! Hour 1
   0,                                      ! Minute 1
@@ -26583,7 +26583,7 @@ OS:Schedule:Day,
 OS:Schedule:Day,
   {0bcee554-cb6b-4834-9af9-2b096844301e}, ! Handle
   SmallHotel UnitHeater HtgSP Sch Summer Design Day, ! Name
-  {ca4441b0-ffcf-4a66-b2fb-d9b49b1106bc}, ! Schedule Type Limits Name
+  {404ff268-79da-4217-8bf0-991eaff51fdc}, ! Schedule Type Limits Name
   ,                                       ! Interpolate to Timestep
   24,                                     ! Hour 1
   0,                                      ! Minute 1

@@ -2,6 +2,12 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::ControllerOutdoorAir
 
+  # Sets all auto-sizeable fields to autosize
+  def autosize
+    self.autosizeMaximumOutdoorAirFlowRate
+    self.autosizeMinimumOutdoorAirFlowRate
+  end
+
   # Takes the values calculated by the EnergyPlus sizing routines
   # and puts them into this object model in place of the autosized fields.
   # Must have previously completed a run with sql output for this to work.

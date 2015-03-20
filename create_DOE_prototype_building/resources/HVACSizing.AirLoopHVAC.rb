@@ -2,6 +2,11 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::AirLoopHVAC
 
+  # Sets all auto-sizeable fields to autosize
+  def autosize
+    self.autosizeDesignSupplyAirFlowRate
+  end
+
   # Takes the values calculated by the EnergyPlus sizing routines
   # and puts them into this object model in place of the autosized fields.
   # Must have previously completed a run with sql output for this to work.
@@ -14,8 +19,6 @@ class OpenStudio::Model::AirLoopHVAC
         
   end
 
-  # 
-  
   # returns the autosized design supply air flow rate as an optional double
   def autosizedDesignSupplyAirFlowRate
 

@@ -1,7 +1,9 @@
 
 # Start the measure
 class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
-
+  
+  require 'json'
+  
   # Define the name of the Measure.
   def name
     return 'Create DOE Prototype Building'
@@ -25,7 +27,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs = OpenStudio::StringVector.new
     building_type_chs << 'SecondarySchool'
     building_type_chs << 'SmallOffice'
+<<<<<<< HEAD
     building_type_chs << 'LargeHotel'
+=======
+    building_type_chs << 'SmallHotel'
+>>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -88,9 +94,36 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     climate_zone = runner.getStringArgumentValue('climate_zone',user_arguments)
 
     # Open a channel to log info/warning/error messages
-    msg_log = OpenStudio::StringStreamLogSink.new
-    msg_log.setLogLevel(OpenStudio::Info)
-
+    @msg_log = OpenStudio::StringStreamLogSink.new
+    @msg_log.setLogLevel(OpenStudio::Info)
+    @start_time = Time.new
+    @runner = runner
+    
+    # Get all the log messages and put into output
+    # for users to see.
+    def log_msgs()
+      @msg_log.logMessages.each do |msg|
+        # DLM: you can filter on log channel here for now
+        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+          # Skip certain messages that are irrelevant/misleading
+          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+                  msg.logChannel.include?("runmanager") || # RunManager messages
+                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
+                  
+          # Report the message in the correct way
+          if msg.logLevel == OpenStudio::Info
+            @runner.registerInfo(msg.logMessage)  
+          elsif msg.logLevel == OpenStudio::Warn
+            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+          elsif msg.logLevel == OpenStudio::Error
+            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+          end
+        end
+      end
+      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+    end    
+    
     # Load the libraries
     # HVAC sizing
     require_relative 'resources/HVACSizing.Model'
@@ -103,6 +136,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     require_relative 'resources/Weather.Model'
     # HVAC standards
     require_relative 'resources/Standards.Model'
+    require_relative 'resources/Standards.Model.2' # TODO merge these two Standards.Model files after changes calm down
 
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
@@ -118,15 +152,18 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       'climate_zone' => climate_zone,
       'building_type' => building_type,
     }
+    model.hvac_standards = hvac_standards
 
     # Load the Prototype Inputs from JSON
     prototype_input = find_object(hvac_standards['prototype_inputs'], search_criteria)
     if prototype_input.nil?
-      runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
+      @runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
+      log_msgs
       return false
     end
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
     prototype_input.each do |key, value|
+      next if value.nil?
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "  #{key} = #{value}")
     end
 
@@ -149,7 +186,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     when 'SecondarySchool'
       require_relative 'resources/Prototype.secondary_school'
       geometry_file = 'Geometry.secondary_school.osm'
-      has_swh = false
     when 'SmallOffice'
       require_relative 'resources/Prototype.small_office'
       # Small Office geometry is different for pre-1980
@@ -161,6 +197,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         geometry_file = 'Geometry.small_office.osm'
       end
       space_building_type_search = 'Office'
+<<<<<<< HEAD
     when 'LargeHotel'
       require_relative 'resources/Prototype.large_hotel'
 
@@ -175,13 +212,24 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
           geometry_file = 'Geometry.large_hotel.2013.osm'
       end
       space_building_type_search = 'LargeHotel'
+=======
+    when 'SmallHotel'
+      require_relative 'resources/Prototype.small_hotel'
+      # Small Hotel geometry is different between
+      # Reference and Prototype vintages
+      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+        geometry_file = 'Geometry.small_hotel_doe.osm'
+      else
+        geometry_file = 'Geometry.small_hotel_pnnl.osm'
+      end
+>>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
     end
 
     model.add_geometry(geometry_file)
-    space_type_map = model.define_space_type_map
+    space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
     model.assign_space_type_stubs(space_building_type_search, space_type_map)
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
@@ -200,51 +248,40 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Assign the standards to the model
     model.template = building_vintage
-    model.hvac_standards = hvac_standards
     model_status = '1_initial_creation'
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    
     # Perform a sizing run
-    model.runSizingRun("#{osm_directory}/SizingRun1")
-    model_status = '2_after_first_sz_run'
+    if model.runSizingRun("#{osm_directory}/SizingRun1") == false
+      log_msgs
+      return false
+    end
+    model_status = "2_after_first_sz_run"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
-    # Retrieve only the fan flow rates and HX flow rates from the sizing run
-    # and apply to the model.
-    model.getFanConstantVolumes.sort.each {|obj| obj.applySizingValues}
-    model.getFanVariableVolumes.sort.each {|obj| obj.applySizingValues}
-    model.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.applySizingValues}
-    model_status = '3_after_apply_fan_flows'
-    #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
     # on the flow rate of the system.
     model.applyPrototypeHVACAssumptions
     model_status = '4_after_proto_hvac_assumptions'
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
-    # Perform a second sizing run. The adjusted fan pressure rises
-    # impact the sizes of the heating coils.
-    model.runSizingRun("#{osm_directory}/SizingRun2")
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
 
     # Get the equipment sizes from the sizing run
     # and hard-assign them back to the model
-    model.applySizingValues
-    model_status = '5_after_apply_sizes'
+    #model.applySizingValues
+    #model_status = "5_after_apply_sizes"
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    
     # Apply the HVAC efficiency standard
     model.applyHVACEfficiencyStandard
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
-    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
+    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
+   
     # Add output variables for debugging
     model.request_timeseries_outputs
 
@@ -252,24 +289,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = 'final'
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-
-    # Get all the log messages and put into output
-    # for users to see.
-    msg_log.logMessages.each do |msg|
-      # DLM: you can filter on log channel here for now
-      if /openstudio\.model\..*/.match(msg.logChannel)
-        # Skip the annoying/bogus "Skipping layer" warnings
-        next if msg.logMessage.include?('Skipping layer')
-        if msg.logLevel == OpenStudio::Info
-          runner.registerInfo(msg.logMessage)
-        elsif msg.logLevel == OpenStudio::Warn
-          runner.registerWarning(msg.logMessage)
-        elsif msg.logLevel == OpenStudio::Error
-          runner.registerError(msg.logMessage)
-        end
-      end
-    end
-
+    
+    log_msgs
     return true
 
   end #end the run method

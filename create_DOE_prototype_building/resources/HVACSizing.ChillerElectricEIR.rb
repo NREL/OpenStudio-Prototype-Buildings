@@ -2,6 +2,11 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::ChillerElectricEIR
 
+  # Sets all auto-sizeable fields to autosize
+  def autosize
+    OpenStudio::logFree(OpenStudio::Warn, "openstudio.sizing.ChillerElectricEIR", ".autosize not yet implemented for #{self.iddObject.type.valueDescription}.")
+  end
+
   # Takes the values calculated by the EnergyPlus sizing routines
   # and puts them into this object model in place of the autosized fields.
   # Must have previously completed a run with sql output for this to work.
@@ -31,21 +36,21 @@ class OpenStudio::Model::ChillerElectricEIR
   # returns the autosized chilled water flow rate as an optional double
   def autosizedReferenceChilledWaterFlowRate
 
-    return self.model.getAutosizedValue(self, 'Reference Chilled Water Flow Rate', 'm3/s')
+    return self.model.getAutosizedValue(self, 'Design Size Reference Chilled Water Flow Rate', 'm3/s')
     
   end
   
   # returns the autosized reference capacity as an optional double
   def autosizedReferenceCapacity
 
-    return self.model.getAutosizedValue(self, 'Reference Capacity', 'W')
+    return self.model.getAutosizedValue(self, 'Design Size Reference Capacity', 'W')
 
   end
   
   # returns the autosized reference condenser fluid flow rate as an optional double
   def autosizedReferenceCondenserFluidFlowRate
 
-    return self.model.getAutosizedValue(self, 'Reference Condenser Water Flow Rate', 'm3/s')
+    return self.model.getAutosizedValue(self, 'User-Specified Reference Condenser Water Flow Rate', 'm3/s')
     
   end
   

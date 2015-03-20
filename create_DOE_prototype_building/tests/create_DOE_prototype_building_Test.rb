@@ -17,7 +17,7 @@ class Hash
   end
 end
 
-class CreateDOEPrototypeBuildingTest < MiniTest::Test
+class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   # Create a set of models, return a list of failures
   def create_models(bldg_types, vintages, climate_zones)
@@ -76,20 +76,22 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   # Create a set of models, return a list of failures  
   def run_models(bldg_types, vintages, climate_zones)
   
+    # Open a channel to log info/warning/error messages
+    msg_log = OpenStudio::StringStreamLogSink.new
+    msg_log.setLogLevel(OpenStudio::Info)
+  
     #### Run the specified models
     failures = []
-    
-    # Find EnergyPlus
-    require 'openstudio/energyplus/find_energyplus'
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
-    ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
-    ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-    idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
     
     # Make a run manager and queue up the sizing run
     run_manager_db_path = OpenStudio::Path.new("#{Dir.pwd}/run.db")
     run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
-    
+
+    # Configure the run manager with the correct versions of Ruby and E+
+    config_opts = OpenStudio::Runmanager::ConfigOptions.new
+    config_opts.findTools(false, false, false, false)
+    run_manager.setConfigOptions(config_opts)
+
     # Loop through all of the given combinations
     bldg_types.sort.each do |building_type|
       vintages.sort.each do |building_vintage|
@@ -145,12 +147,15 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
           # Set the output path
           output_path = OpenStudio::Path.new("#{model_directory}/")
           
-          # Queue up the simulation
-          job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
-                                                                       idd_path,
-                                                                       idf_path,
-                                                                       epw_path,
-                                                                       output_path)
+          # Create a new workflow for the model to go through
+          workflow = OpenStudio::Runmanager::Workflow.new
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("ModelToIdf"))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("ExpandObjects"))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlusPreProcess"))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlus"))
+          workflow.add(config_opts.getTools)
+          job = workflow.create(output_path, model_path, epw_path)
+
           run_manager.enqueue(job, true)
           
         end
@@ -196,12 +201,12 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
             puts "**********#{building_type}-#{building_vintage}-#{climate_zone}******************"
             # Open the sql file, skipping if not found
             model_name = "#{building_type}-#{building_vintage}-#{climate_zone}"
-            sql_path_string = "#{Dir.pwd}/build/#{model_name}/EnergyPlus/eplusout.sql"
+            sql_path_string = "#{Dir.pwd}/build/#{model_name}/ModelToIdf/ExpandObjects-0/EnergyPlusPreProcess-0/EnergyPlus-0/eplusout.sql"
             sql_path = OpenStudio::Path.new(sql_path_string)
             sql = nil
             if OpenStudio.exists(sql_path)
               sql = OpenStudio::SqlFile.new(sql_path)
-            else 
+            else
               failures << "****Error - #{model_name} - Could not find sql file"
               puts "**********no sql here #{sql_path}******************"
               next
@@ -212,6 +217,10 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
             
             # Get the osm values for all fuel type/end use pairs
             # and compare to the legacy idf results
+            total_legacy_energy_val = 0
+            total_osm_energy_val = 0
+            total_legacy_water_val = 0
+            total_osm_water_val = 0
             fuel_types.each do |fuel_type|
               end_uses.each do |end_use|
                 
@@ -222,7 +231,14 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
                   failures << "Error - #{model_name} - #{fuel_type} #{end_use} legacy idf value not found"
                   next
                 end
-                
+
+                # Add the energy to the total
+                if fuel_type == 'Water'
+                  total_legacy_water_val += legacy_val
+                else
+                  total_legacy_energy_val += legacy_val
+                end
+      
                 # Select the correct units based on fuel type
                 units = 'GJ'
                 if fuel_type == 'Water'
@@ -241,7 +257,15 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
                   osm_val = 0
                 end
                 
-                # Calculate the error and check if less than 2%
+                # Add the energy to the total
+                if fuel_type == 'Water'
+                  total_osm_water_val += osm_val
+                else
+                 total_osm_energy_val += osm_val
+                end
+                
+                # Calculate the error and check if less than
+                # acceptable_error_percentage
                 percent_error = nil
                 if osm_val > 0 && legacy_val > 0
                   # If both 
@@ -270,6 +294,26 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
               end # Next end use
             end # Next fuel type
         
+            # Calculate the overall energy error
+            total_percent_error = nil
+            if total_osm_energy_val > 0 && total_legacy_energy_val > 0
+              # If both 
+              total_percent_error = ((total_osm_energy_val - total_legacy_energy_val)/total_legacy_energy_val) * 100
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = #{total_percent_error.round}% ***"
+            elsif total_osm_energy_val > 0 && total_legacy_energy_val == 0
+              # The osm has a fuel/end use that the legacy idf does not
+              total_percent_error = 1000
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm has extra fuel/end use that legacy idf does not"
+            elsif total_osm_energy_val == 0 && total_legacy_energy_val > 0
+              # The osm has a fuel/end use that the legacy idf does not
+              total_percent_error = 1000
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm is missing a fuel/end use that legacy idf has"
+            else
+              # Both osm and legacy are == 0 for, no error
+              total_percent_error = 0
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = both idf and osm don't use any energy."
+            end
+
             # Save the results to JSON
             File.open("#{Dir.pwd}/build/#{model_name}/comparison.json", 'w') do |file|
               file << JSON::pretty_generate(results_hash)
@@ -302,10 +346,10 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   end
   
   # Test the Secondary School in the PTool vintages and climate zones
-  def dont_test_secondary_school_ptool
+  def test_secondary_school
 
     bldg_types = ['SecondarySchool']
-    vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
@@ -331,10 +375,37 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
   # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",    
   
   # Test the Small Office in the PTool vintages and climate zones
+<<<<<<< HEAD
   def dont_test_small_office_ptool
+=======
+  def test_small_office
 
-    bldg_types = ['SmallOffice']#,'SecondarySchool']
-    vintages = ['90.1-2010', 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    bldg_types = ['SmallOffice']
+    vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010'] 
+    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+    all_failures = []
+    
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+>>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
+  
+  def test_small_hotel_ptool
+    
+    bldg_types = ['SmallHotel']
+    vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
@@ -353,6 +424,7 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
+<<<<<<< HEAD
 
   # Test the large hotel in the PTool vintages and climate zones
   def test_large_hotel_ptool
@@ -378,4 +450,8 @@ class CreateDOEPrototypeBuildingTest < MiniTest::Test
 
   end
 
+=======
+  
+  
+>>>>>>> b47458cdcb6aa2ad835f7ea6f39e8cfea11fdd0e
 end
