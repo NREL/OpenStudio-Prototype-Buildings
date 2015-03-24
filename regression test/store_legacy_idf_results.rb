@@ -4,11 +4,11 @@
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
 # Specify the building types to run.
-bldg_types = ["OfficeSmall", "SchoolSecondary"]
+bldg_types = ["SchoolPrimary"]
 
 # Specify the vintages you want to run.
-# valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["Pre1980", "Post1980", "STD2010"] #["Pre1980", "Post1980", "STD2010"]
+# valid options are: "Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"
+vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"] #["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"]
 
 # Specify the climate zones you want to run.
 # for PTool: Los Angeles, Houston, Chicago, and Baltimore
@@ -17,7 +17,7 @@ climate_zones = ["El Paso", "Houston", "Chicago", "Baltimore"]
 ################################################################################
 
 require 'json'
-require 'C:/Program Files (x86)/OpenStudio 1.5.0/Ruby/openstudio'
+require 'openstudio'
     
 # List of all fuel types
 fuel_types = ["Electricity", "Natural Gas", "Additional Fuel", "District Cooling", "District Heating", "Water"]
@@ -93,13 +93,17 @@ bldg_types.sort.each do |bldg_type|
           # conventions that will be used for the prototype buildings
           bldg_type_map = {
           "SchoolSecondary" => "SecondarySchool",
-          "OfficeSmall" => "SmallOffice"
+          "OfficeSmall" => "SmallOffice",
+          "SchoolPrimary" => "PrimarySchool"
           }
 
           vintage_map = {
           "Pre1980" => "DOE Ref Pre-1980",
           "Post1980" => "DOE Ref 1980-2004",
-          "STD2010" => "90.1-2010"
+          "STD2004" => "90.1-2004",
+          "STD2007" => "90.1-2007",
+          "STD2010" => "90.1-2010",
+          "STD2013" => "90.1-2013"
           }          
           
           climate_zone_map = {
