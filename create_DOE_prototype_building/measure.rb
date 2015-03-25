@@ -28,6 +28,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs << 'SecondarySchool'
     building_type_chs << 'SmallOffice'
     building_type_chs << 'SmallHotel'
+    building_type_chs << 'LargeHotel'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -202,6 +203,20 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_hotel_pnnl.osm'
       end
+      when 'LargeHotel'
+        require_relative 'resources/Prototype.large_hotel'
+
+        case building_vintage
+          when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+            geometry_file = 'Geometry.large_hotel.doe.osm'
+          when '90.1-2007'
+            geometry_file = 'Geometry.large_hotel.2004_2007.osm'
+          when '90.1-2010'
+            geometry_file = 'Geometry.large_hotel.2010.osm'
+          else
+            geometry_file = 'Geometry.large_hotel.2013.osm'
+        end
+        space_building_type_search = 'LargeHotel'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
@@ -213,7 +228,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
     model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
-    model.create_thermal_zones
+    model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     if has_swh
       swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
