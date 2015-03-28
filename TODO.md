@@ -38,19 +38,14 @@
 - High-rise Apartment
 
 #### General TODO
-- [x] Generalize spreadsheet export
-- [X] Flatten file structure to meet Measure requirements
+- [ ] Booster Water Heaters
+- [ ] Add heat recovery logic for 90.1-2004-2013
+- [ ] Add lighting controls logic for 90.1-2010-2013 
 - [ ] Chillers for Pre-1980 and 1980-2004
 - [ ] DX Heating coil efficiency
-- [ ] Check if two sizing runs necessary and remove one if not
-- [ ] Merge schedules to standards spreadsheet, leave HVAC and prototype inputs
-- [ ] Generalize standards spreadsheet JSON export to match hvac standards spreadsheet and add units to headers
-- [ ] Make 90.1-2004-2010 space type templates use schedules pulled from prototype bldgs
 - [ ] Scrape constructions and materials from prototype IDFs for 90.1-2004-2010
 - [ ] Put standards R-values in for Constructions instead of building up layer-by-layer in spreadsheet?
 - [ ] Run all legacy IDF files
-- [ ] Make spreadsheet export use cross-platform Ruby gem
-- [ ] Make sure that tests run in Ruby 2.0.0 (OS 1.5.+)
 
 #### Building Specific TODO
 
