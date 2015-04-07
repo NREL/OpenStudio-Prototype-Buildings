@@ -245,8 +245,8 @@ class OpenStudio::Model::Model
     self.getSpaces.each do |space|
       zone = OpenStudio::Model::ThermalZone.new(self)
       zone.setName("#{space.name} ZN")
-      if space_multiplier_map[space.name] != nil
-        zone.setMultiplier(space_multiplier_map[space.name])
+      if space_multiplier_map[space.name.to_s] != nil
+        zone.setMultiplier(space_multiplier_map[space.name.to_s])
       end
       space.setThermalZone(zone)
       
