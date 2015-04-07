@@ -205,6 +205,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             sql_path = OpenStudio::Path.new(sql_path_string)
             sql = nil
             if OpenStudio.exists(sql_path)
+              puts "Found SQL file."
               sql = OpenStudio::SqlFile.new(sql_path)
             else
               failures << "****Error - #{model_name} - Could not find sql file"
@@ -223,7 +224,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             total_osm_water_val = 0
             fuel_types.each do |fuel_type|
               end_uses.each do |end_use|
-                
                 # Get the legacy results number
                 legacy_val = legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, end_use)
                 #legacy_val = legacy_idf_results[building_type][building_vintage][climate_zone][fuel_type][end_use]
@@ -431,10 +431,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     all_failures = []
 
     # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
+    #all_failures += create_models(bldg_types, vintages, climate_zones)
 
     # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
+    #all_failures += run_models(bldg_types, vintages, climate_zones)
 
     # Compare the results to the legacy idf results
     all_failures += compare_results(bldg_types, vintages, climate_zones)
