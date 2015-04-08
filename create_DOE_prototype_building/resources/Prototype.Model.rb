@@ -106,6 +106,49 @@ class OpenStudio::Model::Model
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
 
+    # Assign construction to adiabatic construction
+    # Assign a material to all internal mass objects
+    cp02_carpet_pad = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
+    cp02_carpet_pad.setName('CP02 CARPET PAD')
+    cp02_carpet_pad.setRoughness("VeryRough")
+    cp02_carpet_pad.setThermalResistance(0.21648)
+    cp02_carpet_pad.setThermalAbsorptance(0.9)
+    cp02_carpet_pad.setSolarAbsorptance(0.7)
+    cp02_carpet_pad.setVisibleAbsorptance(0.8)
+
+    normalweight_concrete_floor = OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    normalweight_concrete_floor.setName('100mm Normalweight concrete floor')
+    normalweight_concrete_floor.setRoughness('MediumSmooth')
+    normalweight_concrete_floor.setThickness(0.1016)
+    normalweight_concrete_floor.setConductivity(2.31)
+    normalweight_concrete_floor.setDensity(2322)
+    normalweight_concrete_floor.setSpecificHeat(832)
+
+    nonres_floor_insulation = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
+    nonres_floor_insulation.setName('Nonres_Floor_Insulation')
+    nonres_floor_insulation.setRoughness("MediumSmooth")
+    nonres_floor_insulation.setThermalResistance(4.13066404430099)
+    nonres_floor_insulation.setThermalAbsorptance(0.9)
+    nonres_floor_insulation.setSolarAbsorptance(0.7)
+    nonres_floor_insulation.setVisibleAbsorptance(0.7)
+
+    adiabatic_construction = OpenStudio::Model::Construction.new(self)
+    adiabatic_construction.setName('nonres_floor_ceiling')
+    layers = OpenStudio::Model::MaterialVector.new
+    layers << cp02_carpet_pad
+    layers << normalweight_concrete_floor
+    layers << nonres_floor_insulation
+
+    adiabatic_construction.setLayers(layers)
+    self.getSurfaces.each do |surface|
+      if surface.outsideBoundaryCondition.to_s == "Adiabatic"
+        surface.setConstruction(adiabatic_construction)
+      elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
+        surface.setOutsideBoundaryCondition("Adiabatic")
+        surface.setConstruction(adiabatic_construction)
+      end
+    end
+
     path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
 
     # Load the openstudio_standards.json file
@@ -185,14 +228,26 @@ class OpenStudio::Model::Model
 
   end  
 
-  def create_thermal_zones
+  def create_thermal_zones(building_type,building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started creating thermal zones')
+
+    # This map define the multipliers for spaces with multipliers not equals to 1
+    case building_type
+      when 'LargeHotel'
+        space_multiplier_map = define_space_multiplier
+      else
+        space_multiplier_map ={}
+    end
+
 
     # Create a thermal zone for each space in the self
     self.getSpaces.each do |space|
       zone = OpenStudio::Model::ThermalZone.new(self)
       zone.setName("#{space.name} ZN")
+      if space_multiplier_map[space.name.to_s] != nil
+        zone.setMultiplier(space_multiplier_map[space.name.to_s])
+      end
       space.setThermalZone(zone)
       
       # Skip thermostat for spaces with no space type

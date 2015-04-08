@@ -2,9 +2,7 @@ require 'openstudio'
 require 'openstudio/ruleset/ShowRunnerOutput'
 require 'minitest/autorun'
 require 'json'
-
 require_relative '../measure.rb'
-
 require 'fileutils'
 
 # Add a "dig" method to Hash to check if deeply nested elements exist
@@ -18,7 +16,6 @@ class Hash
 end
 
 class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
-    
   # Create a set of models, return a list of failures
   def create_models(bldg_types, vintages, climate_zones)
 
@@ -63,6 +60,15 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           if result.value.valueName != 'Success'
             failures << "Error - #{model_name} - Model was not created successfully."
           end
+
+          model_directory = "#{Dir.pwd}/build/#{building_type}-#{building_vintage}-#{climate_zone}"
+
+          # Convert the model to energyplus idf
+          forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
+          idf = forward_translator.translateModel(model)
+          idf_path_string = "#{model_directory}/#{model_name}.idf"
+          idf_path = OpenStudio::Path.new(idf_path_string)
+          idf.save(idf_path,true)
           
         end     
       end
@@ -116,13 +122,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             failures << "Error - #{model_name} - #{model_path_string} couldn't be found"
             return failures
           end
-          
-          # Convert the model to energyplus idf
-          forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
-          idf = forward_translator.translateModel(model)
-          idf_path_string = "#{model_directory}/#{model_name}.idf"
-          idf_path = OpenStudio::Path.new(idf_path_string)    
-          idf.save(idf_path,true)
           
           # Find the weather file
           epw_path = nil
@@ -205,6 +204,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             sql_path = OpenStudio::Path.new(sql_path_string)
             sql = nil
             if OpenStudio.exists(sql_path)
+              puts "Found SQL file."
               sql = OpenStudio::SqlFile.new(sql_path)
             else
               failures << "****Error - #{model_name} - Could not find sql file"
@@ -223,7 +223,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             total_osm_water_val = 0
             fuel_types.each do |fuel_type|
               end_uses.each do |end_use|
-                
                 # Get the legacy results number
                 legacy_val = legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, end_use)
                 #legacy_val = legacy_idf_results[building_type][building_vintage][climate_zone][fuel_type][end_use]
@@ -318,7 +317,25 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             File.open("#{Dir.pwd}/build/#{model_name}/comparison.json", 'w') do |file|
               file << JSON::pretty_generate(results_hash)
             end
-        
+
+            # Save the results to CSV
+            File.open("#{Dir.pwd}/build/#{model_name}/comparison.csv", 'w') do |file|
+              file.write("building_type,building_vintage,climate_zone,fuel_type,end_use,Legacy Val,OpenStudio Val,Percent Error\n")
+              results_hash.each_pair do |key1, value1|
+                value1.each_pair do |key2, value2|
+                  value2.each_pair do |key3, value3|
+                    value3.each_pair do |key4, value4|
+                      value4.each_pair do |key5, value5|
+                        if value5['Percent Error'].to_i != 0
+                          file.write("#{key1},#{key2},#{key3},#{key4},#{key5},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+
           end
         end
       end
@@ -403,6 +420,28 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-  
+
+  # Test the large hotel in the PTool vintages and climate zones
+  def test_large_hotel
+    bldg_types = ['LargeHotel']
+    vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    climate_zones = ['ASHRAE 169-2006-2A']
+
+    all_failures = []
+
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+  end
   
 end

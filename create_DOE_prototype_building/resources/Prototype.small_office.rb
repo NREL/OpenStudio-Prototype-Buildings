@@ -56,7 +56,7 @@ class OpenStudio::Model::Model
     return system_to_space_map
 
   end
-     
+
   def add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
