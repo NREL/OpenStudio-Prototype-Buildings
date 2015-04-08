@@ -278,7 +278,6 @@ class OpenStudio::Model::Model
   # Create a space type from the openstudio standards dataset.
   # TODO make return an OptionalSpaceType
   def add_space_type(template, clim, building_type, spc_type)
-
     #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
 
     # Get the space type data
@@ -384,14 +383,12 @@ class OpenStudio::Model::Model
     unless occupancy_per_area == 0 || occupancy_per_area.nil? then make_people = true end
 
     if make_people == true
-
       # create the people definition
       people_def = OpenStudio::Model::PeopleDefinition.new(self)
       people_def.setName("#{name} People Definition")
-      unless  occupancy_per_area == 0 || occupancy_per_area.nil?
-        people_def.setPeopleperSpaceFloorArea(OpenStudio.convert(occupancy_per_area / 1000, 'people/ft^2', 'people/m^2').get)
-      end
+      people_def.setPeopleperSpaceFloorArea(OpenStudio.convert(occupancy_per_area/1000.0, 'people/ft^2', 'people/m^2').get)
 
+      puts "occupancy_per_area:#{occupancy_per_area} = #{OpenStudio.convert(occupancy_per_area/1000.0, 'people/ft^2', 'people/m^2').get} "
       # create the people instance and hook it up to the space type
       people = OpenStudio::Model::People.new(people_def)
       people.setName("#{name} People")
