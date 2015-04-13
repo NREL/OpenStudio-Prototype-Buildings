@@ -284,8 +284,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                   # Both osm and legacy are == 0 for this fuel/end use, no error
                   percent_error = 0
                 end
-                
-                # Record the values
+
                 results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val'] = legacy_val.round(2)
                 results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['OpenStudio Val'] = osm_val.round(2)
                 results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Percent Error'] = percent_error.round(2)

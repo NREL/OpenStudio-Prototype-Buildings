@@ -377,67 +377,94 @@ class OpenStudio::Model::Model
   end #add occupancy sensors
 
   def add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
-   
     # TODO Standards - translate w/linear foot of facade, door, parking, etc
     # into lookup table and implement that way instead of hard-coding as
     # inputs in the spreadsheet.
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding exterior lights')
- 
-    # Occupancy Sensing Exterior Lights
-    # which reduce to 70% power when no one is around.
-    unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
-      occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
-      occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
-      occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
-      occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
-      occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-      occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
-      occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
-      if building_type == "SmallHotel"
-        occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-      else
-        occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-        occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-      end
-      occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
-      occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
-      occ_sens_ext_lts.setControlOption('AstronomicalClock')
-    end
-    
-    # Building Facade and Landscape Lights
-    # that don't dim at all at night.    
-    unless prototype_input['nondimming_exterior_lighting_power'].nil?
-      nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
-      nondimming_ext_lts_name = 'NonDimming Exterior Lights'
-      nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
-      nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
-      # 
-      nondimming_ext_lts_sch = nil
-      if building_vintage == '90.1-2010'
-        nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-        nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
-        nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
+
+    if building_type == "LargeHotel"
+      data = self.find_object(@standards['exterior'], {'template'=>building_vintage, 'climate_zone_set'=>'ClimateZone 1-8', 'building_type'=>building_type})
+
+      ext_lts_power = data['exterior_lights']
+      ext_lts_sch_name = data['exterior_lights_schedule']
+      ext_lts_name = 'Exterior Lights'
+      ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      ext_lts_def.setName("#{ext_lts_name} Def")
+      ext_lts_def.setDesignLevel(ext_lts_power)
+      ext_lts_sch = self.add_schedule(ext_lts_sch_name)
+
+      ext_lts = OpenStudio::Model::ExteriorLights.new(ext_lts_def, ext_lts_sch)
+      ext_lts.setName("#{ext_lts_name}")
+      ext_lts.setControlOption('AstronomicalClock')
+
+      # TODO: The exterior fuel equipment is not available yet. Use exterior lights instead.
+      ext_fuel_equip_power = data['fuel_equipment']
+      ext_fuel_equip_sch_name = data['fuel_equipment_schedule']
+      ext_fuel_equip_name = 'Exterior Fuel Equipment'
+      ext_fuel_equip_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      ext_fuel_equip_def.setName("#{ext_fuel_equip_name} Def")
+      ext_fuel_equip_def.setDesignLevel(ext_fuel_equip_power)
+      ext_fuel_equip_sch = self.add_schedule(ext_fuel_equip_sch_name)
+
+      ext_fuel_equip = OpenStudio::Model::ExteriorLights.new(ext_fuel_equip_def, ext_fuel_equip_sch)
+      ext_fuel_equip.setName("#{ext_fuel_equip_name}")
+      ext_fuel_equip.setControlOption('ScheduleNameOnly')
+
+    else
+      # Occupancy Sensing Exterior Lights
+      # which reduce to 70% power when no one is around.
+      unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
+        occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
+        occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
+        occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+        occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
+        occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
+        occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+        occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
+        occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
         if building_type == "SmallHotel"
-          nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
         else
-          nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-          nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
         end
-      elsif building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
-        nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
+        occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
+        occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
+        occ_sens_ext_lts.setControlOption('AstronomicalClock')
       end
-      nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
-      nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
-      nondimming_ext_lts.setControlOption('AstronomicalClock')
-    end
-   
+
+      # Building Facade and Landscape Lights
+      # that don't dim at all at night.
+      unless prototype_input['nondimming_exterior_lighting_power'].nil?
+        nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
+        nondimming_ext_lts_name = 'NonDimming Exterior Lights'
+        nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+        nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
+        nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
+        #
+        nondimming_ext_lts_sch = nil
+        if building_vintage == '90.1-2010'
+          nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+          nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
+          nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
+          if building_type == "SmallHotel"
+            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+          else
+            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+          end
+        elsif building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+          nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
+        end
+        nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
+        nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
+        nondimming_ext_lts.setControlOption('AstronomicalClock')
+      end
+   end
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding exterior lights')
     
     return true
-    
   end #add exterior lights  
   
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)

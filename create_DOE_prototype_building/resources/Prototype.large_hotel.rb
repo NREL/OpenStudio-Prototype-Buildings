@@ -73,7 +73,6 @@ class OpenStudio::Model::Model
     simulation_control.setLoadsConvergenceToleranceValue(0.4)
     simulation_control.setTemperatureConvergenceToleranceValue(0.5)
 
-
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
     system_to_space_map = define_hvac_system_map
 
