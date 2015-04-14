@@ -118,7 +118,7 @@ class OpenStudio::Model::Model
       pri_chw_pump.setCoefficient1ofthePartLoadPerformanceCurve(0)
       pri_chw_pump.setCoefficient2ofthePartLoadPerformanceCurve(1)
       pri_chw_pump.setCoefficient3ofthePartLoadPerformanceCurve(0)
-      pri_chw_pump.setCoefficient4ofthePartLoadPerformanceCurve(0)    
+      pri_chw_pump.setCoefficient4ofthePartLoadPerformanceCurve(0)
       pri_chw_pump.setPumpControlType('Intermittent')
       pri_chw_pump.addToNode(chilled_water_loop.supplyInletNode) 
       # Secondary chilled water pump
@@ -1879,4 +1879,116 @@ class OpenStudio::Model::Model
     
   end
 
+  def add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
+    hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
+    # create new air loop if story contains primary zones
+
+    airloop_primary = OpenStudio::Model::AirLoopHVAC.new(self)
+    airloop_primary.setName("DOAS Air Loop HVAC")
+    # modify system sizing properties
+    sizing_system = airloop_primary.sizingSystem
+    # set central heating and cooling temperatures for sizing
+    sizing_system.setCentralCoolingDesignSupplyAirTemperature(12.8)
+    sizing_system.setCentralHeatingDesignSupplyAirTemperature(40)     #ML OS default is 16.7
+    # load specification
+    sizing_system.setSystemOutdoorAirMethod("ZoneSum")                #ML OS default is ZoneSum
+    sizing_system.setTypeofLoadtoSizeOn("Sensible")         # DOAS
+    sizing_system.setAllOutdoorAirinCooling(true)           # DOAS
+    sizing_system.setAllOutdoorAirinHeating(true)           # DOAS
+    sizing_system.setMinimumSystemAirFlowRatio(1.0)         # No DCV
+
+    air_loop_comps = []
+
+    # set availability schedule
+    airloop_primary.setAvailabilitySchedule(hvac_op_sch)
+    # create air loop fan
+    # constant speed fan
+    fan = OpenStudio::Model::FanConstantVolume.new(self, self.alwaysOnDiscreteSchedule)
+    fan.setFanEfficiency(0.58175)
+    fan.setPressureRise(622.5) #Pa
+    fan.autosizeMaximumFlowRate
+    fan.setMotorEfficiency(0.895)
+    fan.setMotorInAirstreamFraction(1.0)
+    air_loop_comps << fan
+
+    # create heating coil
+    # water coil
+    heating_coil = OpenStudio::Model::CoilHeatingWater.new(self, self.alwaysOnDiscreteSchedule)
+    air_loop_comps << heating_coil
+
+    # create cooling coil
+    # water coil
+    cooling_coil = OpenStudio::Model::CoilCoolingWater.new(self, self.alwaysOnDiscreteSchedule)
+    air_loop_comps << cooling_coil
+
+    # create controller outdoor air
+    controller_OA = OpenStudio::Model::ControllerOutdoorAir.new(self)
+    controller_OA.autosizeMinimumOutdoorAirFlowRate
+    controller_OA.autosizeMaximumOutdoorAirFlowRate
+
+    # create ventilation schedules and assign to OA controller
+    controller_OA.setMinimumFractionofOutdoorAirSchedule(self.alwaysOnDiscreteSchedule)
+    controller_OA.setMaximumFractionofOutdoorAirSchedule(self.alwaysOnDiscreteSchedule)
+    controller_OA.setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum")
+
+    # create outdoor air system
+    system_OA = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, controller_OA)
+    air_loop_comps << system_OA
+    # create ERV
+    heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
+    heat_exchanger.setAvailabilitySchedule(self.alwaysOnDiscreteSchedule)
+    sensible_eff = 0.75
+    latent_eff = 0.69
+    heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(sensible_eff)
+    heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(sensible_eff)
+    heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(sensible_eff)
+    heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(sensible_eff)
+    heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(latent_eff)
+    heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(latent_eff)
+    heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(latent_eff)
+    heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(latent_eff)
+    heat_exchanger.setFrostControlType("ExhaustOnly")
+    heat_exchanger.setThresholdTemperature(-12.2)
+    heat_exchanger.setInitialDefrostTimeFraction(0.1670)
+    heat_exchanger.setRateofDefrostTimeFractionIncrease(0.0240)
+    heat_exchanger.setEconomizerLockout(false)
+
+    # create scheduled setpoint manager for airloop
+    # DOAS or VAV for cooling and not ventilation
+    setpoint_manager = OpenStudio::Model::SetpointManagerOutdoorAirReset.new(self)
+    setpoint_manager.setControlVariable('Temperature')
+    setpoint_manager.setSetpointatOutdoorLowTemperature(15.5)
+    setpoint_manager.setOutdoorLowTemperature(15.5)
+    setpoint_manager.setSetpointatOutdoorHighTemperature(12.8)
+    setpoint_manager.setOutdoorHighTemperature(21)
+
+    # connect components to airloop
+    # find the supply inlet node of the airloop
+    airloop_supply_inlet = airloop_primary.supplyInletNode
+    # add the components to the airloop
+    air_loop_comps.each do |comp|
+      comp.addToNode(airloop_supply_inlet)
+      if comp.to_CoilHeatingWater.is_initialized
+        hot_water_loop.addDemandBranchForComponent(comp)
+        comp.controllerWaterCoil.get.setMinimumActuatedFlow(0)
+      elsif comp.to_CoilCoolingWater.is_initialized
+        chilled_water_loop.addDemandBranchForComponent(comp)
+        comp.controllerWaterCoil.get.setMinimumActuatedFlow(0)
+      end
+    end
+    # add erv to outdoor air system
+    heat_exchanger.addToNode(system_OA.outboardOANode.get)
+
+    # add setpoint manager to supply equipment outlet node
+    setpoint_manager.addToNode(airloop_primary.supplyOutletNode)
+
+    # add thermal zones to airloop
+    thermal_zones.each do |zone|
+      # make an air terminal for the zone
+      air_terminal = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(self, self.alwaysOnDiscreteSchedule)
+
+      # attach new terminal to the zone and to the airloop
+      airloop_primary.addBranchForZone(zone, air_terminal.to_StraightComponent)
+    end
+  end
 end

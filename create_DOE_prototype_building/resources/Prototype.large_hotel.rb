@@ -38,17 +38,15 @@ class OpenStudio::Model::Model
                     'Retail_2_Flr_1',
                     'Basement',
                     'Storage_Flr_1',
-                    # The DOAS rooms
+                ]
+        },
+        {
+            'type' => 'DOAS',
+            'space_names' =>
+                [
                     'Room_1_Flr_3','Room_2_Flr_3','Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3','Room_5_Flr_3','Room_6_Flr_3','Room_1_Flr_6','Room_2_Flr_6','Room_3_Mult9_Flr_6'
                 ]
-        }#,
-        # {
-        #     'type' => 'DOAS',
-        #     'space_names' =>
-        #         [
-        #             'Room_1_Flr_3','Room_2_Flr_3','Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3','Room_5_Flr_3','Room_6_Flr_3','Room_1_Flr_6','Room_2_Flr_6','Room_3_Mult9_Flr_6'
-        #         ]
-        # }
+        }
     ]
     return system_to_space_map
   end
@@ -72,7 +70,6 @@ class OpenStudio::Model::Model
     simulation_control =  self.getSimulationControl
     simulation_control.setLoadsConvergenceToleranceValue(0.4)
     simulation_control.setTemperatureConvergenceToleranceValue(0.5)
-
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
     system_to_space_map = define_hvac_system_map
@@ -107,8 +104,8 @@ class OpenStudio::Model::Model
             OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
             return false
           end
-        #when 'DOAS'
-        #  self.add_doas(prototype_input, hvac_standards, thermal_zones)
+        when 'DOAS'
+          self.add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Undefined HVAC system type called #{system['type']}")
           return false
@@ -118,8 +115,4 @@ class OpenStudio::Model::Model
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
     return true
   end #add hvac
-
-  def add_doas(prototype_input, hvac_standards,thermal_zones)
-
-  end
 end

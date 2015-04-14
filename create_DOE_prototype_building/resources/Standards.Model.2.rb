@@ -152,7 +152,7 @@ class OpenStudio::Model::Model
         #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added schedule: #{schedule_name}")
         return schedule
       end
-    end 
+    end
  
     require 'date'
 
@@ -859,7 +859,7 @@ class OpenStudio::Model::Model
     return OpenStudio::Model::OptionalDefaultConstructionSet.new(construction_set)
   
   end
-  
+
   private
 
   # Helper method to make a shortened version of a name
