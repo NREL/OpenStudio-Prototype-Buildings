@@ -334,7 +334,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                 end
               end
             end
-
           end
         end
       end
