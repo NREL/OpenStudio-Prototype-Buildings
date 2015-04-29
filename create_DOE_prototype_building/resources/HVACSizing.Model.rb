@@ -2,6 +2,14 @@
 # open the class to add methods to size all HVAC equipment
 class OpenStudio::Model::Model
 
+  # Ensure that the version of OpenStudio is 1.6.0 or greater
+  # because the HVACSizing .autosizedFoo methods are currently built
+  # expecting the EnergyPlus 8.2 syntax.
+  min_os_version = "1.6.0"
+  if OpenStudio::Model::Model.new.version < OpenStudio::VersionString.new(min_os_version)
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.model.Model", "This measure requires a minimum OpenStudio version of #{min_os_version} because the HVACSizing .autosizedFoo methods expect EnergyPlus 8.2 output variable names.")
+  end
+  
   # Load the helper libraries for getting the autosized
   # values for each type of model object.
   require_relative 'HVACSizing.AirTerminalSingleDuctParallelPIUReheat'
@@ -39,9 +47,7 @@ class OpenStudio::Model::Model
   require_relative 'HVACSizing.FanConstantVolume'
   require_relative 'HVACSizing.FanVariableVolume'
   require_relative 'HVACSizing.FanOnOff'  
-  
-  
-  
+
   # A helper method to run a sizing run and pull any values calculated during
   # autosizing back into the self.
   def runSizingRun(sizing_run_dir = "#{Dir.pwd}/SizingRun")
@@ -167,6 +173,12 @@ class OpenStudio::Model::Model
     # Load the sql file created by the sizing run
     if OpenStudio::exists(sql_path)
       sql = OpenStudio::SqlFile.new(sql_path)
+      # Check to make sure the sql file is readable,
+      # which won't be true if EnergyPlus crashed during simulation.
+      if !sql.connectionOpen
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "The sizing run failed, cannot create model.  Look at the eplusout.err file in #{File.dirname(sql_path.to_s)} to see the cause.")
+        return false
+      end
       # Attach the sql file from the run to the sizing model
       self.setSqlFile(sql)
     else 
@@ -174,6 +186,20 @@ class OpenStudio::Model::Model
       return false
     end
     
+    # Check that the sizing run finished without severe errors
+    error_query = "SELECT ErrorMessage 
+        FROM Errors 
+        WHERE ErrorType='1'"
+
+    errs = self.sqlFile.get.execAndReturnVectorOfString(error_query)
+    if errs.is_initialized
+      errs = errs.get
+      if errs.size > 0
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "The sizing run failed with the following severe errors: #{errs.join('\n')}.")
+        return false
+      end
+    end
+
     # Change the model back to running the weather file
     sim_control.setRunSimulationforSizingPeriods(false)
     sim_control.setRunSimulationforWeatherFileRunPeriods(true)

@@ -2,7 +2,7 @@
 # Extend the class to add Secondary School specific stuff
 class OpenStudio::Model::Model
  
-  def define_space_type_map
+  def define_space_type_map(building_type, building_vintage, climate_zone)
 
     space_type_map = {
       'Office' => ['Offices_ZN_1_FLR_1', 'Offices_ZN_1_FLR_2'],
@@ -50,7 +50,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def define_hvac_system_map
+  def define_hvac_system_map(building_type, building_vintage, climate_zone)
 
     system_to_space_map = [
       {
@@ -158,12 +158,12 @@ class OpenStudio::Model::Model
     return system_to_space_map
 
   end
-    
+
   def add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
     
-    system_to_space_map = define_hvac_system_map
+    system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
 
     chilled_water_loop = self.add_chw_loop(prototype_input, hvac_standards)
 

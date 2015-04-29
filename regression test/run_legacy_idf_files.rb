@@ -7,7 +7,7 @@
 # Both sets of buildings contain 2004.  The Prototype Buildings will be used.
 
 # Specify the building types to run.
-bldg_types = ['OfficeMedium']#['OfficeSmall', 'SchoolSecondary']
+bldg_types = ['OfficeMedium']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
@@ -67,6 +67,8 @@ bldg_types.each do |bldg_type|
           bldg_type_search = 'LargeOffice'
         when 'SchoolSecondary'
           bldg_type_search = 'SecondarySchool'
+        when "HotelLarge"
+          bldg_type_search=  "LargeHotel"
         else
           bldg_type_search = bldg_type
         end
