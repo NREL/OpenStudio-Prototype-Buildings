@@ -371,6 +371,169 @@ class OpenStudio::Model::Model
 
   end
 
+  def add_pvav(prototype_input, hvac_standards, thermal_zones)
+
+    # hw_temp_f = 180 #HW setpoint 180F 
+    # hw_delta_t_r = 20 #20F delta-T    
+    # hw_temp_c = OpenStudio.convert(hw_temp_f,'F','C').get
+    # hw_delta_t_k = OpenStudio.convert(hw_delta_t_r,'R','K').get
+
+    #hvac operation schedule
+    # HVACOperationSchd,On/Off,
+    # Through: 12/31,
+    # For: Weekdays SummerDesignDay,Until: 06:00,0.0,Until: 22:00,1.0,Until: 24:00,0.0,
+    # For: Saturday WinterDesignDay,Until: 06:00,0.0,Until: 18:00,1.0,Until: 24:00,0.0,
+    # For: AllOtherDays,Until: 24:00,0.0    
+    #weekdays and summer design days
+    hvac_op_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    hvac_op_sch.setName('HVAC Operation Schedule')
+    hvac_op_sch.defaultDaySchedule.setName('HVAC Operation Schedule Weekdays')
+    hvac_op_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0), 0.0)
+    hvac_op_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,22,0,0), 1.0)
+    hvac_op_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
+    hvac_op_sch.setSummerDesignDaySchedule(hvac_op_sch.defaultDaySchedule)
+    #saturdays and winter design days
+    saturday_rule = OpenStudio::Model::ScheduleRule.new(hvac_op_sch)
+    saturday_rule.setName('HVAC Operation Schedule Saturday Rule')
+    saturday_rule.setApplySaturday(true)   
+    saturday = saturday_rule.daySchedule  
+    saturday.setName('HVAC Operation Schedule Saturday')
+    saturday.addValue(OpenStudio::Time.new(0,6,0,0), 0.0)
+    saturday.addValue(OpenStudio::Time.new(0,18,0,0), 1.0)
+    saturday.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
+    hvac_op_sch.setWinterDesignDaySchedule(saturday)
+    #sundays
+    sunday_rule = OpenStudio::Model::ScheduleRule.new(hvac_op_sch)
+    sunday_rule.setName('HVAC Operation Schedule Sunday Rule')
+    sunday_rule.setApplySunday(true)   
+    sunday = sunday_rule.daySchedule  
+    sunday.setName('HVAC Operation Schedule Sunday')
+    sunday.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
+    
+    #motorized oa damper schedule
+    # MinOA_MotorizedDamper_Sched,Fraction,
+    # Through: 12/31,
+    # For: Weekdays SummerDesignDay,Until: 07:00,0.0,Until: 22:00,1.0,Until: 24:00,0.0,
+    # For: Saturday WinterDesignDay,Until: 07:00,0.0,Until: 18:00,1.0,Until: 24:00,0.0,
+    # For: AllOtherDays,Until: 24:00,0.0
+    #weekdays and summer design days
+    motorized_oa_damper_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    motorized_oa_damper_sch.setName('Motorized OA Damper Schedule')
+    motorized_oa_damper_sch.defaultDaySchedule.setName('Motorized OA Damper Schedule Weekdays')
+    motorized_oa_damper_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,7,0,0), 0.0)
+    motorized_oa_damper_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,22,0,0), 1.0)
+    motorized_oa_damper_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
+    motorized_oa_damper_sch.setSummerDesignDaySchedule(motorized_oa_damper_sch.defaultDaySchedule)
+    #saturdays and winter design days
+    saturday_rule = OpenStudio::Model::ScheduleRule.new(motorized_oa_damper_sch)
+    saturday_rule.setName('Motorized OA Damper Schedule Saturday Rule')
+    saturday_rule.setApplySaturday(true)   
+    saturday = saturday_rule.daySchedule  
+    saturday.setName('Motorized OA Damper Schedule Saturday')
+    saturday.addValue(OpenStudio::Time.new(0,7,0,0), 0.0)
+    saturday.addValue(OpenStudio::Time.new(0,18,0,0), 1.0)
+    saturday.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)
+    motorized_oa_damper_sch.setWinterDesignDaySchedule(saturday)
+    #sundays
+    sunday_rule = OpenStudio::Model::ScheduleRule.new(motorized_oa_damper_sch)
+    sunday_rule.setName('Motorized OA Damper Schedule Sunday Rule')
+    sunday_rule.setApplySunday(true)   
+    sunday = sunday_rule.daySchedule  
+    sunday.setName('Motorized OA Damper Schedule Sunday')
+    sunday.addValue(OpenStudio::Time.new(0,24,0,0), 0.0)    
+    
+    #control temps used across all air handlers
+    clg_sa_temp_f = 55 # Central deck clg temp 55F 
+    prehtg_sa_temp_f = 44.6 # Preheat to 44.6F
+    htg_sa_temp_f = 55 # Central deck htg temp 55F
+    rht_sa_temp_f = 104 # VAV box reheat to 104F
+    
+    clg_sa_temp_c = OpenStudio.convert(clg_sa_temp_f,'F','C').get
+    prehtg_sa_temp_c = OpenStudio.convert(prehtg_sa_temp_f,'F','C').get
+    htg_sa_temp_c = OpenStudio.convert(htg_sa_temp_f,'F','C').get
+    rht_sa_temp_c = OpenStudio.convert(rht_sa_temp_f,'F','C').get
+    
+    sa_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    sa_temp_sch.setName("Supply Air Temp - #{clg_sa_temp_f}F")
+    sa_temp_sch.defaultDaySchedule.setName("Supply Air Temp - #{clg_sa_temp_f}F Default")
+    sa_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),clg_sa_temp_c)
+
+    #air handler
+    air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
+    air_loop.setName("#{thermal_zones.size} Zone VAV")
+    air_loop.setAvailabilitySchedule(hvac_op_sch)
+    
+    #air handler controls
+    hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
+    hw_stpt_manager.addToNode(air_loop.supplyOutletNode)
+    sizing_system = air_loop.sizingSystem
+    sizing_system.setSizingOption('Coincident')
+    sizing_system.setAllOutdoorAirinCooling(false)
+    sizing_system.setAllOutdoorAirinHeating(false)
+    sizing_system.setSystemOutdoorAirMethod('VentilationRateProcedure')
+    air_loop.setNightCycleControlType('CycleOnAny')
+    
+    #fan
+    fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
+    fan.setName("#{thermal_zones.size} Zone VAV Fan")
+    fan.setFanEfficiency(0.6045)
+    fan.setMotorEfficiency(0.93)
+    fan_static_pressure_in_h2o = 5.58
+    fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
+    fan.setPressureRise(fan_static_pressure_pa)
+    fan.addToNode(air_loop.supplyInletNode)
+    
+    #cooling coil
+    clg_coil = OpenStudio::Model::CoilCoolingWater.new(self,self.alwaysOnDiscreteSchedule)
+    clg_coil.setName("#{thermal_zones.size} Zone VAV Clg Coil")
+    clg_coil.addToNode(air_loop.supplyInletNode)
+    chilled_water_loop.addDemandBranchForComponent(clg_coil)
+    
+    #heating coil
+    htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
+    htg_coil.setName("#{thermal_zones.size} Zone VAV Main Htg Coil")
+    htg_coil.setRatedInletWaterTemperature(hw_temp_c)
+    htg_coil.setRatedInletAirTemperature(prehtg_sa_temp_c)
+    htg_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
+    htg_coil.setRatedOutletAirTemperature(htg_sa_temp_c)
+    htg_coil.addToNode(air_loop.supplyInletNode)
+    hot_water_loop.addDemandBranchForComponent(htg_coil)
+    
+    #outdoor air intake system
+    oa_intake_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
+    oa_intake = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, oa_intake_controller)    
+    oa_intake.setName("#{thermal_zones.size} Zone VAV OA Sys")
+    oa_intake_controller.setEconomizerControlType('NoEconomizer')
+    oa_intake_controller.setMinimumLimitType('FixedMinimum')
+    oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
+    oa_intake.addToNode(air_loop.supplyInletNode)
+    
+    #hook the VAV system to each zone
+    thermal_zones.each do |zone|
+    
+      #reheat coil
+      rht_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
+      rht_coil.setName("#{zone.name} Rht Coil")
+      rht_coil.setRatedInletWaterTemperature(hw_temp_c)
+      rht_coil.setRatedInletAirTemperature(htg_sa_temp_c)
+      rht_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
+      rht_coil.setRatedOutletAirTemperature(rht_sa_temp_c)
+      hot_water_loop.addDemandBranchForComponent(rht_coil)        
+      
+      #vav terminal
+      terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
+      terminal.setName("#{zone.name} VAV Term")
+      terminal.setZoneMinimumAirFlowMethod('Constant')
+      terminal.setConstantMinimumAirFlowFraction(0.3)
+      terminal.setDamperHeatingAction('Normal')
+      air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
+    
+    end
+
+    return true
+
+  end
+
   def add_psz_ac(prototype_input, hvac_standards, thermal_zones)
 
     #hvac operation schedule
@@ -894,73 +1057,91 @@ class OpenStudio::Model::Model
 
   def add_chiller(hvac_standards, chlr_props)
     
-    curve_biquadratics = hvac_standards['curve_biquadratics']
-    curve_quadratics = hvac_standards['curve_quadratics']
-    curve_bicubics = hvac_standards['curve_bicubics']
+    # curve_biquadratics = hvac_standards['curve_biquadratics']
+    # curve_quadratics = hvac_standards['curve_quadratics']
+    # curve_bicubics = hvac_standards['curve_bicubics']
   
     # Make the CAPFT curve
-    capft_properties = find_object(curve_biquadratics, {'name'=>chlr_props['capft']})
-    ccFofT = OpenStudio::Model::CurveBiquadratic.new(self)
-    ccFofT.setName(capft_properties['name'])
-    ccFofT.setCoefficient1Constant(capft_properties['coeff_1'])
-    ccFofT.setCoefficient2x(capft_properties['coeff_2'])
-    ccFofT.setCoefficient3xPOW2(capft_properties['coeff_3'])
-    ccFofT.setCoefficient4y(capft_properties['coeff_4'])
-    ccFofT.setCoefficient5yPOW2(capft_properties['coeff_5'])
-    ccFofT.setCoefficient6xTIMESY(capft_properties['coeff_6'])
-    ccFofT.setMinimumValueofx(capft_properties['min_x'])
-    ccFofT.setMaximumValueofx(capft_properties['max_x'])
-    ccFofT.setMinimumValueofy(capft_properties['min_y'])
-    ccFofT.setMaximumValueofy(capft_properties['max_y'])
+    puts chlr_props['capft']
+    # capft_properties = find_object(curve_biquadratics, {'name'=>chlr_props['capft']})
+    # ccFofT = OpenStudio::Model::CurveBiquadratic.new(self)
+    # puts capft_properties
+    ccFofT = add_curve( OpenStudio::Model::CurveBiquadratic.iddObjectType, chlr_props['capft'], hvac_standards )
+
+    # ccFofT.setName(capft_properties['name'])
+    # ccFofT.setCoefficient1Constant(capft_properties['coeff_1'])
+    # ccFofT.setCoefficient2x(capft_properties['coeff_2'])
+    # ccFofT.setCoefficient3xPOW2(capft_properties['coeff_3'])
+    # ccFofT.setCoefficient4y(capft_properties['coeff_4'])
+    # ccFofT.setCoefficient5yPOW2(capft_properties['coeff_5'])
+    # ccFofT.setCoefficient6xTIMESY(capft_properties['coeff_6'])
+    # ccFofT.setMinimumValueofx(capft_properties['min_x'])
+    # ccFofT.setMaximumValueofx(capft_properties['max_x'])
+    # ccFofT.setMinimumValueofy(capft_properties['min_y'])
+    # ccFofT.setMaximumValueofy(capft_properties['max_y'])
 
     # Make the EIRFT curve
-    eirft_properties = find_object(curve_biquadratics, {'name'=>chlr_props['eirft']})
-    eirToCorfOfT = OpenStudio::Model::CurveBiquadratic.new(self)
-    eirToCorfOfT.setName(eirft_properties['name'])
-    eirToCorfOfT.setCoefficient1Constant(eirft_properties['coeff_1'])
-    eirToCorfOfT.setCoefficient2x(eirft_properties['coeff_2'])
-    eirToCorfOfT.setCoefficient3xPOW2(eirft_properties['coeff_3'])
-    eirToCorfOfT.setCoefficient4y(eirft_properties['coeff_4'])
-    eirToCorfOfT.setCoefficient5yPOW2(eirft_properties['coeff_5'])
-    eirToCorfOfT.setCoefficient6xTIMESY(eirft_properties['coeff_6'])
-    eirToCorfOfT.setMinimumValueofx(eirft_properties['min_x'])
-    eirToCorfOfT.setMaximumValueofx(eirft_properties['max_x'])
-    eirToCorfOfT.setMinimumValueofy(eirft_properties['min_y'])
-    eirToCorfOfT.setMaximumValueofy(eirft_properties['max_y'])
+    # eirft_properties = find_object(curve_biquadratics, {'name'=>chlr_props['eirft']})
+    # eirToCorfOfT = OpenStudio::Model::CurveBiquadratic.new(self)
+    eirToCorfOfT = add_curve( OpenStudio::Model::CurveBiquadratic.iddObjectType, chlr_props['eirft'], hvac_standards )
+
+    # eirToCorfOfT.setName(eirft_properties['name'])
+    # eirToCorfOfT.setCoefficient1Constant(eirft_properties['coeff_1'])
+    # eirToCorfOfT.setCoefficient2x(eirft_properties['coeff_2'])
+    # eirToCorfOfT.setCoefficient3xPOW2(eirft_properties['coeff_3'])
+    # eirToCorfOfT.setCoefficient4y(eirft_properties['coeff_4'])
+    # eirToCorfOfT.setCoefficient5yPOW2(eirft_properties['coeff_5'])
+    # eirToCorfOfT.setCoefficient6xTIMESY(eirft_properties['coeff_6'])
+    # eirToCorfOfT.setMinimumValueofx(eirft_properties['min_x'])
+    # eirToCorfOfT.setMaximumValueofx(eirft_properties['max_x'])
+    # eirToCorfOfT.setMinimumValueofy(eirft_properties['min_y'])
+    # eirToCorfOfT.setMaximumValueofy(eirft_properties['max_y'])
 
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
     eirToCorfOfPlr = nil
-    eirfplr_properties = find_object(curve_quadratics, {'name'=>chlr_props['eirfplr']})
+    eirToCorfOfPlr = add_curve( OpenStudio::Model::CurveQuadratic.iddObjectType, chlr_props['eirfplr'], hvac_standards )
+    if eirToCorfOfPlr.nil?
+        eirToCorfOfPlr = add_curve( OpenStudio::Model::CurveBicubic.iddObjectType, chlr_props['eirfplr'], hvac_standards )
+    end
+    # eirfplr_properties = find_object(curve_quadratics, {'name'=>chlr_props['eirfplr']})
     if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveQuadratic.new(self)
-      eirToCorfOfPlr.setName(eirfplr_properties['name'])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
-      eirToCorfOfPlr.setMinimumValueofx(eirfplr_properties['min_x'])
-      eirToCorfOfPlr.setMaximumValueofx(eirfplr_properties['max_x'])
+      # eirToCorfOfPlr = OpenStudio::Model::CurveQuadratic.new(self)
+      # eirToCorfOfPlr = add_curve( OpenStudio::Model::CurveQuadratic.iddObjectType, chlr_props['eirfplr'], hvac_standards )
+
+      # eirToCorfOfPlr.setName(eirfplr_properties['name'])
+      # eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
+      # eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
+      # eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
+      # eirToCorfOfPlr.setMinimumValueofx(eirfplr_properties['min_x'])
+      # eirToCorfOfPlr.setMaximumValueofx(eirfplr_properties['max_x'])
     end
     
-    eirfplr_properties = find_object(curve_bicubics, {'name'=>chlr_props['eirfplr']})
+    # eirfplr_properties = find_object(curve_bicubics, {'name'=>chlr_props['eirfplr']})
     if eirfplr_properties
-      eirToCorfOfPlr = OpenStudio::Model::CurveBicubic.new(self)
-      eirToCorfOfPlr.setName(eirft_properties['name'])
-      eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
-      eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
-      eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
-      eirToCorfOfPlr.setCoefficient4y(eirfplr_properties['coeff_4'])
-      eirToCorfOfPlr.setCoefficient5yPOW2(eirfplr_properties['coeff_5'])
-      eirToCorfOfPlr.setCoefficient6xTIMESY(eirfplr_properties['coeff_6'])
-      eirToCorfOfPlr.setCoefficient7xPOW3 (eirfplr_properties['coeff_7'])
-      eirToCorfOfPlr.setCoefficient8yPOW3 (eirfplr_properties['coeff_8'])
-      eirToCorfOfPlr.setCoefficient9xPOW2TIMESY(eirfplr_properties['coeff_9'])
-      eirToCorfOfPlr.setCoefficient10xTIMESYPOW2 (eirfplr_properties['coeff_10'])
-      eirToCorfOfPlr.setMinimumValueofx(eirft_properties['min_x'])
-      eirToCorfOfPlr.setMaximumValueofx(eirft_properties['max_x'])
-      eirToCorfOfPlr.setMinimumValueofy(eirft_properties['min_y'])
-      eirToCorfOfPlr.setMaximumValueofy(eirft_properties['max_y'])
-    end  
+      # eirToCorfOfPlr = OpenStudio::Model::CurveBicubic.new(self)
+      # eirToCorfOfPlr = add_curve( OpenStudio::Model::CurveBicubic.iddObjectType, chlr_props['eirfplr'], hvac_standards )
+
+      # eirToCorfOfPlr.setName(eirft_properties['name'])
+      # eirToCorfOfPlr.setCoefficient1Constant(eirfplr_properties['coeff_1'])
+      # eirToCorfOfPlr.setCoefficient2x(eirfplr_properties['coeff_2'])
+      # eirToCorfOfPlr.setCoefficient3xPOW2(eirfplr_properties['coeff_3'])
+      # eirToCorfOfPlr.setCoefficient4y(eirfplr_properties['coeff_4'])
+      # eirToCorfOfPlr.setCoefficient5yPOW2(eirfplr_properties['coeff_5'])
+      # eirToCorfOfPlr.setCoefficient6xTIMESY(eirfplr_properties['coeff_6'])
+      # eirToCorfOfPlr.setCoefficient7xPOW3 (eirfplr_properties['coeff_7'])
+      # eirToCorfOfPlr.setCoefficient8yPOW3 (eirfplr_properties['coeff_8'])
+      # eirToCorfOfPlr.setCoefficient9xPOW2TIMESY(eirfplr_properties['coeff_9'])
+      # eirToCorfOfPlr.setCoefficient10xTIMESYPOW2 (eirfplr_properties['coeff_10'])
+      # eirToCorfOfPlr.setMinimumValueofx(eirft_properties['min_x'])
+      # eirToCorfOfPlr.setMaximumValueofx(eirft_properties['max_x'])
+      # eirToCorfOfPlr.setMinimumValueofy(eirft_properties['min_y'])
+      # eirToCorfOfPlr.setMaximumValueofy(eirft_properties['max_y'])
+    end
+
+    puts ccFofT
+    puts eirToCorfOfT
+    puts eirToCorfOfPlr
 
     chiller = OpenStudio::Model::ChillerElectricEIR.new(self,ccFofT,eirToCorfOfT,eirToCorfOfPlr)
     chiller.setName("#{chlr_props['template']} #{chlr_props['cooling_type']} #{chlr_props['condenser_type']} #{chlr_props['compressor_type']} Chiller")
@@ -1109,5 +1290,41 @@ class OpenStudio::Model::Model
     swh_loop.addDemandBranchForComponent(swh_connection)
     
   end
+
+  curve_map = {
+    :name => :setName,
+    :coeff_1 => :setCoefficient1Constant,
+    :coeff_2 => :setCoefficient2x,
+    :coeff_3 => :setCoefficient3xPOW2,
+    :coeff_4 => :setCoefficient4y,
+    :coeff_5 => :setCoefficient5yPOW2,
+    :coeff_6 => :setCoefficient6xTIMESY,
+    :coeff_7 => :setCoefficient7xPOW3,
+    :coeff_8 => :setCoefficient8yPOW3,
+    :coeff_9 => :setCoefficient9xPOW2TIMESY,
+    :coeff_10 => :setCoefficient10xTIMESYPOW2,
+    :min_x => :setMinimumValueofx,
+    :max_x => :setMaximumValueofx,
+    :min_y => :setMinimumValueofy,
+    :max_y => :setMaximumValueofy
+}
+
+  # def add_hvac_curve( curve_type, os_curve, curve_properties )
+  #   puts "in add_hvac_curve"
+  #   puts curve_type
+  #   puts curve_type == OpenStudio::Model::CurveBicubic.iddObjectType
+  #   puts curve_properties
+  #   if curve_properties and not os_curve.nil?
+  #       puts "past first check"
+  #     for property in curve_properties
+  #       if os_curve.respond_to? curve_map[:property] # :property in curve_map and
+  #           puts "past 2nd check"
+  #         function = os_curve.method curve_map[:property]
+  #         function.call curve_properties[:property]
+  #       end
+  #     end
+  #   end
+  #   return os_curve
+  # end
 
 end
