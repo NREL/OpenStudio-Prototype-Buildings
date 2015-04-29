@@ -35,21 +35,14 @@ if !Dir.exists?(regression_dir)
   Dir.mkdir regression_dir
 end
 
-# Setup a run manager
-run_manager_db_path = OpenStudio::Path.new("#{regression_dir}/regression_test.db")
-run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
-
 # Find EnergyPlus 
 # 7.2 for the Reference Buildings
-ep_72_hash = OpenStudio::EnergyPlus::find_energyplus(7,2)
-ep_72_path = OpenStudio::Path.new(ep_72_hash[:energyplus_exe].to_s)
-idd_72_path = OpenStudio::Path.new(ep_72_hash[:energyplus_idd].to_s)
-ep_72_tool = OpenStudio::Runmanager::ToolInfo.new(ep_72_path)
+ep_72_path = "C:/EnergyPlusV7-2-0/EnergyPlus.exe"
+idd_72_path =  "C:/EnergyPlusV7-2-0/Energy+.idd"
+
 # 8.0 for the Prototype Buildings
-ep_80_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
-ep_80_path = OpenStudio::Path.new(ep_80_hash[:energyplus_exe].to_s)
-idd_80_path = OpenStudio::Path.new(ep_80_hash[:energyplus_idd].to_s)
-ep_80_tool = OpenStudio::Runmanager::ToolInfo.new(ep_80_path)
+ep_80_path = "C:/EnergyPlusV8-0-0/EnergyPlus.exe"
+idd_80_path = "C:/EnergyPlusV8-0-0/Energy+.idd"
 
 # Find the IDF files for each of the given combinations
 # and add a job for this file to the run manager
@@ -57,6 +50,7 @@ bldg_types.each do |bldg_type|
   vintages.each do |vintage|
     climate_zones.each do |climate_zone|
       puts "#{bldg_type}-#{vintage}-#{climate_zone}"
+      
       # Change the bldg_type based on the vintage since the naming
       # conventions are different between Prototype and Reference buildings.
       bldg_type_search = nil
