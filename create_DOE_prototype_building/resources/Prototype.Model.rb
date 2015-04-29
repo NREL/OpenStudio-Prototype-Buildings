@@ -412,7 +412,6 @@ class OpenStudio::Model::Model
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
     ##### Add Economizers
-    
     # Create an economizer maximum OA fraction of 70%
     # to reflect damper leakage per PNNL
     econ_max_70_pct_oa_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -457,8 +456,59 @@ class OpenStudio::Model::Model
     
     end
 
+    #### Add ERVs
+    # Check each airloop and add an ERV if required
+    self.getAirLoopHVACs.each do |air_loop|
+      if air_loop.isEnergyRecoveryVentilatorRequired(self.template, self.climate_zone) == true
     
+        # Get the AHU design supply air flow rate
+        dsn_flow_m3_per_s = nil
+        if air_loop.designSupplyAirFlowRate.is_initialized
+          dsn_flow_m3_per_s = air_loop.designSupplyAirFlowRate.get
+        elsif air_loop.autosizedDesignSupplyAirFlowRate.is_initialized
+          dsn_flow_m3_per_s = air_loop.autosizedDesignSupplyAirFlowRate.get
+        else
+          OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.AirLoopHVAC", "For #{air_loop.name} design supply air flow rate is not available, cannot apply ERV.")
+          return false
+        end
+        dsn_flow_cfm = OpenStudio.convert(dsn_flow_m3_per_s, 'm^3/s', 'cfm').get    
     
+        # Get the oa system
+        oa_system = nil
+        if air_loop.airLoopHVACOutdoorAirSystem.is_initialized
+          oa_system = air_loop.airLoopHVACOutdoorAirSystem.get
+        else
+          runner.registerError("ERV not applicable to '#{air_loop.name}' because it has no OA intake.")
+          next
+        end
+
+        # Calculate the motor power for the rotatry wheel per:
+        # Power (W) = (Nominal Supply Air Flow Rate (CFM) * 0.3386) + 49.5
+        power = (dsn_flow_cfm * 0.3386) + 49.5
+      
+        # Create an ERV
+        erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
+        erv.setName("#{air_loop.name} ERV")
+        erv.setSensibleEffectivenessat100HeatingAirFlow(0.7)
+        erv.setLatentEffectivenessat100HeatingAirFlow(0.6)
+        erv.setSensibleEffectivenessat75HeatingAirFlow(0.7)
+        erv.setLatentEffectivenessat75HeatingAirFlow(0.6)
+        erv.setSensibleEffectivenessat100CoolingAirFlow(0.75)
+        erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
+        erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
+        erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
+        erv.setNominalElectricPower(power)
+        erv.setSupplyAirOutletTemperatureControl(true) 
+        erv.setHeatExchangerType('Rotary')
+        erv.setEconomizerLockout(true)
+        
+        # Add the ERV to the OA system
+        erv.addToNode(oa_system.outboardOANode.get)    
+    
+      end
+    
+    end
+       
   end 
 
   def add_debugging_variables(type)
