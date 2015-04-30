@@ -140,6 +140,11 @@ def strip_model(model)
     rc.remove
   end
   
+  # Remove the daylight controls
+  model.getDaylightingControls.each do |dc|
+    dc.remove
+  end
+  
   return model
 
 
