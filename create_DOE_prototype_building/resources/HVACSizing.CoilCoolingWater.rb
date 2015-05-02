@@ -101,7 +101,7 @@ class OpenStudio::Model::CoilCoolingWater
   # returns the autosized design coil load
   def autosizedDesignCoilLoad
 
-    return self.model.getAutosizedValue(self, 'Design Size Design Coil Load', '')
+    return self.model.getAutosizedValue(self, 'Design Size Design Coil Load', 'W')
     
   end  
   
