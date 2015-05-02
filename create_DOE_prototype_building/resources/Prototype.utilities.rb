@@ -140,6 +140,11 @@ def strip_model(model)
     rc.remove
   end
   
+  # Remove the daylight controls
+  model.getDaylightingControls.each do |dc|
+    dc.remove
+  end
+  
   return model
 
 
@@ -177,6 +182,10 @@ def find_objects(hash_of_objects, search_criteria, capacity = nil)
   if capacity.nil?
     matching_objects = search_criteria_matching_objects
   else
+    # Round up if capacity is an integer
+    if capacity = capacity.round
+      capacity = capacity + (capacity * 0.01)
+    end 
     search_criteria_matching_objects.each do |object|
       # Skip objects that don't have fields for minimum_capacity and maximum_capacity
       next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
@@ -233,6 +242,10 @@ def find_object(hash_of_objects, search_criteria, capacity = nil)
   if capacity.nil?
     matching_objects = search_criteria_matching_objects
   else
+    # Round up if capacity is an integer
+    if capacity = capacity.round
+      capacity = capacity + (capacity * 0.01)
+    end  
     search_criteria_matching_objects.each do |object|
       # Skip objects that don't have fields for minimum_capacity and maximum_capacity
       next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
@@ -250,7 +263,7 @@ def find_object(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
+    OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find object search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}")
   elsif matching_objects.size == 1
     desired_object = matching_objects[0]
   else 
@@ -311,3 +324,18 @@ def kw_per_ton_to_cop(kw_per_ton)
   return 3.517/kw_per_ton
  
 end
+
+# A helper method to convert from AFUE to thermal efficiency
+def afue_to_thermal_eff(afue)
+  
+  return afue # Per PNNL doc, Boiler Addendum 90.1-04an
+ 
+end
+
+# A helper method to convert from combustion efficiency to thermal efficiency
+def combustion_eff_to_thermal_eff(combustion_eff)
+  
+  return combustion_eff - 0.007 # Per PNNL doc, Boiler Addendum 90.1-04an
+ 
+end
+

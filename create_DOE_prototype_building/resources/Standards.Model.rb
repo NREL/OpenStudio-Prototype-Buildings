@@ -10,6 +10,10 @@ class OpenStudio::Model::Model
   require_relative 'Standards.ChillerElectricEIR'
   require_relative 'Standards.CoilCoolingDXTwoSpeed'
   require_relative 'Standards.CoilCoolingDXSingleSpeed'
+  require_relative 'Standards.BoilerHotWater'
+  require_relative 'Standards.AirLoopHVAC'
+  require_relative 'Standards.WaterHeaterMixed'
+  require_relative 'Standards.Space'
   
   def applyHVACEfficiencyStandard
     
@@ -31,7 +35,30 @@ class OpenStudio::Model::Model
     # Chillers
     self.getChillerElectricEIRs.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.hvac_standards)}
   
+    # Boilers
+    self.getBoilerHotWaters.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.hvac_standards)}
+  
+    # Water Heaters
+    self.getWaterHeaterMixeds.sort.each {|obj| obj.setStandardEfficiency(self.template, self.hvac_standards)}
+  
+    # Economizers
+    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerLimits(self.template, self.climate_zone)}
+    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerIntegration(self.template, self.climate_zone)}
+  
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying HVAC efficiency standards.')
+  
+  end
+  
+  def addDaylightingControls
+    
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding daylighting controls.')
+    
+    # Add daylighting controls to each space
+    self.getSpaces.sort.each do |space|
+      added = space.addDaylightingControls(self.template, false, false)
+    end
+  
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding daylighting controls.')
   
   end
   
