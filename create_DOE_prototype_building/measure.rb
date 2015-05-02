@@ -268,6 +268,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
    
+    # Add daylighting controls per standard
+    model.addDaylightingControls
+   
+   
     # Add output variables for debugging
     model.request_timeseries_outputs
 
