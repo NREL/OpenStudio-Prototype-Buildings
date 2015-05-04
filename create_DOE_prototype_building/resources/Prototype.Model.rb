@@ -5,6 +5,7 @@ class OpenStudio::Model::Model
   # Let the model store and access its own template and hvac_standards
   attr_accessor :template
   attr_accessor :hvac_standards
+  attr_accessor :climate_zone
   #attr_accessor :runner
  
   def add_geometry(geometry_osm_name)
@@ -491,7 +492,7 @@ class OpenStudio::Model::Model
     
   end
 
-  def applyPrototypeHVACAssumptions
+  def applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     
     # Load the helper libraries for getting the autosized
     # values for each type of model object.
@@ -506,7 +507,7 @@ class OpenStudio::Model::Model
     
     # Fans
     self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
-    self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
     # Heat Exchangers
@@ -514,6 +515,104 @@ class OpenStudio::Model::Model
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
+    ##### Add Economizers
+    # Create an economizer maximum OA fraction of 70%
+    # to reflect damper leakage per PNNL
+    econ_max_70_pct_oa_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    econ_max_70_pct_oa_sch.setName("Economizer Max OA Fraction 70 pct")
+    econ_max_70_pct_oa_sch.defaultDaySchedule.setName("Economizer Max OA Fraction 70 pct Default")
+    econ_max_70_pct_oa_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.7)   
+    
+    # Check each airloop
+    self.getAirLoopHVACs.each do |air_loop|
+      if air_loop.isEconomizerRequired(self.template, self.climate_zone) == true
+        # If an economizer is required, determine the economizer type
+        # in the prototype buildings, which depends on climate zone.
+        economizer_type = nil
+        case building_vintage
+        when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007'
+          economizer_type = 'FixedDryBulb'
+        when '90.1-2010', '90.1-2013'
+          case climate_zone
+          when 'ASHRAE 169-2006-1A',
+            'ASHRAE 169-2006-2A',
+            'ASHRAE 169-2006-3A',
+            'ASHRAE 169-2006-4A'
+            economizer_type = 'DifferentialDryBulb'
+          else
+            economizer_type = 'FixedDryBulb'
+          end
+        end
+        # Set the economizer type
+        # Get the OA system and OA controller
+        oa_sys = air_loop.airLoopHVACOutdoorAirSystem
+        if oa_sys.is_initialized
+          oa_sys = oa_sys.get
+        else
+          OpenStudio::logFree(OpenStudio::Error, "openstudio.prototype.Model", "#{air_loop.name} is required to have an economizer, but it has no OA system.")
+          next
+        end
+        oa_control = oa_sys.getControllerOutdoorAir
+        oa_control.setEconomizerControlType(economizer_type)
+        oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
+      end
+    
+    
+    end
+
+    #### Add ERVs
+    # Check each airloop and add an ERV if required
+    self.getAirLoopHVACs.each do |air_loop|
+      if air_loop.isEnergyRecoveryVentilatorRequired(self.template, self.climate_zone) == true
+    
+        # Get the AHU design supply air flow rate
+        dsn_flow_m3_per_s = nil
+        if air_loop.designSupplyAirFlowRate.is_initialized
+          dsn_flow_m3_per_s = air_loop.designSupplyAirFlowRate.get
+        elsif air_loop.autosizedDesignSupplyAirFlowRate.is_initialized
+          dsn_flow_m3_per_s = air_loop.autosizedDesignSupplyAirFlowRate.get
+        else
+          OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.AirLoopHVAC", "For #{air_loop.name} design supply air flow rate is not available, cannot apply ERV.")
+          return false
+        end
+        dsn_flow_cfm = OpenStudio.convert(dsn_flow_m3_per_s, 'm^3/s', 'cfm').get    
+    
+        # Get the oa system
+        oa_system = nil
+        if air_loop.airLoopHVACOutdoorAirSystem.is_initialized
+          oa_system = air_loop.airLoopHVACOutdoorAirSystem.get
+        else
+          runner.registerError("ERV not applicable to '#{air_loop.name}' because it has no OA intake.")
+          next
+        end
+
+        # Calculate the motor power for the rotatry wheel per:
+        # Power (W) = (Nominal Supply Air Flow Rate (CFM) * 0.3386) + 49.5
+        power = (dsn_flow_cfm * 0.3386) + 49.5
+      
+        # Create an ERV
+        erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
+        erv.setName("#{air_loop.name} ERV")
+        erv.setSensibleEffectivenessat100HeatingAirFlow(0.7)
+        erv.setLatentEffectivenessat100HeatingAirFlow(0.6)
+        erv.setSensibleEffectivenessat75HeatingAirFlow(0.7)
+        erv.setLatentEffectivenessat75HeatingAirFlow(0.6)
+        erv.setSensibleEffectivenessat100CoolingAirFlow(0.75)
+        erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
+        erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
+        erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
+        erv.setNominalElectricPower(power)
+        erv.setSupplyAirOutletTemperatureControl(true) 
+        erv.setHeatExchangerType('Rotary')
+        erv.setEconomizerLockout(true)
+        
+        # Add the ERV to the OA system
+        erv.addToNode(oa_system.outboardOANode.get)    
+    
+      end
+    
+    end
+       
   end 
 
   def add_debugging_variables(type)
@@ -725,7 +824,25 @@ class OpenStudio::Model::Model
     vars << ['Fan Electric Power', 'detailed']
     vars << ['Zone Mechanical Ventilation Standard Density Volume Flow Rate', 'detailed']
     vars << ['Air System Outdoor Air Mass Flow Rate', 'detailed']
+    vars << ['Air System Outdoor Air Flow Fraction', 'detailed']
+    vars << ['Air System Outdoor Air Minimum Flow Fraction', 'detailed']
     
+    vars << ['Water Use Equipment Hot Water Volume Flow Rate', 'hourly']
+    vars << ['Water Use Equipment Cold Water Volume Flow Rate', 'hourly']
+    vars << ['Water Use Equipment Total Volume Flow Rate', 'hourly']
+    vars << ['Water Use Equipment Hot Water Temperature', 'hourly']
+    vars << ['Water Use Equipment Cold Water Temperature', 'hourly']
+    vars << ['Water Use Equipment Target Water Temperature', 'hourly']
+    vars << ['Water Use Equipment Mixed Water Temperature', 'hourly']
+    
+    vars << ['Water Use Connections Hot Water Volume Flow Rate', 'hourly']
+    vars << ['Water Use Connections Cold Water Volume Flow Rate', 'hourly']
+    vars << ['Water Use Connections Total Volume Flow Rate', 'hourly']
+    vars << ['Water Use Connections Hot Water Temperature', 'hourly']
+    vars << ['Water Use Connections Cold Water Temperature', 'hourly']
+    vars << ['Water Use Connections Plant Hot Water Energy', 'hourly']
+    vars << ['Water Use Connections Return Water Temperature', 'hourly']
+  
     vars.each do |var, freq|  
       outputVariable = OpenStudio::Model::OutputVariable.new(var, self)
       outputVariable.setReportingFrequency(freq)

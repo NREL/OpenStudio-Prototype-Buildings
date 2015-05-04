@@ -26,6 +26,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Make an argument for the building type
     building_type_chs = OpenStudio::StringVector.new
     building_type_chs << 'SecondarySchool'
+    building_type_chs << 'PrimarySchool'
     building_type_chs << 'SmallOffice'
     building_type_chs << 'MediumOffice'
     building_type_chs << 'SmallHotel'
@@ -39,10 +40,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_vintage_chs = OpenStudio::StringVector.new
     building_vintage_chs << 'DOE Ref Pre-1980'
     building_vintage_chs << 'DOE Ref 1980-2004'
-    #building_vintage_chs << 'DOE Ref 2004'
-    #building_vintage_chs << '90.1-2007'
+    building_vintage_chs << '90.1-2004'
+    building_vintage_chs << '90.1-2007'
     #building_vintage_chs << '189.1-2009'
     building_vintage_chs << '90.1-2010'
+    building_vintage_chs << '90.1-2013'
     building_vintage = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_vintage', building_vintage_chs, true)
     building_vintage.setDisplayName('Select a Vintage.')
     building_vintage.setDefaultValue('90.1-2010')
@@ -209,6 +211,9 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     when 'SecondarySchool'
       require_relative 'resources/Prototype.secondary_school'
       geometry_file = 'Geometry.secondary_school.osm'
+    when 'PrimarySchool'
+      require_relative 'resources/Prototype.primary_school'
+      geometry_file = 'Geometry.primary_school.osm'      
     when 'SmallOffice'
       require_relative 'resources/Prototype.small_office'
       # Small Office geometry is different for pre-1980
@@ -253,6 +258,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
 
     model.add_geometry(geometry_file)
+    model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
     model.assign_space_type_stubs(space_building_type_search, space_type_map)
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
@@ -274,6 +280,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Assign the standards to the model
     model.template = building_vintage
+    model.climate_zone = climate_zone
     model_status = '1_initial_creation'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
@@ -290,7 +297,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
     # on the flow rate of the system.
-    model.applyPrototypeHVACAssumptions
+    model.applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     model_status = '4_after_proto_hvac_assumptions'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
@@ -307,6 +314,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
+   
+    # Add daylighting controls per standard
+    model.addDaylightingControls
+   
    
     # Add output variables for debugging
     model.request_timeseries_outputs

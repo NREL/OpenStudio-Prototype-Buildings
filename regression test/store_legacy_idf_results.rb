@@ -17,7 +17,7 @@ climate_zones = ["Houston", "Chicago", "Baltimore", "El Paso"]#["Houston", "Chic
 ################################################################################
 
 require 'json'
-require 'C:/Program Files (x86)/OpenStudio 1.5.0/Ruby/openstudio'
+require 'openstudio'
     
 # List of all fuel types
 fuel_types = ["Electricity", "Natural Gas", "Additional Fuel", "District Cooling", "District Heating", "Water"]
@@ -105,13 +105,17 @@ bldg_types.sort.each do |bldg_type|
           bldg_type_map = {
           "SchoolSecondary" => "SecondarySchool",
           "OfficeSmall" => "SmallOffice",
+          "SchoolPrimary" => "PrimarySchool",
           "HotelLarge" => "LargeHotel"
           }
 
           vintage_map = {
           "Pre1980" => "DOE Ref Pre-1980",
           "Post1980" => "DOE Ref 1980-2004",
-          "STD2010" => "90.1-2010"
+          "STD2004" => "90.1-2004",
+          "STD2007" => "90.1-2007",
+          "STD2010" => "90.1-2010",
+          "STD2013" => "90.1-2013"
           }          
           
           climate_zone_map = {

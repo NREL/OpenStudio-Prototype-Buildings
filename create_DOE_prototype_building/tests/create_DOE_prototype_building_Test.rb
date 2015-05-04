@@ -123,6 +123,17 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             return failures
           end
           
+          # Delete the old ModelToIdf and SizingRun1 directories if they exist
+          FileUtils.rm_rf("#{model_directory}/ModelToIdf")
+          FileUtils.rm_rf("#{model_directory}/SizingRun1")
+
+          # Convert the model to energyplus idf
+          forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
+          idf = forward_translator.translateModel(model)
+          idf_path_string = "#{model_directory}/#{model_name}.idf"
+          idf_path = OpenStudio::Path.new(idf_path_string)    
+          idf.save(idf_path,true)
+          
           # Find the weather file
           epw_path = nil
           if model.weatherFile.is_initialized
@@ -344,7 +355,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
   
   # Test the Secondary School in the PTool vintages and climate zones
-  def test_secondary_school
+  def dont_test_secondary_school
 
     bldg_types = ['SecondarySchool']
     vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
@@ -373,30 +384,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",    
   
   # Test the Small Office in the PTool vintages and climate zones
-  def test_small_office_ptool
-
-    bldg_types = ['SecondarySchool'] #'SmallOffice'
-    vintages = ['90.1-2010']#, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']'90.1-2010'
-    climate_zones = ['ASHRAE 169-2006-2A'] #, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
-
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
-  end
-
-  def test_small_office
+  def dont_test_small_office
 
     bldg_types = ['SmallOffice']
     vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010'] 
@@ -443,7 +431,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   end
   
-  def test_small_hotel_ptool
+  def dont_test_small_hotel
     
     bldg_types = ['SmallHotel']
     vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
@@ -497,20 +485,66 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     climate_zones = ['ASHRAE 169-2006-2A']
 
     all_failures = []
-
+    
     # Create the models
     all_failures += create_models(bldg_types, vintages, climate_zones)
-
+    
     # Run the models
     all_failures += run_models(bldg_types, vintages, climate_zones)
-
+    
     # Compare the results to the legacy idf results
     all_failures += compare_results(bldg_types, vintages, climate_zones)
 
     # Assert if there are any errors
     puts "There were #{all_failures.size} failures"
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-
+    
   end
+  
+  def test_primary_school
+    
+    bldg_types = ['PrimarySchool']
+    vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',
+    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+    all_failures = []
+    
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
+  
+  def dont_test_all
+    
+    bldg_types = ['SecondarySchool', 'PrimarySchool', 'SmallOffice', 'SmallHotel']
+    vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+    all_failures = []
+    
+    # Create the models
+    #all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    #all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end  
   
 end

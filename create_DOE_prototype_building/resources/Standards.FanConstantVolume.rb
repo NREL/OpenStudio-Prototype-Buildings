@@ -40,7 +40,7 @@ class OpenStudio::Model::FanConstantVolume
     search_criteria = {
     'template' => template,
     'number_of_poles' => 4.0,
-    'type' => 'Open Drip-Proof',
+    'type' => 'Enclosed',
     }
     
     motor_properties = find_object(motors, search_criteria, allowed_hp)
@@ -162,7 +162,7 @@ class OpenStudio::Model::FanConstantVolume
     search_criteria = {
       "template" => template,
       "number_of_poles" => 4.0,
-      "type" => "Open Drip-Proof",
+      "type" => "Enclosed",
     }
     
     motor_properties = find_object(motors, search_criteria, motor_bhp)
