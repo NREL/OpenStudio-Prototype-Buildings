@@ -3,16 +3,22 @@
 # the "truth" standard for the OpenStudio Prototype Buildings.
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
+
 # Specify the building types to run.
-bldg_types = ["HotelLarge"]#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
+bldg_types = ["HotelLarge"] #["OfficeSmall", "SchoolSecondary"]
 
 # Specify the vintages you want to run.
-# valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["STD2010"]#["Pre1980", "Post1980", "STD2010"]
+# valid options are: Pre1980, Post1980, STD2004, STD2007, STD2010, STD2013
+vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013",]
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
-climate_zones = ["Houston", "Chicago", "Baltimore", "El Paso"]#["Houston", "Chicago", "Baltimore", "El Paso"]
+# 1A Miami, 2A Houston, 2B Phoenix, 3A Memphis (Atlanta), 3B El Paso (Las Vegas), 3C San Francisco
+# 4A Baltimore, 4B Albuquerque, 4C Salem (Seattle), 5A Chicago, 5B Boise (Boulder), 6A Burlington (Minneapolis)
+# 6B Helena, 7A Duluth, 8A Fairbanks
+climate_zones = ["Miami", "Houston", "Phoenix", "Memphis","El Paso","San Francisco",
+                 "Baltimore", "Albuquerque", "Salem", "Chicago", "Boise", "Burlington",
+                 "Helena", "Duluth", "Fairbanks"]
 
 ################################################################################
 
@@ -48,21 +54,32 @@ bldg_types.sort.each do |bldg_type|
           else
             bldg_type_search = bldg_type
         end
-
         case climate_zone
+          when "Memphis"
+            climate_zone = "Atlanta"
           when "El Paso"
             climate_zone = "Las.Vegas"
+          when "Salem"
+            climate_zone = "Seattle"
+          when "Boise"
+            climate_zone = "Boulder"
+          when "Burlington"
+            climate_zone = "Minneapolis"
+          when "San Francisco"
+            climate_zone = "San.Francisco"
         end
       else
         case climate_zone
           when "El Paso"
             climate_zone = "El.Paso"
+          when "San Francisco"
+            climate_zone = "San.Francisco"
         end
         bldg_type_search = bldg_type
       end
       
       # Open the sql file, skipping if not found
-      sql_path_string = "#{Dir.pwd}/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}/EnergyPlus/eplusout.sql"
+      sql_path_string = "#{Dir.pwd}/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}/eplusout.sql"
       sql_path = OpenStudio::Path.new(sql_path_string)
       sql = nil
       if OpenStudio.exists(sql_path)
