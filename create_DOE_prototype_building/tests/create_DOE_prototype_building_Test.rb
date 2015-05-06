@@ -441,5 +441,4 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
 
   end
-  
 end
