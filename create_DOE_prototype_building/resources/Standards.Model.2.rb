@@ -387,8 +387,6 @@ class OpenStudio::Model::Model
       people_def = OpenStudio::Model::PeopleDefinition.new(self)
       people_def.setName("#{name} People Definition")
       people_def.setPeopleperSpaceFloorArea(OpenStudio.convert(occupancy_per_area/1000.0, 'people/ft^2', 'people/m^2').get)
-
-      puts "occupancy_per_area:#{occupancy_per_area} = #{OpenStudio.convert(occupancy_per_area/1000.0, 'people/ft^2', 'people/m^2').get} "
       # create the people instance and hook it up to the space type
       people = OpenStudio::Model::People.new(people_def)
       people.setName("#{name} People")
