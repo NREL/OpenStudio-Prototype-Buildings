@@ -323,11 +323,19 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
               results_hash.each_pair do |key1, value1|
                 value1.each_pair do |key2, value2|
                   value2.each_pair do |key3, value3|
-                    value3.each_pair do |key4, value4|
-                      value4.each_pair do |key5, value5|
+                    value3.each_pair do |key4, value4|# fuel type
+                      fuel_type_legacy_val_total = 0
+                      fuel_type_openstudio_val_total = 0
+                      value4.each_pair do |key5, value5| # end use
                         if value5['Percent Error'].to_i != 0
+                          fuel_type_legacy_val_total += value5['Legacy Val'].to_f
+                          fuel_type_openstudio_val_total += value5['OpenStudio Val'].to_f
                           file.write("#{key1},#{key2},#{key3},#{key4},#{key5},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
                         end
+                      end
+
+                      if fuel_type_legacy_val_total != 0
+                        file.write("#{key1},#{key2},#{key3},#{key4},Total,#{fuel_type_legacy_val_total},#{fuel_type_openstudio_val_total},#{(fuel_type_openstudio_val_total-fuel_type_legacy_val_total)/fuel_type_legacy_val_total*100}\n")
                       end
                     end
                   end
@@ -422,8 +430,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # Test the large hotel in the PTool vintages and climate zones
   def test_large_hotel
     bldg_types = ['LargeHotel']
-    vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
-    climate_zones = ['ASHRAE 169-2006-2A']
+    vintages = ['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    climate_zones = ['ASHRAE 169-2006-2A', 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
 
     all_failures = []
 
