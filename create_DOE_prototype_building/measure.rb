@@ -205,6 +205,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Make the prototype building
     space_building_type_search = building_type
+    construction_type_search = building_type
     has_swh = true
 
     case building_type
@@ -225,10 +226,12 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         geometry_file = 'Geometry.small_office.osm'
       end
       space_building_type_search = 'Office'
+      construction_type_search = 'Office'
     when 'MediumOffice'
       require_relative 'resources/Prototype.medium_office'
       geometry_file = 'Geometry.medium_office.osm'
       space_building_type_search = 'Office'
+      construction_type_search = 'Office'
     when 'SmallHotel'
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
@@ -264,8 +267,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
     # model.add_constructions('Office', building_vintage, climate_zone, standards_data_dir)
-    model.create_thermal_zones
-    model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
+    model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     if has_swh

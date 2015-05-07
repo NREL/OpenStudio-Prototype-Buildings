@@ -7,11 +7,11 @@
 # Both sets of buildings contain 2004.  The Prototype Buildings will be used.
 
 # Specify the building types to run.
-bldg_types = ['OfficeMedium']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
+bldg_types = ['OfficeMedium', 'OfficeLarge']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ['STD2010']#['Pre1980', 'Post1980', 'STD2010']
+vintages = ['Pre1980', 'Post1980', 'STD2010']
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore

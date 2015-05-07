@@ -455,10 +455,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # Test the Small Office in the QTR vintages and climate zones
-  def dont_test_medium_office
+  def test_medium_office
 
     bldg_types = ['MediumOffice']
-    vintages = ['90.1-2010']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
     climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
@@ -479,7 +479,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # Test the large hotel in the PTool vintages and climate zones
-  def test_large_hotel
+  def dont_test_large_hotel
     bldg_types = ['LargeHotel']
     vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
     climate_zones = ['ASHRAE 169-2006-2A']
@@ -501,7 +501,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   end
   
-  def test_primary_school
+  def dont_test_primary_school
     
     bldg_types = ['PrimarySchool']
     vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',

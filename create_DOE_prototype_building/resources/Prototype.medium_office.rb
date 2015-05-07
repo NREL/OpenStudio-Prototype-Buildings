@@ -2,9 +2,9 @@
 # Extend the class to add Medium Office specific stuff
 class OpenStudio::Model::Model
  
-  def define_space_type_map
+  def define_space_type_map(building_type, building_vintage, climate_zone)
     space_type_map = {
-      'WholeBuilding - Sm Office' => [
+      'WholeBuilding - Md Office' => [
         'Perimeter_bot_ZN_1', 'Perimeter_bot_ZN_2', 'Perimeter_bot_ZN_3', 'Perimeter_bot_ZN_4', 'Core_bottom',
         'Perimeter_mid_ZN_1', 'Perimeter_mid_ZN_2', 'Perimeter_mid_ZN_3', 'Perimeter_mid_ZN_4', 'Core_mid',
         'Perimeter_top_ZN_1', 'Perimeter_top_ZN_2', 'Perimeter_top_ZN_3', 'Perimeter_top_ZN_4', 'Core_top'
@@ -13,7 +13,7 @@ class OpenStudio::Model::Model
     return space_type_map
   end
 
-  def define_hvac_system_map
+  def define_hvac_system_map(building_type, building_vintage, climate_zone)
     system_to_space_map = [
       {
           'type' => 'VAV',
@@ -56,9 +56,7 @@ class OpenStudio::Model::Model
    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
     
-    system_to_space_map = define_hvac_system_map
-
-    # chilled_water_loop = self.add_chw_loop(prototype_input, hvac_standards)
+    system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
 
     # hot_water_loop = self.add_hw_loop(prototype_input, hvac_standards)
     
@@ -83,12 +81,7 @@ class OpenStudio::Model::Model
 
       case system['type']
       when 'VAV'
-        if hot_water_loop && chilled_water_loop
-          # self.add_vav(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
-        else
-          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
-          return false
-        end
+        self.add_pvav(prototype_input, hvac_standards, thermal_zones)
       end
 
     end
