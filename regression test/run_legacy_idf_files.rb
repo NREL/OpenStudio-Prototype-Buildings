@@ -7,26 +7,27 @@
 # Both sets of buildings contain 2004.  The Prototype Buildings will be used.
 
 # Specify the building types to run.
-bldg_types = ["HotelLarge"]#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
+bldg_types = ['OfficeMedium', 'OfficeLarge']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["STD2010"]#["Pre1980", "Post1980", "STD2010"]
+vintages = ['Pre1980', 'Post1980', 'STD2010']
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
-climate_zones = ["Houston", "Chicago", "Baltimore", "El Paso"]#["Houston", "Chicago", "Baltimore", "El Paso"]
+climate_zones = ['Houston', 'Chicago', 'Baltimore', 'El Paso']#['Houston', 'Chicago', 'Baltimore', 'El Paso']
 
 ################################################################################
 
 require 'find'
 require 'fileutils'
-require 'C:/Program Files (x86)/OpenStudio 1.5.0/Ruby/openstudio'
-require 'openstudio/energyplus/find_energyplus'
+require 'openstudio'
+# require 'C:/Program Files (x86)/OpenStudio 1.5.0/Ruby/openstudio'
+require '/Users/m5z/github/nrel/openstudio/branches/develop/openstudiocore/ruby/openstudio/energyplus/find_energyplus'
 
 # Make the folder to store results, if it doesn't exist yet
 regression_dir = "#{Dir.pwd}/regression runs"
-if !Dir.exists?(regression_dir)
+unless Dir.exists?(regression_dir)
   Dir.mkdir regression_dir
 end
 
@@ -56,25 +57,29 @@ bldg_types.each do |bldg_type|
       # Change the bldg_type based on the vintage since the naming
       # conventions are different between Prototype and Reference buildings.
       bldg_type_search = nil
-      if vintage == "Pre1980" || vintage == "Post1980"
+      if vintage == 'Pre1980' || vintage == 'Post1980'
         case bldg_type
-        when "OfficeSmall"
-          bldg_type_search = "SmallOffice"
-        when "SchoolSecondary"
-          bldg_type_search = "SecondarySchool"
+        when 'OfficeSmall'
+          bldg_type_search = 'SmallOffice'
+        when 'OfficeMedium'
+          bldg_type_search = 'MediumOffice'
+        when 'OfficeLarge'
+          bldg_type_search = 'LargeOffice'
+        when 'SchoolSecondary'
+          bldg_type_search = 'SecondarySchool'
         when "HotelLarge"
           bldg_type_search=  "LargeHotel"
         else
           bldg_type_search = bldg_type
         end
         case climate_zone
-        when "El Paso"
-          climate_zone = "Las.Vegas"
+        when 'El Paso'
+          climate_zone = 'Las.Vegas'
         end
       else
         case climate_zone
-        when "El Paso"
-          climate_zone = "El.Paso"
+        when 'El Paso'
+          climate_zone = 'El.Paso'
         end
         bldg_type_search = bldg_type
       end
@@ -92,7 +97,7 @@ bldg_types.each do |bldg_type|
         end
       end
       if idf_file.nil?
-        puts "  IDF File = EPW FILE NOT FOUND"
+        puts '  IDF File = EPW FILE NOT FOUND'
         next
       end
       
@@ -106,14 +111,14 @@ bldg_types.each do |bldg_type|
         end
       end
       if epw_file.nil?
-        puts "  EPW File = EPW FILE NOT FOUND"
+        puts '  EPW File = EPW FILE NOT FOUND'
         next
       end      
       
       # Choose the correct version of EnergyPlus
       ep_tool = nil
       idd_path = nil
-      if vintage == "Pre1980" || vintage == "Post1980"
+      if vintage == 'Pre1980' || vintage == 'Post1980'
         ep_tool = ep_72_tool
         idd_path = idd_72_path
       else
@@ -148,4 +153,4 @@ while run_manager.workPending()
   OpenStudio::Application::instance().processEvents()
 end
 
-puts "finished running models"
+puts 'finished running models'

@@ -4,11 +4,11 @@
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
 # Specify the building types to run.
-bldg_types = ["HotelLarge"]#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
+bldg_types = ['OfficeMedium', 'OfficeLarge']#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["STD2010"]#["Pre1980", "Post1980", "STD2010"]
+vintages = ["Pre1980", "Post1980", "STD2010"]
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
@@ -41,6 +41,10 @@ bldg_types.sort.each do |bldg_type|
         case bldg_type
         when "OfficeSmall"
           bldg_type_search = "SmallOffice"
+        when 'OfficeMedium'
+          bldg_type_search = 'MediumOffice'
+        when 'OfficeLarge'
+          bldg_type_search = 'LargeOffice'
         when "SchoolSecondary"
           bldg_type_search = "SecondarySchool"
         when "HotelLarge"
@@ -105,6 +109,8 @@ bldg_types.sort.each do |bldg_type|
           bldg_type_map = {
           "SchoolSecondary" => "SecondarySchool",
           "OfficeSmall" => "SmallOffice",
+          "OfficeMedium" => "MediumOffice",
+          "OfficeLarge" => "LargeOffice",
           "SchoolPrimary" => "PrimarySchool",
           "HotelLarge" => "LargeHotel"
           }
