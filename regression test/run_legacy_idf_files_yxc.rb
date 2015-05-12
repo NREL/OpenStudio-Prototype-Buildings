@@ -29,15 +29,36 @@ bldg_type_search = nil
 if vintage == "Pre1980" || vintage == "Post1980"
   idf_file_path = "C:/Sites/OSM/regression test/legacy reference idf files/"
   case bldg_type
-    when "OfficeSmall"
+    when "OfficeSmall" #1
       bldg_type_search = "SmallOffice"
-    when "SchoolSecondary"
+    when "OfficeMedium" #2
+      bldg_type_search = "MediumOffice"
+    when "OfficeLarge" #3
+      bldg_type_search = "LargeOffice"
+    when "RetailStandalone" #4
+      bldg_type_search = "Stand-aloneRetail"
+    when "RetailStripmall" #5
+      bldg_type_search = "StripMall"
+    when "SchoolPrimary" #6
+      bldg_type_search = "PrimarySchool"
+    when "SchoolSecondary" #7
       bldg_type_search = "SecondarySchool"
-    when "HotelLarge"
+    when "OutPatientHealthCare" #8
+      bldg_type_search = "OutPatient"
+    when "HotelSmall" #9
+      bldg_type_search=  "SmallHotel"
+    when "HotelLarge" #10
       bldg_type_search=  "LargeHotel"
+    when "RestaurantFastFood" #11
+      bldg_type_search=  "QuickServiceRestaurant"
+    when "RestaurantSitDown" #12
+      bldg_type_search=  "FullServiceRestaurant"
+    when "ApartmentMidRise" #13
+      bldg_type_search=  "MidriseApartment"
     else
-      bldg_type_search = bldg_type
+      bldg_type_search = bldg_type  #14 Hospital #15 Warehouse
   end
+
   case climate_zone
     when "Memphis"
       climate_zone = "Atlanta"
