@@ -176,7 +176,7 @@ bldg_types.sort.each do |bldg_type|
 			"OutPatientHealthCare" => "OutPatient",
 			"Hospital" => "Hospital",
 			"HotelSmall" => "SmallHotel",
-			"HotelLarge"=>"LargeHotel"
+			"HotelLarge"=>"LargeHotel",
 			"RestaurantFastFood" => "QuickServiceRestaurant",
 			"RestaurantSitDown" => "FullServiceRestaurant",
 			"ApartmentMidRise" => "MidriseApartment"
@@ -184,9 +184,9 @@ bldg_types.sort.each do |bldg_type|
           vintage_map = {
               "Pre1980" => "DOE Ref Pre-1980",
               "Post1980" => "DOE Ref 1980-2004",
-              "STD2004" => "90.1-2004"
-              "STD2007" => "90.1-2007"
-              "STD2010" => "90.1-2010"
+              "STD2004" => "90.1-2004",
+              "STD2007" => "90.1-2007",
+              "STD2010" => "90.1-2010",
               "STD2013" => "90.1-2013"
           }
 
