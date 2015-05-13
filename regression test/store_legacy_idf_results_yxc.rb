@@ -4,15 +4,46 @@
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
 # Specify the building types to run.
-bldg_types = ["HotelLarge"]#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
+bldg_types = [
+"OfficeSmall",
+"OfficeMedium",
+"OfficeLarge",
+"RetailStandalone",
+"RetailStripmall",
+"SchoolPrimary",
+"SchoolSecondary",
+"OutPatientHealthCare",
+"Hospital",
+"HotelSmall",
+"HotelLarge",
+"Warehouse",
+"RestaurantFastFood",
+"RestaurantSitDown",
+"ApartmentMidRise"]
 
 # Specify the vintages you want to run.
-# valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["STD2010"]#["Pre1980", "Post1980", "STD2010"]
+# valid options are: Pre1980, Post1980, STD2004, STD2007, STD2010, STD2013
+vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"]
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
-climate_zones = ["Houston", "Chicago", "Baltimore", "El Paso"]#["Houston", "Chicago", "Baltimore", "El Paso"]
+climate_zones = [
+"Miami",
+"Houston", 
+"Phoenix", 
+"Memphis", 
+"San Francisco", 
+"Chicago", 
+"Albuquerque", 
+"Salem", 
+"Boise", 
+"Burlington", 
+"Helena", 
+"Duluth", 
+"Baltimore", 
+"El Paso", 
+"Fairbanks"
+]
 
 ################################################################################
 
@@ -33,43 +64,74 @@ results_hash = Hash.new{|h,k| h[k]=Hash.new(&h.default_proc) }
 bldg_types.sort.each do |bldg_type|
   vintages.sort.each do |vintage|
     climate_zones.sort.each do |climate_zone|
-      puts "#{bldg_type}-#{vintage}-#{climate_zone}"
+		puts "#{bldg_type}-#{vintage}-#{climate_zone}"
 
-      # Change the bldg_type based on the vintage since the naming
-      # conventions are different between Prototype and Reference buildings.
-      if vintage == "Pre1980" || vintage == "Post1980"
-        case bldg_type
-          when "OfficeSmall"
-            bldg_type_search = "SmallOffice"
-          when "SchoolSecondary"
-            bldg_type_search = "SecondarySchool"
-          when "HotelLarge"
-            bldg_type_search=  "LargeHotel"
-          else
-            bldg_type_search = bldg_type
-        end
+		# Change the bldg_type based on the vintage since the naming
+		# conventions are different between Prototype and Reference buildings.
+		if vintage == "Pre1980" || vintage == "Post1980"
+		  case bldg_type
+			when "OfficeSmall" #1
+			  bldg_type_search = "SmallOffice"
+			when "OfficeMedium" #2
+			  bldg_type_search = "MediumOffice"
+			when "OfficeLarge" #3
+			  bldg_type_search = "LargeOffice"
+			when "RetailStandalone" #4
+			  bldg_type_search = "Stand-aloneRetail"
+			when "RetailStripmall" #5
+			  bldg_type_search = "StripMall"
+			when "SchoolPrimary" #6
+			  bldg_type_search = "PrimarySchool"
+			when "SchoolSecondary" #7
+			  bldg_type_search = "SecondarySchool"
+			when "OutPatientHealthCare" #8
+			  bldg_type_search = "OutPatient"
+			when "HotelSmall" #9
+			  bldg_type_search=  "SmallHotel"
+			when "HotelLarge" #10
+			  bldg_type_search=  "LargeHotel"
+			when "RestaurantFastFood" #11
+			  bldg_type_search=  "QuickServiceRestaurant"
+			when "RestaurantSitDown" #12
+			  bldg_type_search=  "FullServiceRestaurant"
+			when "ApartmentMidRise" #13
+			  bldg_type_search=  "MidriseApartment"
+			else
+			  bldg_type_search = bldg_type  #14 Hospital #15 Warehouse
+		  end
 
-        case climate_zone
-          when "El Paso"
-            climate_zone = "Las.Vegas"
-        end
-      else
-        case climate_zone
-          when "El Paso"
-            climate_zone = "El.Paso"
-        end
-        bldg_type_search = bldg_type
-      end
+		  case climate_zone
+			when "Memphis"
+			  climate_zone = "Atlanta"
+			when "El Paso"
+			  climate_zone = "Las.Vegas"
+			when "Salem"
+			  climate_zone = "Seattle"
+			when "Boise"
+			  climate_zone = "Boulder"
+			when "Burlington"
+			  climate_zone = "Minneapolis"
+			when "San Francisco"
+			  climate_zone = "San.Francisco"
+		  end
+		else
+		  case climate_zone
+			when "El Paso"
+			  climate_zone = "El.Paso"
+			when "San Francisco"
+			  climate_zone = "San.Francisco"
+		  end
+		  bldg_type_search = bldg_type
+		end
 
       # Open the sql file, skipping if not found
-      sql_path_string = "#{Dir.pwd}/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}/EnergyPlus/eplusout.sql"
+      sql_path_string = "C:/Sites/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}/eplusout.sql"
       sql_path = OpenStudio::Path.new(sql_path_string)
       sql = nil
       if OpenStudio.exists(sql_path)
         sql = OpenStudio::SqlFile.new(sql_path)
       else
-        puts "  eplusout.sql not found here: #{sql_path_string}"
-        next
+        raise "  eplusout.sql not found here: #{sql_path_string}"
       end
 
       # Record values for all fuel type/end use pairs
@@ -104,28 +166,53 @@ bldg_types.sort.each do |bldg_type|
           # First rename the building type, vintage, and climate zone to match the
           # conventions that will be used for the prototype buildings
           bldg_type_map = {
-              "SchoolSecondary" => "SecondarySchool",
-              "OfficeSmall" => "SmallOffice",
-              "HotelLarge" => "LargeHotel"
+		    "OfficeSmall" =>  "SmallOffice",
+			"OfficeMedium" => "MediumOffice",
+			"OfficeLarge" => "LargeOffice",
+			"RetailStandalone" => "Stand-aloneRetail",
+			"RetailStripmall" => "StripMall",
+			"SchoolPrimary" => "PrimarySchool",
+			"SchoolSecondary" => "SecondarySchool",
+			"OutPatientHealthCare" => "OutPatient",
+			"Hospital" => "Hospital",
+			"HotelSmall" => "SmallHotel",
+			"HotelLarge"=>"LargeHotel"
+			"RestaurantFastFood" => "QuickServiceRestaurant",
+			"RestaurantSitDown" => "FullServiceRestaurant",
+			"ApartmentMidRise" => "MidriseApartment"
           }
-
           vintage_map = {
               "Pre1980" => "DOE Ref Pre-1980",
               "Post1980" => "DOE Ref 1980-2004",
+              "STD2004" => "90.1-2004"
+              "STD2007" => "90.1-2007"
               "STD2010" => "90.1-2010"
+              "STD2013" => "90.1-2013"
           }
 
           climate_zone_map = {
-              "Houston" => "ASHRAE 169-2006-2A",
-              "Baltimore" => "ASHRAE 169-2006-4A",
-              "Chicago" => "ASHRAE 169-2006-5A",
-              "Las.Vegas" => "ASHRAE 169-2006-3B",
-              "El.Paso" => "ASHRAE 169-2006-3B"
+			"Miami" => "ASHRAE 169-2006-1A",
+			"Houston" => "ASHRAE 169-2006-2A", 
+			"Phoenix" => "ASHRAE 169-2006-2B", 
+			"Memphis" => "ASHRAE 169-2006-3A", "Atlanta" => "ASHRAE 169-2006-3A",
+			"El.Paso" => "ASHRAE 169-2006-3B",  "Las.Vegas" => "ASHRAE 169-2006-3B",
+			"San.Francisco" => "ASHRAE 169-2006-3C", 
+			"Baltimore" => "ASHRAE 169-2006-4A", 
+			"Albuquerque" => "ASHRAE 169-2006-4B", 
+			"Salem" => "ASHRAE 169-2006-4C", "Seattle" => "ASHRAE 169-2006-4C",
+			"Chicago" => "ASHRAE 169-2006-5A", 
+			"Boise" => "ASHRAE 169-2006-5B",   "Boulder" => "ASHRAE 169-2006-5B",
+			"Burlington" => "ASHRAE 169-2006-6A", "Minneapolis" => "ASHRAE 169-2006-6A",
+			"Helena" => "ASHRAE 169-2006-6B", 
+			"Duluth" => "ASHRAE 169-2006-7A", 
+			"Fairbanks" => "ASHRAE 169-2006-8A"
           }
 
           new_bldg_type = bldg_type_map[bldg_type]
           new_vintage = vintage_map[vintage]
           new_climate_zone = climate_zone_map[climate_zone]
+		  
+		  new_bldg_type = bldg_type if new_bldg_type == nil
 
           #puts "#{bldg_type}-#{vintage}-#{climate_zone}-#{fuel_type}-#{end_use}"
           results_hash[new_bldg_type][new_vintage][new_climate_zone][fuel_type][end_use] = energy_val
