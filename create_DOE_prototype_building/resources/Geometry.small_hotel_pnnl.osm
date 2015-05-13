@@ -1,7 +1,7 @@
 
 OS:Version,
-  {ee84bb6d-0d6c-4903-bc6d-2e5caf35eed7}, !- Handle
-  1.5.0;                                  !- Version Identifier
+  {f9fcfe64-8d3a-4dc3-bca7-d073560464a9}, !- Handle
+  1.7.0;                                  !- Version Identifier
 
 OS:Site,
   {5341c9d2-2c1c-4817-a174-0f170b414c4f}, !- Handle
@@ -82,32 +82,6 @@ OS:Space,
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
 
-OS:Schedule:Compact,
-  {8eca85af-79da-470a-8260-86c380591994}, !- Handle
-  VacGuestRoom_HtgSP_Sch,                 !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  18.889;                                 !- Field 4
-
-OS:ScheduleTypeLimits,
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Handle
-  Temperature,                            !- Name
-  -60,                                    !- Lower Limit Value {BasedOnField A4}
-  200,                                    !- Upper Limit Value {BasedOnField A4}
-  Continuous,                             !- Numeric Type
-  Temperature;                            !- Unit Type
-
-OS:Schedule:Compact,
-  {6fa0e694-e7c1-42d0-ab44-e8097f4605c0}, !- Handle
-  VacGuestRoom_ClgSP_Sch,                 !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  23.333;                                 !- Field 4
-
 OS:Connection,
   {380ec220-d144-410f-b3e5-e55ae63c262e}, !- Handle
   {2ad1e7e6-65d8-494a-a867-a8f582582de5}, !- Name
@@ -130,44 +104,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
-
-OS:Schedule:Compact,
-  {95c0a5aa-e214-4ead-b408-1a33a64d65da}, !- Handle
-  AlwaysOff,                              !- Name
-  {b5bd176d-9701-48d6-af2e-da9cc33723c1}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0;                                      !- Field 4
-
-OS:ScheduleTypeLimits,
-  {b5bd176d-9701-48d6-af2e-da9cc33723c1}, !- Handle
-  On/Off,                                 !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
-  Discrete,                               !- Numeric Type
-  Availability;                           !- Unit Type
-
-OS:Schedule:Compact,
-  {0984e327-965c-4bd3-bc04-965d1d273628}, !- Handle
-  Activity_Sch,                           !- Name
-  {0459b00a-6ad5-403f-9269-6cde6caa9fe4}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  132;                                    !- Field 4
-
-OS:ScheduleTypeLimits,
-  {9b4b9182-6a02-4a0d-8b15-7efbc6d8981c}, !- Handle
-  {e4d28506-8d98-4149-8f1e-d0e9950b1881}; !- Name
-
-OS:ScheduleTypeLimits,
-  {0459b00a-6ad5-403f-9269-6cde6caa9fe4}, !- Handle
-  ActivityLevel,                          !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
-  Continuous,                             !- Numeric Type
-  ActivityLevel;                          !- Unit Type
 
 OS:Connection,
   {9a48861c-0db8-4533-a994-cb7ae846e24d}, !- Handle
@@ -192,24 +128,6 @@ OS:Space,
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
 
-OS:Schedule:Compact,
-  {5e87cd43-9681-4987-a6e5-53088e011624}, !- Handle
-  CommonArea_HtgSP_Sch,                   !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111;                                 !- Field 4
-
-OS:Schedule:Compact,
-  {f5fc9274-0fd6-4281-b5a1-f2b8ec1ec679}, !- Handle
-  CommonArea_ClgSP_Sch,                   !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  23.889;                                 !- Field 4
-
 OS:Connection,
   {e59756ec-0aa8-4494-8755-4caad07aea36}, !- Handle
   {2631fe48-231f-4aa2-ab12-4a0db67f8a87}, !- Name
@@ -233,15 +151,6 @@ OS:Space,
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
 
-OS:Schedule:Compact,
-  {2db0afac-9eff-4d81-b3f8-8c4ea0208a6e}, !- Handle
-  SHWSysLaundry Water Heater Setpoint Temperature Schedule, !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
-
 OS:Connection,
   {79262454-6f92-422f-a002-1f43f9216678}, !- Handle
   {9977c535-1c8e-4a23-acc7-e44843f8f106}, !- Name
@@ -264,93 +173,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
-
-OS:Schedule:Compact,
-  {4f9e3c42-0787-41e5-a8a0-9d263d19ea48}, !- Handle
-  Base_OccGuestRoom_HtgSP_Sch,            !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111;                                 !- Field 4
-
-OS:Schedule:Compact,
-  {0515863a-e91a-419e-88d1-b30c46450b3c}, !- Handle
-  Base_OccGuestRoom_ClgSP_Sch,            !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111;                                 !- Field 4
-
-OS:Schedule:Compact,
-  {99b07d17-42cb-44f8-9abb-ee23749154f6}, !- Handle
-  GuestRoom_Eqp_Sch_Base,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.11,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.62,                                   !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.90,                                   !- Field 8
-  Until: 10:00,                           !- Field 9
-  0.43,                                   !- Field 10
-  Until: 17:00,                           !- Field 11
-  0.26,                                   !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.51,                                   !- Field 14
-  Until: 20:00,                           !- Field 15
-  0.49,                                   !- Field 16
-  Until: 21:00,                           !- Field 17
-  0.66,                                   !- Field 18
-  Until: 22:00,                           !- Field 19
-  0.70,                                   !- Field 20
-  Until: 23:00,                           !- Field 21
-  0.35,                                   !- Field 22
-  Until: 24:00,                           !- Field 23
-  0.11,                                   !- Field 24
-  For: Saturday Sunday Holidays,          !- Field 25
-  Until: 06:00,                           !- Field 26
-  0.11,                                   !- Field 27
-  Until: 07:00,                           !- Field 28
-  0.3,                                    !- Field 29
-  Until: 08:00,                           !- Field 30
-  0.62,                                   !- Field 31
-  Until: 09:00,                           !- Field 32
-  0.90,                                   !- Field 33
-  Until: 10:00,                           !- Field 34
-  0.62,                                   !- Field 35
-  Until: 17:00,                           !- Field 36
-  0.29,                                   !- Field 37
-  Until: 18:00,                           !- Field 38
-  0.43,                                   !- Field 39
-  Until: 19:00,                           !- Field 40
-  0.51,                                   !- Field 41
-  Until: 20:00,                           !- Field 42
-  0.49,                                   !- Field 43
-  Until: 21:00,                           !- Field 44
-  0.66,                                   !- Field 45
-  Until: 22:00,                           !- Field 46
-  0.70,                                   !- Field 47
-  Until: 23:00,                           !- Field 48
-  0.35,                                   !- Field 49
-  Until: 24:00,                           !- Field 50
-  0.11,                                   !- Field 51
-  For: WinterDesignDay,                   !- Field 52
-  Until: 24:00,                           !- Field 53
-  0.0,                                    !- Field 54
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 55
-  Until: 24:00,                           !- Field 56
-  1.0;                                    !- Field 57
-
-OS:ScheduleTypeLimits,
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Handle
-  Fraction,                               !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
-  Continuous;                             !- Numeric Type
 
 OS:Surface,
   {d479b89f-b88d-4a3b-9fa3-56c91c29a2e2}, !- Handle
@@ -412,63 +234,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
-
-OS:Schedule:Compact,
-  {a9e7d64d-5b57-43a7-8aa2-808299e2328b}, !- Handle
-  AlwaysOn,                               !- Name
-  {b5bd176d-9701-48d6-af2e-da9cc33723c1}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
-
-OS:Schedule:Compact,
-  {052f3c4e-3ca0-4ca1-9d64-d199e99d5ca0}, !- Handle
-  GuestRoom_Occ_Sch,                      !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  1.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.77,                                   !- Field 6
-  Until: 09:00,                           !- Field 7
-  0.43,                                   !- Field 8
-  Until: 15:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 16:00,                           !- Field 11
-  0.31,                                   !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.54,                                   !- Field 14
-  Until: 21:00,                           !- Field 15
-  0.77,                                   !- Field 16
-  Until: 22:00,                           !- Field 17
-  0.89,                                   !- Field 18
-  Until: 24:00,                           !- Field 19
-  1.0,                                    !- Field 20
-  For: Saturday Sunday Holidays,          !- Field 21
-  Until: 06:00,                           !- Field 22
-  1.0,                                    !- Field 23
-  Until: 07:00,                           !- Field 24
-  0.77,                                   !- Field 25
-  Until: 09:00,                           !- Field 26
-  0.53,                                   !- Field 27
-  Until: 17:00,                           !- Field 28
-  0.3,                                    !- Field 29
-  Until: 18:00,                           !- Field 30
-  0.53,                                   !- Field 31
-  Until: 19:00,                           !- Field 32
-  0.54,                                   !- Field 33
-  Until: 21:00,                           !- Field 34
-  0.65,                                   !- Field 35
-  Until: 24:00,                           !- Field 36
-  0.77,                                   !- Field 37
-  For: WinterDesignDay,                   !- Field 38
-  Until: 24:00,                           !- Field 39
-  0,                                      !- Field 40
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 41
-  Until: 24:00,                           !- Field 42
-  1.0;                                    !- Field 43
 
 OS:Surface,
   {f85137cc-34bd-452d-bf32-09f72fb72b0a}, !- Handle
@@ -635,68 +400,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
-
-OS:Schedule:Compact,
-  {2cfcf0d5-71ce-4ae4-a815-066f8172ad2c}, !- Handle
-  BLDG_LIGHT_GUESTROOM_SCH,               !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 1:00,                            !- Field 3
-  0.22,                                   !- Field 4
-  Until: 2:00,                            !- Field 5
-  0.17,                                   !- Field 6
-  Until: 5:00,                            !- Field 7
-  0.11,                                   !- Field 8
-  Until: 6:00,                            !- Field 9
-  0.22,                                   !- Field 10
-  Until: 7:00,                            !- Field 11
-  0.44,                                   !- Field 12
-  Until: 8:00,                            !- Field 13
-  0.56,                                   !- Field 14
-  Until: 10:00,                           !- Field 15
-  0.44,                                   !- Field 16
-  Until: 18:00,                           !- Field 17
-  0.28,                                   !- Field 18
-  Until: 19:00,                           !- Field 19
-  0.67,                                   !- Field 20
-  Until: 20:00,                           !- Field 21
-  0.89,                                   !- Field 22
-  Until: 21:00,                           !- Field 23
-  1,                                      !- Field 24
-  Until: 22:00,                           !- Field 25
-  0.89,                                   !- Field 26
-  Until: 23:00,                           !- Field 27
-  0.67,                                   !- Field 28
-  Until: 24:00,                           !- Field 29
-  0.33,                                   !- Field 30
-  For: Saturday Sunday Holidays,          !- Field 31
-  Until: 2:00,                            !- Field 32
-  0.26,                                   !- Field 33
-  Until: 6:00,                            !- Field 34
-  0.11,                                   !- Field 35
-  Until: 8:00,                            !- Field 36
-  0.41,                                   !- Field 37
-  Until: 10:00,                           !- Field 38
-  0.56,                                   !- Field 39
-  Until: 11:00,                           !- Field 40
-  0.41,                                   !- Field 41
-  Until: 18:00,                           !- Field 42
-  0.33,                                   !- Field 43
-  Until: 19:00,                           !- Field 44
-  0.85,                                   !- Field 45
-  Until: 22:00,                           !- Field 46
-  1,                                      !- Field 47
-  Until: 23:00,                           !- Field 48
-  0.85,                                   !- Field 49
-  Until: 24:00,                           !- Field 50
-  0.41,                                   !- Field 51
-  For: WinterDesignDay,                   !- Field 52
-  Until: 24:00,                           !- Field 53
-  0,                                      !- Field 54
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 55
-  Until: 24:00,                           !- Field 56
-  1;                                      !- Field 57
 
 OS:Surface,
   {78859500-8c16-4b6e-a724-a6d2fb5f546c}, !- Handle
@@ -1794,38 +1497,6 @@ OS:Space,
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
 
-OS:Schedule:Compact,
-  {b1fd2040-b6c3-41cf-9c81-d96f9412f00a}, !- Handle
-  N Adva_OccGuestRoom_HtgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  18.889,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
-
-OS:Schedule:Compact,
-  {cde925ac-a2ae-47b3-9017-a6c089100a3e}, !- Handle
-  N Adva_OccGuestRoom_ClgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  23.333,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
-
 OS:Surface,
   {baa9fa8c-e89d-4b0d-adf3-31a5dccbe972}, !- Handle
   C_RearStorageFlr1_1_0_0,                !- Name
@@ -2007,15 +1678,6 @@ OS:Space,
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
 
-OS:Schedule:Compact,
-  {c0645a0a-919b-4ee9-922b-0f9b1c6862a3}, !- Handle
-  BLDG_LIGHT_STAIR_SCH,                   !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
-
 OS:Surface,
   {bc344a42-ad14-4ccd-8611-e7b43d8b7526}, !- Handle
   C_CorridorFlr1_1_1_0,                   !- Name
@@ -2090,19 +1752,6 @@ OS:Surface,
   28.6998844241, 10.10782922, 3.3528,     !- X,Y,Z Vertex 3 {m}
   28.6998844241, 10.10782922, 6.096;      !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {ec995b14-7047-4967-8bc1-25695b00e196}, !- Handle
-  COMPACT HVAC-ALWAYS 4,                  !- Name
-  {e3027992-2cc6-4f8f-864f-f912c88ccc57}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  4;                                      !- Field 4
-
-OS:ScheduleTypeLimits,
-  {e3027992-2cc6-4f8f-864f-f912c88ccc57}, !- Handle
-  COMPACT HVAC Any Number;                !- Name
-
 OS:Surface,
   {1ef4b5d1-8874-4602-9eda-15452f6c0d24}, !- Handle
   P_GuestRoom201_10114_0_10074,           !- Name
@@ -2119,21 +1768,6 @@ OS:Surface,
   4.01108442, 8.2790292198, 3.3528,       !- X,Y,Z Vertex 2 {m}
   0.04868442, 8.2790292198, 3.3528,       !- X,Y,Z Vertex 3 {m}
   0.04868442, 8.2790292198, 6.096;        !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {fc07ab28-91f6-414f-a2fa-1df85de5a200}, !- Handle
-  GuestRoom_Infil_Sch,                    !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.25,                                   !- Field 4
-  For: WinterDesignDay,                   !- Field 5
-  Until: 24:00,                           !- Field 6
-  0.0,                                    !- Field 7
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 8
-  Until: 24:00,                           !- Field 9
-  1.0;                                    !- Field 10
 
 OS:Surface,
   {072cfb2a-f529-47ca-96ba-b533848f9648}, !- Handle
@@ -2220,19 +1854,6 @@ OS:Space,
   ,                                       !- Building Story Name
   ;                                       !- Thermal Zone Name
 
-OS:Schedule:Compact,
-  {9481144b-e740-4d89-a8da-4a5b67e45828}, !- Handle
-  BLDG_LIGHT_LAUNDRY_SCH,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 8:00,                            !- Field 3
-  0,                                      !- Field 4
-  Until: 17:00,                           !- Field 5
-  1,                                      !- Field 6
-  Until: 24:00,                           !- Field 7
-  0;                                      !- Field 8
-
 OS:Surface,
   {a5690ab5-7045-4376-b9cc-aeefeb6ae6c5}, !- Handle
   P_GuestRoom313_10238_0_10134,           !- Name
@@ -2289,35 +1910,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
-
-OS:Schedule:Compact,
-  {02c30cad-5429-4c19-8cf2-63c8d92ab047}, !- Handle
-  ExerciseCenter_Eqp_Sch,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.5,                                    !- Field 6
-  Until: 9:00,                            !- Field 7
-  1.0,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.0,                                    !- Field 12
-  Until: 16:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 17:00,                           !- Field 15
-  1.0,                                    !- Field 16
-  Until: 19:00,                           !- Field 17
-  0.50,                                   !- Field 18
-  Until: 21:00,                           !- Field 19
-  1.0,                                    !- Field 20
-  Until: 23:00,                           !- Field 21
-  0.5,                                    !- Field 22
-  Until: 24:00,                           !- Field 23
-  0.0;                                    !- Field 24
 
 OS:Surface,
   {eac314c7-23b1-4111-999f-66ec94ff76de}, !- Handle
@@ -2472,15 +2064,6 @@ OS:Surface,
   0.04868442, 10.1078292198, 8.8392,      !- X,Y,Z Vertex 2 {m}
   2.48708442, 10.1078292198, 8.8392,      !- X,Y,Z Vertex 3 {m}
   2.48708442, 10.1078292198, 11.5824;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {fab1fa2b-748a-4c15-83a5-aa1c66d0090c}, !- Handle
-  MinOA_MotorizedDamper_Sched,            !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1.0;                                    !- Field 4
 
 OS:SubSurface,
   {87780a9b-215a-42b9-87d4-89becb342100}, !- Handle
@@ -2801,12 +2384,6 @@ OS:Space,
   ,                                       !- Part of Total Floor Area
   ;                                       !- Design Specification Outdoor Air Object Name
 
-OS:Schedule:Constant,
-  {7fdc08a4-e365-47db-a46d-056118a0ad00}, !- Handle
-  {e81c6bcb-b904-4516-8ee6-359cb2d1248e}, !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  0.7;                                    !- Value
-
 OS:SubSurface,
   {cb00f72f-82b9-4b0e-a908-c189a1ec11d1}, !- Handle
   W_GuestRoom402_405_5_0_0_0_2,           !- Name
@@ -3010,56 +2587,6 @@ OS:Surface,
   32.66228442, 10.1078292198, 3.3528,     !- X,Y,Z Vertex 3 {m}
   32.66228442, 10.1078292198, 6.096;      !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {5ab01dc4-0486-4618-b108-25bfa108215b}, !- Handle
-  MeetingRoom_Occ_Sch,                    !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 07:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 08:00,                           !- Field 5
-  0.05,                                   !- Field 6
-  Until: 10:00,                           !- Field 7
-  0.5,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.05,                                   !- Field 12
-  Until: 15:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.2,                                    !- Field 16
-  Until: 20:00,                           !- Field 17
-  0.05,                                   !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.0,                                    !- Field 20
-  For: Saturday Sunday Holidays,          !- Field 21
-  Until: 07:00,                           !- Field 22
-  0.0,                                    !- Field 23
-  Until: 08:00,                           !- Field 24
-  0.05,                                   !- Field 25
-  Until: 10:00,                           !- Field 26
-  0.5,                                    !- Field 27
-  Until: 12:00,                           !- Field 28
-  0.2,                                    !- Field 29
-  Until: 13:00,                           !- Field 30
-  0.05,                                   !- Field 31
-  Until: 15:00,                           !- Field 32
-  0.5,                                    !- Field 33
-  Until: 18:00,                           !- Field 34
-  0.2,                                    !- Field 35
-  Until: 20:00,                           !- Field 36
-  0.05,                                   !- Field 37
-  Until: 24:00,                           !- Field 38
-  0.0,                                    !- Field 39
-  For: WinterDesignDay,                   !- Field 40
-  Until: 24:00,                           !- Field 41
-  0.0,                                    !- Field 42
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 43
-  Until: 24:00,                           !- Field 44
-  1.0;                                    !- Field 45
-
 OS:Surface,
   {d30b1e48-23a3-444e-bced-7aa8b43ee5ed}, !- Handle
   W_RearStairsFlr1_2_0_0,                 !- Name
@@ -3184,57 +2711,6 @@ OS:Surface,
   54.91326842, 10.1078292198, 0,          !- X,Y,Z Vertex 2 {m}
   52.47428442, 10.1078292198, 0,          !- X,Y,Z Vertex 3 {m}
   52.47428442, 10.1078292198, 3.3528;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {a282a903-25e7-4d0e-8334-4a4de16ddb33}, !- Handle
-  LaundryRoom_Occ_Sch,                    !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 08:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 10:00,                           !- Field 5
-  0.09,                                   !- Field 6
-  Until: 12:00,                           !- Field 7
-  0.18,                                   !- Field 8
-  Until: 13:00,                           !- Field 9
-  0.0,                                    !- Field 10
-  Until: 16:00,                           !- Field 11
-  0.18,                                   !- Field 12
-  Until: 17:00,                           !- Field 13
-  0.09,                                   !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.0,                                    !- Field 16
-  For: Saturday Sunday Holidays,          !- Field 17
-  Until: 08:00,                           !- Field 18
-  0.0,                                    !- Field 19
-  Until: 10:00,                           !- Field 20
-  0.09,                                   !- Field 21
-  Until: 12:00,                           !- Field 22
-  0.18,                                   !- Field 23
-  Until: 13:00,                           !- Field 24
-  0.0,                                    !- Field 25
-  Until: 16:00,                           !- Field 26
-  0.18,                                   !- Field 27
-  Until: 17:00,                           !- Field 28
-  0.09,                                   !- Field 29
-  Until: 24:00,                           !- Field 30
-  0.0,                                    !- Field 31
-  For: WinterDesignDay,                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.0,                                    !- Field 34
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 35
-  Until: 24:00,                           !- Field 36
-  1.0;                                    !- Field 37
-
-OS:Schedule:Compact,
-  {2f439d2c-e52a-40fa-968d-95900be480dd}, !- Handle
-  BLDG_LIGHT_CORRIDOR_SCH,                !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
 
 OS:Surface,
   {df93ce6c-f796-4949-93f4-df79f698ec8b}, !- Handle
@@ -3423,32 +2899,6 @@ OS:Surface,
   26.87108442, 10.10782922, 8.8392,       !- X,Y,Z Vertex 3 {m}
   26.87108442, 18.33742922, 8.8392;       !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {49cea289-5c99-4859-8339-c1be8640db31}, !- Handle
-  Adva_EmployeeLounge_HtgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 5:00,                            !- Field 3
-  18.333,                                 !- Field 4
-  Until: 20:00,                           !- Field 5
-  21.111,                                 !- Field 6
-  Until: 24:00,                           !- Field 7
-  18.333;                                 !- Field 8
-
-OS:Schedule:Compact,
-  {15631072-4696-46c8-8cf6-e7c08570a244}, !- Handle
-  Adva_EmployeeLounge_ClgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 5:00,                            !- Field 3
-  26.667,                                 !- Field 4
-  Until: 20:00,                           !- Field 5
-  23.889,                                 !- Field 6
-  Until: 24:00,                           !- Field 7
-  26.667;                                 !- Field 8
-
 OS:SubSurface,
   {60cdefe4-4ad0-47f6-bd43-5c9a455c2448}, !- Handle
   W_GuestRoom315_318_3_0_0_0_2,           !- Name
@@ -3551,19 +3001,6 @@ OS:Surface,
   2.48708442, 10.10782922, 6.096,         !- X,Y,Z Vertex 3 {m}
   2.48708442, 18.33742922, 6.096;         !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {5b4106d3-1791-485b-a698-b37e006f932b}, !- Handle
-  Adva_MeetingRoom_ClgSP_Sch,             !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 7:00,                            !- Field 3
-  26.667,                                 !- Field 4
-  Until: 19:00,                           !- Field 5
-  23.889,                                 !- Field 6
-  Until: 24:00,                           !- Field 7
-  26.667;                                 !- Field 8
-
 OS:Surface,
   {33c0a35f-b1eb-4322-b56d-28515bf4a02b}, !- Handle
   W_CorridorFlr3_2_0_0,                   !- Name
@@ -3597,15 +3034,6 @@ OS:Surface,
   23.82308442, 10.10782922, 8.8392,       !- X,Y,Z Vertex 2 {m}
   7.97348442, 10.10782922, 8.8392,        !- X,Y,Z Vertex 3 {m}
   7.97348442, 18.33742922, 8.8392;        !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {561b6a48-399c-4b89-8aaa-5d885715c707}, !- Handle
-  Heat Exchanger Supply Air Temp Sch,     !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  14.0;                                   !- Field 4
 
 OS:Surface,
   {073ae222-2546-4f37-ba95-7e7827324f12}, !- Handle
@@ -3811,42 +3239,6 @@ OS:Surface,
   44.5494844242, 0.0488452197, 0,         !- X,Y,Z Vertex 3 {m}
   44.5494844242, 8.2790292198, 0;         !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {f5e65584-754b-4022-8b76-795bb537af7a}, !- Handle
-  BLDG_LIGHT_EXERCENTER_SCH,              !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 6:00,                            !- Field 3
-  0,                                      !- Field 4
-  Until: 7:00,                            !- Field 5
-  0.5,                                    !- Field 6
-  Until: 22:00,                           !- Field 7
-  1,                                      !- Field 8
-  Until: 23:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 24:00,                           !- Field 11
-  0;                                      !- Field 12
-
-OS:Schedule:Compact,
-  {0c7f9d03-d304-4598-b681-e6069862d585}, !- Handle
-  LaundryRoom_Eqp_Elec_Sch,               !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 08:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 16:00,                           !- Field 5
-  1.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.0,                                    !- Field 8
-  For: WinterDesignDay,                   !- Field 9
-  Until: 24:00,                           !- Field 10
-  0.0,                                    !- Field 11
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 12
-  Until: 24:00,                           !- Field 13
-  1.0;                                    !- Field 14
-
 OS:Surface,
   {510548a9-b33c-48d1-b321-3d094860db43}, !- Handle
   P_GuestRoom319_10204_0_10111,           !- Name
@@ -3864,54 +3256,6 @@ OS:Surface,
   32.66228442, 10.1078292198, 6.096,      !- X,Y,Z Vertex 3 {m}
   32.66228442, 10.1078292198, 8.8392;     !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {6cfa0f17-54f2-4524-b0d7-674434c14b80}, !- Handle
-  OFF_EQUIP_SCH,                          !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.33,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.38,                                   !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.43,                                   !- Field 8
-  Until: 10:00,                           !- Field 9
-  0.43,                                   !- Field 10
-  Until: 12:00,                           !- Field 11
-  1,                                      !- Field 12
-  Until: 13:00,                           !- Field 13
-  0.94,                                   !- Field 14
-  Until: 17:00,                           !- Field 15
-  1,                                      !- Field 16
-  Until: 18:00,                           !- Field 17
-  0.75,                                   !- Field 18
-  Until: 20:00,                           !- Field 19
-  0.63,                                   !- Field 20
-  Until: 22:00,                           !- Field 21
-  0.48,                                   !- Field 22
-  Until: 24:00,                           !- Field 23
-  0.33,                                   !- Field 24
-  For: Saturday Sunday Holidays,          !- Field 25
-  Until: 05:00,                           !- Field 26
-  0.33,                                   !- Field 27
-  Until: 07:00,                           !- Field 28
-  0.38,                                   !- Field 29
-  Until: 08:00,                           !- Field 30
-  0.43,                                   !- Field 31
-  Until: 18:00,                           !- Field 32
-  0.63,                                   !- Field 33
-  Until: 22:00,                           !- Field 34
-  0.48,                                   !- Field 35
-  Until: 24:00,                           !- Field 36
-  0.33,                                   !- Field 37
-  For: WinterDesignDay,                   !- Field 38
-  Until: 24:00,                           !- Field 39
-  0.0,                                    !- Field 40
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 41
-  Until: 24:00,                           !- Field 42
-  1.0;                                    !- Field 43
-
 OS:Surface,
   {f215a9a1-2355-402f-a67e-fa3f9538e86d}, !- Handle
   P_GuestRoom302_305_2_0_0,               !- Name
@@ -3928,15 +3272,6 @@ OS:Surface,
   19.8606844241, 0.04884522, 6.096,       !- X,Y,Z Vertex 2 {m}
   19.8606844241, 8.27902922, 6.096,       !- X,Y,Z Vertex 3 {m}
   19.8606844241, 8.27902922, 8.8392;      !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {985d29f2-095f-480e-9152-4f8560903bba}, !- Handle
-  PlantOnSched,                           !- Name
-  {b5bd176d-9701-48d6-af2e-da9cc33723c1}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1.0;                                    !- Field 4
 
 OS:Surface,
   {f0cfba41-809a-47ff-99a3-685bbc062926}, !- Handle
@@ -4517,21 +3852,6 @@ OS:Surface,
   23.8230844241, 10.10782922, 3.3528,     !- X,Y,Z Vertex 3 {m}
   23.8230844241, 10.10782922, 6.096;      !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {8ec0f303-5096-4c03-aae6-679d3d5531cd}, !- Handle
-  CommonArea_Infil_Sch,                   !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.25,                                   !- Field 4
-  For: WinterDesignDay,                   !- Field 5
-  Until: 24:00,                           !- Field 6
-  0.0,                                    !- Field 7
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 8
-  Until: 24:00,                           !- Field 9
-  1.0;                                    !- Field 10
-
 OS:Surface,
   {0617cff8-70c9-4cf4-8908-3565bb16ea23}, !- Handle
   P_GuestRoom213_10123_0_10081,           !- Name
@@ -4548,40 +3868,6 @@ OS:Surface,
   52.4742844242, 0.04884522, 3.3528,      !- X,Y,Z Vertex 2 {m}
   52.4742844242, 8.27902922, 3.3528,      !- X,Y,Z Vertex 3 {m}
   52.4742844242, 8.27902922, 6.096;       !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {c27041d6-64cf-4f88-8058-835946e80360}, !- Handle
-  BLDG_LIGHT_STORAGE_SCH,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 7:00,                            !- Field 3
-  0.1,                                    !- Field 4
-  Until: 8:00,                            !- Field 5
-  0.2,                                    !- Field 6
-  Until: 18:00,                           !- Field 7
-  0.4,                                    !- Field 8
-  Until: 22:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 24:00,                           !- Field 11
-  0.1,                                    !- Field 12
-  For: Saturday Sunday Holidays,          !- Field 13
-  Until: 7:00,                            !- Field 14
-  0.1,                                    !- Field 15
-  Until: 8:00,                            !- Field 16
-  0.2,                                    !- Field 17
-  Until: 18:00,                           !- Field 18
-  0.4,                                    !- Field 19
-  Until: 22:00,                           !- Field 20
-  0.2,                                    !- Field 21
-  Until: 24:00,                           !- Field 22
-  0.1,                                    !- Field 23
-  For: WinterDesignDay,                   !- Field 24
-  Until: 24:00,                           !- Field 25
-  0,                                      !- Field 26
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 27
-  Until: 24:00,                           !- Field 28
-  1;                                      !- Field 29
 
 OS:Surface,
   {cb2d1ef5-8d8e-461f-8e29-336289e2cb81}, !- Handle
@@ -4727,22 +4013,6 @@ OS:Surface,
   32.66228442, 8.2790292198, 3.3528,      !- X,Y,Z Vertex 3 {m}
   32.66228442, 8.2790292198, 6.096;       !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {04daf18e-880e-48c7-ae35-f02ee5fb94ba}, !- Handle
-  S Adva_OccGuestRoom_HtgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  18.889,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
-
 OS:Surface,
   {ca186b39-de80-45d5-a04c-6b93d59485aa}, !- Handle
   P_CorridorFlr2_8_0_0,                   !- Name
@@ -4810,12 +4080,6 @@ OS:Surface,
   52.4742844242, 18.33742922, 6.096,      !- X,Y,Z Vertex 2 {m}
   52.4742844242, 10.10782922, 6.096,      !- X,Y,Z Vertex 3 {m}
   52.4742844242, 10.10782922, 8.8392;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Constant,
-  {8821c7de-3c37-4f55-a392-5661a6267675}, !- Handle
-  {8f431b27-6534-436d-872a-5a1fc06bca42}, !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  0.7;                                    !- Value
 
 OS:Surface,
   {999271b1-21b4-4949-882e-6418bcbbd4e7}, !- Handle
@@ -4965,39 +4229,6 @@ OS:Surface,
   48.51188442, 10.10782922, 3.3528,       !- X,Y,Z Vertex 3 {m}
   48.51188442, 18.33742922, 3.3528;       !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {3e1bb860-c10f-44d8-bffd-2c30c93298b5}, !- Handle
-  BLDG_LIGHT_MEETINGROOM_SCH,             !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 5:00,                            !- Field 3
-  0,                                      !- Field 4
-  Until: 6:00,                            !- Field 5
-  0.2,                                    !- Field 6
-  Until: 7:00,                            !- Field 7
-  0.3,                                    !- Field 8
-  Until: 8:00,                            !- Field 9
-  0.5,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  1,                                      !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 20:00,                           !- Field 15
-  0.3,                                    !- Field 16
-  Until: 21:00,                           !- Field 17
-  0.2,                                    !- Field 18
-  Until: 22:00,                           !- Field 19
-  0.05,                                   !- Field 20
-  Until: 24:00,                           !- Field 21
-  0,                                      !- Field 22
-  For: WinterDesignDay,                   !- Field 23
-  Until: 24:00,                           !- Field 24
-  0,                                      !- Field 25
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 26
-  Until: 24:00,                           !- Field 27
-  1;                                      !- Field 28
-
 OS:Surface,
   {fa358a15-f0f2-4330-b55a-01831c4cecf2}, !- Handle
   S_GuestRoom103_0_0_0,                   !- Name
@@ -5099,40 +4330,6 @@ OS:Surface,
   48.51188442, 10.1078292198, 6.096,      !- X,Y,Z Vertex 2 {m}
   32.66228442, 10.1078292198, 6.096,      !- X,Y,Z Vertex 3 {m}
   32.66228442, 10.1078292198, 8.8392;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {e3507666-5203-4d1f-911a-e8e60e17e9e7}, !- Handle
-  INFIL_Door_Opening_SCH,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.144,                                  !- Field 6
-  Until: 08:00,                           !- Field 7
-  1.0,                                    !- Field 8
-  Until: 17:00,                           !- Field 9
-  0.144,                                  !- Field 10
-  Until: 18:00,                           !- Field 11
-  1.0,                                    !- Field 12
-  Until: 22:00,                           !- Field 13
-  0.144,                                  !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.0;                                    !- Field 16
-
-OS:Schedule:Compact,
-  {529e6a3c-ee80-4691-b7f3-c9363919c558}, !- Handle
-  Adva_MeetingRoom_HtgSP_Sch,             !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 7:00,                            !- Field 3
-  18.333,                                 !- Field 4
-  Until: 19:00,                           !- Field 5
-  21.111,                                 !- Field 6
-  Until: 24:00,                           !- Field 7
-  18.333;                                 !- Field 8
 
 OS:Surface,
   {387f0b96-6f87-4882-abe5-c71ac4b616b5}, !- Handle
@@ -5386,22 +4583,6 @@ OS:Surface,
   7.973484424, 18.3374292198, 3.3528,     !- X,Y,Z Vertex 3 {m}
   7.973484424, 18.3374292198, 6.096;      !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4b0cc730-c3eb-4ab8-92ea-fa0a61961339}, !- Handle
-  Adva5F_OccGuestRoom_HtgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  18.334,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
-
 OS:Surface,
   {714bebe6-5802-465c-9cfa-905405f18236}, !- Handle
   W_RearStorageFlr3_2_0_0,                !- Name
@@ -5486,22 +4667,6 @@ OS:Surface,
   40.5870844242, 18.3374292198, 0,        !- X,Y,Z Vertex 2 {m}
   28.6998844241, 18.3374292198, 0,        !- X,Y,Z Vertex 3 {m}
   28.6998844241, 18.3374292198, 3.3528;   !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {713f652c-0177-4be4-8e82-5467c7329f36}, !- Handle
-  Adva_OccGuestRoom_ClgSP_Sch,            !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  23.333,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
 
 OS:Surface,
   {534ed1fc-a62c-4ed3-8df1-8a3a8204cc83}, !- Handle
@@ -5802,31 +4967,6 @@ OS:Surface,
   48.5118844242, 10.1078292198, 0,        !- X,Y,Z Vertex 3 {m}
   48.5118844242, 18.3374292198, 0;        !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {474b0356-5617-4217-a766-1e8dc8f21761}, !- Handle
-  Lobby_Eqp_Sch,                          !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.21,                                   !- Field 4
-  Until: 06:00,                           !- Field 5
-  0.68,                                   !- Field 6
-  Until: 10:00,                           !- Field 7
-  1.0,                                    !- Field 8
-  Until: 11:00,                           !- Field 9
-  0.32,                                   !- Field 10
-  Until: 23:00,                           !- Field 11
-  0.23,                                   !- Field 12
-  Until: 24:00,                           !- Field 13
-  0.21,                                   !- Field 14
-  For: WinterDesignDay,                   !- Field 15
-  Until: 24:00,                           !- Field 16
-  0.0,                                    !- Field 17
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 18
-  Until: 24:00,                           !- Field 19
-  1.0;                                    !- Field 20
-
 OS:Surface,
   {d72228bf-a09a-40f2-aba5-bedf29f61c22}, !- Handle
   F_GuestRoom202_205_10032_0_10029,       !- Name
@@ -6037,69 +5177,6 @@ OS:Surface,
   0.04868442, 18.33742922, 6.096,         !- X,Y,Z Vertex 3 {m}
   0.04868442, 10.10782922, 6.096;         !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {1ff09d00-8ad2-434b-9cd9-d093f76caa84}, !- Handle
-  SHWSysShower-Loop-Temp-Schedule,        !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
-
-OS:Schedule:Compact,
-  {47e3b169-a645-4594-b35d-46b2f386e927}, !- Handle
-  EmployeeLounge_Eqp_Sch,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.11,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.19,                                   !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.25,                                   !- Field 8
-  Until: 10:00,                           !- Field 9
-  1,                                      !- Field 10
-  Until: 12:00,                           !- Field 11
-  0.86,                                   !- Field 12
-  Until: 13:00,                           !- Field 13
-  1,                                      !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.86,                                   !- Field 16
-  Until: 19:00,                           !- Field 17
-  0.25,                                   !- Field 18
-  Until: 20:00,                           !- Field 19
-  0.19,                                   !- Field 20
-  Until: 24:00,                           !- Field 21
-  0.11,                                   !- Field 22
-  For: Saturday Sunday Holidays,          !- Field 23
-  Until: 05:00,                           !- Field 24
-  0.11,                                   !- Field 25
-  Until: 07:00,                           !- Field 26
-  0.19,                                   !- Field 27
-  Until: 08:00,                           !- Field 28
-  0.25,                                   !- Field 29
-  Until: 10:00,                           !- Field 30
-  1,                                      !- Field 31
-  Until: 12:00,                           !- Field 32
-  0.86,                                   !- Field 33
-  Until: 13:00,                           !- Field 34
-  1,                                      !- Field 35
-  Until: 18:00,                           !- Field 36
-  0.86,                                   !- Field 37
-  Until: 19:00,                           !- Field 38
-  0.25,                                   !- Field 39
-  Until: 20:00,                           !- Field 40
-  0.19,                                   !- Field 41
-  Until: 24:00,                           !- Field 42
-  0.11,                                   !- Field 43
-  For: WinterDesignDay,                   !- Field 44
-  Until: 24:00,                           !- Field 45
-  0.0,                                    !- Field 46
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 47
-  Until: 24:00,                           !- Field 48
-  1.0;                                    !- Field 49
-
 OS:Surface,
   {2f278ad3-ca61-4031-b99a-4ff5f6bbf3ae}, !- Handle
   P_CorridorFlr3_12_0_0,                  !- Name
@@ -6238,15 +5315,6 @@ OS:Surface,
   32.66228442, 8.2790292198, 8.8392,      !- X,Y,Z Vertex 3 {m}
   32.66228442, 8.2790292198, 11.5824;     !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4d33bc5a-cbfb-4b61-a350-082ed85061fb}, !- Handle
-  SHW Sensible fract sched,               !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.20;                                   !- Field 4
-
 OS:Surface,
   {e2b411e1-dd59-4668-ab11-f23a380e970e}, !- Handle
   P_MechanicalRoomFlr1_10041_0_10034,     !- Name
@@ -6280,60 +5348,6 @@ OS:Surface,
   32.66228442, 8.2790292198, 8.8392,      !- X,Y,Z Vertex 2 {m}
   48.51188442, 8.2790292198, 8.8392,      !- X,Y,Z Vertex 3 {m}
   48.51188442, 8.2790292198, 11.5824;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {cbb59e53-42a1-4975-b8fb-d734bfa033d7}, !- Handle
-  Lobby_Occ_Sch,                          !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.1,                                    !- Field 4
-  Until: 06:00,                           !- Field 5
-  0.3,                                    !- Field 6
-  Until: 10:00,                           !- Field 7
-  0.7,                                    !- Field 8
-  Until: 16:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  0.4,                                    !- Field 12
-  Until: 22:00,                           !- Field 13
-  0.2,                                    !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.1,                                    !- Field 16
-  For: Saturday Sunday Holidays,          !- Field 17
-  Until: 06:00,                           !- Field 18
-  0.1,                                    !- Field 19
-  Until: 07:00,                           !- Field 20
-  0.3,                                    !- Field 21
-  Until: 10:00,                           !- Field 22
-  0.7,                                    !- Field 23
-  Until: 22:00,                           !- Field 24
-  0.2,                                    !- Field 25
-  Until: 24:00,                           !- Field 26
-  0.1,                                    !- Field 27
-  For: WinterDesignDay,                   !- Field 28
-  Until: 24:00,                           !- Field 29
-  0,                                      !- Field 30
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 31
-  Until: 24:00,                           !- Field 32
-  1.0;                                    !- Field 33
-
-OS:Schedule:Compact,
-  {dd7ff921-a23d-46c7-913b-7d721a805268}, !- Handle
-  Adva_OccGuestRoom_HtgSP_Sch,            !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  18.889,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
 
 OS:SubSurface,
   {acf63a67-44a3-4c49-bd5c-d76902b73709}, !- Handle
@@ -6645,15 +5659,6 @@ OS:Surface,
   23.8230844241, 0.04884522, 0,           !- X,Y,Z Vertex 3 {m}
   23.8230844241, 0.04884522, 3.3528;      !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {0db6dc7c-8b0f-4420-9c67-8a23bffbfce5}, !- Handle
-  COMPACT HVAC-ALWAYS 0,                  !- Name
-  {e3027992-2cc6-4f8f-864f-f912c88ccc57}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0;                                      !- Field 4
-
 OS:Surface,
   {5bb56804-f818-4353-be1f-a40566d867d8}, !- Handle
   P_GuestRoom215_218_10105_0_10065,       !- Name
@@ -6704,12 +5709,6 @@ OS:Surface,
   32.66228442, 8.2790292198, 6.096,       !- X,Y,Z Vertex 2 {m}
   19.86068442, 8.2790292198, 6.096,       !- X,Y,Z Vertex 3 {m}
   19.86068442, 8.2790292198, 8.8392;      !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Constant,
-  {d3bcf1a8-d081-422e-b98d-d84df9237ef8}, !- Handle
-  {bc829684-a8c4-46ac-8c31-a9548bb49566}, !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  0.7;                                    !- Value
 
 OS:Surface,
   {6e840d42-cdc5-42fb-8a9f-9ea61a915267}, !- Handle
@@ -7102,31 +6101,6 @@ OS:Surface,
   7.97348442, 10.1078292198, 8.8392,      !- X,Y,Z Vertex 3 {m}
   7.97348442, 10.1078292198, 11.5824;     !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {2cc95472-ec45-4ead-b34d-188afa3b478e}, !- Handle
-  Adva5F_OccGuestRoom_ClgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  23.888,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
-
-OS:Schedule:Compact,
-  {15297562-5aa4-424a-8d4e-3a557ffbeea8}, !- Handle
-  COMPACT HVAC-ALWAYS 1,                  !- Name
-  {e3027992-2cc6-4f8f-864f-f912c88ccc57}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
-
 OS:Surface,
   {fe38d6b2-e316-42c1-82b6-2dbb0248bcd8}, !- Handle
   F_GuestRoom306_308_10136_0_10086,       !- Name
@@ -7212,28 +6186,6 @@ OS:Surface,
   4.011084424, 8.27902922, 3.3528,        !- X,Y,Z Vertex 3 {m}
   4.011084424, 8.27902922, 6.096;         !- X,Y,Z Vertex 4 {m}
 
-OS:SizingPeriod:DesignDay,
-  {71825c16-706a-4e71-8d35-97ddee447efe}, !- Handle
-  San Francisco Intl Ap Ann Htg 99.6% Condns DB, !- Name
-  3.8,                                    !- Maximum Dry-Bulb Temperature {C}
-  0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  3.8,                                    !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
-  101301,                                 !- Barometric Pressure {Pa}
-  2.2,                                    !- Wind Speed {m/s}
-  150,                                    !- Wind Direction {deg}
-  0,                                      !- Sky Clearness
-  0,                                      !- Rain Indicator
-  0,                                      !- Snow Indicator
-  21,                                     !- Day of Month
-  1,                                      !- Month
-  WinterDesignDay,                        !- Day Type
-  0,                                      !- Daylight Saving Time Indicator
-  Wetbulb,                                !- Humidity Indicating Type
-  ,                                       !- Humidity Indicating Day Schedule Name
-  DefaultMultipliers,                     !- Dry-Bulb Temperature Range Modifier Type
-  ,                                       !- Dry-Bulb Temperature Range Modifier Schedule Name
-  ASHRAEClearSky;                         !- Solar Model Indicator
-
 OS:Surface,
   {cd5268ca-769a-48ff-9074-55e708de48f5}, !- Handle
   P_FrontStorageFlr1_10088_0_10056,       !- Name
@@ -7302,14 +6254,6 @@ OS:SubSurface,
   41.9986844242, 18.3374292198, 6.7456,   !- X,Y,Z Vertex 3 {m}
   41.9986844242, 18.3374292198, 8.1896;   !- X,Y,Z Vertex 4 {m}
 
-OS:ScheduleTypeLimits,
-  {8af4d92c-6e2f-4f6c-9bde-6426c2cc3846}, !- Handle
-  Control Type,                           !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  4,                                      !- Upper Limit Value {BasedOnField A4}
-  Discrete,                               !- Numeric Type
-  ControlMode;                            !- Unit Type
-
 OS:Surface,
   {febc65d0-9412-48cb-bbef-0965d60c323c}, !- Handle
   S_LaundryRoomFlr1_0_0_0,                !- Name
@@ -7326,15 +6270,6 @@ OS:Surface,
   40.5870844242, 10.1078292198, 0,        !- X,Y,Z Vertex 2 {m}
   28.6998844241, 10.1078292198, 0,        !- X,Y,Z Vertex 3 {m}
   28.6998844241, 18.3374292198, 0;        !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {d41e2a13-8138-4f33-b22e-2626659d5772}, !- Handle
-  SHW Shower Temp Sched,                  !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
 
 OS:Surface,
   {56a77c8d-2193-40c8-b5c1-6f64be79abe8}, !- Handle
@@ -7369,15 +6304,6 @@ OS:SubSurface,
   39.1754844241, 18.3374292198, 9.4888,   !- X,Y,Z Vertex 2 {m}
   38.0362844241, 18.3374292198, 9.4888,   !- X,Y,Z Vertex 3 {m}
   38.0362844241, 18.3374292198, 10.9328;  !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {15ae459b-a8c3-449e-bed4-32ed9ce7d459}, !- Handle
-  AlwaysOn_SCH,                           !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
 
 OS:Surface,
   {076ea7e5-31b1-4483-8689-bc5a56332895}, !- Handle
@@ -7518,15 +6444,6 @@ OS:Surface,
   19.8606844241, 18.33742922, 0,          !- X,Y,Z Vertex 2 {m}
   19.8606844241, 10.10782922, 0,          !- X,Y,Z Vertex 3 {m}
   19.8606844241, 10.10782922, 3.3528;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {7a008988-7194-48cf-ac1d-c68856ddcdcd}, !- Handle
-  SHW Laundry Temp Sched,                 !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  82.22;                                  !- Field 4
 
 OS:Surface,
   {7bfefb8a-9932-4575-9442-c2d6c6609ba5}, !- Handle
@@ -7851,25 +6768,6 @@ OS:Surface,
   7.97348442, 18.33742922, 3.3528,        !- X,Y,Z Vertex 3 {m}
   7.97348442, 10.10782922, 3.3528;        !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {e2ec8b64-463c-43f3-99d5-a93247db26ee}, !- Handle
-  LaundryRoom_Eqp_Gas_Sch,                !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 9:00,                            !- Field 3
-  0.0,                                    !- Field 4
-  Until: 17:00,                           !- Field 5
-  1.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.0,                                    !- Field 8
-  For: WinterDesignDay,                   !- Field 9
-  Until: 24:00,                           !- Field 10
-  0.0,                                    !- Field 11
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 12
-  Until: 24:00,                           !- Field 13
-  1.0;                                    !- Field 14
-
 OS:Surface,
   {68a6db82-14df-48b6-a588-8bee1be71574}, !- Handle
   P_RearStorageFlr3_4_0_0,                !- Name
@@ -8040,72 +6938,6 @@ OS:Surface,
   4.01108442, 8.2790292198, 3.3528,       !- X,Y,Z Vertex 3 {m}
   4.01108442, 8.2790292198, 6.096;        !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4708a4b9-ffcb-4703-9328-8594ce68c1eb}, !- Handle
-  GuestRoom_Eqp_Sch_Adva,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.09,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.62,                                   !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.90,                                   !- Field 8
-  Until: 10:00,                           !- Field 9
-  0.43,                                   !- Field 10
-  Until: 16:00,                           !- Field 11
-  0.12,                                   !- Field 12
-  Until: 17:00,                           !- Field 13
-  0.19,                                   !- Field 14
-  Until: 19:00,                           !- Field 15
-  0.48,                                   !- Field 16
-  Until: 20:00,                           !- Field 17
-  0.46,                                   !- Field 18
-  Until: 21:00,                           !- Field 19
-  0.62,                                   !- Field 20
-  Until: 22:00,                           !- Field 21
-  0.69,                                   !- Field 22
-  Until: 23:00,                           !- Field 23
-  0.34,                                   !- Field 24
-  Until: 24:00,                           !- Field 25
-  0.09,                                   !- Field 26
-  For: Saturday Sunday Holidays,          !- Field 27
-  Until: 06:00,                           !- Field 28
-  0.09,                                   !- Field 29
-  Until: 07:00,                           !- Field 30
-  0.3,                                    !- Field 31
-  Until: 08:00,                           !- Field 32
-  0.62,                                   !- Field 33
-  Until: 09:00,                           !- Field 34
-  0.90,                                   !- Field 35
-  Until: 10:00,                           !- Field 36
-  0.62,                                   !- Field 37
-  Until: 16:00,                           !- Field 38
-  0.13,                                   !- Field 39
-  Until: 17:00,                           !- Field 40
-  0.21,                                   !- Field 41
-  Until: 18:00,                           !- Field 42
-  0.40,                                   !- Field 43
-  Until: 19:00,                           !- Field 44
-  0.48,                                   !- Field 45
-  Until: 20:00,                           !- Field 46
-  0.46,                                   !- Field 47
-  Until: 21:00,                           !- Field 48
-  0.62,                                   !- Field 49
-  Until: 22:00,                           !- Field 50
-  0.69,                                   !- Field 51
-  Until: 23:00,                           !- Field 52
-  0.34,                                   !- Field 53
-  Until: 24:00,                           !- Field 54
-  0.09,                                   !- Field 55
-  For: WinterDesignDay,                   !- Field 56
-  Until: 24:00,                           !- Field 57
-  0.0,                                    !- Field 58
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 59
-  Until: 24:00,                           !- Field 60
-  1.0;                                    !- Field 61
-
 OS:SubSurface,
   {d88bcd2a-64b2-4dd4-80b6-51d2c8adb4d0}, !- Handle
   W_GuestRoom309_312_5_0_0_0_1,           !- Name
@@ -8139,19 +6971,6 @@ OS:Surface,
   32.6622844241, 0.0488452197, 6.096,     !- X,Y,Z Vertex 2 {m}
   48.5118844242, 0.0488452197, 6.096,     !- X,Y,Z Vertex 3 {m}
   48.5118844242, 0.0488452197, 8.8392;    !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {bd412e97-ad40-4754-802c-39b033880883}, !- Handle
-  Exterior_Ltg_Sch,                       !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 07:00,                           !- Field 3
-  1.0,                                    !- Field 4
-  Until: 19:00,                           !- Field 5
-  0.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  1.0;                                    !- Field 8
 
 OS:SubSurface,
   {f6107d00-f181-433f-ad14-72af2b96e457}, !- Handle
@@ -8220,15 +7039,6 @@ OS:Surface,
   40.5870844242, 18.33742922, 0,          !- X,Y,Z Vertex 2 {m}
   40.5870844242, 10.10782922, 0,          !- X,Y,Z Vertex 3 {m}
   40.5870844242, 10.10782922, 3.3528;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {e71f5dc7-9a3f-495c-95af-dd690648ad69}, !- Handle
-  SemiHeated_HtgSP_Sch,                   !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  7.2;                                    !- Field 4
 
 OS:SubSurface,
   {babb43c3-64bc-4ec3-a95b-ecf18b301b15}, !- Handle
@@ -8332,19 +7142,6 @@ OS:Surface,
   23.8230844241, 10.10782922, 8.8392,     !- X,Y,Z Vertex 3 {m}
   23.8230844241, 10.10782922, 11.5824;    !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {a810feb0-3d1a-43e3-b58b-1113f15ad9ed}, !- Handle
-  Adva_ExerciseCenter_HtgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 6:00,                            !- Field 3
-  18.333,                                 !- Field 4
-  Until: 23:00,                           !- Field 5
-  21.111,                                 !- Field 6
-  Until: 24:00,                           !- Field 7
-  18.333;                                 !- Field 8
-
 OS:SubSurface,
   {1aa769d0-a115-4acb-8674-3a699e91fc83}, !- Handle
   W_GuestRoom309_312_5_0_0_0_3,           !- Name
@@ -8430,15 +7227,6 @@ OS:SubSurface,
   43.1378844242, 0.0488452197, 6.7456,    !- X,Y,Z Vertex 3 {m}
   43.1378844242, 0.0488452197, 8.1896;    !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {f319829f-3d38-4d0b-b2a5-d264237bf802}, !- Handle
-  SHW Latent fract sched,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.05;                                   !- Field 4
-
 OS:Surface,
   {5fa26347-f382-4d95-b030-7b70652f0d78}, !- Handle
   C_LaundryRoomFlr1_1_0_0,                !- Name
@@ -8507,45 +7295,6 @@ OS:Surface,
   2.487084424, 10.10782922, 0,            !- X,Y,Z Vertex 3 {m}
   2.487084424, 10.10782922, 3.3528;       !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {e1ac129d-a253-4ce2-ae10-fb0aa819ae6b}, !- Handle
-  BLDG_ELEVATORS,                         !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignday,                   !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.5,                                    !- Field 4
-  For: WinterDesignDay,                   !- Field 5
-  Until: 24:00,                           !- Field 6
-  0.05,                                   !- Field 7
-  For: AllOtherDays,                      !- Field 8
-  Until: 04:00,                           !- Field 9
-  0.05,                                   !- Field 10
-  Until: 05:00,                           !- Field 11
-  0.10,                                   !- Field 12
-  Until: 06:00,                           !- Field 13
-  0.20,                                   !- Field 14
-  Until: 07:00,                           !- Field 15
-  0.40,                                   !- Field 16
-  Until: 09:00,                           !- Field 17
-  0.50,                                   !- Field 18
-  Until: 10:00,                           !- Field 19
-  0.35,                                   !- Field 20
-  Until: 16:00,                           !- Field 21
-  0.15,                                   !- Field 22
-  Until: 17:00,                           !- Field 23
-  0.35,                                   !- Field 24
-  Until: 19:00,                           !- Field 25
-  0.50,                                   !- Field 26
-  Until: 21:00,                           !- Field 27
-  0.40,                                   !- Field 28
-  Until: 22:00,                           !- Field 29
-  0.30,                                   !- Field 30
-  Until: 23:00,                           !- Field 31
-  0.20,                                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.10;                                   !- Field 34
-
 OS:SubSurface,
   {4e20046b-7a52-4c8a-940a-37e1d0016f8d}, !- Handle
   W_GuestRoom324_3_0_0_0_0,               !- Name
@@ -8579,15 +7328,6 @@ OS:Surface,
   7.973484424, 18.3374292198, 6.096,      !- X,Y,Z Vertex 2 {m}
   4.011084424, 18.3374292198, 6.096,      !- X,Y,Z Vertex 3 {m}
   4.011084424, 18.3374292198, 8.8392;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {d5a3f8e8-dab1-45fb-8c13-746207c186cb}, !- Handle
-  SHWSys Water Heater Ambient Temperature Schedule, !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.1;                                   !- Field 4
 
 OS:Surface,
   {2709a5b9-9c7a-47ed-8a5a-ba98f42d8d22}, !- Handle
@@ -8899,35 +7639,6 @@ OS:Surface,
   2.48708442, 18.33742922, 6.096,         !- X,Y,Z Vertex 3 {m}
   2.48708442, 10.10782922, 6.096;         !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4fafa93e-77bc-4b1d-869f-c36d3c50283c}, !- Handle
-  Adva_ExerciseCenter_ClgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 6:00,                            !- Field 3
-  26.667,                                 !- Field 4
-  Until: 23:00,                           !- Field 5
-  23.889,                                 !- Field 6
-  Until: 24:00,                           !- Field 7
-  26.667;                                 !- Field 8
-
-OS:Schedule:Compact,
-  {e34e2b26-bf20-4dc9-b155-d2b71cf48cfa}, !- Handle
-  S Adva_OccGuestRoom_ClgSP_Sch,          !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignDay WinterDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  21.111,                                 !- Field 4
-  For: AllOtherDays,                      !- Field 5
-  Until: 9:00,                            !- Field 6
-  21.111,                                 !- Field 7
-  Until: 16:00,                           !- Field 8
-  23.333,                                 !- Field 9
-  Until: 24:00,                           !- Field 10
-  21.111;                                 !- Field 11
-
 OS:Surface,
   {361f5e5b-164c-4470-b069-f215ca741e3b}, !- Handle
   P_CorridorFlr1_12_0_0,                  !- Name
@@ -8978,33 +7689,6 @@ OS:Surface,
   48.51188442, 8.27902922, 6.096,         !- X,Y,Z Vertex 2 {m}
   32.66228442, 8.27902922, 6.096,         !- X,Y,Z Vertex 3 {m}
   32.66228442, 0.04884522, 6.096;         !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {34c28fcd-efda-4241-a107-acbe26ca2e48}, !- Handle
-  BLDG_LIGHT_OFFICE_SCH,                  !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 7:00,                            !- Field 3
-  0.5,                                    !- Field 4
-  Until: 8:00,                            !- Field 5
-  0.61,                                   !- Field 6
-  Until: 12:00,                           !- Field 7
-  0.9,                                    !- Field 8
-  Until: 13:00,                           !- Field 9
-  0.8,                                    !- Field 10
-  Until: 17:00,                           !- Field 11
-  0.9,                                    !- Field 12
-  Until: 18:00,                           !- Field 13
-  0.61,                                   !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.5,                                    !- Field 16
-  For: WinterDesignDay,                   !- Field 17
-  Until: 24:00,                           !- Field 18
-  0,                                      !- Field 19
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 20
-  Until: 24:00,                           !- Field 21
-  1;                                      !- Field 22
 
 OS:Surface,
   {98d9aea5-9b3c-4a4a-bfe8-95ed3bf72568}, !- Handle
@@ -9141,26 +7825,6 @@ OS:Surface,
   2.48708442, 10.1078292198, 0,           !- X,Y,Z Vertex 2 {m}
   4.01108442, 10.1078292198, 0,           !- X,Y,Z Vertex 3 {m}
   4.01108442, 10.1078292198, 3.3528;      !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {f046814c-7356-4516-bdbb-a78d1ea61777}, !- Handle
-  Sliding_Doors_Ventilation_Availability_SCH, !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: WinterDesignDay SummerDesignDay,   !- Field 2
-  Until: 24:00,                           !- Field 3
-  0,                                      !- Field 4
-  For: Allotherdays,                      !- Field 5
-  Until: 6:00,                            !- Field 6
-  0,                                      !- Field 7
-  Until: 9:00,                            !- Field 8
-  1,                                      !- Field 9
-  Until: 16:00,                           !- Field 10
-  0,                                      !- Field 11
-  Until: 22:00,                           !- Field 12
-  1,                                      !- Field 13
-  Until: 24:00,                           !- Field 14
-  0;                                      !- Field 15
 
 OS:Surface,
   {6c371ef4-c82d-4d61-aaca-3b409a2c63f1}, !- Handle
@@ -9690,39 +8354,6 @@ OS:Surface,
   52.47428442, 8.2790292198, 3.3528,      !- X,Y,Z Vertex 3 {m}
   52.47428442, 8.2790292198, 6.096;       !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {e821294d-de0a-43ba-b6e2-526f512286a7}, !- Handle
-  BLDG_LIGHT_FRONTLOUNGE_SCH,             !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 5:00,                            !- Field 3
-  0,                                      !- Field 4
-  Until: 6:00,                            !- Field 5
-  0.2,                                    !- Field 6
-  Until: 7:00,                            !- Field 7
-  0.3,                                    !- Field 8
-  Until: 8:00,                            !- Field 9
-  0.5,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  1,                                      !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 20:00,                           !- Field 15
-  0.3,                                    !- Field 16
-  Until: 21:00,                           !- Field 17
-  0.2,                                    !- Field 18
-  Until: 22:00,                           !- Field 19
-  0.05,                                   !- Field 20
-  Until: 24:00,                           !- Field 21
-  0,                                      !- Field 22
-  For: WinterDesignDay,                   !- Field 23
-  Until: 24:00,                           !- Field 24
-  0,                                      !- Field 25
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 26
-  Until: 24:00,                           !- Field 27
-  1;                                      !- Field 28
-
 OS:Surface,
   {c5c8f474-9abd-4650-9353-780c31d95680}, !- Handle
   P_RestroomFlr1_10020_0_10018,           !- Name
@@ -9740,48 +8371,6 @@ OS:Surface,
   23.8230844241, 8.27902922, 0,           !- X,Y,Z Vertex 3 {m}
   23.8230844241, 8.27902922, 3.3528;      !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {6f2f404e-6555-4e17-a775-0f08f3c6f38c}, !- Handle
-  EmployeeLounge_Occ_Sch,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.1,                                    !- Field 6
-  Until: 12:00,                           !- Field 7
-  0.2,                                    !- Field 8
-  Until: 13:00,                           !- Field 9
-  0.7,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  0.2,                                    !- Field 12
-  Until: 20:00,                           !- Field 13
-  0.1,                                    !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.0,                                    !- Field 16
-  For: Saturday Sunday Holidays,          !- Field 17
-  Until: 05:00,                           !- Field 18
-  0.0,                                    !- Field 19
-  Until: 08:00,                           !- Field 20
-  0.05,                                   !- Field 21
-  Until: 12:00,                           !- Field 22
-  0.1,                                    !- Field 23
-  Until: 13:00,                           !- Field 24
-  0.2,                                    !- Field 25
-  Until: 18:00,                           !- Field 26
-  0.1,                                    !- Field 27
-  Until: 20:00,                           !- Field 28
-  0.05,                                   !- Field 29
-  Until: 24:00,                           !- Field 30
-  0.0,                                    !- Field 31
-  For: WinterDesignDay,                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.0,                                    !- Field 34
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 35
-  Until: 24:00,                           !- Field 36
-  1.0;                                    !- Field 37
-
 OS:SubSurface,
   {feab1be0-442a-4aae-9b24-b98f739d7e43}, !- Handle
   W_GuestRoom209_212_5_0_0_0_2,           !- Name
@@ -9798,31 +8387,6 @@ OS:SubSurface,
   41.9986844242, 0.0488452197, 4.0024,    !- X,Y,Z Vertex 2 {m}
   43.1378844242, 0.0488452197, 4.0024,    !- X,Y,Z Vertex 3 {m}
   43.1378844242, 0.0488452197, 5.4464;    !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {cb1e258a-2dc5-49d1-b64d-9d946a31d0c6}, !- Handle
-  MeetingRoom_Eqp_Sch,                    !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 07:00,                           !- Field 3
-  0,                                      !- Field 4
-  Until: 08:00,                           !- Field 5
-  0.05,                                   !- Field 6
-  Until: 10:00,                           !- Field 7
-  0.54,                                   !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.26,                                   !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.05,                                   !- Field 12
-  Until: 15:00,                           !- Field 13
-  0.54,                                   !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.26,                                   !- Field 16
-  Until: 20:00,                           !- Field 17
-  0.05,                                   !- Field 18
-  Until: 24:00,                           !- Field 19
-  0;                                      !- Field 20
 
 OS:Surface,
   {93b36bfd-b8d8-43bc-b42f-72b6fe1055dc}, !- Handle
@@ -9908,10 +8472,6 @@ OS:Surface,
   2.48708442, 18.33742922, 3.3528,        !- X,Y,Z Vertex 2 {m}
   0.04868442, 18.33742922, 3.3528,        !- X,Y,Z Vertex 3 {m}
   0.04868442, 10.10782922, 3.3528;        !- X,Y,Z Vertex 4 {m}
-
-OS:ScheduleTypeLimits,
-  {3ebe4797-7e29-4055-99a7-d8c24977c480}, !- Handle
-  {b04e63a2-6f10-4bc3-9369-e29be169b494}; !- Name
 
 OS:Surface,
   {9ab4dbee-0b1a-43e0-9b88-07ae1a964550}, !- Handle
@@ -10303,40 +8863,6 @@ OS:SubSurface,
   18.4490844241, 18.3374292198, 0.9544,   !- X,Y,Z Vertex 2 {m}
   17.3098844241, 18.3374292198, 0.9544,   !- X,Y,Z Vertex 3 {m}
   17.3098844241, 18.3374292198, 2.3984;   !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {c2cfaed7-56d7-4331-b393-3d061fa47cb3}, !- Handle
-  BLDG_LIGHT_MECHROOM_SCH,                !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 7:00,                            !- Field 3
-  0.1,                                    !- Field 4
-  Until: 8:00,                            !- Field 5
-  0.2,                                    !- Field 6
-  Until: 18:00,                           !- Field 7
-  0.4,                                    !- Field 8
-  Until: 22:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 24:00,                           !- Field 11
-  0.1,                                    !- Field 12
-  For: Saturday Sunday Holidays,          !- Field 13
-  Until: 7:00,                            !- Field 14
-  0.1,                                    !- Field 15
-  Until: 8:00,                            !- Field 16
-  0.2,                                    !- Field 17
-  Until: 18:00,                           !- Field 18
-  0.4,                                    !- Field 19
-  Until: 22:00,                           !- Field 20
-  0.2,                                    !- Field 21
-  Until: 24:00,                           !- Field 22
-  0.1,                                    !- Field 23
-  For: WinterDesignDay,                   !- Field 24
-  Until: 24:00,                           !- Field 25
-  0,                                      !- Field 26
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 27
-  Until: 24:00,                           !- Field 28
-  1;                                      !- Field 29
 
 OS:Surface,
   {f539815e-1bc4-4757-ae62-73a6cfa207c3}, !- Handle
@@ -11239,15 +9765,6 @@ OS:Surface,
   0.04868442, 10.1078292198, 8.8392,      !- X,Y,Z Vertex 3 {m}
   0.04868442, 10.1078292198, 11.5824;     !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4ce37448-95af-45e5-8802-86ff5827d690}, !- Handle
-  BLDG_LIGHT_RESTROOM_SCH,                !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
-
 OS:Surface,
   {f686df9e-ea0a-405b-b016-dd938b9cee45}, !- Handle
   C_FrontLoungeFlr1_1_1_0,                !- Name
@@ -11357,48 +9874,6 @@ OS:Surface,
   52.4742844242, 18.33742922, 8.8392,     !- X,Y,Z Vertex 3 {m}
   52.4742844242, 18.33742922, 11.5824;    !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {f3182611-3bbc-4951-8332-24c78babf2bd}, !- Handle
-  BLDG_LIGHT_EMPLOYEELOUNGE_SCH,          !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 5:00,                            !- Field 3
-  0,                                      !- Field 4
-  Until: 6:00,                            !- Field 5
-  0.2,                                    !- Field 6
-  Until: 7:00,                            !- Field 7
-  0.3,                                    !- Field 8
-  Until: 8:00,                            !- Field 9
-  0.5,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  1,                                      !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 20:00,                           !- Field 15
-  0.3,                                    !- Field 16
-  Until: 21:00,                           !- Field 17
-  0.2,                                    !- Field 18
-  Until: 22:00,                           !- Field 19
-  0.05,                                   !- Field 20
-  Until: 24:00,                           !- Field 21
-  0,                                      !- Field 22
-  For: WinterDesignDay,                   !- Field 23
-  Until: 24:00,                           !- Field 24
-  0,                                      !- Field 25
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 26
-  Until: 24:00,                           !- Field 27
-  1;                                      !- Field 28
-
-OS:Schedule:Compact,
-  {a181e366-6212-4f0d-9205-803229a41426}, !- Handle
-  Exterior_Lgt_ALWAYS_ON,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
-
 OS:Surface,
   {b0e97f2b-4ab5-4bcf-aa69-7bb61220ebc0}, !- Handle
   F_RearStairsFlr2_10001_0_10000,         !- Name
@@ -11416,29 +9891,6 @@ OS:Surface,
   52.47428442, 10.10782922, 3.3528,       !- X,Y,Z Vertex 3 {m}
   52.47428442, 18.33742922, 3.3528;       !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {e8651df2-2daf-4f97-b094-86b834ad5a8d}, !- Handle
-  ExerciseCenter_Occ_Sch,                 !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.5,                                    !- Field 6
-  Until: 11:00,                           !- Field 7
-  1.0,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.0,                                    !- Field 12
-  Until: 22:00,                           !- Field 13
-  1.0,                                    !- Field 14
-  Until: 23:00,                           !- Field 15
-  0.5,                                    !- Field 16
-  Until: 24:00,                           !- Field 17
-  0.0;                                    !- Field 18
-
 OS:Surface,
   {bb931d9b-e75b-4466-8f67-5dede2a11a96}, !- Handle
   W_FrontStorageFlr3_3_0_0,               !- Name
@@ -11455,87 +9907,6 @@ OS:Surface,
   4.011084424, 18.3374292198, 6.096,      !- X,Y,Z Vertex 2 {m}
   2.487084424, 18.3374292198, 6.096,      !- X,Y,Z Vertex 3 {m}
   2.487084424, 18.3374292198, 8.8392;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {dbdcd3f5-edf4-454a-b145-65f54c9c0c4c}, !- Handle
-  GuestRoom_SHW_Sch,                      !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 01:00,                           !- Field 3
-  0.20,                                   !- Field 4
-  Until: 04:00,                           !- Field 5
-  0.15,                                   !- Field 6
-  Until: 05:00,                           !- Field 7
-  0.2,                                    !- Field 8
-  Until: 06:00,                           !- Field 9
-  0.35,                                   !- Field 10
-  Until: 07:00,                           !- Field 11
-  0.60,                                   !- Field 12
-  Until: 08:00,                           !- Field 13
-  0.80,                                   !- Field 14
-  Until: 09:00,                           !- Field 15
-  0.55,                                   !- Field 16
-  Until: 10:00,                           !- Field 17
-  0.40,                                   !- Field 18
-  Until: 11:00,                           !- Field 19
-  0.30,                                   !- Field 20
-  Until: 17:00,                           !- Field 21
-  0.20,                                   !- Field 22
-  Until: 18:00,                           !- Field 23
-  0.30,                                   !- Field 24
-  Until: 19:00,                           !- Field 25
-  0.55,                                   !- Field 26
-  Until: 21:00,                           !- Field 27
-  0.40,                                   !- Field 28
-  Until: 22:00,                           !- Field 29
-  0.60,                                   !- Field 30
-  Until: 23:00,                           !- Field 31
-  0.45,                                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.25,                                   !- Field 34
-  For: AllOtherDays,                      !- Field 35
-  Until: 01:00,                           !- Field 36
-  0.2,                                    !- Field 37
-  Until: 04:00,                           !- Field 38
-  0.15,                                   !- Field 39
-  Until: 05:00,                           !- Field 40
-  0.2,                                    !- Field 41
-  Until: 06:00,                           !- Field 42
-  0.25,                                   !- Field 43
-  Until: 07:00,                           !- Field 44
-  0.35,                                   !- Field 45
-  Until: 08:00,                           !- Field 46
-  0.60,                                   !- Field 47
-  Until: 09:00,                           !- Field 48
-  0.80,                                   !- Field 49
-  Until: 10:00,                           !- Field 50
-  0.55,                                   !- Field 51
-  Until: 11:00,                           !- Field 52
-  0.40,                                   !- Field 53
-  Until: 12:00,                           !- Field 54
-  0.30,                                   !- Field 55
-  Until: 17:00,                           !- Field 56
-  0.20,                                   !- Field 57
-  Until: 18:00,                           !- Field 58
-  0.25,                                   !- Field 59
-  Until: 19:00,                           !- Field 60
-  0.30,                                   !- Field 61
-  Until: 22:00,                           !- Field 62
-  0.40,                                   !- Field 63
-  Until: 23:00,                           !- Field 64
-  0.60,                                   !- Field 65
-  Until: 24:00,                           !- Field 66
-  0.35;                                   !- Field 67
-
-OS:Schedule:Compact,
-  {be30703f-1627-47a8-9333-9eac7d043feb}, !- Handle
-  SHWSysShower Water Heater Setpoint Temperature Schedule, !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
 
 OS:SubSurface,
   {ff346646-918a-4dc7-bffd-f36d3c2d25d7}, !- Handle
@@ -11689,15 +10060,6 @@ OS:Surface,
   2.48708442, 10.1078292198, 6.096,       !- X,Y,Z Vertex 2 {m}
   4.01108442, 10.1078292198, 6.096,       !- X,Y,Z Vertex 3 {m}
   4.01108442, 10.1078292198, 8.8392;      !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {cdfc1b8b-fe90-406c-800f-f4bf2e51e822}, !- Handle
-  ELEV_LIGHT_FAN_SCH_24_7,                !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
 
 OS:Surface,
   {2f6de19f-c05e-488c-898f-cef004b98f14}, !- Handle
@@ -12046,12 +10408,6 @@ OS:Surface,
   54.9132684242, 18.3374292198, 8.8392,   !- X,Y,Z Vertex 3 {m}
   54.9132684242, 18.3374292198, 11.5824;  !- X,Y,Z Vertex 4 {m}
 
-OS:Sizing:Parameters,
-  {eb158a83-04ae-4f64-874c-bb2a45eea231}, !- Handle
-  1.2,                                    !- Heating Sizing Factor
-  1.2,                                    !- Cooling Sizing Factor
-  6;                                      !- Timesteps in Averaging Window
-
 OS:Surface,
   {7297e91f-76c4-4fcd-be28-ed342214f276}, !- Handle
   P_EmployeeLoungeFlr1_10009_0_10007,     !- Name
@@ -12388,25 +10744,6 @@ OS:Surface,
   36.62468442, 0.04884522, 3.3528,        !- X,Y,Z Vertex 3 {m}
   36.62468442, 8.27902922, 3.3528;        !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Constant,
-  {bdff62ca-678e-411d-a9c5-b94271177d6b}, !- Handle
-  {9f619a81-2a69-4250-ad17-6a15a80a38c3}, !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  0.7;                                    !- Value
-
-OS:Schedule:Compact,
-  {1c3a7d51-8133-47c7-9170-913350b49c6e}, !- Handle
-  LaundryRoom_SHW_Sch,                    !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 08:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 16:00,                           !- Field 5
-  1.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.0;                                    !- Field 8
-
 OS:Surface,
   {d7b23607-00cd-40cb-8375-64021915ba25}, !- Handle
   P_GuestRoom315_318_10249_0_10137,       !- Name
@@ -12525,32 +10862,6 @@ OS:Surface,
   52.47428442, 8.2790292198, 3.3528,      !- X,Y,Z Vertex 2 {m}
   48.51188442, 8.2790292198, 3.3528,      !- X,Y,Z Vertex 3 {m}
   48.51188442, 8.2790292198, 6.096;       !- X,Y,Z Vertex 4 {m}
-
-OS:SizingPeriod:DesignDay,
-  {d521828e-5d24-48c6-a056-d9acc63cf9fb}, !- Handle
-  San Francisco Intl Ap Ann Clg .4% Condns DB=>MWB, !- Name
-  28.3,                                   !- Maximum Dry-Bulb Temperature {C}
-  8.5,                                    !- Daily Dry-Bulb Temperature Range {deltaC}
-  17.2,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
-  101301,                                 !- Barometric Pressure {Pa}
-  5.9,                                    !- Wind Speed {m/s}
-  310,                                    !- Wind Direction {deg}
-  0,                                      !- Sky Clearness
-  0,                                      !- Rain Indicator
-  0,                                      !- Snow Indicator
-  21,                                     !- Day of Month
-  8,                                      !- Month
-  SummerDesignDay,                        !- Day Type
-  0,                                      !- Daylight Saving Time Indicator
-  Wetbulb,                                !- Humidity Indicating Type
-  ,                                       !- Humidity Indicating Day Schedule Name
-  DefaultMultipliers,                     !- Dry-Bulb Temperature Range Modifier Type
-  ,                                       !- Dry-Bulb Temperature Range Modifier Schedule Name
-  ASHRAETau,                              !- Solar Model Indicator
-  ,                                       !- Beam Solar Day Schedule Name
-  ,                                       !- Diffuse Solar Day Schedule Name
-  0.365,                                  !- ASHRAE Taub {dimensionless}
-  2.435;                                  !- ASHRAE Taud {dimensionless}
 
 OS:Surface,
   {2fc709d5-b2d0-4787-a67d-2cc078faa4fc}, !- Handle
@@ -12977,15 +11288,6 @@ OS:Surface,
   28.69988442, 10.1078292198, 6.096,      !- X,Y,Z Vertex 3 {m}
   28.69988442, 10.1078292198, 8.8392;     !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {c516bcc0-45a9-4824-80dc-39467669d3ad}, !- Handle
-  AlwaysOff_SCH,                          !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0;                                      !- Field 4
-
 OS:SubSurface,
   {7972fc88-a113-492b-8fb0-0e489e40d934}, !- Handle
   W_CorridorFlr4_15_0_0_0_0,              !- Name
@@ -13019,48 +11321,6 @@ OS:Surface,
   0.048684424, 10.1078292198, 8.8392,     !- X,Y,Z Vertex 2 {m}
   0.048684424, 8.2790292198, 8.8392,      !- X,Y,Z Vertex 3 {m}
   0.048684424, 8.2790292198, 11.5824;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {15661371-5754-4ad2-b144-3f44f2c76469}, !- Handle
-  Office_Occ_Sch,                         !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.2,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.3,                                    !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.4,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  1.0,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.5,                                    !- Field 12
-  Until: 17:00,                           !- Field 13
-  1.0,                                    !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.4,                                    !- Field 16
-  Until: 19:00,                           !- Field 17
-  0.3,                                    !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.2,                                    !- Field 20
-  For: Saturday Sunday Holidays,          !- Field 21
-  Until: 07:00,                           !- Field 22
-  0.2,                                    !- Field 23
-  Until: 08:00,                           !- Field 24
-  0.3,                                    !- Field 25
-  Until: 17:00,                           !- Field 26
-  0.5,                                    !- Field 27
-  Until: 18:00,                           !- Field 28
-  0.3,                                    !- Field 29
-  Until: 24:00,                           !- Field 30
-  0.2,                                    !- Field 31
-  For: WinterDesignDay,                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0,                                      !- Field 34
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 35
-  Until: 24:00,                           !- Field 36
-  1.0;                                    !- Field 37
 
 OS:Surface,
   {320ba408-d417-4a08-969f-3a2cedccff09}, !- Handle
@@ -13129,19 +11389,6 @@ OS:Surface,
   32.6622844241, 18.33742922, 8.8392,     !- X,Y,Z Vertex 2 {m}
   32.6622844241, 10.10782922, 8.8392,     !- X,Y,Z Vertex 3 {m}
   32.6622844241, 10.10782922, 11.5824;    !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {e42db5eb-0ad1-489a-8430-206c48fe6a4e}, !- Handle
-  Off During Unoccupied Period,           !- Name
-  {b5bd176d-9701-48d6-af2e-da9cc33723c1}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 8:00,                            !- Field 3
-  0,                                      !- Field 4
-  Until: 18:00,                           !- Field 5
-  1,                                      !- Field 6
-  Until: 24:00,                           !- Field 7
-  0;                                      !- Field 8
 
 OS:Surface,
   {f205fe59-baf1-4a93-ba88-1a59af1dfd6e}, !- Handle
@@ -13231,45 +11478,6 @@ OS:Surface,
   23.8230844241, 10.10782922, 6.096,      !- X,Y,Z Vertex 2 {m}
   23.8230844241, 18.33742922, 6.096,      !- X,Y,Z Vertex 3 {m}
   23.8230844241, 18.33742922, 8.8392;     !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {98447f20-04da-4927-a18b-a5194186526c}, !- Handle
-  ELEV_LIGHT_FAN_SCH_ADD_DF,              !- Name
-  {7c3445db-e82a-49db-a9b8-65ed43596e9e}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: SummerDesignday,                   !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.5,                                    !- Field 4
-  For: WinterDesignDay,                   !- Field 5
-  Until: 24:00,                           !- Field 6
-  0.05,                                   !- Field 7
-  For: AllOtherDays,                      !- Field 8
-  Until: 04:00,                           !- Field 9
-  0.05,                                   !- Field 10
-  Until: 05:00,                           !- Field 11
-  0.10,                                   !- Field 12
-  Until: 06:00,                           !- Field 13
-  0.20,                                   !- Field 14
-  Until: 07:00,                           !- Field 15
-  0.40,                                   !- Field 16
-  Until: 09:00,                           !- Field 17
-  0.50,                                   !- Field 18
-  Until: 10:00,                           !- Field 19
-  0.35,                                   !- Field 20
-  Until: 16:00,                           !- Field 21
-  0.15,                                   !- Field 22
-  Until: 17:00,                           !- Field 23
-  0.35,                                   !- Field 24
-  Until: 19:00,                           !- Field 25
-  0.50,                                   !- Field 26
-  Until: 21:00,                           !- Field 27
-  0.40,                                   !- Field 28
-  Until: 22:00,                           !- Field 29
-  0.30,                                   !- Field 30
-  Until: 23:00,                           !- Field 31
-  0.20,                                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.10;                                   !- Field 34
 
 OS:SubSurface,
   {16b3f0bd-7ca0-4668-8f16-79eca29057c1}, !- Handle
@@ -13389,15 +11597,6 @@ OS:Surface,
   23.82308442, 18.33742922, 3.3528,       !- X,Y,Z Vertex 2 {m}
   19.86068442, 18.33742922, 3.3528,       !- X,Y,Z Vertex 3 {m}
   19.86068442, 10.10782922, 3.3528;       !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {2036e894-8126-485c-8574-37192a53a4a1}, !- Handle
-  SHWSysLaundry-Loop-Temp-Schedule,       !- Name
-  {5d20886a-a117-49ad-ad3d-ab17722ff04d}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
 
 OS:Surface,
   {2928a014-c1a9-459b-b66b-4ca6bb6f6964}, !- Handle

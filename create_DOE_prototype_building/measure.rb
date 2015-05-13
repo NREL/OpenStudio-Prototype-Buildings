@@ -26,7 +26,9 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Make an argument for the building type
     building_type_chs = OpenStudio::StringVector.new
     building_type_chs << 'SecondarySchool'
+    building_type_chs << 'PrimarySchool'
     building_type_chs << 'SmallOffice'
+    building_type_chs << 'MediumOffice'
     building_type_chs << 'SmallHotel'
     building_type_chs << 'LargeHotel'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
@@ -38,10 +40,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_vintage_chs = OpenStudio::StringVector.new
     building_vintage_chs << 'DOE Ref Pre-1980'
     building_vintage_chs << 'DOE Ref 1980-2004'
-    #building_vintage_chs << 'DOE Ref 2004'
-    #building_vintage_chs << '90.1-2007'
+    building_vintage_chs << '90.1-2004'
+    building_vintage_chs << '90.1-2007'
     #building_vintage_chs << '189.1-2009'
     building_vintage_chs << '90.1-2010'
+    building_vintage_chs << '90.1-2013'
     building_vintage = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_vintage', building_vintage_chs, true)
     building_vintage.setDisplayName('Select a Vintage.')
     building_vintage.setDefaultValue('90.1-2010')
@@ -95,6 +98,31 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     @msg_log.setLogLevel(OpenStudio::Info)
     @start_time = Time.new
     @runner = runner
+
+        # Get all the log messages and put into output
+    # for users to see.
+    def log_msgs()
+      @msg_log.logMessages.each do |msg|
+        # DLM: you can filter on log channel here for now
+        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+          # Skip certain messages that are irrelevant/misleading
+          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+                  msg.logChannel.include?("runmanager") || # RunManager messages
+                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
+                  
+          # Report the message in the correct way
+          if msg.logLevel == OpenStudio::Info
+            @runner.registerInfo(msg.logMessage)  
+          elsif msg.logLevel == OpenStudio::Warn
+            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+          elsif msg.logLevel == OpenStudio::Error
+            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+          end
+        end
+      end
+      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+    end
     
     # Get all the log messages and put into output
     # for users to see.
@@ -177,12 +205,16 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Make the prototype building
     space_building_type_search = building_type
+    construction_type_search = building_type
     has_swh = true
 
     case building_type
     when 'SecondarySchool'
       require_relative 'resources/Prototype.secondary_school'
       geometry_file = 'Geometry.secondary_school.osm'
+    when 'PrimarySchool'
+      require_relative 'resources/Prototype.primary_school'
+      geometry_file = 'Geometry.primary_school.osm'      
     when 'SmallOffice'
       require_relative 'resources/Prototype.small_office'
       # Small Office geometry is different for pre-1980
@@ -194,6 +226,12 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         geometry_file = 'Geometry.small_office.osm'
       end
       space_building_type_search = 'Office'
+      construction_type_search = 'Office'
+    when 'MediumOffice'
+      require_relative 'resources/Prototype.medium_office'
+      geometry_file = 'Geometry.medium_office.osm'
+      space_building_type_search = 'Office'
+      construction_type_search = 'Office'
     when 'SmallHotel'
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
@@ -223,11 +261,13 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
 
     model.add_geometry(geometry_file)
+    model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
     model.assign_space_type_stubs(space_building_type_search, space_type_map)
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
-    model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
+    # model.add_constructions('Office', building_vintage, climate_zone, standards_data_dir)
+    model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     if has_swh
@@ -242,6 +282,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Assign the standards to the model
     model.template = building_vintage
+    model.climate_zone = climate_zone
     model_status = '1_initial_creation'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
@@ -258,7 +299,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
     # on the flow rate of the system.
-    model.applyPrototypeHVACAssumptions
+    model.applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     model_status = '4_after_proto_hvac_assumptions'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
@@ -275,6 +316,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
     #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
+   
+    # Add daylighting controls per standard
+    model.addDaylightingControls
+   
    
     # Add output variables for debugging
     model.request_timeseries_outputs

@@ -4,11 +4,11 @@
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
 # Specify the building types to run.
-bldg_types = ["HotelLarge"]#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
+bldg_types = ['OfficeMedium', 'OfficeLarge']#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
 # Specify the vintages you want to run.
 # valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["STD2010"]#["Pre1980", "Post1980", "STD2010"]
+vintages = ["Pre1980", "Post1980", "STD2010"]
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
@@ -17,7 +17,7 @@ climate_zones = ["Houston", "Chicago", "Baltimore", "El Paso"]#["Houston", "Chic
 ################################################################################
 
 require 'json'
-require 'C:/Program Files (x86)/OpenStudio 1.5.0/Ruby/openstudio'
+require 'openstudio'
     
 # List of all fuel types
 fuel_types = ["Electricity", "Natural Gas", "Additional Fuel", "District Cooling", "District Heating", "Water"]
@@ -39,6 +39,7 @@ bldg_types.sort.each do |bldg_type|
       # conventions are different between Prototype and Reference buildings.
       if vintage == "Pre1980" || vintage == "Post1980"
         case bldg_type
+<<<<<<< HEAD
           when "OfficeSmall"
             bldg_type_search = "SmallOffice"
           when "SchoolSecondary"
@@ -47,6 +48,20 @@ bldg_types.sort.each do |bldg_type|
             bldg_type_search=  "LargeHotel"
           else
             bldg_type_search = bldg_type
+=======
+        when "OfficeSmall"
+          bldg_type_search = "SmallOffice"
+        when 'OfficeMedium'
+          bldg_type_search = 'MediumOffice'
+        when 'OfficeLarge'
+          bldg_type_search = 'LargeOffice'
+        when "SchoolSecondary"
+          bldg_type_search = "SecondarySchool"
+        when "HotelLarge"
+          bldg_type_search=  "LargeHotel"
+        else
+          bldg_type_search = bldg_type
+>>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
         end
 
         case climate_zone
@@ -106,13 +121,19 @@ bldg_types.sort.each do |bldg_type|
           bldg_type_map = {
           "SchoolSecondary" => "SecondarySchool",
           "OfficeSmall" => "SmallOffice",
+          "OfficeMedium" => "MediumOffice",
+          "OfficeLarge" => "LargeOffice",
+          "SchoolPrimary" => "PrimarySchool",
           "HotelLarge" => "LargeHotel"
           }
 
           vintage_map = {
           "Pre1980" => "DOE Ref Pre-1980",
           "Post1980" => "DOE Ref 1980-2004",
-          "STD2010" => "90.1-2010"
+          "STD2004" => "90.1-2004",
+          "STD2007" => "90.1-2007",
+          "STD2010" => "90.1-2010",
+          "STD2013" => "90.1-2013"
           }          
           
           climate_zone_map = {

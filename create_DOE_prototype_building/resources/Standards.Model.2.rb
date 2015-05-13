@@ -56,6 +56,10 @@ class OpenStudio::Model::Model
     if capacity.nil?
       matching_objects = search_criteria_matching_objects
     else
+      # Round up if capacity is an integer
+      if capacity = capacity.round
+        capacity = capacity + (capacity * 0.01)
+      end    
       search_criteria_matching_objects.each do |object|
         # Skip objects that don't have fields for minimum_capacity and maximum_capacity
         next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
@@ -113,6 +117,10 @@ class OpenStudio::Model::Model
     if capacity.nil?
       matching_objects = search_criteria_matching_objects
     else
+      # Round up if capacity is an integer
+      if capacity = capacity.round
+        capacity = capacity + (capacity * 0.01)
+      end    
       search_criteria_matching_objects.each do |object|
         # Skip objects that don't have fields for minimum_capacity and maximum_capacity
         next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
@@ -408,7 +416,8 @@ class OpenStudio::Model::Model
 
     make_infiltration = false
     infiltration_per_area_ext = data['infiltration_per_exterior_area']
-    unless infiltration_per_area_ext == 0 || infiltration_per_area_ext.nil? then make_infiltration = true end
+    infiltration_per_area_ext_wall = data['infiltration_per_exterior_wall_area']
+    unless (infiltration_per_area_ext == 0 || infiltration_per_area_ext.nil?) &&  (infiltration_per_area_ext_wall == 0 || infiltration_per_area_ext_wall.nil?) then make_infiltration = true end
 
     if make_infiltration == true
 
@@ -418,6 +427,9 @@ class OpenStudio::Model::Model
       infiltration.setSpaceType(space_type)
       unless infiltration_per_area_ext == 0 || infiltration_per_area_ext.nil?
         infiltration.setFlowperExteriorSurfaceArea(OpenStudio.convert(infiltration_per_area_ext, 'ft^3/min*ft^2', 'm^3/s*m^2').get)
+      end
+      unless infiltration_per_area_ext_wall == 0 || infiltration_per_area_ext_wall.nil?
+        infiltration.setFlowperExteriorWallArea(OpenStudio.convert(infiltration_per_area_ext_wall, 'ft^3/min*ft^2', 'm^3/s*m^2').get)
       end
 
       # Get the infiltration schedule from the library and set as the default

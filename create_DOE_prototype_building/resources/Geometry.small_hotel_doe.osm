@@ -1,7 +1,7 @@
 
 OS:Version,
-  {d405ea9a-0238-4395-8653-78dad46a2424}, !- Handle
-  1.5.0;                                  !- Version Identifier
+  {b19f5da1-09ae-4fca-a0f5-2a049051a492}, !- Handle
+  1.7.0;                                  !- Version Identifier
 
 OS:Site,
   {d35b6d87-a53b-45dc-a4b3-c8a0c6320df4}, !- Handle
@@ -63,32 +63,6 @@ OS:Space,
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
-
-OS:Schedule:Compact,
-  {91d981bf-f186-4ed3-bc70-8ee190ab596e}, !- Handle
-  HTGSETP_SCH,                            !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  21;                                     !- Field 4
-
-OS:ScheduleTypeLimits,
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Handle
-  Temperature,                            !- Name
-  -60,                                    !- Lower Limit Value {BasedOnField A4}
-  200,                                    !- Upper Limit Value {BasedOnField A4}
-  CONTINUOUS,                             !- Numeric Type
-  Temperature;                            !- Unit Type
-
-OS:Schedule:Compact,
-  {23081614-c687-40b3-b317-e26aa2f997b6}, !- Handle
-  CLGSETP_SCH,                            !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  24;                                     !- Field 4
 
 OS:SubSurface,
   {d3d2c100-8d40-48b4-9d7a-216b797a958b}, !- Handle
@@ -168,22 +142,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
 
-OS:Schedule:Compact,
-  {61d969d2-d3f9-424a-afc7-eee1f99c37a8}, !- Handle
-  INFIL_HALF_ON_SCH,                      !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.5;                                    !- Field 4
-
-OS:ScheduleTypeLimits,
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Handle
-  Fraction,                               !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
-  CONTINUOUS;                             !- Numeric Type
-
 OS:Surface,
   {32b1b516-68cf-455d-932c-80b0ce0fcf89}, !- Handle
   W_CorridorFlr1_10_0_0,                  !- Name
@@ -262,33 +220,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
 
-OS:Schedule:Compact,
-  {0a687ce8-2777-4f09-9689-7d20949645bd}, !- Handle
-  UnitHeater_HtgSP_Sch,                   !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  15.6;                                   !- Field 4
-
-OS:Schedule:Compact,
-  {2a297b9d-8d47-450e-ab35-171677297627}, !- Handle
-  UnitHeater_ClgSP_Sch,                   !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  40;                                     !- Field 4
-
-OS:Schedule:Compact,
-  {3aff3379-4b92-49aa-a13c-66ecaac160fc}, !- Handle
-  Laundry Water Equipment Temp Sched,     !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
-
 OS:Surface,
   {8b9dc997-5326-4eef-9db8-f325289c88d4}, !- Handle
   R_ElevatorCoreFlr4_1_0_0,               !- Name
@@ -366,60 +297,6 @@ OS:Space,
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
-
-OS:Schedule:Compact,
-  {5b0e0d8f-13b9-4888-b403-d90795df28f8}, !- Handle
-  EmployeeLounge_Eqp_Sch,                 !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.11,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.19,                                   !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.25,                                   !- Field 8
-  Until: 10:00,                           !- Field 9
-  1.0,                                    !- Field 10
-  Until: 12:00,                           !- Field 11
-  0.86,                                   !- Field 12
-  Until: 13:00,                           !- Field 13
-  1.0,                                    !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.86,                                   !- Field 16
-  Until: 19:00,                           !- Field 17
-  0.25,                                   !- Field 18
-  Until: 20:00,                           !- Field 19
-  0.19,                                   !- Field 20
-  Until: 24:00,                           !- Field 21
-  0.11,                                   !- Field 22
-  For: Saturday Sunday Holidays,          !- Field 23
-  Until: 05:00,                           !- Field 24
-  0.11,                                   !- Field 25
-  Until: 07:00,                           !- Field 26
-  0.19,                                   !- Field 27
-  Until: 08:00,                           !- Field 28
-  0.25,                                   !- Field 29
-  Until: 10:00,                           !- Field 30
-  1.0,                                    !- Field 31
-  Until: 12:00,                           !- Field 32
-  0.86,                                   !- Field 33
-  Until: 13:00,                           !- Field 34
-  1.0,                                    !- Field 35
-  Until: 18:00,                           !- Field 36
-  0.86,                                   !- Field 37
-  Until: 19:00,                           !- Field 38
-  0.25,                                   !- Field 39
-  Until: 20:00,                           !- Field 40
-  0.19,                                   !- Field 41
-  Until: 24:00,                           !- Field 42
-  0.11,                                   !- Field 43
-  For: WinterDesignDay,                   !- Field 44
-  Until: 24:00,                           !- Field 45
-  0.0,                                    !- Field 46
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 47
-  Until: 24:00,                           !- Field 48
-  1.0;                                    !- Field 49
 
 OS:ShadowCalculation,
   {75d40881-ac53-40ad-90a0-f0d7f3fbb9da}, !- Handle
@@ -689,21 +566,6 @@ OS:Surface,
   52.4743, 8.279, 0,                      !- X,Y,Z Vertex 3 {m}
   52.4743, 8.279, 3.3528;                 !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {c5e85be7-ebb7-4d4f-b7c7-5a8a849f63c9}, !- Handle
-  FrontStairsFlr2 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1341,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {85f15cc6-6ec1-47d5-a8a5-4ed5ae93ae7f}, !- Handle
-  FrontStairsFlr2 Internal Mass,          !- Name
-  {c5e85be7-ebb7-4d4f-b7c7-5a8a849f63c9}, !- Internal Mass Definition Name
-  {d821d156-e8aa-4f06-9c87-741ea66b6a2d}; !- Space or SpaceType Name
-
 OS:Connection,
   {7c275af6-a9dc-4605-b103-ca602940a1e7}, !- Handle
   {1aa02915-a6e0-445f-a16d-2b8a05c1875e}, !- Name
@@ -860,15 +722,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
 
-OS:Schedule:Compact,
-  {70dd2563-6581-4875-b0df-54cf6158848a}, !- Handle
-  Laundry Water Equipment Hot Supply Temp Sched, !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
-
 OS:Surface,
   {8f7af713-689b-40e0-8522-c1e330ac31de}, !- Handle
   W_FrontStairsFlr3_3_0_0,                !- Name
@@ -907,13 +760,6 @@ OS:Space,
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
-
-OS:ScheduleTypeLimits,
-  {80fc4d0e-ba17-449c-b6e5-698a0e9fe45a}, !- Handle
-  Humidity,                               !- Name
-  10,                                     !- Lower Limit Value {BasedOnField A4}
-  90,                                     !- Upper Limit Value {BasedOnField A4}
-  CONTINUOUS;                             !- Numeric Type
 
 OS:Surface,
   {7e98d834-ccf5-440a-b63c-89752c231859}, !- Handle
@@ -975,68 +821,6 @@ OS:Space,
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
-
-OS:Schedule:Compact,
-  {5b7b9e71-feb7-4aea-9582-0734bf908fe1}, !- Handle
-  GuestRoom_Eqp_Sch,                      !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.20,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.62,                                   !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.90,                                   !- Field 8
-  Until: 10:00,                           !- Field 9
-  0.43,                                   !- Field 10
-  Until: 17:00,                           !- Field 11
-  0.26,                                   !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.51,                                   !- Field 14
-  Until: 20:00,                           !- Field 15
-  0.49,                                   !- Field 16
-  Until: 21:00,                           !- Field 17
-  0.66,                                   !- Field 18
-  Until: 22:00,                           !- Field 19
-  0.70,                                   !- Field 20
-  Until: 23:00,                           !- Field 21
-  0.35,                                   !- Field 22
-  Until: 24:00,                           !- Field 23
-  0.20,                                   !- Field 24
-  For: Saturday Sunday Holidays,          !- Field 25
-  Until: 06:00,                           !- Field 26
-  0.20,                                   !- Field 27
-  Until: 07:00,                           !- Field 28
-  0.3,                                    !- Field 29
-  Until: 08:00,                           !- Field 30
-  0.62,                                   !- Field 31
-  Until: 09:00,                           !- Field 32
-  0.90,                                   !- Field 33
-  Until: 10:00,                           !- Field 34
-  0.62,                                   !- Field 35
-  Until: 17:00,                           !- Field 36
-  0.29,                                   !- Field 37
-  Until: 18:00,                           !- Field 38
-  0.43,                                   !- Field 39
-  Until: 19:00,                           !- Field 40
-  0.51,                                   !- Field 41
-  Until: 20:00,                           !- Field 42
-  0.49,                                   !- Field 43
-  Until: 21:00,                           !- Field 44
-  0.66,                                   !- Field 45
-  Until: 22:00,                           !- Field 46
-  0.70,                                   !- Field 47
-  Until: 23:00,                           !- Field 48
-  0.35,                                   !- Field 49
-  Until: 24:00,                           !- Field 50
-  0.20,                                   !- Field 51
-  For: WinterDesignDay,                   !- Field 52
-  Until: 24:00,                           !- Field 53
-  0.0,                                    !- Field 54
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 55
-  Until: 24:00,                           !- Field 56
-  1.0;                                    !- Field 57
 
 OS:Surface,
   {772340d7-1df0-4163-8891-d574d1f53de4}, !- Handle
@@ -1284,21 +1068,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
 
-OS:InternalMass:Definition,
-  {50333cbc-2347-42a3-b915-c94aa90ef130}, !- Handle
-  CorridorFlr2 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  250.8404,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {8fdaaabb-0611-4cd2-bbea-be012caacc57}, !- Handle
-  CorridorFlr2 Internal Mass,             !- Name
-  {50333cbc-2347-42a3-b915-c94aa90ef130}, !- Internal Mass Definition Name
-  {d0feb5ba-207b-4314-9b0d-bb09e22cab14}; !- Space or SpaceType Name
-
 OS:Connection,
   {51496afc-48ca-48a9-be8d-2cc607b85664}, !- Handle
   {6f3d9860-1642-4d96-b509-6ff32f64c97c}, !- Name
@@ -1421,68 +1190,6 @@ OS:Space,
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
 
-OS:Schedule:Compact,
-  {4d2f4b55-edb3-456b-82d4-13efc543556c}, !- Handle
-  GuestRoom_Ltg_Sch_Base,                 !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 01:00,                           !- Field 3
-  0.22,                                   !- Field 4
-  Until: 02:00,                           !- Field 5
-  0.17,                                   !- Field 6
-  Until: 05:00,                           !- Field 7
-  0.11,                                   !- Field 8
-  Until: 06:00,                           !- Field 9
-  0.22,                                   !- Field 10
-  Until: 07:00,                           !- Field 11
-  0.44,                                   !- Field 12
-  Until: 08:00,                           !- Field 13
-  0.56,                                   !- Field 14
-  Until: 10:00,                           !- Field 15
-  0.44,                                   !- Field 16
-  Until: 18:00,                           !- Field 17
-  0.28,                                   !- Field 18
-  Until: 19:00,                           !- Field 19
-  0.67,                                   !- Field 20
-  Until: 20:00,                           !- Field 21
-  0.89,                                   !- Field 22
-  Until: 21:00,                           !- Field 23
-  1.0,                                    !- Field 24
-  Until: 22:00,                           !- Field 25
-  0.89,                                   !- Field 26
-  Until: 23:00,                           !- Field 27
-  0.67,                                   !- Field 28
-  Until: 24:00,                           !- Field 29
-  0.33,                                   !- Field 30
-  For: Saturday Sunday Holidays,          !- Field 31
-  Until: 02:00,                           !- Field 32
-  0.26,                                   !- Field 33
-  Until: 06:00,                           !- Field 34
-  0.11,                                   !- Field 35
-  Until: 08:00,                           !- Field 36
-  0.41,                                   !- Field 37
-  Until: 10:00,                           !- Field 38
-  0.56,                                   !- Field 39
-  Until: 11:00,                           !- Field 40
-  0.41,                                   !- Field 41
-  Until: 18:00,                           !- Field 42
-  0.33,                                   !- Field 43
-  Until: 19:00,                           !- Field 44
-  0.85,                                   !- Field 45
-  Until: 22:00,                           !- Field 46
-  1.0,                                    !- Field 47
-  Until: 23:00,                           !- Field 48
-  0.85,                                   !- Field 49
-  Until: 24:00,                           !- Field 50
-  0.41,                                   !- Field 51
-  For: WinterDesignDay,                   !- Field 52
-  Until: 24:00,                           !- Field 53
-  0.0,                                    !- Field 54
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 55
-  Until: 24:00,                           !- Field 56
-  1.0;                                    !- Field 57
-
 OS:Surface,
   {c20e94ef-90d5-41a8-ab67-ded3a6f51a3b}, !- Handle
   R_GuestRoom413_1_0_0,                   !- Name
@@ -1573,21 +1280,6 @@ OS:Surface,
   28.6999, 10.1078, 8.8392,               !- X,Y,Z Vertex 3 {m}
   28.6999, 10.1078, 11.5824;              !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {2882706c-8fec-4c2c-af70-a9a830196802}, !- Handle
-  MechanicalRoomFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {b521b960-4fbc-42d3-aa2f-f090bcfe018a}, !- Handle
-  MechanicalRoomFlr1 Internal Mass,       !- Name
-  {2882706c-8fec-4c2c-af70-a9a830196802}, !- Internal Mass Definition Name
-  {f3266d0b-cb8a-4a47-a9c2-7dba5a7bfef1}; !- Space or SpaceType Name
-
 OS:Connection,
   {364e5d55-cd39-497d-9225-688c4ac0ad9e}, !- Handle
   {9dfb4d97-88e1-4070-8540-b770be692c60}, !- Name
@@ -1656,21 +1348,6 @@ OS:Meter,
   False,                                  !- Meter File Only
   False;                                  !- Cumulative
 
-OS:InternalMass:Definition,
-  {c3e84973-828d-4dd9-a915-512a1dcbd0f8}, !- Handle
-  EmployeeLoungeFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {7c6fa89c-00b1-48cb-a62c-65596763bff6}, !- Handle
-  EmployeeLoungeFlr1 Internal Mass,       !- Name
-  {c3e84973-828d-4dd9-a915-512a1dcbd0f8}, !- Internal Mass Definition Name
-  {b40b11be-718b-4d28-87c4-1e8da99dcc08}; !- Space or SpaceType Name
-
 OS:Connection,
   {330a13da-32d8-48d4-bf33-26b36076c14a}, !- Handle
   {0b18091a-1149-4609-9ce5-38e5a7716711}, !- Name
@@ -1709,134 +1386,6 @@ OS:Surface,
   19.8607, 0.0488, 3.3528,                !- X,Y,Z Vertex 2 {m}
   19.8607, 8.279, 3.3528,                 !- X,Y,Z Vertex 3 {m}
   19.8607, 8.279, 6.096;                  !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {c63e0ddb-cfdf-4414-bdaa-28487ba5b614}, !- Handle
-  GuestRoom_Occ_Sch,                      !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.65,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.50,                                   !- Field 6
-  Until: 09:00,                           !- Field 7
-  0.28,                                   !- Field 8
-  Until: 15:00,                           !- Field 9
-  0.13,                                   !- Field 10
-  Until: 16:00,                           !- Field 11
-  0.20,                                   !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.35,                                   !- Field 14
-  Until: 21:00,                           !- Field 15
-  0.50,                                   !- Field 16
-  Until: 22:00,                           !- Field 17
-  0.58,                                   !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.65,                                   !- Field 20
-  For: Saturday Sunday Holidays,          !- Field 21
-  Until: 06:00,                           !- Field 22
-  0.65,                                   !- Field 23
-  Until: 07:00,                           !- Field 24
-  0.50,                                   !- Field 25
-  Until: 09:00,                           !- Field 26
-  0.34,                                   !- Field 27
-  Until: 17:00,                           !- Field 28
-  0.20,                                   !- Field 29
-  Until: 18:00,                           !- Field 30
-  0.34,                                   !- Field 31
-  Until: 19:00,                           !- Field 32
-  0.35,                                   !- Field 33
-  Until: 21:00,                           !- Field 34
-  0.65,                                   !- Field 35
-  Until: 24:00,                           !- Field 36
-  0.50,                                   !- Field 37
-  For: WinterDesignDay,                   !- Field 38
-  Until: 24:00,                           !- Field 39
-  0,                                      !- Field 40
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 41
-  Until: 24:00,                           !- Field 42
-  1.0;                                    !- Field 43
-
-OS:Schedule:Compact,
-  {9f04ec77-18ac-4203-ac01-2133050449a4}, !- Handle
-  ACTIVITY_SCH,                           !- Name
-  {a487ac77-a159-433c-9dae-a1fc7ba20667}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  120.;                                   !- Field 4
-
-OS:ScheduleTypeLimits,
-  {aca17147-554d-483f-8b24-a4e1540afb75}, !- Handle
-  {673ab93d-d01f-483b-98c4-4ca137dce314}; !- Name
-
-OS:ScheduleTypeLimits,
-  {a487ac77-a159-433c-9dae-a1fc7ba20667}, !- Handle
-  ActivityLevel,                          !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
-  Continuous,                             !- Numeric Type
-  ActivityLevel;                          !- Unit Type
-
-OS:Schedule:Compact,
-  {143ca9c3-4837-488b-9d5f-1b5a8cad8f98}, !- Handle
-  WORK_EFF_SCH,                           !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.0;                                    !- Field 4
-
-OS:Schedule:Compact,
-  {fb5f1c17-6996-4bd4-8ff1-31f624a02d4c}, !- Handle
-  CLOTHING_SCH,                           !- Name
-  {ea868e7e-dbb3-4434-9160-dd93c2e8c2b4}, !- Schedule Type Limits Name
-  Through: 04/30,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1.0,                                    !- Field 4
-  Through: 09/30,                         !- Field 5
-  For: AllDays,                           !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.5,                                    !- Field 8
-  Through: 12/31,                         !- Field 9
-  For: AllDays,                           !- Field 10
-  Until: 24:00,                           !- Field 11
-  1.0;                                    !- Field 12
-
-OS:ScheduleTypeLimits,
-  {52bff830-46cc-4b78-bfc2-916cb02b78cd}, !- Handle
-  {8313cba4-e403-4d74-aa9e-13e9b34d4b26}; !- Name
-
-OS:ScheduleTypeLimits,
-  {ea868e7e-dbb3-4434-9160-dd93c2e8c2b4}, !- Handle
-  ClothingInsulation,                     !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
-  Continuous,                             !- Numeric Type
-  ClothingInsulation;                     !- Unit Type
-
-OS:Schedule:Compact,
-  {d26e6a6c-cd65-4593-a0c7-5c19cfee0ffc}, !- Handle
-  AIR_VELO_SCH,                           !- Name
-  {f93e831a-bcb8-425c-b812-2ba5bd204cc1}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.2;                                    !- Field 4
-
-OS:ScheduleTypeLimits,
-  {d94c42b9-4125-4b07-982e-8622efcfc327}, !- Handle
-  {1fcc4ba2-8c11-43c1-963b-c01c9f048374}; !- Name
-
-OS:ScheduleTypeLimits,
-  {f93e831a-bcb8-425c-b812-2ba5bd204cc1}, !- Handle
-  Velocity,                               !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
-  Continuous,                             !- Numeric Type
-  Velocity;                               !- Unit Type
 
 OS:Surface,
   {262fc390-c57e-46ca-8bfb-7bdb69db9c48}, !- Handle
@@ -1910,15 +1459,6 @@ OS:Surface,
   0.0487, 0.0488, 8.8392,                 !- X,Y,Z Vertex 2 {m}
   4.0111, 0.0488, 8.8392,                 !- X,Y,Z Vertex 3 {m}
   4.0111, 0.0488, 11.5824;                !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {5e6b8af8-86d4-4069-b618-d70ba2c91d44}, !- Handle
-  INFIL_SCH,                              !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1.0;                                    !- Field 4
 
 OS:Surface,
   {503e0f94-57c0-459a-a6aa-9b81617a14ce}, !- Handle
@@ -2351,21 +1891,6 @@ OS:Surface,
   13.954806, -11.573442, 11.5824,         !- X,Y,Z Vertex 3 {m}
   13.954806, -3.343842, 11.5824;          !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {dc5e362b-f793-4f09-8fef-241f16063586}, !- Handle
-  FrontStairsFlr4 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1341,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {a6b8938b-cf05-4bc3-a514-8c9a08fcc550}, !- Handle
-  FrontStairsFlr4 Internal Mass,          !- Name
-  {dc5e362b-f793-4f09-8fef-241f16063586}, !- Internal Mass Definition Name
-  {4de603b5-1db6-485a-b6c6-4c8b65c5f083}; !- Space or SpaceType Name
-
 OS:Connection,
   {f63a1593-5e55-4798-9382-de343db8976e}, !- Handle
   {105443d5-c123-4565-bc6c-dce1c2b8dd0b}, !- Name
@@ -2727,23 +2252,6 @@ OS:Surface,
   48.5119, 18.3374, 8.8392,               !- X,Y,Z Vertex 3 {m}
   48.5119, 10.1078, 8.8392;               !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {c494d2d7-f7fd-449e-8e02-58c63133d8b4}, !- Handle
-  Corridor_Ltg_Sch,                       !- Name
-  {2f48f3ad-ed8e-4aa0-ac39-4228d9f91859}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
-
-OS:ScheduleTypeLimits,
-  {2f48f3ad-ed8e-4aa0-ac39-4228d9f91859}, !- Handle
-  On/Off,                                 !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
-  DISCRETE,                               !- Numeric Type
-  Availability;                           !- Unit Type
-
 OS:Connection,
   {bb1908f8-6dc1-4fed-8637-478eef44b04d}, !- Handle
   {263ef04e-190a-4e54-a8f8-cab7eb12f5c5}, !- Name
@@ -2838,21 +2346,6 @@ OS:Space,
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
-
-OS:InternalMass:Definition,
-  {06d36ee4-f00d-4478-91ee-553c88ee2cbf}, !- Handle
-  GuestRoom415_418 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8717,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {266c54cd-a82d-403e-9837-8f1329efd847}, !- Handle
-  GuestRoom415_418 Internal Mass,         !- Name
-  {06d36ee4-f00d-4478-91ee-553c88ee2cbf}, !- Internal Mass Definition Name
-  {28be9614-3bcb-4cf7-b80b-cf711bdb616c}; !- Space or SpaceType Name
 
 OS:Surface,
   {830a1dbc-b07d-4fb4-a1ae-1f325bb45d22}, !- Handle
@@ -3011,21 +2504,6 @@ OS:Surface,
   32.6623, 18.3374, 8.8392,               !- X,Y,Z Vertex 3 {m}
   32.6623, 18.3374, 11.5824;              !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {9aff268e-96f5-4e32-8ea2-1c43cce59190}, !- Handle
-  CorridorFlr1 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  301.0117,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {17e4c6be-10a1-43b5-8d2d-bbe5debcac21}, !- Handle
-  CorridorFlr1 Internal Mass,             !- Name
-  {9aff268e-96f5-4e32-8ea2-1c43cce59190}, !- Internal Mass Definition Name
-  {4fef5bf3-b03a-4b91-b0e3-fd3c7a5e420a}; !- Space or SpaceType Name
-
 OS:Surface,
   {da33a9dc-8da7-4a3d-8c46-eff4615a304f}, !- Handle
   P_GuestRoom301_2_0_0,                   !- Name
@@ -3171,56 +2649,6 @@ OS:Surface,
   2.4871, 10.1078, 3.3528,                !- X,Y,Z Vertex 2 {m}
   0.0487, 10.1078, 3.3528,                !- X,Y,Z Vertex 3 {m}
   0.0487, 10.1078, 6.096;                 !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {80b9f21c-2253-4d96-b0d2-3124f791f4b1}, !- Handle
-  EmployeeLounge_Ltg_Sch,                 !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.05,                                   !- Field 4
-  Until: 06:00,                           !- Field 5
-  0.15,                                   !- Field 6
-  Until: 07:00,                           !- Field 7
-  0.4,                                    !- Field 8
-  Until: 08:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  1.0,                                    !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 20:00,                           !- Field 15
-  0.4,                                    !- Field 16
-  Until: 22:00,                           !- Field 17
-  0.15,                                   !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.05,                                   !- Field 20
-  For: Saturday Sunday Holidays,          !- Field 21
-  Until: 05:00,                           !- Field 22
-  0.05,                                   !- Field 23
-  Until: 06:00,                           !- Field 24
-  0.15,                                   !- Field 25
-  Until: 07:00,                           !- Field 26
-  0.3,                                    !- Field 27
-  Until: 08:00,                           !- Field 28
-  0.4,                                    !- Field 29
-  Until: 18:00,                           !- Field 30
-  0.6,                                    !- Field 31
-  Until: 19:00,                           !- Field 32
-  0.4,                                    !- Field 33
-  Until: 20:00,                           !- Field 34
-  0.3,                                    !- Field 35
-  Until: 22:00,                           !- Field 36
-  0.15,                                   !- Field 37
-  Until: 24:00,                           !- Field 38
-  0.05,                                   !- Field 39
-  For: WinterDesignDay,                   !- Field 40
-  Until: 24:00,                           !- Field 41
-  0.0,                                    !- Field 42
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 43
-  Until: 24:00,                           !- Field 44
-  1.0;                                    !- Field 45
 
 OS:Surface,
   {695a7b09-8fa3-4886-aee8-a85868265e25}, !- Handle
@@ -3402,21 +2830,6 @@ OS:Surface,
   48.5119, 0.0488, 3.3528,                !- X,Y,Z Vertex 3 {m}
   48.5119, 0.0488, 6.096;                 !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {3eff9df8-342a-4e11-903f-4ca661ecf6c9}, !- Handle
-  GuestRoom420_423 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8717,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {6aed82a1-2562-47d5-b23b-29d7a6a64039}, !- Handle
-  GuestRoom420_423 Internal Mass,         !- Name
-  {3eff9df8-342a-4e11-903f-4ca661ecf6c9}, !- Internal Mass Definition Name
-  {34e4dcf9-28a2-48d2-aaaa-8e9d56aa8d31}; !- Space or SpaceType Name
-
 OS:Surface,
   {f19b8714-337c-44d1-91bc-669947056653}, !- Handle
   P_ElevatorCoreFlr2_10108_0_10068,       !- Name
@@ -3511,21 +2924,6 @@ OS:Space,
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
   Yes;                                    !- Part of Total Floor Area
-
-OS:InternalMass:Definition,
-  {1e8473ab-b159-412f-aca7-0897dddad845}, !- Handle
-  FrontStorageFlr4 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  25.0838,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {fb3f43b4-ac14-4427-83f0-ce3a4f6a2378}, !- Handle
-  FrontStorageFlr4 Internal Mass,         !- Name
-  {1e8473ab-b159-412f-aca7-0897dddad845}, !- Internal Mass Definition Name
-  {1c907215-1ac2-482d-952d-67d97dcb86ee}; !- Space or SpaceType Name
 
 OS:Surface,
   {51859f09-d5c1-4907-92c3-6904fe0ae0da}, !- Handle
@@ -3662,21 +3060,6 @@ OS:Surface,
   62.418006, -21.632442, 11.5824,         !- X,Y,Z Vertex 2 {m}
   46.568406, -21.632442, 11.5824,         !- X,Y,Z Vertex 3 {m}
   46.568406, -13.402242, 11.5824;         !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {ccd6e096-c8c6-463f-9c7c-16fc6c571dbb}, !- Handle
-  GuestRoom102 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {8c46f515-4f9c-491d-8625-0a231022e001}, !- Handle
-  GuestRoom102 Internal Mass,             !- Name
-  {ccd6e096-c8c6-463f-9c7c-16fc6c571dbb}, !- Internal Mass Definition Name
-  {49e9662d-b063-44c0-a635-7b008d43f398}; !- Space or SpaceType Name
 
 OS:Connection,
   {064935d8-25b8-4e47-ade0-00cef582d01d}, !- Handle
@@ -3931,21 +3314,6 @@ OS:Surface,
   26.8711, 18.3374, 0,                    !- X,Y,Z Vertex 3 {m}
   26.8711, 18.3374, 3.3528;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {09907136-cf4c-407e-8c46-0924ab21058e}, !- Handle
-  GuestRoom324 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {da20d064-5288-4712-8c2d-0b73758a8a1f}, !- Handle
-  GuestRoom324 Internal Mass,             !- Name
-  {09907136-cf4c-407e-8c46-0924ab21058e}, !- Internal Mass Definition Name
-  {d7c4a37c-cc40-4e87-8475-10623c275297}; !- Space or SpaceType Name
-
 OS:Surface,
   {0c9e62f6-31e4-4569-b52d-2964b696d13a}, !- Handle
   P_GuestRoom101_2_0_0,                   !- Name
@@ -4075,21 +3443,6 @@ OS:Surface,
   0.0487, 8.279, 0,                       !- X,Y,Z Vertex 3 {m}
   0.0487, 8.279, 3.3528;                  !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {49135897-2c32-49f6-b15f-eac1aa01f58e}, !- Handle
-  FrontStorageFlr2 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  25.0838,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {d6ad1ae7-0b10-4613-b0c2-776074767f73}, !- Handle
-  FrontStorageFlr2 Internal Mass,         !- Name
-  {49135897-2c32-49f6-b15f-eac1aa01f58e}, !- Internal Mass Definition Name
-  {194b277b-5b81-4ca9-8287-f45c5ae5fbe3}; !- Space or SpaceType Name
-
 OS:SubSurface,
   {d24bb1dd-d947-4cab-9b9b-a97bf3e98226}, !- Handle
   W_MeetingRoomFlr1_5_0_0_0_0,            !- Name
@@ -4140,21 +3493,6 @@ OS:Surface,
   32.6623, 8.279, 8.8392,                 !- X,Y,Z Vertex 2 {m}
   32.6623, 0.0488, 8.8392,                !- X,Y,Z Vertex 3 {m}
   32.6623, 0.0488, 11.5824;               !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {9b314cf1-283b-4af6-86de-14af25ae1ed6}, !- Handle
-  RestroomFlr1 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {389e9273-d36f-4486-9977-cbcf4eb02ccb}, !- Handle
-  RestroomFlr1 Internal Mass,             !- Name
-  {9b314cf1-283b-4af6-86de-14af25ae1ed6}, !- Internal Mass Definition Name
-  {c7add13d-8f81-4104-8e2d-6b7fa7abd05b}; !- Space or SpaceType Name
 
 OS:Surface,
   {a3bdbf62-fd90-4442-b94d-2d3f2b2d1e28}, !- Handle
@@ -4275,21 +3613,6 @@ OS:Surface,
   32.6623, 0.0488, 6.096,                 !- X,Y,Z Vertex 3 {m}
   32.6623, 0.0488, 8.8392;                !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {cf86e962-bd6e-45f1-95aa-875463cfec3b}, !- Handle
-  GuestRoom101 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {9adf0d33-9dfb-4e98-a4ae-394be75fa606}, !- Handle
-  GuestRoom101 Internal Mass,             !- Name
-  {cf86e962-bd6e-45f1-95aa-875463cfec3b}, !- Internal Mass Definition Name
-  {7ed5ea93-6244-44f5-9809-becc30d6a89d}; !- Space or SpaceType Name
-
 OS:Surface,
   {8631e346-cafc-43b7-b9e5-d27cae5e62ec}, !- Handle
   R_GuestRoom401_1_0_0,                   !- Name
@@ -4358,31 +3681,6 @@ OS:Surface,
   54.9133, 10.1078, 0,                    !- X,Y,Z Vertex 3 {m}
   54.9133, 10.1078, 3.3528;               !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4ff6e723-b409-45dd-9ab4-02fef8e0040c}, !- Handle
-  MeetingRoom_Eqp_Sch,                    !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 07:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 08:00,                           !- Field 5
-  0.05,                                   !- Field 6
-  Until: 10:00,                           !- Field 7
-  0.54,                                   !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.26,                                   !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.05,                                   !- Field 12
-  Until: 15:00,                           !- Field 13
-  0.54,                                   !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.26,                                   !- Field 16
-  Until: 20:00,                           !- Field 17
-  0.05,                                   !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.0;                                    !- Field 20
-
 OS:SubSurface,
   {340f42d3-f2d1-49a5-9aaa-8e0d537dbf42}, !- Handle
   W_GuestRoom202_205_5_0_0_0_2,           !- Name
@@ -4433,21 +3731,6 @@ OS:Surface,
   28.6999, 18.3374, 6.096,                !- X,Y,Z Vertex 2 {m}
   26.8711, 18.3374, 6.096,                !- X,Y,Z Vertex 3 {m}
   26.8711, 10.1078, 6.096;                !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {297bf9ca-3d0b-48fb-a06b-1b0845b9f139}, !- Handle
-  GuestRoom319 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {721dce1d-301d-49da-b571-91b1bd465856}, !- Handle
-  GuestRoom319 Internal Mass,             !- Name
-  {297bf9ca-3d0b-48fb-a06b-1b0845b9f139}, !- Internal Mass Definition Name
-  {46da124c-bab8-424c-8eb4-351223adb60c}; !- Space or SpaceType Name
 
 OS:Surface,
   {d3e73e88-0f58-4781-a392-13b991c881f8}, !- Handle
@@ -4516,54 +3799,6 @@ OS:Surface,
   28.6999, 18.3374, 3.3528,               !- X,Y,Z Vertex 2 {m}
   26.8711, 18.3374, 3.3528,               !- X,Y,Z Vertex 3 {m}
   26.8711, 10.1078, 3.3528;               !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {b5d60f06-25cd-422d-b8b2-c4f3df5c93f8}, !- Handle
-  Office_Eqp_Sch,                         !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.33,                                   !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.38,                                   !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.43,                                   !- Field 8
-  Until: 10:00,                           !- Field 9
-  0.43,                                   !- Field 10
-  Until: 12:00,                           !- Field 11
-  1.0,                                    !- Field 12
-  Until: 13:00,                           !- Field 13
-  0.94,                                   !- Field 14
-  Until: 17:00,                           !- Field 15
-  1.0,                                    !- Field 16
-  Until: 18:00,                           !- Field 17
-  0.75,                                   !- Field 18
-  Until: 20:00,                           !- Field 19
-  0.63,                                   !- Field 20
-  Until: 22:00,                           !- Field 21
-  0.48,                                   !- Field 22
-  Until: 24:00,                           !- Field 23
-  0.33,                                   !- Field 24
-  For: Saturday Sunday Holidays,          !- Field 25
-  Until: 05:00,                           !- Field 26
-  0.33,                                   !- Field 27
-  Until: 07:00,                           !- Field 28
-  0.38,                                   !- Field 29
-  Until: 08:00,                           !- Field 30
-  0.43,                                   !- Field 31
-  Until: 18:00,                           !- Field 32
-  0.63,                                   !- Field 33
-  Until: 22:00,                           !- Field 34
-  0.48,                                   !- Field 35
-  Until: 24:00,                           !- Field 36
-  0.33,                                   !- Field 37
-  For: WinterDesignDay,                   !- Field 38
-  Until: 24:00,                           !- Field 39
-  0.0,                                    !- Field 40
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 41
-  Until: 24:00,                           !- Field 42
-  1.0;                                    !- Field 43
 
 OS:Surface,
   {6d3425f8-4c0a-4eee-bb3c-fe6985590f01}, !- Handle
@@ -4708,39 +3943,6 @@ OS:Surface,
   0.0487, 10.1078, 6.096,                 !- X,Y,Z Vertex 3 {m}
   0.0487, 10.1078, 8.8392;                !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {592dc0f3-75f7-4e68-bae0-a82a2c9859bd}, !- Handle
-  MeetingRoom_Ltg_Sch_Base,               !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 06:00,                           !- Field 5
-  0.2,                                    !- Field 6
-  Until: 07:00,                           !- Field 7
-  0.3,                                    !- Field 8
-  Until: 08:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  1.0,                                    !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 20:00,                           !- Field 15
-  0.3,                                    !- Field 16
-  Until: 21:00,                           !- Field 17
-  0.2,                                    !- Field 18
-  Until: 22:00,                           !- Field 19
-  0.05,                                   !- Field 20
-  Until: 24:00,                           !- Field 21
-  0.0,                                    !- Field 22
-  For: WinterDesignDay,                   !- Field 23
-  Until: 24:00,                           !- Field 24
-  0.0,                                    !- Field 25
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 26
-  Until: 24:00,                           !- Field 27
-  1.0;                                    !- Field 28
-
 OS:Surface,
   {b0083fc8-bd99-4ef0-8b1b-923049cd7b1b}, !- Handle
   P_GuestRoom414_10286_0_10150,           !- Name
@@ -4757,71 +3959,6 @@ OS:Surface,
   52.4743, 10.1078, 8.8392,               !- X,Y,Z Vertex 2 {m}
   52.4743, 18.3374, 8.8392,               !- X,Y,Z Vertex 3 {m}
   52.4743, 18.3374, 11.5824;              !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {eeefb81a-a79a-4854-bd6c-f836e3bae72f}, !- Handle
-  MeetingRoom_Occ_Sch,                    !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 07:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 08:00,                           !- Field 5
-  0.05,                                   !- Field 6
-  Until: 10:00,                           !- Field 7
-  0.5,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.05,                                   !- Field 12
-  Until: 15:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.2,                                    !- Field 16
-  Until: 20:00,                           !- Field 17
-  0.05,                                   !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.0,                                    !- Field 20
-  For: Saturday Sunday Holidays,          !- Field 21
-  Until: 07:00,                           !- Field 22
-  0.0,                                    !- Field 23
-  Until: 08:00,                           !- Field 24
-  0.05,                                   !- Field 25
-  Until: 10:00,                           !- Field 26
-  0.5,                                    !- Field 27
-  Until: 12:00,                           !- Field 28
-  0.2,                                    !- Field 29
-  Until: 13:00,                           !- Field 30
-  0.05,                                   !- Field 31
-  Until: 15:00,                           !- Field 32
-  0.5,                                    !- Field 33
-  Until: 18:00,                           !- Field 34
-  0.2,                                    !- Field 35
-  Until: 20:00,                           !- Field 36
-  0.05,                                   !- Field 37
-  Until: 24:00,                           !- Field 38
-  0.0,                                    !- Field 39
-  For: WinterDesignDay,                   !- Field 40
-  Until: 24:00,                           !- Field 41
-  0.0,                                    !- Field 42
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 43
-  Until: 24:00,                           !- Field 44
-  1.0;                                    !- Field 45
-
-OS:InternalMass:Definition,
-  {89ab73e7-b857-4ddb-8efd-debcf4eead54}, !- Handle
-  GuestRoom413 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {6e08bdbd-dac8-4248-9a17-4943d8492b8e}, !- Handle
-  GuestRoom413 Internal Mass,             !- Name
-  {89ab73e7-b857-4ddb-8efd-debcf4eead54}, !- Internal Mass Definition Name
-  {c5ba339f-19f1-4e2c-b741-42f4a897b6de}; !- Space or SpaceType Name
 
 OS:Surface,
   {83dd6268-9359-4397-9594-6dd16d22f71a}, !- Handle
@@ -4925,30 +4062,6 @@ OS:Surface,
   4.0111, 10.1078, 8.8392,                !- X,Y,Z Vertex 3 {m}
   4.0111, 10.1078, 11.5824;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {36c96829-45e8-4bb6-b535-fb9bb97c8db7}, !- Handle
-  ExerciseCenterFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {5c1b5727-3564-4bf8-b2fa-b0494fb4e650}, !- Handle
-  ExerciseCenterFlr1 Internal Mass,       !- Name
-  {36c96829-45e8-4bb6-b535-fb9bb97c8db7}, !- Internal Mass Definition Name
-  {a6492e4f-18d6-4ee9-af94-07b491b8513d}; !- Space or SpaceType Name
-
-OS:Schedule:Compact,
-  {311e77f4-b8c9-446a-8064-6b426a0c76d4}, !- Handle
-  Water Equipment Sensible fract sched,   !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.2;                                    !- Field 4
-
 OS:Surface,
   {62eac294-c6e5-4bfe-b625-4c2054b5c8b9}, !- Handle
   W_GuestRoom224_3_0_0,                   !- Name
@@ -4965,21 +4078,6 @@ OS:Surface,
   7.9735, 18.3374, 3.3528,                !- X,Y,Z Vertex 2 {m}
   4.0111, 18.3374, 3.3528,                !- X,Y,Z Vertex 3 {m}
   4.0111, 18.3374, 6.096;                 !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {026b89fa-87d1-4b20-adae-d85ed1399de9}, !- Handle
-  GuestRoom104 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {31fdbf74-3b77-480a-aac2-680c90e971a8}, !- Handle
-  GuestRoom104 Internal Mass,             !- Name
-  {026b89fa-87d1-4b20-adae-d85ed1399de9}, !- Internal Mass Definition Name
-  {17c90570-956d-4d41-aef4-0ef4dfac399c}; !- Space or SpaceType Name
 
 OS:Surface,
   {c12c62d2-e259-4970-8c5d-e68f10e70e69}, !- Handle
@@ -5014,23 +4112,6 @@ OS:Surface,
   48.5119, 10.1078, 6.096,                !- X,Y,Z Vertex 2 {m}
   48.5119, 18.3374, 6.096,                !- X,Y,Z Vertex 3 {m}
   48.5119, 18.3374, 8.8392;               !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {28280d6a-f5a9-4b49-9daf-033b8aa3da00}, !- Handle
-  Dual Zone Control Type Sched,           !- Name
-  {86a1be2f-0488-4b1d-ab58-9140b2fee7c8}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  4;                                      !- Field 4
-
-OS:ScheduleTypeLimits,
-  {86a1be2f-0488-4b1d-ab58-9140b2fee7c8}, !- Handle
-  Control Type,                           !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  4,                                      !- Upper Limit Value {BasedOnField A4}
-  DISCRETE,                               !- Numeric Type
-  ControlMode;                            !- Unit Type
 
 OS:Surface,
   {ca467c93-dcda-4925-b748-fe22e3567144}, !- Handle
@@ -5105,48 +4186,6 @@ OS:Surface,
   19.8607, 10.1078, 0,                    !- X,Y,Z Vertex 3 {m}
   19.8607, 18.3374, 0;                    !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4d13656c-ce9c-4bf4-9d74-191b45190fc9}, !- Handle
-  LaundryRoom_Occ_Sch,                    !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 08:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 10:00,                           !- Field 5
-  0.09,                                   !- Field 6
-  Until: 12:00,                           !- Field 7
-  0.18,                                   !- Field 8
-  Until: 13:00,                           !- Field 9
-  0.0,                                    !- Field 10
-  Until: 16:00,                           !- Field 11
-  0.18,                                   !- Field 12
-  Until: 17:00,                           !- Field 13
-  0.09,                                   !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.0,                                    !- Field 16
-  For: Saturday Sunday Holidays,          !- Field 17
-  Until: 08:00,                           !- Field 18
-  0.0,                                    !- Field 19
-  Until: 10:00,                           !- Field 20
-  0.09,                                   !- Field 21
-  Until: 12:00,                           !- Field 22
-  0.18,                                   !- Field 23
-  Until: 13:00,                           !- Field 24
-  0.0,                                    !- Field 25
-  Until: 16:00,                           !- Field 26
-  0.18,                                   !- Field 27
-  Until: 17:00,                           !- Field 28
-  0.09,                                   !- Field 29
-  Until: 24:00,                           !- Field 30
-  0.0,                                    !- Field 31
-  For: WinterDesignDay,                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.0,                                    !- Field 34
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 35
-  Until: 24:00,                           !- Field 36
-  1.0;                                    !- Field 37
-
 OS:SubSurface,
   {f4726c26-d842-4191-9289-457da9888268}, !- Handle
   W_GuestRoom206_208_5_0_0_0_1,           !- Name
@@ -5215,21 +4254,6 @@ OS:Surface,
   48.5119, 18.3374, 8.8392,               !- X,Y,Z Vertex 3 {m}
   48.5119, 18.3374, 11.5824;              !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {c76c72e0-f2c0-4821-a4fb-5155e00c8895}, !- Handle
-  GuestRoom414 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {51755fc5-c33e-436b-b286-c04d3dafc30f}, !- Handle
-  GuestRoom414 Internal Mass,             !- Name
-  {c76c72e0-f2c0-4821-a4fb-5155e00c8895}, !- Internal Mass Definition Name
-  {35cc8b92-0398-420f-afc4-77242ac28605}; !- Space or SpaceType Name
-
 OS:Surface,
   {f1f71942-be23-4697-a14c-499407991ad0}, !- Handle
   P_GuestRoom313_10221_0_10126,           !- Name
@@ -5264,15 +4288,6 @@ OS:Surface,
   19.8607, 0.0488, 0,                     !- X,Y,Z Vertex 3 {m}
   19.8607, 8.279, 0;                      !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {b0383d58-d049-4b16-9016-b758e3c5ce41}, !- Handle
-  Water Equipment Hot Supply Temp Sched,  !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  43.3;                                   !- Field 4
-
 OS:Surface,
   {8a9b0fb6-c085-46ea-bac8-00c399dba496}, !- Handle
   F_GuestRoom406_408_10232_0_10131,       !- Name
@@ -5289,90 +4304,6 @@ OS:Surface,
   32.6623, 0.0488, 8.8392,                !- X,Y,Z Vertex 2 {m}
   19.8607, 0.0488, 8.8392,                !- X,Y,Z Vertex 3 {m}
   19.8607, 8.279, 8.8392;                 !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {227b1998-2c55-4048-a1b1-f8703eff4f05}, !- Handle
-  EmployeeLounge_Occ_Sch,                 !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 05:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.1,                                    !- Field 6
-  Until: 12:00,                           !- Field 7
-  0.2,                                    !- Field 8
-  Until: 13:00,                           !- Field 9
-  0.7,                                    !- Field 10
-  Until: 18:00,                           !- Field 11
-  0.2,                                    !- Field 12
-  Until: 20:00,                           !- Field 13
-  0.1,                                    !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.0,                                    !- Field 16
-  For: Saturday Sunday Holidays,          !- Field 17
-  Until: 05:00,                           !- Field 18
-  0.0,                                    !- Field 19
-  Until: 08:00,                           !- Field 20
-  0.05,                                   !- Field 21
-  Until: 12:00,                           !- Field 22
-  0.1,                                    !- Field 23
-  Until: 13:00,                           !- Field 24
-  0.2,                                    !- Field 25
-  Until: 18:00,                           !- Field 26
-  0.1,                                    !- Field 27
-  Until: 20:00,                           !- Field 28
-  0.05,                                   !- Field 29
-  Until: 24:00,                           !- Field 30
-  0.0,                                    !- Field 31
-  For: WinterDesignDay,                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.0,                                    !- Field 34
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 35
-  Until: 24:00,                           !- Field 36
-  1.0;                                    !- Field 37
-
-OS:Schedule:Compact,
-  {7dd593e1-d682-470f-b82a-74ce8ecc563b}, !- Handle
-  Office_Occ_Sch,                         !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.2,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.3,                                    !- Field 6
-  Until: 08:00,                           !- Field 7
-  0.4,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  1.0,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.5,                                    !- Field 12
-  Until: 17:00,                           !- Field 13
-  1.0,                                    !- Field 14
-  Until: 18:00,                           !- Field 15
-  0.4,                                    !- Field 16
-  Until: 19:00,                           !- Field 17
-  0.3,                                    !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.2,                                    !- Field 20
-  For: Saturday Sunday Holidays,          !- Field 21
-  Until: 07:00,                           !- Field 22
-  0.2,                                    !- Field 23
-  Until: 08:00,                           !- Field 24
-  0.3,                                    !- Field 25
-  Until: 17:00,                           !- Field 26
-  0.5,                                    !- Field 27
-  Until: 18:00,                           !- Field 28
-  0.3,                                    !- Field 29
-  Until: 24:00,                           !- Field 30
-  0.2,                                    !- Field 31
-  For: WinterDesignDay,                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0,                                      !- Field 34
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 35
-  Until: 24:00,                           !- Field 36
-  1.0;                                    !- Field 37
 
 OS:SubSurface,
   {cf6d3a9e-4ca2-41ed-aa9f-1bf01406df9f}, !- Handle
@@ -5463,93 +4394,6 @@ OS:Surface,
   44.5495, 0.0488, 3.3528,                !- X,Y,Z Vertex 2 {m}
   40.5871, 0.0488, 3.3528,                !- X,Y,Z Vertex 3 {m}
   40.5871, 8.279, 3.3528;                 !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {5439cc1e-19a1-411c-ac2d-dfcc438b69c9}, !- Handle
-  BLDG_LIGHT_SCH,                         !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 01:00,                           !- Field 3
-  0.2,                                    !- Field 4
-  Until: 02:00,                           !- Field 5
-  0.15,                                   !- Field 6
-  Until: 05:00,                           !- Field 7
-  0.1,                                    !- Field 8
-  Until: 06:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 07:00,                           !- Field 11
-  0.4,                                    !- Field 12
-  Until: 08:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 10:00,                           !- Field 15
-  0.4,                                    !- Field 16
-  Until: 18:00,                           !- Field 17
-  0.25,                                   !- Field 18
-  Until: 19:00,                           !- Field 19
-  0.6,                                    !- Field 20
-  Until: 20:00,                           !- Field 21
-  0.8,                                    !- Field 22
-  Until: 21:00,                           !- Field 23
-  0.9,                                    !- Field 24
-  Until: 22:00,                           !- Field 25
-  0.8,                                    !- Field 26
-  Until: 23:00,                           !- Field 27
-  0.6,                                    !- Field 28
-  Until: 24:00,                           !- Field 29
-  0.3,                                    !- Field 30
-  For: Saturday,                          !- Field 31
-  Until: 02:00,                           !- Field 32
-  0.2,                                    !- Field 33
-  Until: 06:00,                           !- Field 34
-  0.1,                                    !- Field 35
-  Until: 08:00,                           !- Field 36
-  0.3,                                    !- Field 37
-  Until: 10:00,                           !- Field 38
-  0.4,                                    !- Field 39
-  Until: 11:00,                           !- Field 40
-  0.3,                                    !- Field 41
-  Until: 18:00,                           !- Field 42
-  0.25,                                   !- Field 43
-  Until: 19:00,                           !- Field 44
-  0.6,                                    !- Field 45
-  Until: 22:00,                           !- Field 46
-  0.7,                                    !- Field 47
-  Until: 23:00,                           !- Field 48
-  0.6,                                    !- Field 49
-  Until: 24:00,                           !- Field 50
-  0.3,                                    !- Field 51
-  For: SummerDesignDay,                   !- Field 52
-  Until: 24:00,                           !- Field 53
-  1.0,                                    !- Field 54
-  For: WinterDesignDay,                   !- Field 55
-  Until: 24:00,                           !- Field 56
-  0.0,                                    !- Field 57
-  For: Sunday Holidays AllOtherDays,      !- Field 58
-  Until: 02:00,                           !- Field 59
-  0.3,                                    !- Field 60
-  Until: 06:00,                           !- Field 61
-  0.2,                                    !- Field 62
-  Until: 07:00,                           !- Field 63
-  0.3,                                    !- Field 64
-  Until: 09:00,                           !- Field 65
-  0.4,                                    !- Field 66
-  Until: 13:00,                           !- Field 67
-  0.3,                                    !- Field 68
-  Until: 18:00,                           !- Field 69
-  0.2,                                    !- Field 70
-  Until: 19:00,                           !- Field 71
-  0.5,                                    !- Field 72
-  Until: 20:00,                           !- Field 73
-  0.7,                                    !- Field 74
-  Until: 21:00,                           !- Field 75
-  0.8,                                    !- Field 76
-  Until: 22:00,                           !- Field 77
-  0.6,                                    !- Field 78
-  Until: 23:00,                           !- Field 79
-  0.5,                                    !- Field 80
-  Until: 24:00,                           !- Field 81
-  0.3;                                    !- Field 82
 
 OS:Surface,
   {887fbd3c-410e-4c7b-909a-2b375d1c083d}, !- Handle
@@ -5823,15 +4667,6 @@ OS:Surface,
   19.8607, 10.1078, 3.3528,               !- X,Y,Z Vertex 3 {m}
   19.8607, 18.3374, 3.3528;               !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {35249737-453c-497c-97b2-6c2d2a672724}, !- Handle
-  ALWAYS_ON,                              !- Name
-  {2f48f3ad-ed8e-4aa0-ac39-4228d9f91859}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1;                                      !- Field 4
-
 OS:Surface,
   {f3c2e7b3-841d-47e5-829f-c7c9cbb54dfe}, !- Handle
   P_GuestRoom102_10049_0_10038,           !- Name
@@ -6007,10 +4842,6 @@ OS:Surface,
   48.5119, 18.3374, 3.3528,               !- X,Y,Z Vertex 3 {m}
   48.5119, 10.1078, 3.3528;               !- X,Y,Z Vertex 4 {m}
 
-OS:ScheduleTypeLimits,
-  {ed0d94ca-dcee-4585-8c85-182905dc9b64}, !- Handle
-  {d937e10f-a074-4289-bf84-3b498b400075}; !- Name
-
 OS:Surface,
   {5c2c5113-4bb3-4dd4-a7ef-b3ef80d9b678}, !- Handle
   P_EmployeeLoungeFlr1_10009_0_10007,     !- Name
@@ -6044,21 +4875,6 @@ OS:Surface,
   52.4743, 10.1078, 0,                    !- X,Y,Z Vertex 2 {m}
   48.5119, 10.1078, 0,                    !- X,Y,Z Vertex 3 {m}
   48.5119, 10.1078, 3.3528;               !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {4d88ed9c-1896-4774-a7c0-df326776335d}, !- Handle
-  GuestRoom306_308 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  210.7195,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {58929297-824d-449e-b985-326adb7cd8a1}, !- Handle
-  GuestRoom306_308 Internal Mass,         !- Name
-  {4d88ed9c-1896-4774-a7c0-df326776335d}, !- Internal Mass Definition Name
-  {618bad20-317c-42f0-843c-550c7fe807ec}; !- Space or SpaceType Name
 
 OS:Connection,
   {cca27b0c-d637-45b7-8f58-bd759a9074b5}, !- Handle
@@ -6281,21 +5097,6 @@ OS:Surface,
   0.0487, 8.279, 3.3528,                  !- X,Y,Z Vertex 3 {m}
   0.0487, 8.279, 6.096;                   !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {366266af-2115-4433-b1bc-721e2d0b967a}, !- Handle
-  FrontStairsFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1341,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {e1a230d9-ad24-4e27-b2da-01887a236399}, !- Handle
-  FrontStairsFlr1 Internal Mass,          !- Name
-  {366266af-2115-4433-b1bc-721e2d0b967a}, !- Internal Mass Definition Name
-  {dd073c98-f8c8-4a75-aa0f-1734fc4b522e}; !- Space or SpaceType Name
-
 OS:Surface,
   {e82726dd-410b-4e03-b5e2-3b50caca8828}, !- Handle
   P_GuestRoom319_10204_0_10111,           !- Name
@@ -6425,21 +5226,6 @@ OS:Surface,
   52.4743, 10.1078, 0,                    !- X,Y,Z Vertex 3 {m}
   52.4743, 10.1078, 3.3528;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {f61b520f-848a-439c-8aaa-a5f280bd8084}, !- Handle
-  GuestRoom309_312 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8908,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {45ad0953-5441-4228-aebf-7486419e1de4}, !- Handle
-  GuestRoom309_312 Internal Mass,         !- Name
-  {f61b520f-848a-439c-8aaa-a5f280bd8084}, !- Internal Mass Definition Name
-  {aeaefcd1-6ff5-4a67-96d1-370d31a6126e}; !- Space or SpaceType Name
-
 OS:Surface,
   {947a3ea5-fb9c-4da8-aedd-80f16363bfeb}, !- Handle
   W_GuestRoom103_5_0_0,                   !- Name
@@ -6473,21 +5259,6 @@ OS:SubSurface,
   35.213, 18.3374, 9.4888,                !- X,Y,Z Vertex 2 {m}
   34.074, 18.3374, 9.4888,                !- X,Y,Z Vertex 3 {m}
   34.074, 18.3374, 10.9328;               !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {40ac0fc8-a638-4163-b3cb-db0b492768da}, !- Handle
-  GuestRoom424 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {6b7ba522-488a-4fc3-bc26-8a29150aebbf}, !- Handle
-  GuestRoom424 Internal Mass,             !- Name
-  {40ac0fc8-a638-4163-b3cb-db0b492768da}, !- Internal Mass Definition Name
-  {41da61d9-3a6a-487f-88af-467b39114b7d}; !- Space or SpaceType Name
 
 OS:Surface,
   {bdafc6fa-4d76-42a2-9205-1c4db132ad53}, !- Handle
@@ -6596,30 +5367,6 @@ OS:Surface,
   44.5495, 8.279, 0,                      !- X,Y,Z Vertex 3 {m}
   44.5495, 8.279, 3.3528;                 !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {1d26be6c-2be3-4cb4-80bc-f14baef8229b}, !- Handle
-  ALWAYS_OFF,                             !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.0;                                    !- Field 4
-
-OS:InternalMass:Definition,
-  {672756f3-653f-431c-996c-cee51cb03f1e}, !- Handle
-  CorridorFlr3 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  250.8404,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {76442ca9-bfe3-48fc-975a-195ba1f2e693}, !- Handle
-  CorridorFlr3 Internal Mass,             !- Name
-  {672756f3-653f-431c-996c-cee51cb03f1e}, !- Internal Mass Definition Name
-  {f0d33f73-7813-48ff-812f-7d55d482c881}; !- Space or SpaceType Name
-
 OS:Surface,
   {3ffefa3f-b2d4-4963-a72a-18bba24dd156}, !- Handle
   P_FrontOfficeFlr1_4_0_0,                !- Name
@@ -6704,10 +5451,6 @@ OS:Surface,
   40.5871, 0.0488, 0,                     !- X,Y,Z Vertex 2 {m}
   44.5495, 0.0488, 0,                     !- X,Y,Z Vertex 3 {m}
   44.5495, 0.0488, 3.3528;                !- X,Y,Z Vertex 4 {m}
-
-OS:ScheduleTypeLimits,
-  {5b636dc3-940b-46b6-b65e-5a344783b57d}, !- Handle
-  {ca1f801b-bf26-45ce-8f55-6d7737871be1}; !- Name
 
 OS:Surface,
   {67279290-fc0e-46a7-a247-fad3a71b5803}, !- Handle
@@ -6879,55 +5622,6 @@ OS:Surface,
   52.4743, 0.0488, 3.3528,                !- X,Y,Z Vertex 3 {m}
   52.4743, 0.0488, 6.096;                 !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {1ccfe8d5-ad4b-4513-854f-dd20089e0e67}, !- Handle
-  Storage_Ltg_Sch,                        !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 07:00,                           !- Field 3
-  0.1,                                    !- Field 4
-  Until: 08:00,                           !- Field 5
-  0.2,                                    !- Field 6
-  Until: 18:00,                           !- Field 7
-  0.4,                                    !- Field 8
-  Until: 22:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 24:00,                           !- Field 11
-  0.1,                                    !- Field 12
-  For: Saturday Sunday Holidays,          !- Field 13
-  Until: 07:00,                           !- Field 14
-  0.1,                                    !- Field 15
-  Until: 08:00,                           !- Field 16
-  0.2,                                    !- Field 17
-  Until: 18:00,                           !- Field 18
-  0.4,                                    !- Field 19
-  Until: 22:00,                           !- Field 20
-  0.2,                                    !- Field 21
-  Until: 24:00,                           !- Field 22
-  0.1,                                    !- Field 23
-  For: WinterDesignDay,                   !- Field 24
-  Until: 24:00,                           !- Field 25
-  0.0,                                    !- Field 26
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 27
-  Until: 24:00,                           !- Field 28
-  1.0;                                    !- Field 29
-
-OS:InternalMass:Definition,
-  {1c2c9c21-145e-4cef-851f-1079014c7dcf}, !- Handle
-  GuestRoom209_212 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8908,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {c768cc76-0e9c-46e1-9dda-234b401219c4}, !- Handle
-  GuestRoom209_212 Internal Mass,         !- Name
-  {1c2c9c21-145e-4cef-851f-1079014c7dcf}, !- Internal Mass Definition Name
-  {4ae884c7-1775-4913-bb91-336ed403740e}; !- Space or SpaceType Name
-
 OS:Surface,
   {a33a5e5e-8e56-4e10-866d-643c080e742b}, !- Handle
   P_CorridorFlr3_10198_0_10107,           !- Name
@@ -6978,28 +5672,6 @@ OS:Surface,
   7.9735, 18.3374, 6.096,                 !- X,Y,Z Vertex 2 {m}
   4.0111, 18.3374, 6.096,                 !- X,Y,Z Vertex 3 {m}
   4.0111, 18.3374, 8.8392;                !- X,Y,Z Vertex 4 {m}
-
-OS:SizingPeriod:DesignDay,
-  {bf4d05b5-4f7c-4cff-9b43-a0b35e3f0c11}, !- Handle
-  BALTIMORE Ann Clg .4% Condns WB=>MDB,   !- Name
-  31.3,                                   !- Maximum Dry-Bulb Temperature {C}
-  10.4,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  25.6,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
-  100762,                                 !- Barometric Pressure {Pa}
-  4.7,                                    !- Wind Speed {m/s}
-  280,                                    !- Wind Direction {deg}
-  1,                                      !- Sky Clearness
-  0,                                      !- Rain Indicator
-  0,                                      !- Snow Indicator
-  21,                                     !- Day of Month
-  7,                                      !- Month
-  SummerDesignDay,                        !- Day Type
-  0,                                      !- Daylight Saving Time Indicator
-  Wetbulb,                                !- Humidity Indicating Type
-  ,                                       !- Humidity Indicating Day Schedule Name
-  ,                                       !- Dry-Bulb Temperature Range Modifier Type
-  ,                                       !- Dry-Bulb Temperature Range Modifier Schedule Name
-  ASHRAEClearSky;                         !- Solar Model Indicator
 
 OS:Surface,
   {2137255f-ae4d-4406-be07-c02374653efa}, !- Handle
@@ -7150,29 +5822,6 @@ OS:Surface,
   48.5119, 10.1078, 6.096,                !- X,Y,Z Vertex 3 {m}
   48.5119, 10.1078, 8.8392;               !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {aea35493-ef34-400a-aa7b-6a94ada7ffb1}, !- Handle
-  ExerciseRoom_Occ_Sch,                   !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.5,                                    !- Field 6
-  Until: 11:00,                           !- Field 7
-  1.0,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.0,                                    !- Field 12
-  Until: 22:00,                           !- Field 13
-  1.0,                                    !- Field 14
-  Until: 23:00,                           !- Field 15
-  0.5,                                    !- Field 16
-  Until: 24:00,                           !- Field 17
-  0.0;                                    !- Field 18
-
 OS:Connection,
   {455aa8d3-e988-4db1-9538-6fcc2d3f0ff2}, !- Handle
   {9c4af45d-2757-467f-9032-29d9d3e8fb10}, !- Name
@@ -7211,21 +5860,6 @@ OS:Surface,
   2.4871, 18.3374, 3.3528,                !- X,Y,Z Vertex 2 {m}
   0.0487, 18.3374, 3.3528,                !- X,Y,Z Vertex 3 {m}
   0.0487, 18.3374, 6.096;                 !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {40519e49-635b-4822-8ce1-3c8f7880e335}, !- Handle
-  RearStairsFlr4 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.144,                                 !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {ca5a7b6d-d607-49eb-9797-da7baefe4786}, !- Handle
-  RearStairsFlr4 Internal Mass,           !- Name
-  {40519e49-635b-4822-8ce1-3c8f7880e335}, !- Internal Mass Definition Name
-  {4a7898ee-5478-438d-a3da-abaea8741ecb}; !- Space or SpaceType Name
 
 OS:SubSurface,
   {ff94b77d-73f4-46f5-858f-17cdec78b8c9}, !- Handle
@@ -7448,33 +6082,6 @@ OS:Surface,
   7.9735, 10.1078, 3.3528,                !- X,Y,Z Vertex 3 {m}
   7.9735, 10.1078, 6.096;                 !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {adf5df25-e141-4f28-9058-704948165140}, !- Handle
-  Office_Ltg_Sch_Base,                    !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 07:00,                           !- Field 3
-  0.50,                                   !- Field 4
-  Until: 08:00,                           !- Field 5
-  0.61,                                   !- Field 6
-  Until: 12:00,                           !- Field 7
-  0.9,                                    !- Field 8
-  Until: 13:00,                           !- Field 9
-  0.8,                                    !- Field 10
-  Until: 17:00,                           !- Field 11
-  0.9,                                    !- Field 12
-  Until: 18:00,                           !- Field 13
-  0.61,                                   !- Field 14
-  Until: 24:00,                           !- Field 15
-  0.50,                                   !- Field 16
-  For: WinterDesignDay,                   !- Field 17
-  Until: 24:00,                           !- Field 18
-  0.0,                                    !- Field 19
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 20
-  Until: 24:00,                           !- Field 21
-  1.0;                                    !- Field 22
-
 OS:SubSurface,
   {a4640b56-ab01-40af-9c9e-ed390e2a664c}, !- Handle
   W_GuestRoom320_323_3_0_0_0_0,           !- Name
@@ -7593,21 +6200,6 @@ OS:Surface,
   19.8607, 8.279, 8.8392,                 !- X,Y,Z Vertex 2 {m}
   4.0111, 8.279, 8.8392,                  !- X,Y,Z Vertex 3 {m}
   4.0111, 0.0488, 8.8392;                 !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {149c1c86-601c-45c5-8c6f-90753406b32a}, !- Handle
-  ElevatorCoreFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  30.1006,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {d8805735-ad64-4e4d-b7f4-450664811318}, !- Handle
-  ElevatorCoreFlr1 Internal Mass,         !- Name
-  {149c1c86-601c-45c5-8c6f-90753406b32a}, !- Internal Mass Definition Name
-  {dfb80a8c-1420-4e8d-92f4-8761d7d0c36a}; !- Space or SpaceType Name
 
 OS:Surface,
   {01ac0ce2-8565-44c9-8dc3-44439cd0dede}, !- Handle
@@ -7902,21 +6494,6 @@ OS:Surface,
   40.5871, 10.1078, 3.3528,               !- X,Y,Z Vertex 3 {m}
   40.5871, 18.3374, 3.3528;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {8428c523-2aec-469c-9dfa-2590b02faf17}, !- Handle
-  RearStorageFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1469,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {5aef304e-12b0-4b5f-98c5-a5197cdf62f3}, !- Handle
-  RearStorageFlr1 Internal Mass,          !- Name
-  {8428c523-2aec-469c-9dfa-2590b02faf17}, !- Internal Mass Definition Name
-  {529214da-e839-464c-bd16-d648a245b14d}; !- Space or SpaceType Name
-
 OS:Surface,
   {1506ead7-76a9-42c4-a812-6d6ba6e9e88c}, !- Handle
   NorthRoof,                              !- Name
@@ -8053,35 +6630,6 @@ OS:SubSurface,
   7.019, 0.0488, 0.9544,                  !- X,Y,Z Vertex 3 {m}
   7.019, 0.0488, 2.3984;                  !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {e9d6574e-0bb0-4493-9888-0a6b493a63f5}, !- Handle
-  ExerciseRoom_Eqp_Sch,                   !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.5,                                    !- Field 6
-  Until: 9:00,                            !- Field 7
-  1.0,                                    !- Field 8
-  Until: 12:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 13:00,                           !- Field 11
-  0.0,                                    !- Field 12
-  Until: 16:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 17:00,                           !- Field 15
-  1.0,                                    !- Field 16
-  Until: 19:00,                           !- Field 17
-  0.50,                                   !- Field 18
-  Until: 21:00,                           !- Field 19
-  1.0,                                    !- Field 20
-  Until: 23:00,                           !- Field 21
-  0.5,                                    !- Field 22
-  Until: 24:00,                           !- Field 23
-  0.0;                                    !- Field 24
-
 OS:Surface,
   {2b8a5b14-fd19-48de-b4fa-9fa22a4d897c}, !- Handle
   F_CorridorFlr2_10004_0_10003,           !- Name
@@ -8136,21 +6684,6 @@ OS:SubSurface,
   51.063, 18.3374, 6.7456,                !- X,Y,Z Vertex 2 {m}
   49.923, 18.3374, 6.7456,                !- X,Y,Z Vertex 3 {m}
   49.923, 18.3374, 8.1896;                !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {ad662218-2c42-4e6b-855e-97ffdf6df78d}, !- Handle
-  CorridorFlr4 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  250.8404,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {6dfa5c17-e729-4b37-b426-40e70cb1a285}, !- Handle
-  CorridorFlr4 Internal Mass,             !- Name
-  {ad662218-2c42-4e6b-855e-97ffdf6df78d}, !- Internal Mass Definition Name
-  {bf0eecce-ee80-4ade-ad83-d76f41ce5bf6}; !- Space or SpaceType Name
 
 OS:Surface,
   {1caf2458-cbb3-427b-a628-af9078a9b088}, !- Handle
@@ -8271,21 +6804,6 @@ OS:Surface,
   0.0487, 10.1078, 8.8392,                !- X,Y,Z Vertex 3 {m}
   0.0487, 10.1078, 11.5824;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {3f113cc6-a8ff-4d40-bb06-abd53d60e0a6}, !- Handle
-  MeetingRoomFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  160.5482,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {fe816231-4d8a-4cfa-b0f0-cfd284b23bc4}, !- Handle
-  MeetingRoomFlr1 Internal Mass,          !- Name
-  {3f113cc6-a8ff-4d40-bb06-abd53d60e0a6}, !- Internal Mass Definition Name
-  {af55c31d-ff67-497b-9d55-82849f91d82f}; !- Space or SpaceType Name
-
 OS:Surface,
   {ebb73cab-8e22-408b-9bbf-e9ec44c744a8}, !- Handle
   P_CorridorFlr2_19_0_0,                  !- Name
@@ -8353,19 +6871,6 @@ OS:Surface,
   23.8231, 10.1078, 8.8392,               !- X,Y,Z Vertex 2 {m}
   23.8231, 18.3374, 8.8392,               !- X,Y,Z Vertex 3 {m}
   23.8231, 18.3374, 11.5824;              !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {82c913df-5b8e-4676-9ed4-08e423b4f22b}, !- Handle
-  LaundryRoom_Ltg_Sch,                    !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 08:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 17:00,                           !- Field 5
-  1.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.0;                                    !- Field 8
 
 OS:SubSurface,
   {987e82f2-654d-4e28-b2dd-042a40fa13f5}, !- Handle
@@ -8639,21 +7144,6 @@ OS:SubSurface,
   9.385, 18.3374, 6.7456,                 !- X,Y,Z Vertex 3 {m}
   9.385, 18.3374, 8.1896;                 !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {aa500907-9133-436b-bbf5-98486638379c}, !- Handle
-  FrontOfficeFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8717,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {47a73994-1c0f-4530-aa0a-2af3e7ab6043}, !- Handle
-  FrontOfficeFlr1 Internal Mass,          !- Name
-  {aa500907-9133-436b-bbf5-98486638379c}, !- Internal Mass Definition Name
-  {50ef6895-d382-4c32-9b44-51d194fd0705}; !- Space or SpaceType Name
-
 OS:SubSurface,
   {71d89920-40ce-46f7-88cf-70bdabd6124e}, !- Handle
   W_MeetingRoomFlr1_5_0_0_0_2,            !- Name
@@ -8831,78 +7321,6 @@ OS:SubSurface,
   35.213, 0.0488, 0.9544,                 !- X,Y,Z Vertex 3 {m}
   35.213, 0.0488, 2.3984;                 !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {0c6b80db-8665-43f2-9cc2-7a7137c3480a}, !- Handle
-  GuestRoom_SWH_Sch,                      !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 01:00,                           !- Field 3
-  0.20,                                   !- Field 4
-  Until: 04:00,                           !- Field 5
-  0.15,                                   !- Field 6
-  Until: 05:00,                           !- Field 7
-  0.2,                                    !- Field 8
-  Until: 06:00,                           !- Field 9
-  0.35,                                   !- Field 10
-  Until: 07:00,                           !- Field 11
-  0.60,                                   !- Field 12
-  Until: 08:00,                           !- Field 13
-  0.80,                                   !- Field 14
-  Until: 09:00,                           !- Field 15
-  0.55,                                   !- Field 16
-  Until: 10:00,                           !- Field 17
-  0.40,                                   !- Field 18
-  Until: 11:00,                           !- Field 19
-  0.30,                                   !- Field 20
-  Until: 17:00,                           !- Field 21
-  0.20,                                   !- Field 22
-  Until: 18:00,                           !- Field 23
-  0.30,                                   !- Field 24
-  Until: 19:00,                           !- Field 25
-  0.55,                                   !- Field 26
-  Until: 21:00,                           !- Field 27
-  0.40,                                   !- Field 28
-  Until: 22:00,                           !- Field 29
-  0.60,                                   !- Field 30
-  Until: 23:00,                           !- Field 31
-  0.45,                                   !- Field 32
-  Until: 24:00,                           !- Field 33
-  0.25,                                   !- Field 34
-  For: AllOtherDays,                      !- Field 35
-  Until: 01:00,                           !- Field 36
-  0.2,                                    !- Field 37
-  Until: 04:00,                           !- Field 38
-  0.15,                                   !- Field 39
-  Until: 05:00,                           !- Field 40
-  0.2,                                    !- Field 41
-  Until: 06:00,                           !- Field 42
-  0.25,                                   !- Field 43
-  Until: 07:00,                           !- Field 44
-  0.35,                                   !- Field 45
-  Until: 08:00,                           !- Field 46
-  0.60,                                   !- Field 47
-  Until: 09:00,                           !- Field 48
-  0.80,                                   !- Field 49
-  Until: 10:00,                           !- Field 50
-  0.55,                                   !- Field 51
-  Until: 11:00,                           !- Field 52
-  0.40,                                   !- Field 53
-  Until: 12:00,                           !- Field 54
-  0.30,                                   !- Field 55
-  Until: 17:00,                           !- Field 56
-  0.20,                                   !- Field 57
-  Until: 18:00,                           !- Field 58
-  0.25,                                   !- Field 59
-  Until: 19:00,                           !- Field 60
-  0.30,                                   !- Field 61
-  Until: 22:00,                           !- Field 62
-  0.40,                                   !- Field 63
-  Until: 23:00,                           !- Field 64
-  0.60,                                   !- Field 65
-  Until: 24:00,                           !- Field 66
-  0.35;                                   !- Field 67
-
 OS:SubSurface,
   {bd5d472e-5455-479d-b7ea-bd81364779a0}, !- Handle
   W_GuestRoom309_312_5_0_0_0_0,           !- Name
@@ -8954,43 +7372,6 @@ OS:Surface,
   52.4743, 18.3374, 8.8392,               !- X,Y,Z Vertex 3 {m}
   52.4743, 10.1078, 8.8392;               !- X,Y,Z Vertex 4 {m}
 
-OS:SizingPeriod:DesignDay,
-  {08c434e5-b2ec-4bb5-99ad-030dda6073b4}, !- Handle
-  BALTIMORE Ann Htg 99.6% Condns DB,      !- Name
-  -11,                                    !- Maximum Dry-Bulb Temperature {C}
-  0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  -11,                                    !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
-  100762,                                 !- Barometric Pressure {Pa}
-  3.9,                                    !- Wind Speed {m/s}
-  270,                                    !- Wind Direction {deg}
-  0,                                      !- Sky Clearness
-  0,                                      !- Rain Indicator
-  0,                                      !- Snow Indicator
-  21,                                     !- Day of Month
-  1,                                      !- Month
-  WinterDesignDay,                        !- Day Type
-  0,                                      !- Daylight Saving Time Indicator
-  Wetbulb,                                !- Humidity Indicating Type
-  ,                                       !- Humidity Indicating Day Schedule Name
-  ,                                       !- Dry-Bulb Temperature Range Modifier Type
-  ,                                       !- Dry-Bulb Temperature Range Modifier Schedule Name
-  ASHRAEClearSky;                         !- Solar Model Indicator
-
-OS:InternalMass:Definition,
-  {0a5ca64a-02e1-4448-92a3-3b3e5c9379b3}, !- Handle
-  GuestRoom105 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {bb57ed9b-448e-4da5-929f-45be8816831c}, !- Handle
-  GuestRoom105 Internal Mass,             !- Name
-  {0a5ca64a-02e1-4448-92a3-3b3e5c9379b3}, !- Internal Mass Definition Name
-  {f6e5b40a-b665-4ffb-b1cf-476c459f9052}; !- Space or SpaceType Name
-
 OS:Surface,
   {0cdfc62f-7ce1-4b8b-8aa5-b8a99ac5e661}, !- Handle
   F_GuestRoom313_10149_0_10090,           !- Name
@@ -9007,36 +7388,6 @@ OS:Surface,
   52.4743, 0.0488, 6.096,                 !- X,Y,Z Vertex 2 {m}
   48.5119, 0.0488, 6.096,                 !- X,Y,Z Vertex 3 {m}
   48.5119, 8.279, 6.096;                  !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {90100bf7-3c15-47a4-a056-301553d34c77}, !- Handle
-  GuestRoom213 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {f8125280-a4a5-4d99-95e4-2ecece0a2554}, !- Handle
-  GuestRoom213 Internal Mass,             !- Name
-  {90100bf7-3c15-47a4-a056-301553d34c77}, !- Internal Mass Definition Name
-  {239dc8b9-bf27-4429-a862-0d192602413d}; !- Space or SpaceType Name
-
-OS:InternalMass:Definition,
-  {46c54477-5550-4522-be58-3a795c379e52}, !- Handle
-  GuestRoom224 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {4242a625-2e6e-4bc8-8041-8871b1cfae25}, !- Handle
-  GuestRoom224 Internal Mass,             !- Name
-  {46c54477-5550-4522-be58-3a795c379e52}, !- Internal Mass Definition Name
-  {51d45b6c-6f80-46c6-9ebf-ffbb00f8ce88}; !- Space or SpaceType Name
 
 OS:Surface,
   {485cc809-02fb-431f-bc22-b643c73cd462}, !- Handle
@@ -9122,21 +7473,6 @@ OS:SubSurface,
   13.348, 0.0488, 9.4888,                 !- X,Y,Z Vertex 2 {m}
   14.487, 0.0488, 9.4888,                 !- X,Y,Z Vertex 3 {m}
   14.487, 0.0488, 10.9328;                !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {dd953423-499b-4b98-8dae-6126aa405d2a}, !- Handle
-  GuestRoom406_408 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  210.7195,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {cc03a2f8-5bb3-452b-a473-1a9a175ecdfb}, !- Handle
-  GuestRoom406_408 Internal Mass,         !- Name
-  {dd953423-499b-4b98-8dae-6126aa405d2a}, !- Internal Mass Definition Name
-  {d24e946a-b00c-4c8d-b880-5acf2ce21928}; !- Space or SpaceType Name
 
 OS:Surface,
   {4a2ebde4-11a9-4425-86ae-72fcb4bdedfd}, !- Handle
@@ -9326,39 +7662,6 @@ OS:SubSurface,
   43.138, 0.0488, 9.4888,                 !- X,Y,Z Vertex 3 {m}
   43.138, 0.0488, 10.9328;                !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {c5b6501b-4e4e-4cb4-b652-ee1c6f2009d4}, !- Handle
-  BLDG_ELEVATORS,                         !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 04:00,                           !- Field 3
-  0.05,                                   !- Field 4
-  Until: 05:00,                           !- Field 5
-  0.10,                                   !- Field 6
-  Until: 06:00,                           !- Field 7
-  0.20,                                   !- Field 8
-  Until: 07:00,                           !- Field 9
-  0.40,                                   !- Field 10
-  Until: 09:00,                           !- Field 11
-  0.50,                                   !- Field 12
-  Until: 10:00,                           !- Field 13
-  0.35,                                   !- Field 14
-  Until: 16:00,                           !- Field 15
-  0.15,                                   !- Field 16
-  Until: 17:00,                           !- Field 17
-  0.35,                                   !- Field 18
-  Until: 19:00,                           !- Field 19
-  0.50,                                   !- Field 20
-  Until: 21:00,                           !- Field 21
-  0.40,                                   !- Field 22
-  Until: 22:00,                           !- Field 23
-  0.30,                                   !- Field 24
-  Until: 23:00,                           !- Field 25
-  0.20,                                   !- Field 26
-  Until: 24:00,                           !- Field 27
-  0.10;                                   !- Field 28
-
 OS:Surface,
   {d8323e44-f2ef-4943-87de-712b8bea2859}, !- Handle
   P_FrontStorageFlr1_10091_0_10058,       !- Name
@@ -9375,15 +7678,6 @@ OS:Surface,
   2.4871, 18.3374, 0,                     !- X,Y,Z Vertex 2 {m}
   2.4871, 10.1078, 0,                     !- X,Y,Z Vertex 3 {m}
   2.4871, 10.1078, 3.3528;                !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {2d47b957-e628-473d-aade-dca8b8372afe}, !- Handle
-  SWHSys1-Loop-Temp-Schedule,             !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
 
 OS:Surface,
   {3bbe01d4-f1ef-4e09-b107-b456e8cae0eb}, !- Handle
@@ -9469,48 +7763,6 @@ OS:Surface,
   2.4871, 10.1078, 0,                     !- X,Y,Z Vertex 2 {m}
   2.4871, 18.3374, 0,                     !- X,Y,Z Vertex 3 {m}
   2.4871, 18.3374, 3.3528;                !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {5bfc06e3-dcfd-4621-8000-4acd045f9f0c}, !- Handle
-  VirginiaElectTOUSched,                  !- Name
-  ,                                       !- Schedule Type Limits Name
-  Through: 5/31,                          !- Field 1
-  For: WeekDays,                          !- Field 2
-  Until: 10:00,                           !- Field 3
-  3,                                      !- Field 4
-  Until: 22:00,                           !- Field 5
-  1,                                      !- Field 6
-  Until: 24:00,                           !- Field 7
-  3,                                      !- Field 8
-  For: AllOtherDays,                      !- Field 9
-  Until: 24:00,                           !- Field 10
-  3,                                      !- Field 11
-  Through: 9/30,                          !- Field 12
-  For: WeekDays,                          !- Field 13
-  Until: 8:00,                            !- Field 14
-  3,                                      !- Field 15
-  Until: 22:00,                           !- Field 16
-  1,                                      !- Field 17
-  Until: 24:00,                           !- Field 18
-  3,                                      !- Field 19
-  For: AllOtherDays,                      !- Field 20
-  Until: 24:00,                           !- Field 21
-  3,                                      !- Field 22
-  Through: 12/31,                         !- Field 23
-  For: WeekDays,                          !- Field 24
-  Until: 10:00,                           !- Field 25
-  3,                                      !- Field 26
-  Until: 22:00,                           !- Field 27
-  1,                                      !- Field 28
-  Until: 24:00,                           !- Field 29
-  3,                                      !- Field 30
-  For: AllOtherDays,                      !- Field 31
-  Until: 24:00,                           !- Field 32
-  3;                                      !- Field 33
-
-OS:ScheduleTypeLimits,
-  {488e082f-b910-48cd-8bb9-bc86de6853de}, !- Handle
-  {7533b203-80e1-4d96-9f57-86f21dd307e1}; !- Name
 
 OS:Surface,
   {392154eb-d821-4a6e-b979-92c6b210674d}, !- Handle
@@ -9664,40 +7916,6 @@ OS:Surface,
   32.6623, 8.279, 6.096,                  !- X,Y,Z Vertex 2 {m}
   19.8607, 8.279, 6.096,                  !- X,Y,Z Vertex 3 {m}
   19.8607, 8.279, 8.8392;                 !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {341350af-f1d8-4a48-b4cc-b67404f4f175}, !- Handle
-  RearStairsFlr3 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.144,                                 !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {23fb261e-04c4-4424-84b4-9cd6414d68ce}, !- Handle
-  RearStairsFlr3 Internal Mass,           !- Name
-  {341350af-f1d8-4a48-b4cc-b67404f4f175}, !- Internal Mass Definition Name
-  {4d1eaa21-4d09-4298-a948-8e1ed39c85b9}; !- Space or SpaceType Name
-
-OS:Schedule:Compact,
-  {50e7b845-3936-4161-8724-e8305be88a0e}, !- Handle
-  LaundryRoom_Eqp_Elec_Sch,               !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 08:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 16:00,                           !- Field 5
-  1.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.0,                                    !- Field 8
-  For: WinterDesignDay,                   !- Field 9
-  Until: 24:00,                           !- Field 10
-  0.0,                                    !- Field 11
-  For: SummerDesignDay CustomDay1 CustomDay2, !- Field 12
-  Until: 24:00,                           !- Field 13
-  1.0;                                    !- Field 14
 
 OS:Surface,
   {d4201b70-4072-4514-b8d8-a3c22409a559}, !- Handle
@@ -10022,21 +8240,6 @@ OS:Surface,
   40.5871, 8.279, 3.3528,                 !- X,Y,Z Vertex 3 {m}
   40.5871, 0.0488, 3.3528;                !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {9da27296-491b-464b-893d-f1dadacf11d0}, !- Handle
-  FrontLoungeFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  326.1134,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {77fd2829-c6c2-4878-99a4-abd7c8c07ea5}, !- Handle
-  FrontLoungeFlr1 Internal Mass,          !- Name
-  {9da27296-491b-464b-893d-f1dadacf11d0}, !- Internal Mass Definition Name
-  {451125ec-20c6-4c88-b6b8-c0f13e7739db}; !- Space or SpaceType Name
-
 OS:Surface,
   {62e14980-8d61-4f3f-9e94-4b62b272217b}, !- Handle
   P_GuestRoom313_10216_0_10123,           !- Name
@@ -10341,93 +8544,6 @@ OS:Surface,
   52.4743, 10.1078, 3.3528,               !- X,Y,Z Vertex 3 {m}
   52.4743, 10.1078, 6.096;                !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {e474650a-ece5-45b5-82d8-5e46f7800951}, !- Handle
-  BLDG_EQUIP_SCH,                         !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 01:00,                           !- Field 3
-  0.3,                                    !- Field 4
-  Until: 02:00,                           !- Field 5
-  0.25,                                   !- Field 6
-  Until: 05:00,                           !- Field 7
-  0.2,                                    !- Field 8
-  Until: 06:00,                           !- Field 9
-  0.3,                                    !- Field 10
-  Until: 07:00,                           !- Field 11
-  0.5,                                    !- Field 12
-  Until: 08:00,                           !- Field 13
-  0.6,                                    !- Field 14
-  Until: 10:00,                           !- Field 15
-  0.5,                                    !- Field 16
-  Until: 18:00,                           !- Field 17
-  0.35,                                   !- Field 18
-  Until: 19:00,                           !- Field 19
-  0.7,                                    !- Field 20
-  Until: 20:00,                           !- Field 21
-  0.9,                                    !- Field 22
-  Until: 21:00,                           !- Field 23
-  0.95,                                   !- Field 24
-  Until: 22:00,                           !- Field 25
-  0.9,                                    !- Field 26
-  Until: 23:00,                           !- Field 27
-  0.7,                                    !- Field 28
-  Until: 24:00,                           !- Field 29
-  0.4,                                    !- Field 30
-  For: Saturday,                          !- Field 31
-  Until: 02:00,                           !- Field 32
-  0.3,                                    !- Field 33
-  Until: 06:00,                           !- Field 34
-  0.2,                                    !- Field 35
-  Until: 08:00,                           !- Field 36
-  0.4,                                    !- Field 37
-  Until: 10:00,                           !- Field 38
-  0.5,                                    !- Field 39
-  Until: 11:00,                           !- Field 40
-  0.4,                                    !- Field 41
-  Until: 18:00,                           !- Field 42
-  0.35,                                   !- Field 43
-  Until: 19:00,                           !- Field 44
-  0.7,                                    !- Field 45
-  Until: 22:00,                           !- Field 46
-  0.8,                                    !- Field 47
-  Until: 23:00,                           !- Field 48
-  0.7,                                    !- Field 49
-  Until: 24:00,                           !- Field 50
-  0.4,                                    !- Field 51
-  For: SummerDesignDay,                   !- Field 52
-  Until: 24:00,                           !- Field 53
-  1.0,                                    !- Field 54
-  For: WinterDesignDay,                   !- Field 55
-  Until: 24:00,                           !- Field 56
-  0.0,                                    !- Field 57
-  For: Sunday Holidays AllOtherDays,      !- Field 58
-  Until: 02:00,                           !- Field 59
-  0.4,                                    !- Field 60
-  Until: 06:00,                           !- Field 61
-  0.3,                                    !- Field 62
-  Until: 07:00,                           !- Field 63
-  0.4,                                    !- Field 64
-  Until: 09:00,                           !- Field 65
-  0.5,                                    !- Field 66
-  Until: 13:00,                           !- Field 67
-  0.4,                                    !- Field 68
-  Until: 18:00,                           !- Field 69
-  0.3,                                    !- Field 70
-  Until: 19:00,                           !- Field 71
-  0.6,                                    !- Field 72
-  Until: 20:00,                           !- Field 73
-  0.8,                                    !- Field 74
-  Until: 21:00,                           !- Field 75
-  0.9,                                    !- Field 76
-  Until: 22:00,                           !- Field 77
-  0.7,                                    !- Field 78
-  Until: 23:00,                           !- Field 79
-  0.6,                                    !- Field 80
-  Until: 24:00,                           !- Field 81
-  0.4;                                    !- Field 82
-
 OS:Surface,
   {4b5c7fd7-6ce6-4771-956e-eca29e7f6680}, !- Handle
   C_GuestRoom220_223_1_0_0,               !- Name
@@ -10530,15 +8646,6 @@ OS:Surface,
   52.4743, 10.1078, 6.096,                !- X,Y,Z Vertex 3 {m}
   52.4743, 18.3374, 6.096;                !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {07fa4b39-a64f-4220-83db-65e6188d1823}, !- Handle
-  HVACOperationSchd,                      !- Name
-  {2f48f3ad-ed8e-4aa0-ac39-4228d9f91859}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1.0;                                    !- Field 4
-
 OS:Surface,
   {a7295877-c7d9-40b6-ad84-53a934725a54}, !- Handle
   W_GuestRoom401_4_0_0,                   !- Name
@@ -10555,25 +8662,6 @@ OS:Surface,
   0.0487, 8.279, 8.8392,                  !- X,Y,Z Vertex 2 {m}
   0.0487, 0.0488, 8.8392,                 !- X,Y,Z Vertex 3 {m}
   0.0487, 0.0488, 11.5824;                !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {0d9bfa1d-8a5a-454f-b42b-9cec2c419f1b}, !- Handle
-  LaundryRoom_Eqp_Gas_Sch,                !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays Saturday Sunday Holidays, !- Field 2
-  Until: 9:00,                            !- Field 3
-  0.0,                                    !- Field 4
-  Until: 17:00,                           !- Field 5
-  1.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.0,                                    !- Field 8
-  For: WinterDesignDay,                   !- Field 9
-  Until: 24:00,                           !- Field 10
-  0.0,                                    !- Field 11
-  For: AllOtherDays,                      !- Field 12
-  Until: 24:00,                           !- Field 13
-  1.0;                                    !- Field 14
 
 OS:Surface,
   {2d219810-9269-4c28-b1c7-8cf2c75e6306}, !- Handle
@@ -10678,21 +8766,6 @@ OS:Surface,
   54.9133, 8.279, 6.096,                  !- X,Y,Z Vertex 3 {m}
   54.9133, 8.279, 8.8392;                 !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {9e00d2eb-d9ee-47f3-8a09-c43482cfd6a2}, !- Handle
-  RearStorageFlr2 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1469,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {5356919f-413b-40ae-bc3a-fd64e5f1a9e5}, !- Handle
-  RearStorageFlr2 Internal Mass,          !- Name
-  {9e00d2eb-d9ee-47f3-8a09-c43482cfd6a2}, !- Internal Mass Definition Name
-  {93182242-e88b-4dba-afd4-34b056ba737b}; !- Space or SpaceType Name
-
 OS:Surface,
   {af2753a9-6f99-4105-b718-2532737edfa4}, !- Handle
   P_GuestRoom309_312_2_0_0,               !- Name
@@ -10744,21 +8817,6 @@ OS:Surface,
   4.0111, 10.1078, 6.096,                 !- X,Y,Z Vertex 3 {m}
   4.0111, 10.1078, 8.8392;                !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {4c86d779-0680-46cb-983c-2a326281e052}, !- Handle
-  GuestRoom315_318 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8717,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {ab366296-e9c4-46a4-a392-eeecc59a13d6}, !- Handle
-  GuestRoom315_318 Internal Mass,         !- Name
-  {4c86d779-0680-46cb-983c-2a326281e052}, !- Internal Mass Definition Name
-  {ab7b92b4-8c60-4b5a-8897-90b7c245ca66}; !- Space or SpaceType Name
-
 OS:Surface,
   {ce411a11-a242-4118-a581-c2dd77f7cb22}, !- Handle
   C_FrontOfficeFlr1_1_0_0,                !- Name
@@ -10792,21 +8850,6 @@ OS:Surface,
   52.4743, 8.279, 6.096,                  !- X,Y,Z Vertex 2 {m}
   52.4743, 0.0488, 6.096,                 !- X,Y,Z Vertex 3 {m}
   52.4743, 0.0488, 8.8392;                !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {d4407c96-637b-480c-addb-cf30b50cc6db}, !- Handle
-  GuestRoom320_323 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8717,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {96a14a2a-ddc7-41c8-a698-c7580a7ef5d6}, !- Handle
-  GuestRoom320_323 Internal Mass,         !- Name
-  {d4407c96-637b-480c-addb-cf30b50cc6db}, !- Internal Mass Definition Name
-  {c17d643a-d75c-4224-94e6-05dcba3ed069}; !- Space or SpaceType Name
 
 OS:Surface,
   {0d63a17e-a816-4c13-9708-339bc09a242c}, !- Handle
@@ -10859,30 +8902,6 @@ OS:Surface,
   19.8607, 0.0488, 3.3528,                !- X,Y,Z Vertex 3 {m}
   19.8607, 0.0488, 6.096;                 !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {efe9a2ab-f4f0-4153-ba9d-d88f1179ac67}, !- Handle
-  Water Equipment Temp Sched,             !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  43.3;                                   !- Field 4
-
-OS:InternalMass:Definition,
-  {c7115da6-1641-49b8-8ec5-2e359018a10d}, !- Handle
-  LaundryRoomFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  195.6538,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {0de94152-bad8-4c77-ac4b-9a4c12967aa1}, !- Handle
-  LaundryRoomFlr1 Internal Mass,          !- Name
-  {c7115da6-1641-49b8-8ec5-2e359018a10d}, !- Internal Mass Definition Name
-  {736416b7-17df-419c-989a-5ffe020d0462}; !- Space or SpaceType Name
-
 OS:Surface,
   {9b74ead4-2b96-499d-a7e9-4be0e4777d3d}, !- Handle
   C_GuestRoom215_218_1_0_0,               !- Name
@@ -10917,21 +8936,6 @@ OS:SubSurface,
   10.982, 0.0488, 0.9544,                 !- X,Y,Z Vertex 3 {m}
   10.982, 0.0488, 2.3984;                 !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {69eacb2f-27be-41bd-ab40-cc0e2246c3f3}, !- Handle
-  RearStorageFlr4 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1469,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {9360f301-cf5a-4fab-a0fe-edd7b0e57961}, !- Handle
-  RearStorageFlr4 Internal Mass,          !- Name
-  {69eacb2f-27be-41bd-ab40-cc0e2246c3f3}, !- Internal Mass Definition Name
-  {b50c5aaf-6038-4a17-a020-107dcbfe322e}; !- Space or SpaceType Name
-
 OS:Surface,
   {5dcd9d1e-4dec-4674-9275-f581b6ea9312}, !- Handle
   W_RearStorageFlr2_2_0_0,                !- Name
@@ -10948,21 +8952,6 @@ OS:Surface,
   54.9133, 0.0488, 3.3528,                !- X,Y,Z Vertex 2 {m}
   54.9133, 8.279, 3.3528,                 !- X,Y,Z Vertex 3 {m}
   54.9133, 8.279, 6.096;                  !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {9c939715-864c-4bbd-9ee8-ce2e27fb023d}, !- Handle
-  GuestRoom206_208 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  210.7195,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {a368f119-fef7-4875-90ca-6825a7cf0b69}, !- Handle
-  GuestRoom206_208 Internal Mass,         !- Name
-  {9c939715-864c-4bbd-9ee8-ce2e27fb023d}, !- Internal Mass Definition Name
-  {b1cc8157-e22a-403f-adf5-cdcf7f3f32e2}; !- Space or SpaceType Name
 
 OS:Surface,
   {aaf2673a-c27e-446e-92d9-28ba5b61e05f}, !- Handle
@@ -11014,69 +9003,6 @@ OS:Surface,
   44.5495, 8.279, 0,                      !- X,Y,Z Vertex 2 {m}
   40.5871, 8.279, 0,                      !- X,Y,Z Vertex 3 {m}
   40.5871, 8.279, 3.3528;                 !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {a9526e0b-9248-42a5-8a90-7142ec7d68b0}, !- Handle
-  BLDG_OCC_SCH,                           !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: Weekdays,                          !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.9,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.7,                                    !- Field 6
-  Until: 09:00,                           !- Field 7
-  0.4,                                    !- Field 8
-  Until: 15:00,                           !- Field 9
-  0.2,                                    !- Field 10
-  Until: 16:00,                           !- Field 11
-  0.3,                                    !- Field 12
-  Until: 19:00,                           !- Field 13
-  0.5,                                    !- Field 14
-  Until: 21:00,                           !- Field 15
-  0.7,                                    !- Field 16
-  Until: 22:00,                           !- Field 17
-  0.8,                                    !- Field 18
-  Until: 24:00,                           !- Field 19
-  0.9,                                    !- Field 20
-  For: SummerDesignDay,                   !- Field 21
-  Until: 24:00,                           !- Field 22
-  1.0,                                    !- Field 23
-  For: Saturday,                          !- Field 24
-  Until: 06:00,                           !- Field 25
-  0.9,                                    !- Field 26
-  Until: 07:00,                           !- Field 27
-  0.7,                                    !- Field 28
-  Until: 09:00,                           !- Field 29
-  0.5,                                    !- Field 30
-  Until: 17:00,                           !- Field 31
-  0.3,                                    !- Field 32
-  Until: 18:00,                           !- Field 33
-  0.5,                                    !- Field 34
-  Until: 21:00,                           !- Field 35
-  0.6,                                    !- Field 36
-  Until: 24:00,                           !- Field 37
-  0.7,                                    !- Field 38
-  For: WinterDesignDay,                   !- Field 39
-  Until: 24:00,                           !- Field 40
-  0.0,                                    !- Field 41
-  For: Sunday Holidays AllOtherDays,      !- Field 42
-  Until: 08:00,                           !- Field 43
-  0.7,                                    !- Field 44
-  Until: 11:00,                           !- Field 45
-  0.5,                                    !- Field 46
-  Until: 13:00,                           !- Field 47
-  0.3,                                    !- Field 48
-  Until: 16:00,                           !- Field 49
-  0.2,                                    !- Field 50
-  Until: 17:00,                           !- Field 51
-  0.3,                                    !- Field 52
-  Until: 19:00,                           !- Field 53
-  0.4,                                    !- Field 54
-  Until: 21:00,                           !- Field 55
-  0.6,                                    !- Field 56
-  Until: 24:00,                           !- Field 57
-  0.8;                                    !- Field 58
 
 OS:Surface,
   {01202f91-676a-4136-aa55-bc234e534858}, !- Handle
@@ -11237,15 +9163,6 @@ OS:Surface,
   54.9133, 8.279, 8.8392,                 !- X,Y,Z Vertex 2 {m}
   54.9133, 10.1078, 8.8392,               !- X,Y,Z Vertex 3 {m}
   54.9133, 10.1078, 11.5824;              !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {bc08aa53-d314-48eb-99d1-221356f957cf}, !- Handle
-  SWHSys1 Water Heater Ambient Temperature Schedule Name, !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  22.0;                                   !- Field 4
 
 OS:SubSurface,
   {d1bbd653-cd5b-4794-8053-e5cc02aeaa58}, !- Handle
@@ -11587,30 +9504,6 @@ OS:SubSurface,
   17.31, 18.3374, 0.9544,                 !- X,Y,Z Vertex 3 {m}
   17.31, 18.3374, 2.3984;                 !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {4192696b-ade1-4a14-81a4-3cd80b22a626}, !- Handle
-  SWHSys1 Water Heater Setpoint Temperature Schedule Name, !- Name
-  {e8b05037-a46d-41d1-ae35-a240b28be81b}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  60.0;                                   !- Field 4
-
-OS:InternalMass:Definition,
-  {9b71684f-a080-47b6-95f1-41e293a1980b}, !- Handle
-  FrontStorageFlr3 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  25.0838,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {47ec3e76-ec0f-4b6d-bab3-a71038d3e01e}, !- Handle
-  FrontStorageFlr3 Internal Mass,         !- Name
-  {9b71684f-a080-47b6-95f1-41e293a1980b}, !- Internal Mass Definition Name
-  {5fa238d1-abe6-44a5-b72b-a035c7757ac3}; !- Space or SpaceType Name
-
 OS:Meter,
   {1c9a437f-5a6f-4620-9c91-60d19297149f}, !- Handle
   InteriorLights:Electricity,             !- Name
@@ -11618,42 +9511,12 @@ OS:Meter,
   False,                                  !- Meter File Only
   False;                                  !- Cumulative
 
-OS:InternalMass:Definition,
-  {b5318785-6439-4a31-8323-b1008ef3663a}, !- Handle
-  GuestRoom202_205 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8908,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {0aba640e-ffd8-4122-9ae2-d839a2e695c4}, !- Handle
-  GuestRoom202_205 Internal Mass,         !- Name
-  {b5318785-6439-4a31-8323-b1008ef3663a}, !- Internal Mass Definition Name
-  {0ca3d235-a9c0-4f06-bbf7-0e3ab1d3cb4d}; !- Space or SpaceType Name
-
 OS:Meter,
   {9f455ec1-66a4-4c07-a8df-fcce5323df89}, !- Handle
   InteriorEquipment:Electricity,          !- Name
   hourly,                                 !- Reporting Frequency
   False,                                  !- Meter File Only
   False;                                  !- Cumulative
-
-OS:InternalMass:Definition,
-  {4252cde0-587b-41db-8600-00ff797c0ab8}, !- Handle
-  GuestRoom214 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {bc5529f5-b168-4edf-9cd1-97bf08e74156}, !- Handle
-  GuestRoom214 Internal Mass,             !- Name
-  {4252cde0-587b-41db-8600-00ff797c0ab8}, !- Internal Mass Definition Name
-  {ec138b40-5c78-407c-be14-7ce81adb1d9d}; !- Space or SpaceType Name
 
 OS:Surface,
   {fdaca755-4cf4-4cb3-a8d8-17d1ca8ea8d9}, !- Handle
@@ -11790,21 +9653,6 @@ OS:Surface,
   52.4743, 8.279, 8.8392,                 !- X,Y,Z Vertex 2 {m}
   48.5119, 8.279, 8.8392,                 !- X,Y,Z Vertex 3 {m}
   48.5119, 8.279, 11.5824;                !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {95360dbe-e567-4893-a47b-5393f8785b26}, !- Handle
-  GuestRoom301 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {fcdcd913-ed5a-4992-a722-e0e9e0f41c48}, !- Handle
-  GuestRoom301 Internal Mass,             !- Name
-  {95360dbe-e567-4893-a47b-5393f8785b26}, !- Internal Mass Definition Name
-  {ef699beb-97d7-485c-8fbe-ed204fffb3d7}; !- Space or SpaceType Name
 
 OS:Surface,
   {d9b69ee2-2d85-45ef-801c-9f7f3631f0c5}, !- Handle
@@ -12051,21 +9899,6 @@ OS:Surface,
   0.0487, 0.0488, 6.096,                  !- X,Y,Z Vertex 3 {m}
   0.0487, 0.0488, 8.8392;                 !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {a348935a-da1e-4529-badd-47e6d31ecbed}, !- Handle
-  GuestRoom313 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {7a0f2307-0542-4b16-bad2-77d0b00084e0}, !- Handle
-  GuestRoom313 Internal Mass,             !- Name
-  {a348935a-da1e-4529-badd-47e6d31ecbed}, !- Internal Mass Definition Name
-  {79a461af-f45a-461b-8bf8-d8f58b3bf40b}; !- Space or SpaceType Name
-
 OS:Surface,
   {be266a54-9a05-4eaa-bfaf-a3b06c83eda6}, !- Handle
   P_GuestRoom215_218_10156_0_10092,       !- Name
@@ -12287,21 +10120,6 @@ OS:Surface,
   19.8607, 10.1078, 0,                    !- X,Y,Z Vertex 3 {m}
   19.8607, 10.1078, 3.3528;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {a703ba94-b713-45cf-bdd1-ed24a99a0396}, !- Handle
-  RearStorageFlr3 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1469,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {5d8ce402-652e-4a96-88a1-efaccf2ad199}, !- Handle
-  RearStorageFlr3 Internal Mass,          !- Name
-  {a703ba94-b713-45cf-bdd1-ed24a99a0396}, !- Internal Mass Definition Name
-  {1128c14e-6e2b-45b9-90a2-2b67ad04b49c}; !- Space or SpaceType Name
-
 OS:Surface,
   {4d00237f-5925-4105-ab40-a5565e786a13}, !- Handle
   P_CorridorFlr2_6_0_0,                   !- Name
@@ -12438,21 +10256,6 @@ OS:Surface,
   40.5871, 0.0488, 0,                     !- X,Y,Z Vertex 3 {m}
   40.5871, 8.279, 0;                      !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {4776a5c9-37b1-4a09-8695-18430a678800}, !- Handle
-  FrontStorageFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  25.0838,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {45b9f568-3675-42b2-ab3e-8cd08a2ea92c}, !- Handle
-  FrontStorageFlr1 Internal Mass,         !- Name
-  {4776a5c9-37b1-4a09-8695-18430a678800}, !- Internal Mass Definition Name
-  {beeb4c99-e13b-40f8-a012-ab17c1e5176b}; !- Space or SpaceType Name
-
 OS:Surface,
   {387de1e3-b2a3-4561-be4b-1779cb63ddac}, !- Handle
   W_CorridorFlr2_9_0_0,                   !- Name
@@ -12561,21 +10364,6 @@ OS:Meter,
   hourly,                                 !- Reporting Frequency
   False,                                  !- Meter File Only
   False;                                  !- Cumulative
-
-OS:InternalMass:Definition,
-  {d4db6f90-3454-4918-80ce-8422cae2acc2}, !- Handle
-  GuestRoom220_223 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8717,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {20908831-6e77-4a5d-8f5b-57bca38e4d44}, !- Handle
-  GuestRoom220_223 Internal Mass,         !- Name
-  {d4db6f90-3454-4918-80ce-8422cae2acc2}, !- Internal Mass Definition Name
-  {d02da7d8-89dc-4ef9-a179-421c490b500f}; !- Space or SpaceType Name
 
 OS:Meter,
   {a5be0941-cdbd-4126-ad40-490f8ded24b7}, !- Handle
@@ -12706,27 +10494,6 @@ OS:Surface,
   66.380406, -11.573442, 11.5824,         !- X,Y,Z Vertex 2 {m}
   62.418006, -11.573442, 11.5824,         !- X,Y,Z Vertex 3 {m}
   62.418006, -3.343842, 11.5824;          !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {453b6450-a583-4be2-857a-c3a76d0082ad}, !- Handle
-  VirginiaElectSeasonSched,               !- Name
-  ,                                       !- Schedule Type Limits Name
-  Through: 5/31,                          !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1,                                      !- Field 4
-  Through: 9/30,                          !- Field 5
-  For: AllDays,                           !- Field 6
-  Until: 24:00,                           !- Field 7
-  3,                                      !- Field 8
-  Through: 12/31,                         !- Field 9
-  For: AllDays,                           !- Field 10
-  Until: 24:00,                           !- Field 11
-  1;                                      !- Field 12
-
-OS:ScheduleTypeLimits,
-  {cd95fc60-cf07-4259-932d-ff178ace4ad4}, !- Handle
-  {d492422d-a6d2-4905-bba7-5725d50932fc}; !- Name
 
 OS:SubSurface,
   {94439053-4307-408a-967c-17805b379d86}, !- Handle
@@ -12864,21 +10631,6 @@ OS:Surface,
   52.4743, 18.3374, 3.3528,               !- X,Y,Z Vertex 3 {m}
   52.4743, 18.3374, 6.096;                !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {12a47dcb-4592-4b87-9891-e55d2311f39f}, !- Handle
-  GuestRoom201 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {6174036d-73c4-4abf-822f-79548081e4d4}, !- Handle
-  GuestRoom201 Internal Mass,             !- Name
-  {12a47dcb-4592-4b87-9891-e55d2311f39f}, !- Internal Mass Definition Name
-  {bd8fa601-9b16-4cb8-ae86-2524673274db}; !- Space or SpaceType Name
-
 OS:Surface,
   {c105c9d9-723c-412c-ac21-71307c1034b6}, !- Handle
   C_MeetingRoomFlr1_1_1_0,                !- Name
@@ -12929,23 +10681,6 @@ OS:Surface,
   42.606006, -11.573442, 11.5824,         !- X,Y,Z Vertex 2 {m}
   40.777206, -11.573442, 11.5824,         !- X,Y,Z Vertex 3 {m}
   40.777206, -3.343842, 11.5824;          !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {3e61cf3c-392a-415e-be32-eae94f1e3354}, !- Handle
-  ExerciseRoom_Ltg_Sch_Base,              !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 06:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 07:00,                           !- Field 5
-  0.5,                                    !- Field 6
-  Until: 22:00,                           !- Field 7
-  1.0,                                    !- Field 8
-  Until: 23:00,                           !- Field 9
-  0.5,                                    !- Field 10
-  Until: 24:00,                           !- Field 11
-  0.0;                                    !- Field 12
 
 OS:Surface,
   {d791dac8-8e1a-4860-a8f2-5edc2949c776}, !- Handle
@@ -13021,21 +10756,6 @@ OS:SubSurface,
   47.1, 18.3374, 9.4888,                  !- X,Y,Z Vertex 2 {m}
   45.961, 18.3374, 9.4888,                !- X,Y,Z Vertex 3 {m}
   45.961, 18.3374, 10.9328;               !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {52f64de6-7295-4610-b164-6e0434da34ab}, !- Handle
-  RearStairsFlr1 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.144,                                 !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {1d10d82a-342e-43ec-bbe7-955c08baa961}, !- Handle
-  RearStairsFlr1 Internal Mass,           !- Name
-  {52f64de6-7295-4610-b164-6e0434da34ab}, !- Internal Mass Definition Name
-  {230df36b-7c35-48d0-9916-55b54f592754}; !- Space or SpaceType Name
 
 OS:Surface,
   {3ea8339d-657e-453f-8a2b-eb5bc35e9d0e}, !- Handle
@@ -13138,21 +10858,6 @@ OS:Surface,
   32.6623, 0.0488, 3.3528,                !- X,Y,Z Vertex 2 {m}
   26.8711, 0.0488, 3.3528,                !- X,Y,Z Vertex 3 {m}
   26.8711, 8.279, 3.3528;                 !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {5173a7ed-96c5-4e32-ae60-cafdb25bdf98}, !- Handle
-  GuestRoom215_218 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8717,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {5e351618-0d6c-4f87-9d32-007d2fafda46}, !- Handle
-  GuestRoom215_218 Internal Mass,         !- Name
-  {5173a7ed-96c5-4e32-ae60-cafdb25bdf98}, !- Internal Mass Definition Name
-  {ee936ecb-4149-452a-bcd9-11945a4dc136}; !- Space or SpaceType Name
 
 OS:Surface,
   {bfd1f5ff-fa67-4b21-9dfe-7b0c612e858a}, !- Handle
@@ -13500,21 +11205,6 @@ OS:Surface,
   0.0487, 18.3374, 0,                     !- X,Y,Z Vertex 3 {m}
   0.0487, 18.3374, 3.3528;                !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {93e1aefc-84be-4255-8952-1130056a480f}, !- Handle
-  GuestRoom103 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {2bf34d0b-5b59-459c-8dff-6b774403b1f0}, !- Handle
-  GuestRoom103 Internal Mass,             !- Name
-  {93e1aefc-84be-4255-8952-1130056a480f}, !- Internal Mass Definition Name
-  {c0b1b8f6-a974-4b9b-9286-c69d34635e2d}; !- Space or SpaceType Name
-
 OS:Surface,
   {b30aacb5-52fc-4838-b16d-49a6474c5b46}, !- Handle
   AtticFloor_GR401_1_0_0,                 !- Name
@@ -13531,19 +11221,6 @@ OS:Surface,
   17.917206, -21.632442, 11.5824,         !- X,Y,Z Vertex 2 {m}
   13.954806, -21.632442, 11.5824,         !- X,Y,Z Vertex 3 {m}
   13.954806, -13.402242, 11.5824;         !- X,Y,Z Vertex 4 {m}
-
-OS:Schedule:Compact,
-  {8c1d1233-25f0-4366-852a-afb35578f6c5}, !- Handle
-  LaundryRoom_SWH_Sch,                    !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 08:00,                           !- Field 3
-  0.0,                                    !- Field 4
-  Until: 16:00,                           !- Field 5
-  1.0,                                    !- Field 6
-  Until: 24:00,                           !- Field 7
-  0.0;                                    !- Field 8
 
 OS:SubSurface,
   {f29f8226-d65e-4e4e-9050-0298243ee517}, !- Handle
@@ -13739,15 +11416,6 @@ OS:Surface,
   0.0487, 10.1078, 3.3528,                !- X,Y,Z Vertex 3 {m}
   0.0487, 18.3374, 3.3528;                !- X,Y,Z Vertex 4 {m}
 
-OS:Schedule:Compact,
-  {1780851a-7285-441e-8fde-0161115ec902}, !- Handle
-  Water Equipment Latent fract sched,     !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  0.05;                                   !- Field 4
-
 OS:Surface,
   {17a434dc-6f92-40da-86ea-747663f0cbf4}, !- Handle
   W_GuestRoom104_3_0_0,                   !- Name
@@ -13798,27 +11466,6 @@ OS:Surface,
   54.9133, 10.1078, 8.8392,               !- X,Y,Z Vertex 2 {m}
   54.9133, 18.3374, 8.8392,               !- X,Y,Z Vertex 3 {m}
   54.9133, 18.3374, 11.5824;              !- X,Y,Z Vertex 4 {m}
-
-OS:Sizing:Parameters,
-  {23673dec-66fe-4cd2-adcf-8fcc4339bfd5}, !- Handle
-  1.2,                                    !- Heating Sizing Factor
-  1.2,                                    !- Cooling Sizing Factor
-  4;                                      !- Timesteps in Averaging Window
-
-OS:InternalMass:Definition,
-  {35b68aed-c0c6-4f96-b176-807450254fbd}, !- Handle
-  GuestRoom219 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {5b12206d-2b1b-4bb9-98b3-776fafbe4b9f}, !- Handle
-  GuestRoom219 Internal Mass,             !- Name
-  {35b68aed-c0c6-4f96-b176-807450254fbd}, !- Internal Mass Definition Name
-  {8f166813-9e24-4dec-be7e-cad81ed13122}; !- Space or SpaceType Name
 
 OS:Surface,
   {874bafb0-8a60-4c94-8a3d-8caa847a9348}, !- Handle
@@ -14075,21 +11722,6 @@ OS:SubSurface,
   30.111, 18.3374, 9.4888,                !- X,Y,Z Vertex 3 {m}
   30.111, 18.3374, 10.9328;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {dfc7aedf-87c8-4b45-9bbb-1e1c6d85fc6e}, !- Handle
-  FrontStairsFlr3 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.1341,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {c8ccd57a-518f-4598-95e2-c55eb44c990a}, !- Handle
-  FrontStairsFlr3 Internal Mass,          !- Name
-  {dfc7aedf-87c8-4b45-9bbb-1e1c6d85fc6e}, !- Internal Mass Definition Name
-  {d8f6d924-da7b-4cb1-8706-e8109d2c9116}; !- Space or SpaceType Name
-
 OS:Surface,
   {5d0c6229-c56a-46d4-aaf3-1eba3335beb8}, !- Handle
   P_CorridorFlr2_5_0_0,                   !- Name
@@ -14107,21 +11739,6 @@ OS:Surface,
   32.6623, 10.1078, 3.3528,               !- X,Y,Z Vertex 3 {m}
   32.6623, 10.1078, 6.096;                !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {e7611cd2-2cc9-4fc2-8503-c29d58cf2cd1}, !- Handle
-  GuestRoom419 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {536cc98b-c79d-4c21-94ce-729841ba8120}, !- Handle
-  GuestRoom419 Internal Mass,             !- Name
-  {e7611cd2-2cc9-4fc2-8503-c29d58cf2cd1}, !- Internal Mass Definition Name
-  {be63120f-43aa-4c62-b9a0-8132b287c086}; !- Space or SpaceType Name
-
 OS:Surface,
   {28536ca4-4f28-4b25-950f-6e56330d19de}, !- Handle
   P_MechanicalRoomFlr1_10041_0_10034,     !- Name
@@ -14138,21 +11755,6 @@ OS:Surface,
   36.6247, 8.279, 0,                      !- X,Y,Z Vertex 2 {m}
   36.6247, 0.0488, 0,                     !- X,Y,Z Vertex 3 {m}
   36.6247, 0.0488, 3.3528;                !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {77a8fcff-97fb-4f63-bd93-660c3702716f}, !- Handle
-  RearStairsFlr2 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  40.144,                                 !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {15a23f65-c9a2-432d-bb89-84f480eb7573}, !- Handle
-  RearStairsFlr2 Internal Mass,           !- Name
-  {77a8fcff-97fb-4f63-bd93-660c3702716f}, !- Internal Mass Definition Name
-  {87120d9d-9e96-4df1-9263-f82840d4170b}; !- Space or SpaceType Name
 
 OS:SubSurface,
   {f202caa9-a503-49b1-9f26-4ecde60192c8}, !- Handle
@@ -14236,21 +11838,6 @@ OS:Meter,
   False,                                  !- Meter File Only
   False;                                  !- Cumulative
 
-OS:InternalMass:Definition,
-  {88fe91eb-83c3-420d-90ee-73ec8a97a8dd}, !- Handle
-  GuestRoom402_405 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8908,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {98eec7db-d0ed-4b1a-87e6-8d4c578573fb}, !- Handle
-  GuestRoom402_405 Internal Mass,         !- Name
-  {88fe91eb-83c3-420d-90ee-73ec8a97a8dd}, !- Internal Mass Definition Name
-  {0d4e2c6c-124c-481e-bbb6-b3fc305b342f}; !- Space or SpaceType Name
-
 OS:SubSurface,
   {06b2cea2-bcab-4c45-b05d-f814e5fc3ba2}, !- Handle
   W_GuestRoom104_3_0_0_0_0,               !- Name
@@ -14301,21 +11888,6 @@ OS:Surface,
   4.0111, 10.1078, 0,                     !- X,Y,Z Vertex 2 {m}
   2.4871, 10.1078, 0,                     !- X,Y,Z Vertex 3 {m}
   2.4871, 10.1078, 3.3528;                !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {e370fc0c-698f-424b-8c0a-57f76f30a42c}, !- Handle
-  GuestRoom401 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2227,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {a6759b9e-a2e8-489d-914b-1dc2a284b4d1}, !- Handle
-  GuestRoom401 Internal Mass,             !- Name
-  {e370fc0c-698f-424b-8c0a-57f76f30a42c}, !- Internal Mass Definition Name
-  {2d0684ba-e561-44b6-bad5-7aec6089fbc6}; !- Space or SpaceType Name
 
 OS:Surface,
   {93c4ddca-67ea-4437-bfa7-7509d2976f6d}, !- Handle
@@ -14443,21 +12015,6 @@ OS:Surface,
   19.8607, 8.279, 3.3528,                 !- X,Y,Z Vertex 3 {m}
   19.8607, 8.279, 6.096;                  !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {e1599550-206d-4970-bf0e-c1826073f396}, !- Handle
-  GuestRoom314 Internal Mass Definition,  !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  65.2179,                                !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {db7debfe-d02c-4d83-85cb-f34dbdc959d8}, !- Handle
-  GuestRoom314 Internal Mass,             !- Name
-  {e1599550-206d-4970-bf0e-c1826073f396}, !- Internal Mass Definition Name
-  {adb86f2f-53a7-45b4-a703-57782f55407d}; !- Space or SpaceType Name
-
 OS:Surface,
   {47f3aae3-fe21-4efb-946a-e84d5a3fdfe7}, !- Handle
   F_GuestRoom215_218_10064_0_10044,       !- Name
@@ -14508,30 +12065,6 @@ OS:SubSurface,
   41.999, 0.0488, 4.0024,                 !- X,Y,Z Vertex 2 {m}
   43.138, 0.0488, 4.0024,                 !- X,Y,Z Vertex 3 {m}
   43.138, 0.0488, 5.4464;                 !- X,Y,Z Vertex 4 {m}
-
-OS:InternalMass:Definition,
-  {e1626e92-f91f-4a99-b6bf-f4a68135cecc}, !- Handle
-  GuestRoom409_412 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8908,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {91cadb0e-a2f8-4a32-b292-da5a65b59c57}, !- Handle
-  GuestRoom409_412 Internal Mass,         !- Name
-  {e1626e92-f91f-4a99-b6bf-f4a68135cecc}, !- Internal Mass Definition Name
-  {efd66a77-0462-4dcb-ba4c-0a87ebdae12d}; !- Space or SpaceType Name
-
-OS:Schedule:Compact,
-  {e528cd7f-0f78-4bd4-a462-fc1d04cef715}, !- Handle
-  MinOA_Sched,                            !- Name
-  {806a80d6-bcae-40a6-8793-2876c05dcbb2}, !- Schedule Type Limits Name
-  Through: 12/31,                         !- Field 1
-  For: AllDays,                           !- Field 2
-  Until: 24:00,                           !- Field 3
-  1.0;                                    !- Field 4
 
 OS:Surface,
   {b16e0520-eef6-4e24-86fc-1d798490d098}, !- Handle
@@ -14601,21 +12134,6 @@ OS:SubSurface,
   21.272, 18.3374, 9.4888,                !- X,Y,Z Vertex 3 {m}
   21.272, 18.3374, 10.9328;               !- X,Y,Z Vertex 4 {m}
 
-OS:InternalMass:Definition,
-  {187d4782-9b32-4c37-8a38-bd2cf816e468}, !- Handle
-  GuestRoom302_305 Internal Mass Definition, !- Name
-  ,                                       !- Construction Name
-  SurfaceArea,                            !- Design Level Calculation Method
-  260.8908,                               !- Surface Area {m2}
-  ,                                       !- Surface Area per Space Floor Area {dimensionless}
-  ;                                       !- Surface Area per Person {m2/person}
-
-OS:InternalMass,
-  {beb9c826-983f-4166-921c-68c91723685b}, !- Handle
-  GuestRoom302_305 Internal Mass,         !- Name
-  {187d4782-9b32-4c37-8a38-bd2cf816e468}, !- Internal Mass Definition Name
-  {1e455b4f-a2db-41e6-909e-8472ad337c90}; !- Space or SpaceType Name
-
 OS:Surface,
   {6572d001-b5a9-4913-a631-b9a455789c83}, !- Handle
   P_CorridorFlr4_4_0_0,                   !- Name
@@ -14635,564 +12153,4 @@ OS:Surface,
 
 OS:Facility,
   {31c4836f-fb39-4d22-8745-b677fe89da17}; !- Handle
-
-OS:Rendering:Color,
-  {62763a9f-589c-4d5e-84e9-54105afdc9fb}, !- Handle
-  Rendering Color 1,                      !- Name
-  135,                                    !- Rendering Red Value
-  206,                                    !- Rendering Green Value
-  250;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {17b931e1-9226-4a70-8e56-dda9fefeeebb}, !- Handle
-  Rendering Color 2,                      !- Name
-  95,                                     !- Rendering Red Value
-  158,                                    !- Rendering Green Value
-  160;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {5f5f53b1-3ed0-4e1a-8efd-4af907c355fa}, !- Handle
-  Rendering Color 3,                      !- Name
-  255,                                    !- Rendering Red Value
-  69,                                     !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {3308cd10-5b9e-466a-988c-eccd4e27fe72}, !- Handle
-  Rendering Color 4,                      !- Name
-  85,                                     !- Rendering Red Value
-  107,                                    !- Rendering Green Value
-  47;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {a69e2bfb-047d-4f70-ac66-747b9546026b}, !- Handle
-  Rendering Color 5,                      !- Name
-  47,                                     !- Rendering Red Value
-  79,                                     !- Rendering Green Value
-  79;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {06580c82-1dd5-4c2d-808c-be2397e43181}, !- Handle
-  Rendering Color 6,                      !- Name
-  218,                                    !- Rendering Red Value
-  112,                                    !- Rendering Green Value
-  214;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {f3ed01bc-7eb8-4f40-b3cc-ee66c70f28ce}, !- Handle
-  Rendering Color 7,                      !- Name
-  85,                                     !- Rendering Red Value
-  107,                                    !- Rendering Green Value
-  47;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {54236efc-6351-4c85-a6c4-f6763f7fca32}, !- Handle
-  Rendering Color 8,                      !- Name
-  224,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {7709c1b9-fcf5-4117-b8fb-5b2db7f6f52a}, !- Handle
-  Rendering Color 9,                      !- Name
-  135,                                    !- Rendering Red Value
-  206,                                    !- Rendering Green Value
-  235;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {023952dc-116f-4cd7-857c-ade48113a6ac}, !- Handle
-  Rendering Color 10,                     !- Name
-  152,                                    !- Rendering Red Value
-  251,                                    !- Rendering Green Value
-  152;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {d77d6527-5d6d-4aa6-b7ab-b9e808730afe}, !- Handle
-  Rendering Color 11,                     !- Name
-  165,                                    !- Rendering Red Value
-  42,                                     !- Rendering Green Value
-  42;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {afd00dfe-dddf-4096-9d1a-3af51e066856}, !- Handle
-  Rendering Color 12,                     !- Name
-  250,                                    !- Rendering Red Value
-  128,                                    !- Rendering Green Value
-  114;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {7c03be3e-17f3-46a7-baf2-864e33e37a19}, !- Handle
-  Rendering Color 13,                     !- Name
-  250,                                    !- Rendering Red Value
-  250,                                    !- Rendering Green Value
-  210;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {49219270-2c47-46de-aca1-d25548ff7dda}, !- Handle
-  Rendering Color 14,                     !- Name
-  224,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {24a0a637-034b-4c73-b52d-751f93a7d025}, !- Handle
-  Rendering Color 15,                     !- Name
-  245,                                    !- Rendering Red Value
-  245,                                    !- Rendering Green Value
-  245;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {2bb6588a-5e54-4f98-8581-5d3f20c960e5}, !- Handle
-  Rendering Color 16,                     !- Name
-  255,                                    !- Rendering Red Value
-  250,                                    !- Rendering Green Value
-  250;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {c2cde452-d009-4431-9ecb-879a742bc416}, !- Handle
-  Rendering Color 17,                     !- Name
-  47,                                     !- Rendering Red Value
-  79,                                     !- Rendering Green Value
-  79;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {00cc251b-49f9-4017-9e3f-48c5fe49dcb7}, !- Handle
-  Rendering Color 18,                     !- Name
-  175,                                    !- Rendering Red Value
-  238,                                    !- Rendering Green Value
-  238;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {e946621e-c2e8-4878-b900-d5ef813d5477}, !- Handle
-  Rendering Color 19,                     !- Name
-  238,                                    !- Rendering Red Value
-  232,                                    !- Rendering Green Value
-  170;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {3b883352-82c6-4bc6-bf71-e81909268660}, !- Handle
-  Rendering Color 20,                     !- Name
-  175,                                    !- Rendering Red Value
-  238,                                    !- Rendering Green Value
-  238;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {f25e0e8e-1b43-4375-97c7-16680faa0ae4}, !- Handle
-  Rendering Color 21,                     !- Name
-  127,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  212;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {39ed70e6-1e67-4250-83cb-2c4a9d5587aa}, !- Handle
-  Rendering Color 22,                     !- Name
-  199,                                    !- Rendering Red Value
-  21,                                     !- Rendering Green Value
-  133;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {c70f41fb-1dfd-4972-a932-2e6299065196}, !- Handle
-  Rendering Color 23,                     !- Name
-  119,                                    !- Rendering Red Value
-  136,                                    !- Rendering Green Value
-  153;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {07ada2fe-2f23-4940-894a-c8fae7ea14a3}, !- Handle
-  Rendering Color 24,                     !- Name
-  138,                                    !- Rendering Red Value
-  43,                                     !- Rendering Green Value
-  226;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {fd165b5e-279a-43e4-9352-a11a133f6327}, !- Handle
-  Rendering Color 25,                     !- Name
-  0,                                      !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  127;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {2e8c6da9-4f24-4d2a-ad66-f634645c9dd0}, !- Handle
-  Rendering Color 26,                     !- Name
-  0,                                      !- Rendering Red Value
-  100,                                    !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {8fb2bd19-8924-4681-9e0f-7e298f67d8ed}, !- Handle
-  Rendering Color 27,                     !- Name
-  245,                                    !- Rendering Red Value
-  245,                                    !- Rendering Green Value
-  220;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {5055f77a-d2ec-4f6c-b3e0-d76444a3ee7d}, !- Handle
-  Rendering Color 28,                     !- Name
-  250,                                    !- Rendering Red Value
-  128,                                    !- Rendering Green Value
-  114;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {69bbcec9-71de-48c4-be56-b25d5fd30e70}, !- Handle
-  Rendering Color 29,                     !- Name
-  124,                                    !- Rendering Red Value
-  252,                                    !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {47de9ba5-9ddc-4aa4-877d-9a899317d568}, !- Handle
-  Rendering Color 30,                     !- Name
-  0,                                      !- Rendering Red Value
-  191,                                    !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {a0d52d5b-f743-4118-a64c-a198ebc0238d}, !- Handle
-  Rendering Color 31,                     !- Name
-  0,                                      !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {998d714e-5e06-4347-ac03-db14edbe4848}, !- Handle
-  Rendering Color 32,                     !- Name
-  255,                                    !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {8045447e-de64-4baa-9f1b-511324c41b4d}, !- Handle
-  Rendering Color 33,                     !- Name
-  175,                                    !- Rendering Red Value
-  238,                                    !- Rendering Green Value
-  238;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {9370333c-415c-4e60-b035-7f5b53575376}, !- Handle
-  Rendering Color 34,                     !- Name
-  112,                                    !- Rendering Red Value
-  128,                                    !- Rendering Green Value
-  144;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {a5b81921-fec6-40d0-a828-5bd3f902a339}, !- Handle
-  Rendering Color 35,                     !- Name
-  255,                                    !- Rendering Red Value
-  182,                                    !- Rendering Green Value
-  193;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {c7fa9039-0fb7-429c-8053-646cce5e3ba9}, !- Handle
-  Rendering Color 36,                     !- Name
-  0,                                      !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {b75302e0-862b-4644-9a5a-efef8d79f340}, !- Handle
-  Rendering Color 37,                     !- Name
-  128,                                    !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {d65214fe-3ffb-4340-b206-1100cc38b4a4}, !- Handle
-  Rendering Color 38,                     !- Name
-  255,                                    !- Rendering Red Value
-  235,                                    !- Rendering Green Value
-  205;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {9c081115-5a82-4cb0-ad0a-fdf12a1df462}, !- Handle
-  Rendering Color 39,                     !- Name
-  240,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  240;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {bf918d2a-b058-46bb-a767-a9fd8eb7b423}, !- Handle
-  Rendering Color 40,                     !- Name
-  240,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  240;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {f855f856-227b-42d1-8c74-ae42d2ad6b2e}, !- Handle
-  Rendering Color 41,                     !- Name
-  255,                                    !- Rendering Red Value
-  235,                                    !- Rendering Green Value
-  205;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {2d87edea-fcab-49e6-858e-ca4a7bf9f6e6}, !- Handle
-  Rendering Color 42,                     !- Name
-  154,                                    !- Rendering Red Value
-  205,                                    !- Rendering Green Value
-  50;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {62060376-5a3d-48ba-90bc-af0042483587}, !- Handle
-  Rendering Color 43,                     !- Name
-  199,                                    !- Rendering Red Value
-  21,                                     !- Rendering Green Value
-  133;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {8118cb55-5564-4530-866e-223ea6062acd}, !- Handle
-  Rendering Color 44,                     !- Name
-  47,                                     !- Rendering Red Value
-  79,                                     !- Rendering Green Value
-  79;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {9be0fcad-0eda-4511-93b0-740abc19795d}, !- Handle
-  Rendering Color 45,                     !- Name
-  255,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  240;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {05fb1613-b6e8-4825-9d45-a6dc3369fcdb}, !- Handle
-  Rendering Color 46,                     !- Name
-  128,                                    !- Rendering Red Value
-  128,                                    !- Rendering Green Value
-  128;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {f213dc77-d9ea-44b0-80e5-94148269fabc}, !- Handle
-  Rendering Color 47,                     !- Name
-  188,                                    !- Rendering Red Value
-  143,                                    !- Rendering Green Value
-  143;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {8a37c542-6d7f-4132-9d54-b3eca9c33364}, !- Handle
-  Rendering Color 48,                     !- Name
-  0,                                      !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {8341f1b3-a847-4314-9f11-84f90dfeaf88}, !- Handle
-  Rendering Color 49,                     !- Name
-  255,                                    !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {6b01100d-8a4e-4f39-a381-acc1a30f9a11}, !- Handle
-  Rendering Color 50,                     !- Name
-  175,                                    !- Rendering Red Value
-  238,                                    !- Rendering Green Value
-  238;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {eeb3d6f5-e432-4a9a-a357-a8e7e294a98d}, !- Handle
-  Rendering Color 51,                     !- Name
-  210,                                    !- Rendering Red Value
-  105,                                    !- Rendering Green Value
-  30;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {a8bd8363-e211-49cc-9f37-d97e8b688409}, !- Handle
-  Rendering Color 52,                     !- Name
-  240,                                    !- Rendering Red Value
-  230,                                    !- Rendering Green Value
-  140;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {a4e85976-1d0f-46b5-bf1b-4d520a39adbb}, !- Handle
-  Rendering Color 53,                     !- Name
-  255,                                    !- Rendering Red Value
-  99,                                     !- Rendering Green Value
-  71;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {98a53c97-2c8c-4462-a3e7-91b2402dcbce}, !- Handle
-  Rendering Color 54,                     !- Name
-  147,                                    !- Rendering Red Value
-  112,                                    !- Rendering Green Value
-  219;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {5eafda7e-ce4b-46b7-b14e-c5ea2547f060}, !- Handle
-  Rendering Color 55,                     !- Name
-  100,                                    !- Rendering Red Value
-  149,                                    !- Rendering Green Value
-  237;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {95c025e9-7bc0-45fd-a546-a25cc1797ae3}, !- Handle
-  Rendering Color 56,                     !- Name
-  255,                                    !- Rendering Red Value
-  250,                                    !- Rendering Green Value
-  205;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {939c97b2-995c-4eb5-9417-e12e88e02ae2}, !- Handle
-  Rendering Color 57,                     !- Name
-  216,                                    !- Rendering Red Value
-  191,                                    !- Rendering Green Value
-  216;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {086e197e-2d1e-47bc-a639-c17b16d4d164}, !- Handle
-  Rendering Color 58,                     !- Name
-  221,                                    !- Rendering Red Value
-  160,                                    !- Rendering Green Value
-  221;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {aec00fa2-8c76-4668-b95a-1d49a51dbcab}, !- Handle
-  Rendering Color 59,                     !- Name
-  139,                                    !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {081ab504-02f2-4956-851e-a5997fdb4c0c}, !- Handle
-  Rendering Color 60,                     !- Name
-  0,                                      !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {4abe0d2a-630c-4ad8-a7ed-b6100c524c9e}, !- Handle
-  Rendering Color 61,                     !- Name
-  85,                                     !- Rendering Red Value
-  107,                                    !- Rendering Green Value
-  47;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {c34e6e56-a963-4839-835a-008c409956c2}, !- Handle
-  Rendering Color 62,                     !- Name
-  255,                                    !- Rendering Red Value
-  239,                                    !- Rendering Green Value
-  213;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {2b81a6ba-d04d-4c86-96b1-15b5bb36cea2}, !- Handle
-  Rendering Color 63,                     !- Name
-  250,                                    !- Rendering Red Value
-  128,                                    !- Rendering Green Value
-  114;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {52b7e38c-0cfb-46ac-a74d-6b69330d0298}, !- Handle
-  Rendering Color 64,                     !- Name
-  127,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  212;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {74c93f6e-3611-4e2a-85a6-d322b31580a4}, !- Handle
-  Rendering Color 65,                     !- Name
-  0,                                      !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  255;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {ec2a2bfe-4fc6-479f-bc5b-a76b1e0b1b5c}, !- Handle
-  Rendering Color 66,                     !- Name
-  250,                                    !- Rendering Red Value
-  235,                                    !- Rendering Green Value
-  215;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {14b9bfa0-eb60-43c5-8deb-a189962dcfb7}, !- Handle
-  Rendering Color 67,                     !- Name
-  205,                                    !- Rendering Red Value
-  133,                                    !- Rendering Green Value
-  63;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {72771107-0bae-4fe8-b2a8-deb1d3d63ccd}, !- Handle
-  Rendering Color 68,                     !- Name
-  139,                                    !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  139;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {fb2186fc-b656-4f4c-8d37-ed3856bbfeca}, !- Handle
-  Rendering Color 69,                     !- Name
-  255,                                    !- Rendering Red Value
-  228,                                    !- Rendering Green Value
-  196;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {47f3c502-3457-445d-8ddb-d93cc1fd332d}, !- Handle
-  Rendering Color 70,                     !- Name
-  186,                                    !- Rendering Red Value
-  85,                                     !- Rendering Green Value
-  211;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {e101c98f-cad9-4425-b51c-084a992e0a11}, !- Handle
-  Rendering Color 71,                     !- Name
-  139,                                    !- Rendering Red Value
-  69,                                     !- Rendering Green Value
-  19;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {9d15e254-29ab-4039-855c-395d9398d5df}, !- Handle
-  Rendering Color 72,                     !- Name
-  148,                                    !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  211;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {d397bbb8-6161-4632-9a71-50c5e1970e92}, !- Handle
-  Rendering Color 73,                     !- Name
-  255,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {df0242d1-cd3d-4f3e-99e6-8dd2e3c65232}, !- Handle
-  Rendering Color 74,                     !- Name
-  173,                                    !- Rendering Red Value
-  255,                                    !- Rendering Green Value
-  47;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {ecf391c6-69c7-450f-a7c3-ccb84e55d006}, !- Handle
-  Rendering Color 75,                     !- Name
-  47,                                     !- Rendering Red Value
-  79,                                     !- Rendering Green Value
-  79;                                     !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {f0d31914-8249-4944-9b0d-e5adf0a200f2}, !- Handle
-  Rendering Color 76,                     !- Name
-  189,                                    !- Rendering Red Value
-  183,                                    !- Rendering Green Value
-  107;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {5bb88dc9-f6ce-4a21-b9b4-ade505ae5bfe}, !- Handle
-  Rendering Color 77,                     !- Name
-  0,                                      !- Rendering Red Value
-  0,                                      !- Rendering Green Value
-  205;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {af136ca4-9fcc-4d42-bea3-6a393e47c847}, !- Handle
-  Rendering Color 78,                     !- Name
-  240,                                    !- Rendering Red Value
-  230,                                    !- Rendering Green Value
-  140;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {3b83c057-a694-4cb4-918a-bc595720ec7d}, !- Handle
-  Rendering Color 79,                     !- Name
-  106,                                    !- Rendering Red Value
-  90,                                     !- Rendering Green Value
-  205;                                    !- Rendering Blue Value
-
-OS:Rendering:Color,
-  {f8af0882-1397-496b-8ccd-f7278b15320b}, !- Handle
-  Rendering Color 80,                     !- Name
-  0,                                      !- Rendering Red Value
-  128,                                    !- Rendering Green Value
-  0;                                      !- Rendering Blue Value
 
