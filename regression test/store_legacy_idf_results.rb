@@ -37,7 +37,7 @@ bldg_types.sort.each do |bldg_type|
 
       # Change the bldg_type based on the vintage since the naming
       # conventions are different between Prototype and Reference buildings.
-	  if vintage == "Pre1980" || vintage == "Post1980"
+      if vintage == "Pre1980" || vintage == "Post1980"
         case bldg_type
         when "OfficeSmall"
           bldg_type_search = "SmallOffice"
@@ -52,17 +52,18 @@ bldg_types.sort.each do |bldg_type|
         else
           bldg_type_search = bldg_type
         end
+
         case climate_zone
-        when "El Paso"
-          climate_zone = "Las.Vegas"
+          when "El Paso"
+            climate_zone = "Las.Vegas"
         end
       else
         case climate_zone
-        when "El Paso"
-          climate_zone = "El.Paso"
+          when "El Paso"
+            climate_zone = "El.Paso"
         end
         bldg_type_search = bldg_type
-      end     
+      end
       
       # Open the sql file, skipping if not found
       sql_path_string = "#{Dir.pwd}/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}/EnergyPlus/eplusout.sql"

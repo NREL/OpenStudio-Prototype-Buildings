@@ -199,7 +199,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     # List of all end uses
     end_uses = ['Heating', 'Cooling', 'Interior Lighting', 'Exterior Lighting', 'Interior Equipment', 'Exterior Equipment', 'Fans', 'Pumps', 'Heat Rejection','Humidification', 'Heat Recovery', 'Water Systems', 'Refrigeration', 'Generators']
-
+    csv_file = File.open("#{Dir.pwd}/build/comparison.csv", 'w')
+    csv_file.write("building_type,building_vintage,climate_zone,fuel_type,end_use,Legacy Val,OpenStudio Val,Percent Error\n")
     # Create a CSV to store the results
     ### Junk csv_string = CSV.generate do |csv| end
      ###More Junk csv << ["row", "of", "CSV", "data"]
@@ -329,25 +330,34 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             end
 
             # Save the results to CSV
-            File.open("#{Dir.pwd}/build/#{model_name}/comparison.csv", 'w') do |file|
-              file.write("building_type,building_vintage,climate_zone,fuel_type,end_use,Legacy Val,OpenStudio Val,Percent Error\n")
-              results_hash.each_pair do |key1, value1|
-                value1.each_pair do |key2, value2|
-                  value2.each_pair do |key3, value3|
-                    value3.each_pair do |key4, value4|
-                      value4.each_pair do |key5, value5|
-                        if value5['Percent Error'].to_i != 0
-                          file.write("#{key1},#{key2},#{key3},#{key4},#{key5},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
-                        end
+
+            results_hash.each_pair do |key1, value1|
+              value1.each_pair do |key2, value2|
+                value2.each_pair do |key3, value3|
+                  value3.each_pair do |key4, value4|# fuel type
+                    fuel_type_legacy_val_total = 0
+                    fuel_type_openstudio_val_total = 0
+                    value4.each_pair do |key5, value5| # end use
+                      if value5['Percent Error'].to_i != 0
+                        fuel_type_legacy_val_total += value5['Legacy Val'].to_f
+                        fuel_type_openstudio_val_total += value5['OpenStudio Val'].to_f
+                        csv_file.write("#{key1},#{key2},#{key3},#{key4},#{key5},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
                       end
+                    end
+
+                    if fuel_type_legacy_val_total != 0
+                      csv_file.write("#{key1},#{key2},#{key3},#{key4},Total,#{fuel_type_legacy_val_total},#{fuel_type_openstudio_val_total},#{(fuel_type_openstudio_val_total-fuel_type_legacy_val_total)/fuel_type_legacy_val_total*100}\n")
                     end
                   end
                 end
               end
             end
+
+
           end
         end
       end
+    csv_file.close
     
     #### Return the list of failures
     return failures
@@ -430,9 +440,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-  
-  def dont_test_small_hotel
-    
+
+  def dont_test_small_hotel_ptool
     bldg_types = ['SmallHotel']
     vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
@@ -502,10 +511,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # Test the large hotel in the PTool vintages and climate zones
-  def dont_test_large_hotel
+  def test_large_hotel
     bldg_types = ['LargeHotel']
-    vintages = ['90.1-2010'] #, 'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
-    climate_zones = ['ASHRAE 169-2006-2A']
+    vintages = ['DOE Ref Pre-1980']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
 
     all_failures = []
     
@@ -568,6 +577,5 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     puts "There were #{all_failures.size} failures"
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
-  end  
-  
+  end
 end
