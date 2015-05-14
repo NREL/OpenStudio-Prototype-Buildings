@@ -9,8 +9,6 @@
 # Specify the building types to run.
 bldg_types = ['OfficeMedium', 'OfficeLarge']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
-# Specify the vintages you want to run.
-<<<<<<< HEAD
 # valid options are: Pre1980, Post1980, STD2004, STD2007, STD2010, STD2013
 vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013",]
 
@@ -22,14 +20,6 @@ vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013",]
 climate_zones = ["Miami", "Houston", "Phoenix", "Memphis","El Paso","San Francisco",
 "Baltimore", "Albuquerque", "Salem", "Chicago", "Boise", "Burlington",
 "Helena", "Duluth", "Fairbanks"]
-=======
-# valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ['Pre1980', 'Post1980', 'STD2010']
-
-# Specify the climate zones you want to run.
-# for PTool: El Paso, Houston, Chicago, and Baltimore
-climate_zones = ['Houston', 'Chicago', 'Baltimore', 'El Paso']#['Houston', 'Chicago', 'Baltimore', 'El Paso']
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
 
 ################################################################################
 
@@ -86,7 +76,6 @@ bldg_types.each do |bldg_type|
           bldg_type_search = bldg_type
         end
         case climate_zone
-<<<<<<< HEAD
           when "Memphis"
             climate_zone = "Atlanta"
           when "El Paso"
@@ -106,15 +95,6 @@ bldg_types.each do |bldg_type|
             climate_zone = "El.Paso"
           when "San Francisco"
             climate_zone = "San.Francisco"
-=======
-        when 'El Paso'
-          climate_zone = 'Las.Vegas'
-        end
-      else
-        case climate_zone
-        when 'El Paso'
-          climate_zone = 'El.Paso'
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
         end
         bldg_type_search = bldg_type
       end
@@ -131,11 +111,7 @@ bldg_types.each do |bldg_type|
         end
       end
       if idf_file.nil?
-<<<<<<< HEAD
         puts "  IDF File = IDF FILE NOT FOUND"
-=======
-        puts '  IDF File = EPW FILE NOT FOUND'
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
         next
       end
       

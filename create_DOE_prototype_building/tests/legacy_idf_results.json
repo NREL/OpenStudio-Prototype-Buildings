@@ -26501,7 +26501,6 @@
       }
     }
   },
-<<<<<<< HEAD
   "SmallHotel": {
     "DOE Ref 1980-2004": {
       "ASHRAE 169-2006-4B": {
@@ -26710,25 +26709,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 232.96,
           "Pumps": 0.44,
-=======
-  "PrimarySchool": {
-    "DOE Ref 1980-2004": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 440.19,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.24,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 147.38,
-          "Pumps": 4.05,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -26738,28 +26722,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 69.72,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 1374.56,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 426.68,
-=======
-          "Water Systems": 174.41,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -26823,16 +26792,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 971.75,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-6A": {
         "Electricity": {
           "Heating": 207.35,
@@ -26843,23 +26807,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 211.67,
           "Pumps": 0.44,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 318.61,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.25,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 146.47,
-          "Pumps": 7.41,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -26869,28 +26820,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 68.01,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 2119.84,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 457.76,
-=======
-          "Water Systems": 189.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -26954,16 +26890,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 971.75,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-5A": {
         "Electricity": {
           "Heating": 122.66,
@@ -26974,23 +26905,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 215.51,
           "Pumps": 0.44,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 791.17,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.23,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 198.98,
-          "Pumps": 1.1,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27000,28 +26918,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 72.78,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 527.17,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 428.45,
-=======
-          "Water Systems": 139.23,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27085,16 +26988,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 971.75,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-7A": {
         "Electricity": {
           "Heating": 208.15,
@@ -27105,23 +27003,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 200.78,
           "Pumps": 0.45,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 1056.31,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.45,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 193.8,
-          "Pumps": 0.86,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27131,28 +27016,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 75.07,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 398.53,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 506.15,
-=======
-          "Water Systems": 135.12,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27216,7 +27086,6 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
           "Refrigeration": 0.0,
           "Generators": 0.0
@@ -27232,30 +27101,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 251.33,
           "Pumps": 0.4,
-=======
-          "Water Systems": 971.75,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "DOE Ref Pre-1980": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 627.0,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.24,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 192.77,
-          "Pumps": 5.95,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27265,28 +27114,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 69.54,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 2106.04,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 312.67,
-=======
-          "Water Systems": 170.07,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27350,16 +27184,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 971.75,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-8A": {
         "Electricity": {
           "Heating": 452.25,
@@ -27370,23 +27199,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 198.63,
           "Pumps": 0.46,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 366.52,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.25,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 163.52,
-          "Pumps": 9.32,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27396,28 +27212,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 67.81,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 2595.21,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 564.72,
-=======
-          "Water Systems": 184.63,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27481,16 +27282,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 971.75,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-6B": {
         "Electricity": {
           "Heating": 93.77,
@@ -27501,23 +27297,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 216.36,
           "Pumps": 0.45,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 1116.32,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.23,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 261.04,
-          "Pumps": 1.39,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27527,28 +27310,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 72.55,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 795.12,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 463.11,
-=======
-          "Water Systems": 135.77,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27612,18 +27380,13 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 971.75,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
       "ASHRAE 169-2006-2A": {
         "Electricity": {
-<<<<<<< HEAD
           "Heating": 6.21,
           "Cooling": 817.15,
           "Interior Lighting": 980.34,
@@ -27730,21 +27493,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 238.05,
           "Pumps": 0.42,
-=======
-          "Heating": 0.0,
-          "Cooling": 1353.71,
-          "Interior Lighting": 1850.87,
-          "Exterior Lighting": 165.45,
-          "Interior Equipment": 1230.23,
-          "Exterior Equipment": 0.0,
-          "Fans": 229.72,
-          "Pumps": 1.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 0.0,
-<<<<<<< HEAD
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27754,28 +27506,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Refrigeration": 74.97,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 520.01,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 234.34,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 355.84,
-=======
-          "Water Systems": 131.76,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27839,7 +27576,6 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
           "Refrigeration": 0.0,
           "Generators": 0.0
@@ -27868,49 +27604,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-          "Water Systems": 971.75,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "90.1-2004": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 872.94,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 84.92,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 480.86,
-          "Pumps": 1.43,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 159.49,
-          "Water Systems": 27.98,
-          "Refrigeration": 76.43,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 1501.75,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 255.57,
-=======
-          "Water Systems": 120.21,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -27974,16 +27674,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-2B": {
         "Electricity": {
           "Heating": 2.06,
@@ -28007,42 +27702,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 643.01,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 84.93,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 498.07,
-          "Pumps": 2.51,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 103.44,
-          "Water Systems": 27.99,
-          "Refrigeration": 76.19,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 2301.34,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 277.32,
-=======
-          "Water Systems": 127.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -28106,16 +27772,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-4C": {
         "Electricity": {
           "Heating": 14.21,
@@ -28139,42 +27800,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 909.26,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 85.01,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 494.15,
-          "Pumps": 0.42,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 105.59,
-          "Water Systems": 27.96,
-          "Refrigeration": 76.3,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 743.6,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 414.6,
-=======
-          "Water Systems": 107.63,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -28238,16 +27870,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-3C": {
         "Electricity": {
           "Heating": 0.96,
@@ -28271,42 +27898,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 1615.95,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 85.03,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 538.18,
-          "Pumps": 0.45,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 167.29,
-          "Water Systems": 27.95,
-          "Refrigeration": 77.85,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 617.84,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 388.36,
-=======
-          "Water Systems": 101.93,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -28370,17 +27968,12 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       }
     },
-<<<<<<< HEAD
     "DOE Ref Pre-1980": {
       "ASHRAE 169-2006-4B": {
         "Electricity": {
@@ -28405,43 +27998,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-    "90.1-2007": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 814.71,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 84.92,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 421.29,
-          "Pumps": 1.09,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 119.84,
-          "Water Systems": 27.97,
-          "Refrigeration": 76.41,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 1236.72,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 377.51,
-=======
-          "Water Systems": 120.08,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -28505,16 +28068,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-4A": {
         "Electricity": {
           "Heating": 151.95,
@@ -28538,42 +28096,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 607.01,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 84.93,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 437.65,
-          "Pumps": 2.14,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 91.56,
-          "Water Systems": 27.98,
-          "Refrigeration": 76.18,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 1649.12,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 384.65,
-=======
-          "Water Systems": 126.93,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -28637,16 +28166,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-5B": {
         "Electricity": {
           "Heating": 132.53,
@@ -28670,42 +28194,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 834.93,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 85.01,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 431.03,
-          "Pumps": 0.36,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 91.54,
-          "Water Systems": 27.96,
-          "Refrigeration": 76.31,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 597.91,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 416.03,
-=======
-          "Water Systems": 107.54,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -28769,16 +28264,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-6A": {
         "Electricity": {
           "Heating": 447.42,
@@ -28802,42 +28292,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 189.48,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 1493.26,
-          "Interior Lighting": 1210.34,
-          "Exterior Lighting": 85.03,
-          "Interior Equipment": 1305.76,
-          "Exterior Equipment": 0.0,
-          "Fans": 470.26,
-          "Pumps": 0.38,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 129.52,
-          "Water Systems": 27.95,
-          "Refrigeration": 77.84,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 547.16,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 446.33,
-=======
-          "Water Systems": 101.85,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -28901,7 +28362,6 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 2216.13,
           "Refrigeration": 0.0,
           "Generators": 0.0
@@ -129832,49 +129292,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 0.0,
-=======
-          "Water Systems": 718.47,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "90.1-2010": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 575.22,
-          "Interior Lighting": 791.33,
-          "Exterior Lighting": 45.82,
-          "Interior Equipment": 1293.9,
-          "Exterior Equipment": 0.0,
-          "Fans": 401.19,
-          "Pumps": 1.5,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 109.19,
-          "Water Systems": 25.84,
-          "Refrigeration": 76.52,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 883.55,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 119.67,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -129938,16 +129362,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-4C": {
         "Electricity": {
           "Heating": 0.0,
@@ -129971,42 +129390,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 0.0,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 482.64,
-          "Interior Lighting": 791.3,
-          "Exterior Lighting": 45.97,
-          "Interior Equipment": 1293.9,
-          "Exterior Equipment": 0.0,
-          "Fans": 399.82,
-          "Pumps": 2.69,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 108.61,
-          "Water Systems": 25.84,
-          "Refrigeration": 76.36,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 1143.33,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 126.51,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -130070,16 +129460,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-3C": {
         "Electricity": {
           "Heating": 0.0,
@@ -130103,42 +129488,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 0.0,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 629.48,
-          "Interior Lighting": 805.0,
-          "Exterior Lighting": 45.8,
-          "Interior Equipment": 1293.9,
-          "Exterior Equipment": 0.0,
-          "Fans": 396.1,
-          "Pumps": 0.5,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 91.36,
-          "Water Systems": 25.83,
-          "Refrigeration": 76.2,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 367.46,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 107.23,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -130202,7 +129558,6 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
           "Refrigeration": 0.0,
           "Generators": 0.0
@@ -130233,47 +129588,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 0.0,
-=======
-          "Water Systems": 718.47,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      },
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 1029.63,
-          "Interior Lighting": 823.3,
-          "Exterior Lighting": 45.82,
-          "Interior Equipment": 1293.9,
-          "Exterior Equipment": 0.0,
-          "Fans": 385.95,
-          "Pumps": 0.51,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 113.13,
-          "Water Systems": 25.83,
-          "Refrigeration": 77.46,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 469.46,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 101.49,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -130337,7 +129658,6 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
           "Refrigeration": 0.0,
           "Generators": 0.0
@@ -130366,49 +129686,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 0.0,
-=======
-          "Water Systems": 718.47,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "90.1-2013": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 486.4,
-          "Interior Lighting": 692.86,
-          "Exterior Lighting": 45.82,
-          "Interior Equipment": 1144.07,
-          "Exterior Equipment": 0.0,
-          "Fans": 341.58,
-          "Pumps": 1.27,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 101.31,
-          "Water Systems": 25.84,
-          "Refrigeration": 63.05,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 922.74,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 119.58,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -130472,16 +129756,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-5B": {
         "Electricity": {
           "Heating": 0.0,
@@ -130505,42 +129784,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 0.0,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 407.79,
-          "Interior Lighting": 694.22,
-          "Exterior Lighting": 45.97,
-          "Interior Equipment": 1144.07,
-          "Exterior Equipment": 0.0,
-          "Fans": 345.09,
-          "Pumps": 2.25,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 101.74,
-          "Water Systems": 25.84,
-          "Refrigeration": 62.86,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 1139.21,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 126.41,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -130604,16 +129854,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-6A": {
         "Electricity": {
           "Heating": 0.0,
@@ -130637,42 +129882,13 @@
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
           "Interior Equipment": 0.0,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 521.61,
-          "Interior Lighting": 715.98,
-          "Exterior Lighting": 45.8,
-          "Interior Equipment": 1144.07,
-          "Exterior Equipment": 0.0,
-          "Fans": 246.4,
-          "Pumps": 0.81,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 25.84,
-          "Refrigeration": 62.28,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 418.03,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 107.25,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -130736,16 +129952,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 718.47,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-5A": {
         "Electricity": {
           "Heating": 0.0,
@@ -130755,51 +129966,16 @@
           "Interior Equipment": 137.06,
           "Exterior Equipment": 0.0,
           "Fans": 30.76,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 824.04,
-          "Interior Lighting": 716.91,
-          "Exterior Lighting": 45.82,
-          "Interior Equipment": 1144.07,
-          "Exterior Equipment": 0.0,
-          "Fans": 320.65,
-          "Pumps": 0.31,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 100.14,
-          "Water Systems": 25.83,
-          "Refrigeration": 64.2,
-          "Generators": 0.0
-        },
-        "Natural Gas": {
-          "Heating": 456.85,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 361.03,
-          "Exterior Equipment": 0.0,
-          "Fans": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Pumps": 0.0,
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 26.08,
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
           "Heating": 720.64,
-=======
-          "Water Systems": 101.49,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        },
-        "Additional Fuel": {
-          "Heating": 0.0,
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -130814,99 +129990,6 @@
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
-        "District Cooling": {
-          "Heating": 0.0,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 0.0,
-          "Exterior Equipment": 0.0,
-          "Fans": 0.0,
-          "Pumps": 0.0,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        },
-        "District Heating": {
-          "Heating": 0.0,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 0.0,
-          "Exterior Equipment": 0.0,
-          "Fans": 0.0,
-          "Pumps": 0.0,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        },
-        "Water": {
-          "Heating": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 0.0,
-          "Exterior Equipment": 0.0,
-          "Fans": 0.0,
-          "Pumps": 0.0,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-<<<<<<< HEAD
-=======
-          "Water Systems": 718.47,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    }
-  },
-  "LargeOffice": {
-    "DOE Ref 1980-2004": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 2477.68,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 967.57,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 661.72,
-          "Pumps": 1236.32,
-          "Heat Rejection": 621.23,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
-          "Water Systems": 0.0,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        },
-<<<<<<< HEAD
-=======
-        "Natural Gas": {
-          "Heating": 4937.26,
-          "Cooling": 0.0,
-          "Interior Lighting": 0.0,
-          "Exterior Lighting": 0.0,
-          "Interior Equipment": 0.0,
-          "Exterior Equipment": 0.0,
-          "Fans": 0.0,
-          "Pumps": 0.0,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 229.72,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        },
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
         "Additional Fuel": {
           "Heating": 0.0,
           "Cooling": 0.0,
@@ -130964,22 +130047,14 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 13897.35,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-7A": {
         "Electricity": {
           "Heating": 0.0,
@@ -130994,31 +130069,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 27.53,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 1718.67,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 967.65,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 702.92,
-          "Pumps": 624.26,
-          "Heat Rejection": 370.53,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 1151.79,
-=======
-          "Heating": 8136.79,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131029,11 +130084,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 252.9,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -131094,17 +130145,10 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 8895.28,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
@@ -131112,7 +130156,6 @@
       "ASHRAE 169-2006-3B": {
         "Electricity": {
           "Heating": 0.0,
-<<<<<<< HEAD
           "Cooling": 29.72,
           "Interior Lighting": 335.63,
           "Exterior Lighting": 82.52,
@@ -131124,28 +130167,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 24.28,
-=======
-          "Cooling": 2309.72,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 967.53,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 833.49,
-          "Pumps": 952.47,
-          "Heat Rejection": 599.5,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 152.25,
-=======
-          "Heating": 2615.64,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131156,11 +130182,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 173.78,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -131221,22 +130243,14 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 23459.97,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-8A": {
         "Electricity": {
           "Heating": 0.0,
@@ -131251,31 +130265,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 28.61,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 4649.65,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 968.79,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 718.96,
-          "Pumps": 1416.3,
-          "Heat Rejection": 804.22,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 1219.22,
-=======
-          "Heating": 1895.86,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131286,11 +130280,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 169.75,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -131351,7 +130341,6 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
@@ -131374,41 +130363,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 26.73,
-=======
-          "Heat Rejection": 20691.65,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "DOE Ref Pre-1980": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 3001.79,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 967.57,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 819.93,
-          "Pumps": 1520.8,
-          "Heat Rejection": 775.78,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 503.09,
-=======
-          "Heating": 7068.15,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131419,11 +130378,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 223.99,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -131484,22 +130439,14 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 16895.11,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-2A": {
         "Electricity": {
           "Heating": 0.0,
@@ -131514,31 +130461,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 23.79,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 1783.28,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 967.65,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 725.68,
-          "Pumps": 639.52,
-          "Heat Rejection": 379.33,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 88.69,
-=======
-          "Heating": 8290.23,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131549,11 +130476,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 246.6,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -131614,22 +130537,14 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 9096.5,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-3A": {
         "Electricity": {
           "Heating": 0.0,
@@ -131644,31 +130559,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 24.53,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 2724.45,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 967.53,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 1001.65,
-          "Pumps": 1118.18,
-          "Heat Rejection": 704.45,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 249.35,
-=======
-          "Heating": 2603.72,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131679,11 +130574,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 169.46,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -131744,22 +130635,14 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 27372.17,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-1A": {
         "Electricity": {
           "Heating": 0.0,
@@ -131774,31 +130657,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 22.82,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 5301.63,
-          "Interior Lighting": 8454.49,
-          "Exterior Lighting": 968.79,
-          "Interior Equipment": 8383.98,
-          "Exterior Equipment": 1895.08,
-          "Fans": 830.83,
-          "Pumps": 1618.88,
-          "Heat Rejection": 920.14,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 1.2,
-=======
-          "Heating": 2042.53,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131809,11 +130672,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 165.52,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -131874,7 +130733,6 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
@@ -131897,41 +130755,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 23.21,
-=======
-          "Heat Rejection": 23468.14,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 1504.13,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "90.1-2010": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.43,
-          "Cooling": 4612.79,
-          "Interior Lighting": 3790.13,
-          "Exterior Lighting": 681.6,
-          "Interior Equipment": 20275.64,
-          "Exterior Equipment": 1904.93,
-          "Fans": 2259.03,
-          "Pumps": 567.04,
-          "Heat Rejection": 438.29,
-          "Humidification": 26.3,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 58.39,
-=======
-          "Heating": 2346.35,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -131942,11 +130770,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 538.41,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132007,22 +130831,14 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 8180.45,
-          "Humidification": 9.78,
-          "Heat Recovery": 0.0,
-          "Water Systems": 2280.17,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-4C": {
         "Electricity": {
           "Heating": 0.0,
@@ -132037,31 +130853,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 25.85,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 6.72,
-          "Cooling": 2950.58,
-          "Interior Lighting": 3795.7,
-          "Exterior Lighting": 684.28,
-          "Interior Equipment": 20275.64,
-          "Exterior Equipment": 1904.93,
-          "Fans": 2251.78,
-          "Pumps": 509.2,
-          "Heat Rejection": 323.87,
-          "Humidification": 1589.31,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 369.67,
-=======
-          "Heating": 4646.7,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132072,11 +130868,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 573.32,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132137,22 +130929,14 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 51.61,
-=======
-          "Heat Rejection": 6789.91,
-          "Humidification": 591.22,
-          "Heat Recovery": 0.0,
-          "Water Systems": 2280.17,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-3C": {
         "Electricity": {
           "Heating": 0.0,
@@ -132167,31 +130951,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 25.39,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 152.2,
-          "Cooling": 4236.74,
-          "Interior Lighting": 3807.85,
-          "Exterior Lighting": 680.31,
-          "Interior Equipment": 20275.64,
-          "Exterior Equipment": 1904.93,
-          "Fans": 2615.05,
-          "Pumps": 553.89,
-          "Heat Rejection": 535.47,
-          "Humidification": 1813.07,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 255.13,
-=======
-          "Heating": 351.16,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132202,11 +130966,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 474.74,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132267,7 +131027,6 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
@@ -132292,39 +131051,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 25.31,
-=======
-          "Heat Rejection": 15435.47,
-          "Humidification": 674.46,
-          "Heat Recovery": 0.0,
-          "Water Systems": 2280.17,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      },
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 0.37,
-          "Cooling": 6674.06,
-          "Interior Lighting": 3869.41,
-          "Exterior Lighting": 679.7,
-          "Interior Equipment": 20275.64,
-          "Exterior Equipment": 1904.93,
-          "Fans": 2290.95,
-          "Pumps": 916.32,
-          "Heat Rejection": 834.84,
-          "Humidification": 6.7,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 266.54,
-=======
-          "Heating": 526.49,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132335,11 +131066,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 447.79,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132400,7 +131127,6 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-<<<<<<< HEAD
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
@@ -132423,43 +131149,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 25.44,
-=======
-          "Heat Rejection": 15943.01,
-          "Humidification": 2.49,
-          "Heat Recovery": 0.0,
-          "Water Systems": 2280.17,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    }
-  },
-  "MediumOffice": {
-    "DOE Ref 1980-2004": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 530.81,
-          "Cooling": 472.66,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 279.75,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 75.01,
-          "Pumps": 0.27,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 406.83,
-=======
-          "Heating": 118.15,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132470,11 +131164,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 34.32,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132538,16 +131228,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 174.59,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-5B": {
         "Electricity": {
           "Heating": 0.0,
@@ -132562,31 +131247,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 25.97,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 808.76,
-          "Cooling": 330.76,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 279.78,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 78.6,
-          "Pumps": 0.27,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 389.84,
-=======
-          "Heating": 234.56,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132597,11 +131262,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 37.01,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132665,16 +131326,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 174.59,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-6A": {
         "Electricity": {
           "Heating": 0.0,
@@ -132689,31 +131345,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 26.64,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 316.15,
-          "Cooling": 754.17,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 279.74,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 103.85,
-          "Pumps": 0.27,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 653.78,
-=======
-          "Heating": 5.51,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132724,11 +131360,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 27.82,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132792,16 +131424,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 174.59,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-5A": {
         "Electricity": {
           "Heating": 0.0,
@@ -132816,31 +131443,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 26.08,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 218.6,
-          "Cooling": 898.06,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 280.11,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 86.21,
-          "Pumps": 0.27,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 668.13,
-=======
-          "Heating": 9.04,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132851,11 +131458,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 27.35,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -132919,7 +131522,6 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
           "Refrigeration": 0.0,
           "Generators": 0.0
@@ -132939,38 +131541,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 27.53,
-=======
-          "Water Systems": 174.59,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "DOE Ref Pre-1980": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 458.8,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 279.75,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 707.98,
-          "Pumps": 0.27,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 1104.38,
-=======
-          "Heating": 502.05,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -132981,11 +131556,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 33.48,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -133049,16 +131620,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 174.59,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-3B": {
         "Electricity": {
           "Heating": 0.0,
@@ -133073,31 +131639,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 24.28,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 266.92,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 279.78,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 646.4,
-          "Pumps": 0.27,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 145.35,
-=======
-          "Heating": 842.06,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -133108,11 +131654,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 36.1,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -133176,16 +131718,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 174.59,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-8A": {
         "Electricity": {
           "Heating": 0.0,
@@ -133260,18 +131797,6 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 0.0,
-          "Cooling": 828.98,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 279.74,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 808.89,
-          "Pumps": 0.27,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
@@ -133279,7 +131804,6 @@
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
-<<<<<<< HEAD
         "Water": {
           "Heating": 0.0,
           "Cooling": 0.0,
@@ -133316,10 +131840,6 @@
         },
         "Natural Gas": {
           "Heating": 466.05,
-=======
-        "Natural Gas": {
-          "Heating": 80.77,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -133330,11 +131850,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 27.14,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -133398,11 +131914,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 174.59,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
@@ -133410,7 +131922,6 @@
       "ASHRAE 169-2006-2A": {
         "Electricity": {
           "Heating": 0.0,
-<<<<<<< HEAD
           "Cooling": 38.47,
           "Interior Lighting": 297.12,
           "Exterior Lighting": 82.45,
@@ -133482,15 +131993,6 @@
           "Exterior Equipment": 0.0,
           "Fans": 0.0,
           "Pumps": 0.0,
-=======
-          "Cooling": 853.33,
-          "Interior Lighting": 951.62,
-          "Exterior Lighting": 280.11,
-          "Interior Equipment": 1066.52,
-          "Exterior Equipment": 0.0,
-          "Fans": 715.55,
-          "Pumps": 0.27,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
@@ -133498,7 +132000,6 @@
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
-<<<<<<< HEAD
         "Water": {
           "Heating": 0.0,
           "Cooling": 0.0,
@@ -133535,10 +132036,6 @@
         },
         "Natural Gas": {
           "Heating": 243.33,
-=======
-        "Natural Gas": {
-          "Heating": 66.28,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -133549,11 +132046,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 26.69,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -133617,7 +132110,6 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
           "Refrigeration": 0.0,
           "Generators": 0.0
@@ -133637,38 +132129,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 22.8,
-=======
-          "Water Systems": 174.59,
-          "Refrigeration": 0.0,
-          "Generators": 0.0
-        }
-      }
-    },
-    "90.1-2010": {
-      "ASHRAE 169-2006-4A": {
-        "Electricity": {
-          "Heating": 146.1,
-          "Cooling": 307.42,
-          "Interior Lighting": 375.76,
-          "Exterior Lighting": 104.89,
-          "Interior Equipment": 757.68,
-          "Exterior Equipment": 0.0,
-          "Fans": 86.22,
-          "Pumps": 0.15,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 1.22,
-=======
-          "Heating": 151.29,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -133679,11 +132144,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 76.32,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -133747,16 +132208,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 271.06,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-2B": {
         "Electricity": {
           "Heating": 0.0,
@@ -133771,31 +132227,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 23.22,
-=======
-      "ASHRAE 169-2006-5A": {
-        "Electricity": {
-          "Heating": 259.5,
-          "Cooling": 262.62,
-          "Interior Lighting": 376.45,
-          "Exterior Lighting": 105.15,
-          "Interior Equipment": 757.68,
-          "Exterior Equipment": 0.0,
-          "Fans": 86.68,
-          "Pumps": 0.15,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 60.34,
-=======
-          "Heating": 306.17,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -133806,11 +132242,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 80.32,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -133874,16 +132306,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 271.06,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-4C": {
         "Electricity": {
           "Heating": 0.0,
@@ -133898,31 +132325,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 25.85,
-=======
-      "ASHRAE 169-2006-3B": {
-        "Electricity": {
-          "Heating": 44.39,
-          "Cooling": 363.29,
-          "Interior Lighting": 379.92,
-          "Exterior Lighting": 104.77,
-          "Interior Equipment": 757.68,
-          "Exterior Equipment": 0.0,
-          "Fans": 103.81,
-          "Pumps": 0.15,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 343.59,
-=======
-          "Heating": 21.92,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -133933,11 +132340,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 69.01,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -134001,16 +132404,11 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 271.06,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }
       },
-<<<<<<< HEAD
       "ASHRAE 169-2006-3C": {
         "Electricity": {
           "Heating": 0.0,
@@ -134025,31 +132423,11 @@
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
           "Water Systems": 25.39,
-=======
-      "ASHRAE 169-2006-2A": {
-        "Electricity": {
-          "Heating": 124.75,
-          "Cooling": 618.9,
-          "Interior Lighting": 390.37,
-          "Exterior Lighting": 104.68,
-          "Interior Equipment": 757.68,
-          "Exterior Equipment": 0.0,
-          "Fans": 99.02,
-          "Pumps": 0.15,
-          "Heat Rejection": 0.0,
-          "Humidification": 0.0,
-          "Heat Recovery": 0.0,
-          "Water Systems": 0.0,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
         "Natural Gas": {
-<<<<<<< HEAD
           "Heating": 250.34,
-=======
-          "Heating": 5.12,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Cooling": 0.0,
           "Interior Lighting": 0.0,
           "Exterior Lighting": 0.0,
@@ -134060,11 +132438,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 0.0,
-=======
-          "Water Systems": 66.03,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         },
@@ -134128,11 +132502,7 @@
           "Heat Rejection": 0.0,
           "Humidification": 0.0,
           "Heat Recovery": 0.0,
-<<<<<<< HEAD
           "Water Systems": 51.61,
-=======
-          "Water Systems": 271.06,
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
           "Refrigeration": 0.0,
           "Generators": 0.0
         }

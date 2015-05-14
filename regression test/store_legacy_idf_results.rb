@@ -39,16 +39,6 @@ bldg_types.sort.each do |bldg_type|
       # conventions are different between Prototype and Reference buildings.
       if vintage == "Pre1980" || vintage == "Post1980"
         case bldg_type
-<<<<<<< HEAD
-          when "OfficeSmall"
-            bldg_type_search = "SmallOffice"
-          when "SchoolSecondary"
-            bldg_type_search = "SecondarySchool"
-          when "HotelLarge"
-            bldg_type_search=  "LargeHotel"
-          else
-            bldg_type_search = bldg_type
-=======
         when "OfficeSmall"
           bldg_type_search = "SmallOffice"
         when 'OfficeMedium'
@@ -61,7 +51,6 @@ bldg_types.sort.each do |bldg_type|
           bldg_type_search=  "LargeHotel"
         else
           bldg_type_search = bldg_type
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
         end
 
         case climate_zone

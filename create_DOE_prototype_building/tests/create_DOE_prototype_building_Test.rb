@@ -440,13 +440,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-  
-<<<<<<< HEAD
+
   def dont_test_small_hotel_ptool
-=======
-  def dont_test_small_hotel
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
-    
     bldg_types = ['SmallHotel']
     vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
@@ -493,7 +488,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # Test the large hotel in the PTool vintages and climate zones
-  def dont_test_large_hotel
+  def test_large_hotel
     bldg_types = ['LargeHotel']
     vintages = ['DOE Ref Pre-1980']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
@@ -537,8 +532,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-<<<<<<< HEAD
-=======
   
   def dont_test_all
     
@@ -561,7 +554,5 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     puts "There were #{all_failures.size} failures"
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
-  end  
-  
->>>>>>> 701946e730e574cdcd4816f224e2cb76b5a3a29d
+  end
 end
