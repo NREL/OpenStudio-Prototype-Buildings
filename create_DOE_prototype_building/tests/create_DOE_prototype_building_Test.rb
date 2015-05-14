@@ -454,8 +454,31 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   end
 
+  def test_large_office
+
+    bldg_types = ['LargeOffice']
+    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+    climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+    all_failures = []
+    
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
+
   # Test the Small Office in the QTR vintages and climate zones
-  def test_medium_office
+  def dont_test_medium_office
 
     bldg_types = ['MediumOffice']
     vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
