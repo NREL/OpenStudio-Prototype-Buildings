@@ -443,44 +443,46 @@ class OpenStudio::Model::Space
     total_skylight_area = 0
     
     # Make rendering colors to help debug visually
-    # Yellow
-    toplit_construction = OpenStudio::Model::Construction.new(model)
-    toplit_color = OpenStudio::Model::RenderingColor.new(model)
-    toplit_color.setRenderingRedValue(255)
-    toplit_color.setRenderingGreenValue(255)
-    toplit_color.setRenderingBlueValue(0)
-    toplit_construction.setRenderingColor(toplit_color)  
+    if draw_daylight_areas_for_debugging
+      # Yellow
+      toplit_construction = OpenStudio::Model::Construction.new(model)
+      toplit_color = OpenStudio::Model::RenderingColor.new(model)
+      toplit_color.setRenderingRedValue(255)
+      toplit_color.setRenderingGreenValue(255)
+      toplit_color.setRenderingBlueValue(0)
+      toplit_construction.setRenderingColor(toplit_color)  
 
-    # Red
-    pri_sidelit_construction = OpenStudio::Model::Construction.new(model)
-    pri_sidelit_color = OpenStudio::Model::RenderingColor.new(model)
-    pri_sidelit_color.setRenderingRedValue(255)
-    pri_sidelit_color.setRenderingGreenValue(0)
-    pri_sidelit_color.setRenderingBlueValue(0)
-    pri_sidelit_construction.setRenderingColor(pri_sidelit_color)
+      # Red
+      pri_sidelit_construction = OpenStudio::Model::Construction.new(model)
+      pri_sidelit_color = OpenStudio::Model::RenderingColor.new(model)
+      pri_sidelit_color.setRenderingRedValue(255)
+      pri_sidelit_color.setRenderingGreenValue(0)
+      pri_sidelit_color.setRenderingBlueValue(0)
+      pri_sidelit_construction.setRenderingColor(pri_sidelit_color)
 
-    # Blue
-    sec_sidelit_construction = OpenStudio::Model::Construction.new(model)
-    sec_sidelit_color = OpenStudio::Model::RenderingColor.new(model)
-    sec_sidelit_color.setRenderingRedValue(0)
-    sec_sidelit_color.setRenderingGreenValue(0)
-    sec_sidelit_color.setRenderingBlueValue(255)
-    sec_sidelit_construction.setRenderingColor(sec_sidelit_color)
+      # Blue
+      sec_sidelit_construction = OpenStudio::Model::Construction.new(model)
+      sec_sidelit_color = OpenStudio::Model::RenderingColor.new(model)
+      sec_sidelit_color.setRenderingRedValue(0)
+      sec_sidelit_color.setRenderingGreenValue(0)
+      sec_sidelit_color.setRenderingBlueValue(255)
+      sec_sidelit_construction.setRenderingColor(sec_sidelit_color)
 
-    # Light Blue
-    flr_construction = OpenStudio::Model::Construction.new(model)
-    flr_color = OpenStudio::Model::RenderingColor.new(model)
-    flr_color.setRenderingRedValue(0)
-    flr_color.setRenderingGreenValue(255)
-    flr_color.setRenderingBlueValue(255)
-    flr_construction.setRenderingColor(flr_color)
-
+      # Light Blue
+      flr_construction = OpenStudio::Model::Construction.new(model)
+      flr_color = OpenStudio::Model::RenderingColor.new(model)
+      flr_color.setRenderingRedValue(0)
+      flr_color.setRenderingGreenValue(255)
+      flr_color.setRenderingBlueValue(255)
+      flr_construction.setRenderingColor(flr_color)
+    end
+    
     # Move the polygon up slightly for viewability in sketchup
     up_translation_flr = OpenStudio::createTranslation(OpenStudio::Vector3d.new(0, 0, 0.05))
     up_translation_top = OpenStudio::createTranslation(OpenStudio::Vector3d.new(0, 0, 0.1))
     up_translation_pri = OpenStudio::createTranslation(OpenStudio::Vector3d.new(0, 0, 0.1))
     up_translation_sec = OpenStudio::createTranslation(OpenStudio::Vector3d.new(0, 0, 0.1))
-
+    
     # Get the space's surface group's transformation
     @space_transformation = self.transformation
     
@@ -1141,8 +1143,6 @@ class OpenStudio::Model::Space
             else
               vt = nil
             end
-
-            OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "****const = #{construction_name}, vt = #{vt}")
             
             # Record the VT
             construction_name_to_vt_map[construction_name] = vt
@@ -1159,9 +1159,7 @@ class OpenStudio::Model::Space
           OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Space", "For #{self.name}, could not determine VLT for #{construction_name}, will not be included in skylight effective aperture caluclation.")
           vt = 0
         end
-  
-        OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Space', "---#{self.name} #{sub_surface.name} const = #{construction_name}, area = #{area_m2} vt = #{vt}, wf = #{wf}.")
-  
+
         sum_85pct_times_skylight_area_times_vt_times_wf += 0.85 * area_m2 * vt * wf
   
       end
