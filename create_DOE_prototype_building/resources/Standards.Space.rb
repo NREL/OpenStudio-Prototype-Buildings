@@ -442,9 +442,20 @@ class OpenStudio::Model::Space
     total_window_area = 0
     total_skylight_area = 0
     
+    rendering_color_material = OpenStudio::Model::MasslessOpaqueMaterial.new(model)
+    rendering_color_material.setName('Rendering color material')
+    rendering_color_material.setRoughness("Rough")
+    # rendering_color_material.setThermalResistance(0.01)
+    # rendering_color_material.setThermalAbsorptance(0.9)
+    # rendering_color_material.setSolarAbsorptance(0.7)
+    # rendering_color_material.setVisibleAbsorptance(0.8)
+    layers = OpenStudio::Model::MaterialVector.new
+    layers << rendering_color_material
+    
     # Make rendering colors to help debug visually
     # Yellow
     toplit_construction = OpenStudio::Model::Construction.new(model)
+    toplit_construction.setLayers(layers)
     toplit_color = OpenStudio::Model::RenderingColor.new(model)
     toplit_color.setRenderingRedValue(255)
     toplit_color.setRenderingGreenValue(255)
@@ -453,6 +464,7 @@ class OpenStudio::Model::Space
 
     # Red
     pri_sidelit_construction = OpenStudio::Model::Construction.new(model)
+    pri_sidelit_construction.setLayers(layers)
     pri_sidelit_color = OpenStudio::Model::RenderingColor.new(model)
     pri_sidelit_color.setRenderingRedValue(255)
     pri_sidelit_color.setRenderingGreenValue(0)
@@ -461,6 +473,7 @@ class OpenStudio::Model::Space
 
     # Blue
     sec_sidelit_construction = OpenStudio::Model::Construction.new(model)
+    sec_sidelit_construction.setLayers(layers)
     sec_sidelit_color = OpenStudio::Model::RenderingColor.new(model)
     sec_sidelit_color.setRenderingRedValue(0)
     sec_sidelit_color.setRenderingGreenValue(0)
@@ -469,6 +482,7 @@ class OpenStudio::Model::Space
 
     # Light Blue
     flr_construction = OpenStudio::Model::Construction.new(model)
+    flr_construction.setLayers(layers)
     flr_color = OpenStudio::Model::RenderingColor.new(model)
     flr_color.setRenderingRedValue(0)
     flr_color.setRenderingGreenValue(255)

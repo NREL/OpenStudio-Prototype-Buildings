@@ -361,6 +361,11 @@ class OpenStudio::Model::Model
     ventilation_per_area = data['ventilation_per_area']
     ventilation_per_person = data['ventilation_per_person']
     ventilation_ach = data['ventilation_air_changes']
+    
+    puts "#{name} ventilation_per_area = #{ventilation_per_area}"
+    puts "#{name} ventilation_per_person = #{ventilation_per_person}"
+    puts "#{name} ventilation_ach = #{ventilation_ach}"
+        
     unless ventilation_per_area  == 0 || ventilation_per_area.nil? then make_ventilation = true  end
     unless ventilation_per_person == 0 || ventilation_per_person.nil? then make_ventilation = true end
     unless ventilation_ach == 0 || ventilation_ach.nil? then make_ventilation = true end
@@ -370,6 +375,7 @@ class OpenStudio::Model::Model
       # Create the ventilation object and hook it up to the space type
       ventilation = OpenStudio::Model::DesignSpecificationOutdoorAir.new(self)
       ventilation.setName("#{name} Ventilation")
+      puts "#{name}"
       space_type.setDesignSpecificationOutdoorAir(ventilation)
       ventilation.setOutdoorAirMethod('Sum')
       unless ventilation_per_area  == 0 || ventilation_per_area.nil?

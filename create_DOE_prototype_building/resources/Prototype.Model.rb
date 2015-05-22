@@ -219,16 +219,49 @@ class OpenStudio::Model::Model
     layers = OpenStudio::Model::MaterialVector.new
     layers << material
     construction.setLayers(layers)
-    self.getInternalMassDefinitions.each do |int_mass_def|
-      int_mass_def.setConstruction(construction)
+    
+    # get all the space types that are conditioned
+    conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)
+    
+    # add internal mass
+    unless building_type == 'SmallHotel' && 
+      (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
+      conditioned_space_names.each do |conditioned_space_name|
+        internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
+        internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
+        internal_mass_def.setConstruction(construction)
+        puts "internal_mass_def = #{internal_mass_def}"
+    
+        internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
+        space = self.getSpaceByName(conditioned_space_name)
+        space = space.get
+        puts "space = #{space}"
+        internal_mass.setSpace(space)
+      end
     end
+    
+    # self.getInternalMassDefinitions.each do |int_mass_def|
+      # int_mass_def.setConstruction(construction)
+    # end
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying constructions')
     
     return true
 
   end  
-
+  
+  # get all the space types that are conditioned
+  def find_conditioned_space_names(building_type, building_vintage, climate_zone)
+    system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
+    conditioned_space_names = OpenStudio::StringVector.new
+    system_to_space_map.each do |system|
+      system['space_names'].each do |space_name|
+        conditioned_space_names << space_name
+      end
+    end
+    return conditioned_space_names
+  end
+  
   def create_thermal_zones(building_type,building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started creating thermal zones')

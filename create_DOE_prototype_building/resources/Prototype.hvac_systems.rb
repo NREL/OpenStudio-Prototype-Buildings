@@ -2313,11 +2313,22 @@ class OpenStudio::Model::Model
     sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)         
     
     # Service water heating pump
-    swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+    swh_pump_head_press_pa = prototype_input['service_water_pump_head']
+    swh_pump_motor_efficiency = prototype_input['service_water_pump_motor_efficiency']
+    if swh_pump_head_press_pa.nil?
+      swh_pump_head_press_pa = 0.001 # As if there is no circulation pump
+    elsif swh_pump_head_press_pa == 179352
+      swh_pump = OpenStudio::Model::PumpVariableSpeed.new(self)
+      swh_pump.setCoefficient1ofthePartLoadPerformanceCurve(0)
+      swh_pump.setCoefficient2ofthePartLoadPerformanceCurve(1)
+      swh_pump.setCoefficient3ofthePartLoadPerformanceCurve(0)
+      swh_pump.setCoefficient4ofthePartLoadPerformanceCurve(0)
+    else
+      swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+    end
     swh_pump.setName('Service Water Loop Pump')
-    swh_pump_head_press_pa = 0.001 # As if there is no circulation pump
     swh_pump.setRatedPumpHead(swh_pump_head_press_pa)
-    swh_pump.setMotorEfficiency(0.3)
+    swh_pump.setMotorEfficiency(swh_pump_motor_efficiency)
     swh_pump.setPumpControlType('Intermittent')
     swh_pump.addToNode(service_water_loop.supplyInletNode)
     
@@ -2391,19 +2402,32 @@ class OpenStudio::Model::Model
     
     # Water use connection
     swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
+    swh_laundry_connection = OpenStudio::Model::WaterUseConnections.new(self)
     
     # Water fixture definition
     # Peak flow rate
+    # Add normal water use
     water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
     rated_flow_rate_gal_per_min = prototype_input['service_water_peak_flowrate']
     rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
     water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
-    # Target mixed water temperature
+    # Add Laundry water use specifically for Hotels
+    water_laundry_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
+    rated_flow_rate_gal_per_min_laundry = prototype_input['service_water_peak_flowrate_laundry']
+    rated_flow_rate_m3_per_s_laundry = OpenStudio.convert(rated_flow_rate_gal_per_min_laundry,'gal/min','m^3/s').get
+    water_laundry_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s_laundry)
+    # Target mixed water temperature - normal guest room
     mixed_water_temp_f = prototype_input['water_use_temperature']
     mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     mixed_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(mixed_water_temp_f,'F','C').get)
     water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
+    # Target mixed water temperature - laundry
+    mixed_water_temp_f_laundry = prototype_input['water_use_temperature_laundry']
+    mixed_water_temp_sch_laundry = OpenStudio::Model::ScheduleRuleset.new(self)
+    mixed_water_temp_sch_laundry.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(mixed_water_temp_f_laundry,'F','C').get)
+    water_laundry_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch_laundry)
     # Temperature of hot water when it reaches fixture
+    
     # TODO enable hot water temperature at fixture to be set with OpenStudio
     #hot_water_temp_at_fixture_f = prototype_input['service_water_temperature_at_fixture']
     #hot_water_at_fixture_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -2412,13 +2436,20 @@ class OpenStudio::Model::Model
     
     # Water use equipment
     #make the initial copy of the water fixture
+    # Normal water use
     water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
     schedule = self.add_schedule(prototype_input['service_water_flowrate_schedule'])
     water_fixture.setFlowRateFractionSchedule(schedule)
     swh_connection.addWaterUseEquipment(water_fixture)
+    # Laundry water use specifically for Hotels
+    water_laundry_fixture = OpenStudio::Model::WaterUseEquipment.new(water_laundry_fixture_def)
+    schedule_laundry = self.add_schedule(prototype_input['service_water_flowrate_schedule_laundry'])
+    water_laundry_fixture.setFlowRateFractionSchedule(schedule_laundry)
+    swh_laundry_connection.addWaterUseEquipment(water_laundry_fixture)
     
     # Connect the water use connection to the SWH loop
     swh_loop.addDemandBranchForComponent(swh_connection)
+    swh_loop.addDemandBranchForComponent(swh_laundry_connection)
     
   end
 
