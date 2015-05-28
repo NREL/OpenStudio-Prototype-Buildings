@@ -185,7 +185,7 @@ def find_objects(hash_of_objects, search_criteria, capacity = nil)
     # Round up if capacity is an integer
     if capacity = capacity.round
       capacity = capacity + (capacity * 0.01)
-    end 
+      end
     search_criteria_matching_objects.each do |object|
       # Skip objects that don't have fields for minimum_capacity and maximum_capacity
       next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 

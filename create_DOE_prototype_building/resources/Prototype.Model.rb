@@ -107,6 +107,49 @@ class OpenStudio::Model::Model
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
 
+    # Assign construction to adiabatic construction
+    # Assign a material to all internal mass objects
+    cp02_carpet_pad = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
+    cp02_carpet_pad.setName('CP02 CARPET PAD')
+    cp02_carpet_pad.setRoughness("VeryRough")
+    cp02_carpet_pad.setThermalResistance(0.21648)
+    cp02_carpet_pad.setThermalAbsorptance(0.9)
+    cp02_carpet_pad.setSolarAbsorptance(0.7)
+    cp02_carpet_pad.setVisibleAbsorptance(0.8)
+
+    normalweight_concrete_floor = OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    normalweight_concrete_floor.setName('100mm Normalweight concrete floor')
+    normalweight_concrete_floor.setRoughness('MediumSmooth')
+    normalweight_concrete_floor.setThickness(0.1016)
+    normalweight_concrete_floor.setConductivity(2.31)
+    normalweight_concrete_floor.setDensity(2322)
+    normalweight_concrete_floor.setSpecificHeat(832)
+
+    nonres_floor_insulation = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
+    nonres_floor_insulation.setName('Nonres_Floor_Insulation')
+    nonres_floor_insulation.setRoughness("MediumSmooth")
+    nonres_floor_insulation.setThermalResistance(4.13066404430099)
+    nonres_floor_insulation.setThermalAbsorptance(0.9)
+    nonres_floor_insulation.setSolarAbsorptance(0.7)
+    nonres_floor_insulation.setVisibleAbsorptance(0.7)
+
+    adiabatic_construction = OpenStudio::Model::Construction.new(self)
+    adiabatic_construction.setName('nonres_floor_ceiling')
+    layers = OpenStudio::Model::MaterialVector.new
+    layers << cp02_carpet_pad
+    layers << normalweight_concrete_floor
+    layers << nonres_floor_insulation
+
+    adiabatic_construction.setLayers(layers)
+    self.getSurfaces.each do |surface|
+      if surface.outsideBoundaryCondition.to_s == "Adiabatic"
+        surface.setConstruction(adiabatic_construction)
+      elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
+        surface.setOutsideBoundaryCondition("Adiabatic")
+        surface.setConstruction(adiabatic_construction)
+      end
+    end
+
     path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
 
     # Load the openstudio_standards.json file
@@ -176,24 +219,69 @@ class OpenStudio::Model::Model
     layers = OpenStudio::Model::MaterialVector.new
     layers << material
     construction.setLayers(layers)
-    self.getInternalMassDefinitions.each do |int_mass_def|
-      int_mass_def.setConstruction(construction)
+    
+    # get all the space types that are conditioned
+    conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)
+    
+    # add internal mass
+    unless building_type == 'SmallHotel' && 
+      (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
+      conditioned_space_names.each do |conditioned_space_name|
+        internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
+        internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
+        internal_mass_def.setConstruction(construction)
+        puts "internal_mass_def = #{internal_mass_def}"
+    
+        internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
+        space = self.getSpaceByName(conditioned_space_name)
+        space = space.get
+        puts "space = #{space}"
+        internal_mass.setSpace(space)
+      end
     end
+    
+    # self.getInternalMassDefinitions.each do |int_mass_def|
+      # int_mass_def.setConstruction(construction)
+    # end
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying constructions')
     
     return true
 
   end  
-
-  def create_thermal_zones
+  
+  # get all the space types that are conditioned
+  def find_conditioned_space_names(building_type, building_vintage, climate_zone)
+    system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
+    conditioned_space_names = OpenStudio::StringVector.new
+    system_to_space_map.each do |system|
+      system['space_names'].each do |space_name|
+        conditioned_space_names << space_name
+      end
+    end
+    return conditioned_space_names
+  end
+  
+  def create_thermal_zones(building_type,building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started creating thermal zones')
+
+    # This map define the multipliers for spaces with multipliers not equals to 1
+    case building_type
+      when 'LargeHotel'
+        space_multiplier_map = define_space_multiplier
+      else
+        space_multiplier_map ={}
+    end
+
 
     # Create a thermal zone for each space in the self
     self.getSpaces.each do |space|
       zone = OpenStudio::Model::ThermalZone.new(self)
       zone.setName("#{space.name} ZN")
+      if space_multiplier_map[space.name.to_s] != nil
+        zone.setMultiplier(space_multiplier_map[space.name.to_s])
+      end
       space.setThermalZone(zone)
       
       # Skip thermostat for spaces with no space type
@@ -323,45 +411,94 @@ class OpenStudio::Model::Model
   end #add occupancy sensors
 
   def add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
-   
     # TODO Standards - translate w/linear foot of facade, door, parking, etc
     # into lookup table and implement that way instead of hard-coding as
     # inputs in the spreadsheet.
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding exterior lights')
- 
-    # Occupancy Sensing Exterior Lights
-    # which reduce to 70% power when no one is around.
-    if prototype_input['occ_sensing_exterior_lighting_power'] && prototype_input['occ_sensing_exterior_lighting_schedule']
-      occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
-      occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
-      occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
-      occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
-      occ_sens_ext_lts_sch = self.add_schedule(prototype_input['occ_sensing_exterior_lighting_schedule'])
-      occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
-      occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
-      occ_sens_ext_lts.setControlOption('AstronomicalClock')
-    end
-    
-    # Building Facade and Landscape Lights
-    # that don't dim at all at night.    
-    if prototype_input['nondimming_exterior_lighting_power'] && prototype_input['nondimming_exterior_lighting_schedule']
-      nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
-      nondimming_ext_lts_name = 'NonDimming Exterior Lights'
-      nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
-      nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
-      nondimming_ext_lts_sch = self.add_schedule(prototype_input['nondimming_exterior_lighting_schedule'])
-      nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
-      nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
-      nondimming_ext_lts.setControlOption('AstronomicalClock')
-    end
-   
+
+    if building_type == "LargeHotel"
+      data = self.find_object(@standards['exterior'], {'template'=>building_vintage, 'climate_zone_set'=>'ClimateZone 1-8', 'building_type'=>building_type})
+
+      ext_lts_power = data['exterior_lights']
+      ext_lts_sch_name = data['exterior_lights_schedule']
+      ext_lts_name = 'Exterior Lights'
+      ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      ext_lts_def.setName("#{ext_lts_name} Def")
+      ext_lts_def.setDesignLevel(ext_lts_power)
+      ext_lts_sch = self.add_schedule(ext_lts_sch_name)
+
+      ext_lts = OpenStudio::Model::ExteriorLights.new(ext_lts_def, ext_lts_sch)
+      ext_lts.setName("#{ext_lts_name}")
+      ext_lts.setControlOption('AstronomicalClock')
+
+      # TODO: The exterior fuel equipment is not available yet. Use exterior lights instead.
+      ext_fuel_equip_power = data['fuel_equipment']
+      ext_fuel_equip_sch_name = data['fuel_equipment_schedule']
+      ext_fuel_equip_name = 'Exterior Fuel Equipment'
+      ext_fuel_equip_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      ext_fuel_equip_def.setName("#{ext_fuel_equip_name} Def")
+      ext_fuel_equip_def.setDesignLevel(ext_fuel_equip_power)
+      ext_fuel_equip_sch = self.add_schedule(ext_fuel_equip_sch_name)
+
+      ext_fuel_equip = OpenStudio::Model::ExteriorLights.new(ext_fuel_equip_def, ext_fuel_equip_sch)
+      ext_fuel_equip.setName("#{ext_fuel_equip_name}")
+      ext_fuel_equip.setControlOption('ScheduleNameOnly')
+
+    else
+      # Occupancy Sensing Exterior Lights
+      # which reduce to 70% power when no one is around.
+      unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
+        occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
+        occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
+        occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+        occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
+        occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
+        occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+        occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
+        occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
+        if building_type == "SmallHotel"
+          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+        else
+          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+        end
+        occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
+        occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
+        occ_sens_ext_lts.setControlOption('AstronomicalClock')
+      end
+
+      # Building Facade and Landscape Lights
+      # that don't dim at all at night.
+      unless prototype_input['nondimming_exterior_lighting_power'].nil?
+        nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
+        nondimming_ext_lts_name = 'NonDimming Exterior Lights'
+        nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+        nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
+        nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
+        #
+        nondimming_ext_lts_sch = nil
+        if building_vintage == '90.1-2010'
+          nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+          nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
+          nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
+          if building_type == "SmallHotel"
+            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+          else
+            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
+            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
+          end
+        elsif building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+          nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
+        end
+        nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
+        nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
+        nondimming_ext_lts.setControlOption('AstronomicalClock')
+      end
+   end
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding exterior lights')
     
     return true
-    
   end #add exterior lights  
   
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)

@@ -4,15 +4,15 @@
 # This script should be run after "run_legacy_idf_files.rb" is complete.
 
 # Specify the building types to run.
-bldg_types = ["SchoolPrimary"]
+bldg_types = ['OfficeMedium', 'OfficeLarge']#["OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
 # Specify the vintages you want to run.
-# valid options are: "Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"
-vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"] #["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"]
+# valid options are: pre1980, post1980, STD2004, STD2007, STD2010, STD2013
+vintages = ["Pre1980", "Post1980", "STD2010"]
 
 # Specify the climate zones you want to run.
-# for PTool: Los Angeles, Houston, Chicago, and Baltimore
-climate_zones = ["El Paso", "Houston", "Chicago", "Baltimore"]
+# for PTool: El Paso, Houston, Chicago, and Baltimore
+climate_zones = ["Houston", "Chicago", "Baltimore", "El Paso"]#["Houston", "Chicago", "Baltimore", "El Paso"]
 
 ################################################################################
 
@@ -38,16 +38,32 @@ bldg_types.sort.each do |bldg_type|
       # Change the bldg_type based on the vintage since the naming
       # conventions are different between Prototype and Reference buildings.
       if vintage == "Pre1980" || vintage == "Post1980"
+        case bldg_type
+        when "OfficeSmall"
+          bldg_type_search = "SmallOffice"
+        when 'OfficeMedium'
+          bldg_type_search = 'MediumOffice'
+        when 'OfficeLarge'
+          bldg_type_search = 'LargeOffice'
+        when "SchoolSecondary"
+          bldg_type_search = "SecondarySchool"
+        when "HotelLarge"
+          bldg_type_search=  "LargeHotel"
+        else
+          bldg_type_search = bldg_type
+        end
+
         case climate_zone
-        when "El Paso"
-          climate_zone = "Las.Vegas"
+          when "El Paso"
+            climate_zone = "Las.Vegas"
         end
       else
         case climate_zone
-        when "El Paso"
-          climate_zone = "El.Paso"
+          when "El Paso"
+            climate_zone = "El.Paso"
         end
-      end      
+        bldg_type_search = bldg_type
+      end
       
       # Open the sql file, skipping if not found
       sql_path_string = "#{Dir.pwd}/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}/EnergyPlus/eplusout.sql"
@@ -94,7 +110,10 @@ bldg_types.sort.each do |bldg_type|
           bldg_type_map = {
           "SchoolSecondary" => "SecondarySchool",
           "OfficeSmall" => "SmallOffice",
-          "SchoolPrimary" => "PrimarySchool"
+          "OfficeMedium" => "MediumOffice",
+          "OfficeLarge" => "LargeOffice",
+          "SchoolPrimary" => "PrimarySchool",
+          "HotelLarge" => "LargeHotel"
           }
 
           vintage_map = {

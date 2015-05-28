@@ -28,7 +28,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs << 'SecondarySchool'
     building_type_chs << 'PrimarySchool'
     building_type_chs << 'SmallOffice'
+    building_type_chs << 'MediumOffice'
+    building_type_chs << 'LargeOffice'
     building_type_chs << 'SmallHotel'
+    building_type_chs << 'LargeHotel'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -103,6 +106,31 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
     @start_time = Time.new
     @runner = runner
+
+        # Get all the log messages and put into output
+    # for users to see.
+    def log_msgs()
+      @msg_log.logMessages.each do |msg|
+        # DLM: you can filter on log channel here for now
+        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+          # Skip certain messages that are irrelevant/misleading
+          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+                  msg.logChannel.include?("runmanager") || # RunManager messages
+                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
+                  
+          # Report the message in the correct way
+          if msg.logLevel == OpenStudio::Info
+            @runner.registerInfo(msg.logMessage)  
+          elsif msg.logLevel == OpenStudio::Warn
+            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+          elsif msg.logLevel == OpenStudio::Error
+            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+          end
+        end
+      end
+      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+    end
     
     # Get all the log messages and put into output
     # for users to see.
@@ -188,6 +216,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Make the prototype building
     space_building_type_search = building_type
+    construction_type_search = building_type
     has_swh = true
 
     case building_type
@@ -220,6 +249,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         geometry_file = 'Geometry.small_office.osm'
       end
       space_building_type_search = 'Office'
+      construction_type_search = 'Office'
+    when 'MediumOffice'
+      require_relative 'resources/Prototype.medium_office'
+      geometry_file = 'Geometry.medium_office.osm'
+      space_building_type_search = 'Office'
+      construction_type_search = 'Office'
+    when 'LargeOffice'
+      require_relative 'resources/Prototype.large_office'
+      geometry_file = 'Geometry.large_office.osm'
+      space_building_type_search = 'Office'
+      construction_type_search = 'Office'
     when 'SmallHotel'
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
@@ -229,6 +269,20 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_hotel_pnnl.osm'
       end
+      when 'LargeHotel'
+        require_relative 'resources/Prototype.large_hotel'
+
+        case building_vintage
+          when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+            geometry_file = 'Geometry.large_hotel.doe.osm'
+          when '90.1-2007'
+            geometry_file = 'Geometry.large_hotel.2004_2007.osm'
+          when '90.1-2010'
+            geometry_file = 'Geometry.large_hotel.2010.osm'
+          else
+            geometry_file = 'Geometry.large_hotel.2013.osm'
+        end
+        space_building_type_search = 'LargeHotel'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
@@ -240,8 +294,9 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.assign_space_type_stubs(space_building_type_search, space_type_map)
     model.add_loads(building_vintage, climate_zone, standards_data_dir)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
-    model.add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
-    model.create_thermal_zones
+    # model.add_constructions('Office', building_vintage, climate_zone, standards_data_dir)
+    model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
+    model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     if has_swh
       swh_loop = model.add_swh_loop(prototype_input, hvac_standards)

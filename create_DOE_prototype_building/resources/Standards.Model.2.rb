@@ -160,7 +160,7 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Model', "Already added schedule: #{schedule_name}")
         return schedule
       end
-    end 
+    end
  
     require 'date'
 
@@ -286,7 +286,6 @@ class OpenStudio::Model::Model
   # Create a space type from the openstudio standards dataset.
   # TODO make return an OptionalSpaceType
   def add_space_type(template, clim, building_type, spc_type)
-
     #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
 
     # Get the space type data
@@ -362,6 +361,11 @@ class OpenStudio::Model::Model
     ventilation_per_area = data['ventilation_per_area']
     ventilation_per_person = data['ventilation_per_person']
     ventilation_ach = data['ventilation_air_changes']
+    
+    puts "#{name} ventilation_per_area = #{ventilation_per_area}"
+    puts "#{name} ventilation_per_person = #{ventilation_per_person}"
+    puts "#{name} ventilation_ach = #{ventilation_ach}"
+        
     unless ventilation_per_area  == 0 || ventilation_per_area.nil? then make_ventilation = true  end
     unless ventilation_per_person == 0 || ventilation_per_person.nil? then make_ventilation = true end
     unless ventilation_ach == 0 || ventilation_ach.nil? then make_ventilation = true end
@@ -371,6 +375,7 @@ class OpenStudio::Model::Model
       # Create the ventilation object and hook it up to the space type
       ventilation = OpenStudio::Model::DesignSpecificationOutdoorAir.new(self)
       ventilation.setName("#{name} Ventilation")
+      puts "#{name}"
       space_type.setDesignSpecificationOutdoorAir(ventilation)
       ventilation.setOutdoorAirMethod('Sum')
       unless ventilation_per_area  == 0 || ventilation_per_area.nil?
@@ -392,7 +397,6 @@ class OpenStudio::Model::Model
     unless occupancy_per_area == 0 || occupancy_per_area.nil? then make_people = true end
 
     if make_people == true
-
       # create the people definition
       people_def = OpenStudio::Model::PeopleDefinition.new(self)
       people_def.setName("#{name} People Definition")
@@ -988,7 +992,7 @@ class OpenStudio::Model::Model
     return OpenStudio::Model::OptionalDefaultConstructionSet.new(construction_set)
   
   end
-  
+
   private
 
   # Helper method to make a shortened version of a name

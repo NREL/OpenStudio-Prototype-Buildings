@@ -34,6 +34,8 @@ class OpenStudio::Model::FanConstantVolume
     allowed_hp = brake_hp * 1.1 # Per PNNL document #TODO add reference
     if allowed_hp > 0.1
       allowed_hp = allowed_hp.round(2)
+    elsif allowed_hp < 0.01
+      allowed_hp = 0.01
     end
     
     # Find the motor that meets these size criteria
@@ -42,6 +44,8 @@ class OpenStudio::Model::FanConstantVolume
     'number_of_poles' => 4.0,
     'type' => 'Enclosed',
     }
+    puts "#{self.name}"
+    puts "allowed_hp = #{allowed_hp}"
     
     motor_properties = find_object(motors, search_criteria, allowed_hp)
   

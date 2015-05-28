@@ -2,9 +2,7 @@ require 'openstudio'
 require 'openstudio/ruleset/ShowRunnerOutput'
 require 'minitest/autorun'
 require 'json'
-
 require_relative '../measure.rb'
-
 require 'fileutils'
 
 # Add a "dig" method to Hash to check if deeply nested elements exist
@@ -18,7 +16,6 @@ class Hash
 end
 
 class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
-    
   # Create a set of models, return a list of failures
   def create_models(bldg_types, vintages, climate_zones)
 
@@ -63,6 +60,15 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           if result.value.valueName != 'Success'
             failures << "Error - #{model_name} - Model was not created successfully."
           end
+
+          model_directory = "#{Dir.pwd}/build/#{building_type}-#{building_vintage}-#{climate_zone}"
+
+          # Convert the model to energyplus idf
+          forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
+          idf = forward_translator.translateModel(model)
+          idf_path_string = "#{model_directory}/#{model_name}.idf"
+          idf_path = OpenStudio::Path.new(idf_path_string)
+          idf.save(idf_path,true)
           
         end     
       end
@@ -153,10 +159,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           
           # Create a new workflow for the model to go through
           workflow = OpenStudio::Runmanager::Workflow.new
-          workflow.addJob(OpenStudio::Runmanager::JobType.new("ModelToIdf"))
-          workflow.addJob(OpenStudio::Runmanager::JobType.new("ExpandObjects"))
-          workflow.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlusPreProcess"))
-          workflow.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlus"))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new('ModelToIdf'))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new('ExpandObjects'))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new('EnergyPlusPreProcess'))
+          workflow.addJob(OpenStudio::Runmanager::JobType.new('EnergyPlus'))
           workflow.add(config_opts.getTools)
           job = workflow.create(output_path, model_path, epw_path)
 
@@ -193,7 +199,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     # List of all end uses
     end_uses = ['Heating', 'Cooling', 'Interior Lighting', 'Exterior Lighting', 'Interior Equipment', 'Exterior Equipment', 'Fans', 'Pumps', 'Heat Rejection','Humidification', 'Heat Recovery', 'Water Systems', 'Refrigeration', 'Generators']
-
+    csv_file = File.open("#{Dir.pwd}/build/comparison.csv", 'w')
+    csv_file.write("building_type,building_vintage,climate_zone,fuel_type,end_use,Legacy Val,OpenStudio Val,Percent Error\n")
     # Create a CSV to store the results
     ### Junk csv_string = CSV.generate do |csv| end
      ###More Junk csv << ["row", "of", "CSV", "data"]
@@ -209,6 +216,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             sql_path = OpenStudio::Path.new(sql_path_string)
             sql = nil
             if OpenStudio.exists(sql_path)
+              puts "Found SQL file."
               sql = OpenStudio::SqlFile.new(sql_path)
             else
               failures << "****Error - #{model_name} - Could not find sql file"
@@ -227,7 +235,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             total_osm_water_val = 0
             fuel_types.each do |fuel_type|
               end_uses.each do |end_use|
-                
                 # Get the legacy results number
                 legacy_val = legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, end_use)
                 #legacy_val = legacy_idf_results[building_type][building_vintage][climate_zone][fuel_type][end_use]
@@ -289,8 +296,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                   # Both osm and legacy are == 0 for this fuel/end use, no error
                   percent_error = 0
                 end
-                
-                # Record the values
+
                 results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val'] = legacy_val.round(2)
                 results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['OpenStudio Val'] = osm_val.round(2)
                 results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Percent Error'] = percent_error.round(2)
@@ -322,10 +328,36 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             File.open("#{Dir.pwd}/build/#{model_name}/comparison.json", 'w') do |file|
               file << JSON::pretty_generate(results_hash)
             end
-        
+
+            # Save the results to CSV
+
+            results_hash.each_pair do |key1, value1|
+              value1.each_pair do |key2, value2|
+                value2.each_pair do |key3, value3|
+                  value3.each_pair do |key4, value4|# fuel type
+                    fuel_type_legacy_val_total = 0
+                    fuel_type_openstudio_val_total = 0
+                    value4.each_pair do |key5, value5| # end use
+                      if value5['Percent Error'].to_i != 0
+                        fuel_type_legacy_val_total += value5['Legacy Val'].to_f
+                        fuel_type_openstudio_val_total += value5['OpenStudio Val'].to_f
+                        csv_file.write("#{key1},#{key2},#{key3},#{key4},#{key5},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
+                      end
+                    end
+
+                    if fuel_type_legacy_val_total != 0
+                      csv_file.write("#{key1},#{key2},#{key3},#{key4},Total,#{fuel_type_legacy_val_total},#{fuel_type_openstudio_val_total},#{(fuel_type_openstudio_val_total-fuel_type_legacy_val_total)/fuel_type_legacy_val_total*100}\n")
+                    end
+                  end
+                end
+              end
+            end
+
+
           end
         end
       end
+    csv_file.close
     
     #### Return the list of failures
     return failures
@@ -384,11 +416,34 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
-  
-  def dont_test_small_hotel
+
+  # Test the Small Office in the QTR vintages and climate zones
+  def dont_test_small_office_qtr
+
+    bldg_types = ['SmallOffice']
+    vintages = ['90.1-2010']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+    climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+    all_failures = []
     
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
+
+  def test_small_hotel
     bldg_types = ['SmallHotel']
-    vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
+    vintages = ['90.1-2010']#, 'DOE Ref 1980-2004','DOE Ref Pre-1980']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
@@ -407,8 +462,78 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
   end
+
+  def test_large_office
+
+    bldg_types = ['LargeOffice']
+    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+    climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+    all_failures = []
+    
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
+
+  # Test the Small Office in the QTR vintages and climate zones
+  def dont_test_medium_office
+
+    bldg_types = ['MediumOffice']
+    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+    climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+    all_failures = []
+    
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
+
+  # Test the large hotel in the PTool vintages and climate zones
+  def dont_test_large_hotel
+    bldg_types = ['LargeHotel']
+    vintages = ['DOE Ref Pre-1980']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
+
+    all_failures = []
+    
+    # Create the models
+    all_failures += create_models(bldg_types, vintages, climate_zones)
+    
+    # Run the models
+    all_failures += run_models(bldg_types, vintages, climate_zones)
+    
+    # Compare the results to the legacy idf results
+    all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+    # Assert if there are any errors
+    puts "There were #{all_failures.size} failures"
+    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    
+  end
   
-  def test_primary_school
+  def dont_test_primary_school
     
     bldg_types = ['PrimarySchool']
     vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',
@@ -452,6 +577,5 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     puts "There were #{all_failures.size} failures"
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     
-  end  
-  
+  end
 end
