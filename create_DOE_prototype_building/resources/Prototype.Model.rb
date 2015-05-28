@@ -156,9 +156,9 @@ class OpenStudio::Model::Model
     end
     
     # Make skylights have the same construction as fixed windows
-    sub_surface = self.getBuilding.defaultConstructionSet.get.defaultExteriorSubSurfaceConstructions.get
-    window_construction = sub_surface.fixedWindowConstruction.get
-    sub_surface.setSkylightConstruction(window_construction)
+    # sub_surface = self.getBuilding.defaultConstructionSet.get.defaultExteriorSubSurfaceConstructions.get
+    # window_construction = sub_surface.fixedWindowConstruction.get
+    # sub_surface.setSkylightConstruction(window_construction)
 
     # Assign a material to all internal mass objects
     material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
@@ -388,6 +388,37 @@ class OpenStudio::Model::Model
     
   end
 
+  def set_sizing_parameters(building_type, building_vintage)
+    
+    # Default unless otherwise specified
+    clg = 1.2
+    htg = 1.2
+    case building_vintage
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      case building_type
+      when 'PrimarySchool', 'SecondarySchool'
+        clg = 1.5
+        htg = 1.5
+      when 'LargeHotel'
+        clg = 1.33
+        htg = 1.33
+      end
+    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+      case building_type
+      when 'Hospital', 'LargeHotel', 'MediumOffice', 'LargeOffice', 'OutPatientHealthCare', 'PrimarySchool'
+        clg = 1.0
+        htg = 1.0
+      end
+    end 
+  
+    sizing_params = self.getSizingParameters
+    sizing_params.setHeatingSizingFactor(htg)
+    sizing_params.setCoolingSizingFactor(clg) 
+  
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.prototype.Model', "Set sizing factors to #{htg} for heating and #{clg} for cooling.")
+  
+  end
+  
   def applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     
     # Load the helper libraries for getting the autosized
