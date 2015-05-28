@@ -77,7 +77,7 @@ class OpenStudio::Model::Model
     # Check the number of matching objects found
     if matching_objects.size == 0
       desired_object = nil
-      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
     end
     
     return matching_objects
@@ -118,7 +118,7 @@ class OpenStudio::Model::Model
       matching_objects = search_criteria_matching_objects
     else
       # Round up if capacity is an integer
-      if capacity = capacity.round
+      if capacity == capacity.round
         capacity = capacity + (capacity * 0.01)
       end    
       search_criteria_matching_objects.each do |object|
@@ -157,7 +157,7 @@ class OpenStudio::Model::Model
     # First check model and return schedule if it already exists
     self.getSchedules.each do |schedule|
       if schedule.name.get.to_s == schedule_name
-        #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added schedule: #{schedule_name}")
+        OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Model', "Already added schedule: #{schedule_name}")
         return schedule
       end
     end 
@@ -397,7 +397,7 @@ class OpenStudio::Model::Model
       people_def = OpenStudio::Model::PeopleDefinition.new(self)
       people_def.setName("#{name} People Definition")
       unless  occupancy_per_area == 0 || occupancy_per_area.nil?
-        people_def.setPeopleperSpaceFloorArea(OpenStudio.convert(occupancy_per_area / 1000, 'people/ft^2', 'people/m^2').get)
+        people_def.setPeopleperSpaceFloorArea(OpenStudio.convert(occupancy_per_area / 1000.0, 'people/ft^2', 'people/m^2').get)
       end
 
       # create the people instance and hook it up to the space type
@@ -600,7 +600,7 @@ class OpenStudio::Model::Model
     # First check model and return material if it already exists
     self.getMaterials.each do |material|
       if material.name.get.to_s == material_name
-        #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added material: #{material_name}")
+        OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Model', "Already added material: #{material_name}")
         return material
       end
     end
@@ -695,18 +695,19 @@ class OpenStudio::Model::Model
   end
 
   # Create a construction from the openstudio standards dataset.
+  # If construction_props are specified, modifies the insulation layer accordingly.
   # TODO make return an OptionalConstruction
-  def add_construction(construction_name)
+  def add_construction(construction_name, construction_props = nil)
 
     # First check model and return construction if it already exists
     self.getConstructions.each do |construction|
       if construction.name.get.to_s == construction_name
-        #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Already added construction: #{construction_name}")
+        OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Model', "Already added construction: #{construction_name}")
         return construction
       end
     end
     
-    #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction: #{construction_name}")  
+    OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Model', "Adding construction: #{construction_name}")  
 
     # Get the object data
     data = self.find_object(@standards['constructions'], {'name'=>construction_name})
@@ -715,9 +716,9 @@ class OpenStudio::Model::Model
       return false #TODO change to return empty optional material
     end
     
+    # Make a new construction and set the standards details
     construction = OpenStudio::Model::Construction.new(self)
     construction.setName(construction_name)
-
     standards_info = construction.standardsInformation
 
     intended_surface_type = data['intended_surface_type']
@@ -734,6 +735,7 @@ class OpenStudio::Model::Model
 
     # TODO: could put construction rendering color in the spreadsheet
 
+    # Add the material layers to the construction
     layers = OpenStudio::Model::MaterialVector.new
     data['materials'].each do |material_name|
       material = add_material(material_name)
@@ -743,8 +745,75 @@ class OpenStudio::Model::Model
     end
     construction.setLayers(layers)
 
+    # Modify the R value of the insulation to hit the specified U-value, C-Factor, or F-Factor.
+    # Doesn't currently operate on glazing constructions
+    if construction_props
+      #puts construction.class #puts construction.methods.sort
+      # Determine the target U-value, C-factor, and F-factor
+      target_u_value_ip = construction_props['assembly_maximum_u_value']
+      target_f_factor_ip = construction_props['assembly_maximum_f_factor']
+      target_c_factor_ip = construction_props['assembly_maximum_c_factor']
+      
+      OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Model', "#{data['intended_surface_type']} u_val #{target_u_value_ip} f_fac #{target_f_factor_ip} c_fac #{target_c_factor_ip}")
+      
+      if target_u_value_ip && !(data['intended_surface_type'] == 'ExteriorWindow' || data['intended_surface_type'] == 'Skylight')
+        
+        # Set the U-Value
+        construction.set_u_value(target_u_value_ip.to_f, data['insulation_layer'], data['intended_surface_type'], true)
+        
+      elsif target_f_factor_ip && data['intended_surface_type'] == 'GroundContactFloor'
+        
+        # Set the F-Factor (only applies to slabs on grade)
+        # TODO figure out what the prototype buildings did about ground heat transfer
+        #construction.set_slab_f_factor(target_f_factor_ip.to_f, data['insulation_layer'])
+        construction.set_u_value(0.0, data['insulation_layer'], data['intended_surface_type'], true)
+      
+      elsif target_c_factor_ip && data['intended_surface_type'] == 'GroundContactWall' 
+        
+        # Set the C-Factor (only applies to underground walls)
+        # TODO figure out what the prototype buildings did about ground heat transfer
+        #construction.set_underground_wall_c_factor(target_c_factor_ip.to_f, data['insulation_layer'])
+        construction.set_u_value(0.0, data['insulation_layer'], data['intended_surface_type'], true)
+      
+      end
+      
+    end 
+
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction #{construction.name}.")    
+
     return construction
     
+  end  
+
+  # Helper method to find a particular construction and add it to the model
+  # after modifying the insulation value if necessary.
+  def find_and_add_construction(template, climate_zone_set, intended_surface_type, standards_construction_type, building_category)
+  
+    # Get the construction properties,
+    # which specifies properties by construction category by climate zone set.
+    # AKA the info in Tables 5.5-1-5.5-8
+    props = self.find_object(@standards['construction_properties'], {'template'=>template,
+                                                                    'climate_zone_set'=> climate_zone_set,
+                                                                    'intended_surface_type'=> intended_surface_type,
+                                                                    'standards_construction_type'=> standards_construction_type,
+                                                                    'building_category' => building_category
+                                                                    })
+    if !props
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction properties for: #{template}-#{climate_zone_set}-#{intended_surface_type}-#{standards_construction_type}-#{building_category}.")
+      return false
+    end  
+  
+    # Make sure that a construction is specified
+    if props['construction'].nil?
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "No typical construction is specified for construction properties of: #{template}-#{climate_zone_set}-#{intended_surface_type}-#{standards_construction_type}-#{building_category}.  Make sure it is entered in the spreadsheet.")
+      return false
+    end
+  
+    # Add the construction, modifying properties as necessary
+    construction = add_construction(props['construction'], props)
+  
+    return construction
+  
   end  
   
   # Create a construction set from the openstudio standards dataset.
@@ -756,17 +825,18 @@ class OpenStudio::Model::Model
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}")
 
     # Find the climate zone set that this climate zone falls into
-    climate_zone_set = find_climate_zone_set(template, clim, building_type, spc_type)
+    climate_zone_set = find_climate_zone_set(clim, template)
     if !climate_zone_set
       return construction_set
     end
-    
+ 
     # Get the object data
     data = self.find_object(@standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
     if !data
+      #OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
       return construction_set
-    end
-
+    end 
+  
     name = make_name(template, clim, building_type, spc_type)
 
     # Create a new construction set and name it
@@ -776,14 +846,26 @@ class OpenStudio::Model::Model
     # Exterior surfaces constructions
     exterior_surfaces = OpenStudio::Model::DefaultSurfaceConstructions.new(self)
     construction_set.setDefaultExteriorSurfaceConstructions(exterior_surfaces)
-    if construction_name = data['exterior_floors']
-      exterior_surfaces.setFloorConstruction(add_construction(construction_name))
+    if data['exterior_floor_standards_construction_type'] && data['exterior_floor_building_category']
+      exterior_surfaces.setFloorConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'ExteriorFloor',
+                                                                       data['exterior_floor_standards_construction_type'],
+                                                                       data['exterior_floor_building_category']))
     end
-    if construction_name = data['exterior_walls']
-      exterior_surfaces.setWallConstruction(add_construction(construction_name))
+    if data['exterior_wall_standards_construction_type'] && data['exterior_wall_building_category']
+      exterior_surfaces.setWallConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'ExteriorWall',
+                                                                       data['exterior_wall_standards_construction_type'],
+                                                                       data['exterior_wall_building_category']))
     end
-    if construction_name = data['exterior_roofs']
-      exterior_surfaces.setRoofCeilingConstruction(add_construction(construction_name))
+    if data['exterior_roof_standards_construction_type'] && data['exterior_roof_building_category']
+      exterior_surfaces.setRoofCeilingConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'ExteriorRoof',
+                                                                       data['exterior_roof_standards_construction_type'],
+                                                                       data['exterior_roof_building_category']))
     end
 
     # Interior surfaces constructions
@@ -802,36 +884,68 @@ class OpenStudio::Model::Model
     # Ground contact surfaces constructions
     ground_surfaces = OpenStudio::Model::DefaultSurfaceConstructions.new(self)
     construction_set.setDefaultGroundContactSurfaceConstructions(ground_surfaces)
-    if construction_name = data['ground_contact_floors']
-      ground_surfaces.setFloorConstruction(add_construction(construction_name))
+    if data['ground_contact_floor_standards_construction_type'] && data['ground_contact_floor_building_category']
+      ground_surfaces.setFloorConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'GroundContactFloor',
+                                                                       data['ground_contact_floor_standards_construction_type'],
+                                                                       data['ground_contact_floor_building_category']))
     end
-    if construction_name = data['ground_contact_walls']
-      ground_surfaces.setWallConstruction(add_construction(construction_name))
+    if data['ground_contact_wall_standards_construction_type'] && data['ground_contact_wall_building_category']
+      ground_surfaces.setWallConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'GroundContactWall',
+                                                                       data['ground_contact_wall_standards_construction_type'],
+                                                                       data['ground_contact_wall_building_category']))
     end
-    if construction_name = data['ground_contact_ceiling']
-      ground_surfaces.setRoofCeilingConstruction(add_construction(construction_name))
+    if data['ground_contact_ceiling_standards_construction_type'] && data['ground_contact_ceiling_building_category']
+      ground_surfaces.setRoofCeilingConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'GroundContactRoof',
+                                                                       data['ground_contact_ceiling_standards_construction_type'],
+                                                                       data['ground_contact_ceiling_building_category']))
     end
 
     # Exterior sub surfaces constructions
     exterior_subsurfaces = OpenStudio::Model::DefaultSubSurfaceConstructions.new(self)
     construction_set.setDefaultExteriorSubSurfaceConstructions(exterior_subsurfaces)
-    if construction_name = data['exterior_fixed_windows']
-      exterior_subsurfaces.setFixedWindowConstruction(add_construction(construction_name))
+    if data['exterior_fixed_window_standards_construction_type'] && data['exterior_fixed_window_building_category']
+      exterior_subsurfaces.setFixedWindowConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'ExteriorWindow',
+                                                                       data['exterior_fixed_window_standards_construction_type'],
+                                                                       data['exterior_fixed_window_building_category']))
     end
-    if construction_name = data['exterior_operable_windows']
-      exterior_subsurfaces.setOperableWindowConstruction(add_construction(construction_name))
+    if data['exterior_operable_window_standards_construction_type'] && data['exterior_operable_window_building_category']
+      exterior_subsurfaces.setOperableWindowConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'ExteriorWindow',
+                                                                       data['exterior_operable_window_standards_construction_type'],
+                                                                       data['exterior_operable_window_building_category']))
     end
-    if construction_name = data['exterior_doors']
-      exterior_subsurfaces.setDoorConstruction(add_construction(construction_name))
+    if data['exterior_door_standards_construction_type'] && data['exterior_door_building_category']
+      exterior_subsurfaces.setDoorConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'ExteriorDoor',
+                                                                       data['exterior_door_standards_construction_type'],
+                                                                       data['exterior_door_building_category']))
     end
     if construction_name = data['exterior_glass_doors']
       exterior_subsurfaces.setGlassDoorConstruction(add_construction(construction_name))
     end
-    if construction_name = data['exterior_overhead_doors']
-      exterior_subsurfaces.setOverheadDoorConstruction(add_construction(construction_name))
+    if data['exterior_overhead_door_standards_construction_type'] && data['exterior_overhead_door_building_category']
+      exterior_subsurfaces.setOverheadDoorConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'ExteriorDoor',
+                                                                       data['exterior_overhead_door_standards_construction_type'],
+                                                                       data['exterior_overhead_door_building_category']))
     end
-    if construction_name = data['exterior_skylights']
-      exterior_subsurfaces.setOverheadDoorConstruction(add_construction(construction_name))
+    if data['exterior_skylight_standards_construction_type'] && data['exterior_skylight_building_category']
+      exterior_subsurfaces.setSkylightConstruction(find_and_add_construction(template,
+                                                                       climate_zone_set,
+                                                                       'Skylight',
+                                                                       data['exterior_skylight_standards_construction_type'],
+                                                                       data['exterior_skylight_building_category']))
     end
     if construction_name = data['tubular_daylight_domes']
       exterior_subsurfaces.setTubularDaylightDomeConstruction(add_construction(construction_name))
@@ -942,44 +1056,41 @@ class OpenStudio::Model::Model
     return result
   end
 
-  # Helper method to find out which climate zone set contains a specific
-  # climate zone for use in adding a construction set.
+  # Helper method to find out which climate zone set contains a specific climate zone.
   # Returns climate zone set name as String if success, nil if not found.
-  def find_climate_zone_set(template, clim, building_type, spc_type)
+  def find_climate_zone_set(clim, building_vintage)
     result = nil
     
-    # Find the construction sets that correspond
-    # to the specified template, building type, and space type
-    possible_const_sets = self.find_objects(@standards['construction_sets'], {'template'=>template, 'building_type'=>building_type, 'space_type'=>spc_type})
-    if possible_const_sets.size == 0
-      #OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Cannot find data for construction sets: #{template}-#{building_type}-#{spc_type}, will not be created.")
-      return result
-    end    
-   
-    # Get a list of climate_zone_sets to check for the specified climate_zone
-    possible_climate_zone_set_names = []
-    possible_const_sets.each do |possible_const_set|
-      possible_climate_zone_set_name = possible_const_set['climate_zone_set']
-      next if possible_climate_zone_set_name.nil?
-      # Get the climate_zone_set with this name
-      possible_climate_zone_set = self.find_object(@standards['climate_zone_sets'], {'name'=>possible_climate_zone_set_name})
-      # Skip climate zone sets with no climate zones
-      next if possible_climate_zone_set['climate_zones'].nil?
-      # Check if this climate zone set includes the specified climate zone 
-      next unless possible_climate_zone_set['climate_zones'].include?(clim)   
-      # Found a possible match
-      possible_climate_zone_set_names << possible_climate_zone_set_name
+    possible_climate_zones = []    
+    @standards['climate_zone_sets'].each do |climate_zone_set|
+      if climate_zone_set['climate_zones'].include?(clim)
+        possible_climate_zones << climate_zone_set['name']
+      end
     end
     
-    if possible_climate_zone_set_names.size == 0
+    # Check the results
+    if possible_climate_zones.size == 0
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Cannot find a climate zone set containing #{clim}")
-    elsif possible_climate_zone_set_names.size > 1
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Found multiple climate zone sets containing #{clim}, using the first one.")
-      result = possible_climate_zone_set_names[0]
-    else
-      result = possible_climate_zone_set_names[0]
+    elsif possible_climate_zones.size > 2
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Found more than 2 climate zone sets containing #{clim}; will return last matching cliimate zone set.")     
     end
-  
+    
+    # For Pre-1980 and 1980-2004, use the most specific climate zone set.
+    # For example, 2A and 2 both contain 2A, so use 2A.    
+    # For 2004-2013, use least specific climate zone set.
+    # For example, 2A and 2 both contain 2A, so use 2.
+    case building_vintage
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'    
+      result = possible_climate_zones.sort.last
+    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+      result = possible_climate_zones.sort.first
+    end
+    
+    # Check that a climate zone set was found
+    if result.nil?
+      
+    end
+    
     return result
   
   end
