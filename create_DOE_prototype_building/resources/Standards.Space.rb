@@ -929,7 +929,7 @@ class OpenStudio::Model::Space
     # Get the total floor area
     total_floor_area_m2 = total_area_of_polygons(combined_floor_polygons)
     total_floor_area_ft2 = OpenStudio.convert(total_floor_area_m2, 'm^2', 'ft^2').get
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Space", "total_floor_area_ft2 = #{total_floor_area_ft2.round(1)}")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "total_floor_area_ft2 = #{total_floor_area_ft2.round(1)}")
     
     # Toplighted area
     toplighted_area_m2 = area_a_polygons_overlap_b_polygons(combined_toplit_polygons, combined_floor_polygons, 'combined_toplit_polygons', 'combined_floor_polygons')
@@ -945,9 +945,9 @@ class OpenStudio::Model::Space
     primary_sidelighted_area_ft2 = OpenStudio.convert(primary_sidelighted_area_m2, 'm^2', 'ft^2').get
     secondary_sidelighted_area_ft2 = OpenStudio.convert(secondary_sidelighted_area_m2, 'm^2', 'ft^2').get
       
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Space", "toplighted_area_ft2 = #{toplighted_area_ft2.round(1)}")
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Space", "primary_sidelighted_area_ft2 = #{primary_sidelighted_area_ft2.round(1)}")
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Space", "secondary_sidelighted_area_ft2 = #{secondary_sidelighted_area_ft2.round(1)}")    
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "toplighted_area_ft2 = #{toplighted_area_ft2.round(1)}")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "primary_sidelighted_area_ft2 = #{primary_sidelighted_area_ft2.round(1)}")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "secondary_sidelighted_area_ft2 = #{secondary_sidelighted_area_ft2.round(1)}")    
     
     result['toplighted_area'] = toplighted_area_m2
     result['primary_sidelighted_area'] = primary_sidelighted_area_m2
@@ -1062,7 +1062,7 @@ class OpenStudio::Model::Space
       sidelighting_effective_aperture = sum_window_area_times_vt/primary_sidelighted_area
     end
  
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Space', "For #{self.name} sidelighting effective aperture = #{sidelighting_effective_aperture.round(4)}.")
+    OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.Space', "For #{self.name} sidelighting effective aperture = #{sidelighting_effective_aperture.round(4)}.")
  
     return sidelighting_effective_aperture
     
