@@ -169,7 +169,7 @@ class OpenStudio::Model::Model
     chiller.setMinimumUnloadingRatio(0.15)
     chiller.setCondenserType('AirCooled')
     chiller.setLeavingChilledWaterLowerTemperatureLimit(OpenStudio.convert(36,'F','C').get)
-    chiller.setChillerFlowMode('VariableFlow')
+    chiller.setChillerFlowMode('ConstantFlow')
     chilled_water_loop.addSupplyBranchForComponent(chiller)  
     
     #chilled water loop pipes
@@ -226,12 +226,15 @@ class OpenStudio::Model::Model
     hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
     hw_stpt_manager.addToNode(air_loop.supplyOutletNode)
     sizing_system = air_loop.sizingSystem
+    sizing_system.setPreheatDesignTemperature(prehtg_sa_temp_c)
+    sizing_system.setCentralCoolingDesignSupplyAirTemperature(clg_sa_temp_c)
+    sizing_system.setCentralHeatingDesignSupplyAirTemperature(htg_sa_temp_c)
     sizing_system.setSizingOption('Coincident')
     sizing_system.setAllOutdoorAirinCooling(false)
     sizing_system.setAllOutdoorAirinHeating(false)
-    sizing_system.setSystemOutdoorAirMethod('VentilationRateProcedure')
+    sizing_system.setSystemOutdoorAirMethod('ZoneSum')
     air_loop.setNightCycleControlType('CycleOnAny')
-    
+        
     #fan
     fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
     fan.setName("#{thermal_zones.size} Zone VAV Fan")
@@ -266,35 +269,10 @@ class OpenStudio::Model::Model
     oa_intake_controller.setEconomizerControlType('NoEconomizer')
     oa_intake_controller.setMinimumLimitType('FixedMinimum')
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
-    oa_intake.addToNode(air_loop.supplyInletNode)
-
-    
-    
-    #heat exchanger on oa system' for some vintages
-    # if prototype_input['template'] == '90.1-2010'
-      # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-      # heat_exchanger.setName("#{thermal_zones.size} Zone VAV HX")
-      # heat_exchanger.setHeatExchangerType('Rotary')
-       # heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-      # heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.6)
-      # heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-      # heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-      # heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-      # heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.6)
-      # heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-      # heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-      # heat_exchanger.setNominalElectricPower(6240.0734)
-      # heat_exchanger.setEconomizerLockout(true)
-      # heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-
-      # oa_node = oa_intake.outboardOANode
-      # if oa_node.is_initialized
-        # heat_exchanger.addToNode(oa_node.get)
-      # else
-        # OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
-        # return false
-      # end
-    # end
+    oa_intake.addToNode(air_loop.supplyInletNode) 
+    controller_mv = oa_intake_controller.controllerMechanicalVentilation
+    controller_mv.setName("#{thermal_zones.size} Zone VAV Ventilation Controller")
+    controller_mv.setSystemOutdoorAirMethod('VentilationRateProcedure')
     
     #hook the VAV system to each zone
     thermal_zones.each do |zone|
@@ -312,9 +290,16 @@ class OpenStudio::Model::Model
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
       terminal.setZoneMinimumAirFlowMethod('Constant')
-      terminal.setConstantMinimumAirFlowFraction(0.3)
-      terminal.setDamperHeatingAction('Normal')
+      #terminal.setConstantMinimumAirFlowFraction(0.7)
+      terminal.setDamperHeatingAction('Reverse')
+      terminal.setMaximumFlowFractionDuringReheat(0.5)
+      terminal.setMaximumReheatAirTemperature(rht_sa_temp_c)
       air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
+    
+      # Zone sizing
+      sizing_zone = zone.sizingZone
+      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(clg_sa_temp_c)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(rht_sa_temp_c)
     
     end
 
@@ -808,6 +793,11 @@ class OpenStudio::Model::Model
       air_loop_sizing.setHeatingDesignAirFlowRate(0.0)
       air_loop_sizing.setSystemOutdoorAirMethod('ZoneSum')
       
+      # Zone sizing
+      sizing_zone = zone.sizingZone
+      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(40.0)
+            
       # Add a setpoint manager single zone reheat to control the
       # supply air temperature based on the needs of this zone
       setpoint_mgr_single_zone_reheat = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(self)
