@@ -91,9 +91,16 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_vintage = runner.getStringArgumentValue('building_vintage',user_arguments)
     climate_zone = runner.getStringArgumentValue('climate_zone',user_arguments)
 
+    # Turn debugging output on/off
+    debug = false    
+    
     # Open a channel to log info/warning/error messages
     @msg_log = OpenStudio::StringStreamLogSink.new
-    @msg_log.setLogLevel(OpenStudio::Info)
+    if debug
+      @msg_log.setLogLevel(OpenStudio::Debug)
+    else
+      @msg_log.setLogLevel(OpenStudio::Info)
+    end
     @start_time = Time.new
     @runner = runner
     
@@ -107,7 +114,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
           next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
                   msg.logChannel.include?("runmanager") || # RunManager messages
                   msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
+                  msg.logChannel.include?("GeometryTranslator") # Forward translator and geometry translator
+                  msg.logChannel.include?("deprecated") # Deprecated method warnings
                   
           # Report the message in the correct way
           if msg.logLevel == OpenStudio::Info
@@ -116,6 +124,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
             @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
           elsif msg.logLevel == OpenStudio::Error
             @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+          elsif debug == true && msg.logLevel == OpenStudio::Debug 
+            @runner.registerInfo("DEBUG [#{msg.logChannel}] #{msg.logMessage}")
           end
         end
       end
@@ -135,7 +145,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # HVAC standards
     require_relative 'resources/Standards.Model'
     require_relative 'resources/Standards.Model.2' # TODO merge these two Standards.Model files after changes calm down
-
+    
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
     # as an instance variable?
@@ -183,10 +193,22 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     case building_type
     when 'SecondarySchool'
       require_relative 'resources/Prototype.secondary_school'
-      geometry_file = 'Geometry.secondary_school.osm'
+      # Secondary School geometry is different between
+      # Reference and Prototype vintages (Prototype has skylights)
+      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+        geometry_file = 'Geometry.secondary_school_pre_1980_to_2004.osm'
+      else
+        geometry_file = 'Geometry.secondary_school.osm'
+      end      
     when 'PrimarySchool'
       require_relative 'resources/Prototype.primary_school'
-      geometry_file = 'Geometry.primary_school.osm'      
+      # Primary School geometry is different between
+      # Reference and Prototype vintages (Prototype has skylights)
+      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+        geometry_file = 'Geometry.primary_school_pre_1980_to_2004.osm'
+      else
+        geometry_file = 'Geometry.primary_school.osm'
+      end 
     when 'SmallOffice'
       require_relative 'resources/Prototype.small_office'
       # Small Office geometry is different for pre-1980
@@ -230,14 +252,16 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Set the building location, weather files, ddy files, etc.
     model.add_design_days_and_weather_file(climate_zone)
+    
+    # Set the sizing parameters
+    model.set_sizing_parameters(building_type, building_vintage)
 
     # Assign the standards to the model
     model.template = building_vintage
     model.climate_zone = climate_zone
     model_status = '1_initial_creation'
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     # Perform a sizing run
     if model.runSizingRun("#{osm_directory}/SizingRun1") == false
       log_msgs
@@ -245,15 +269,15 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
     model_status = "2_after_first_sz_run"
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
     # on the flow rate of the system.
     model.applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     model_status = '4_after_proto_hvac_assumptions'
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
 
     # Get the equipment sizes from the sizing run
     # and hard-assign them back to the model
@@ -266,7 +290,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.applyHVACEfficiencyStandard
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
    
     # Add daylighting controls per standard
     model.addDaylightingControls
