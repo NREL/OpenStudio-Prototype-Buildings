@@ -163,7 +163,7 @@ class OpenStudio::Model::FanOnOff
     # Lookup the minimum motor efficiency
     motors = hvac_standards["motors"]
     
-    # Assuming all fan motors are 4-pole ODP
+    # Assuming all fan motors are 4-pole Enclosed
     search_criteria = {
       "template" => template,
       "number_of_poles" => 4.0,
