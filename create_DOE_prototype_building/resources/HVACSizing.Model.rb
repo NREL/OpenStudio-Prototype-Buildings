@@ -186,7 +186,7 @@ class OpenStudio::Model::Model
       return false
     end
     
-    # Check that the sizing run finished without severe errors
+    # Report severe errors in the sizing run
     error_query = "SELECT ErrorMessage 
         FROM Errors 
         WHERE ErrorType='1'"
@@ -195,11 +195,22 @@ class OpenStudio::Model::Model
     if errs.is_initialized
       errs = errs.get
       if errs.size > 0
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "The sizing run failed with the following severe errors: #{errs.join('\n')}.")
-        return false
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "The sizing run had the following severe errors: #{errs.join('\n')}.")
       end
     end
 
+    # Check that the sizing run completed
+    completed_query = "SELECT CompletedSuccessfully FROM Simulations"
+
+    completed = self.sqlFile.get.execAndReturnFirstDouble(completed_query)
+    if completed.is_initialized
+      completed = completed.get
+      if errs.size == 1
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "The sizing run failed.  See previous severe errors for clues.")
+        return false
+      end
+    end
+    
     # Change the model back to running the weather file
     sim_control.setRunSimulationforSizingPeriods(false)
     sim_control.setRunSimulationforWeatherFileRunPeriods(true)
