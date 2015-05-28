@@ -243,7 +243,7 @@ def find_object(hash_of_objects, search_criteria, capacity = nil)
     matching_objects = search_criteria_matching_objects
   else
     # Round up if capacity is an integer
-    if capacity = capacity.round
+    if capacity == capacity.round
       capacity = capacity + (capacity * 0.01)
     end  
     search_criteria_matching_objects.each do |object|
