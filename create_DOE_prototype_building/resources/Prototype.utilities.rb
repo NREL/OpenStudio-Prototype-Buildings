@@ -203,7 +203,7 @@ def find_objects(hash_of_objects, search_criteria, capacity = nil)
   # Check the number of matching objects found
   if matching_objects.size == 0
     desired_object = nil
-    OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
+    #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
   end
   
   return matching_objects

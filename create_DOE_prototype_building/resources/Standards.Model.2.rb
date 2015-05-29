@@ -77,7 +77,7 @@ class OpenStudio::Model::Model
     # Check the number of matching objects found
     if matching_objects.size == 0
       desired_object = nil
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
+      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Find objects search criteria returned no results. Search criteria: #{search_criteria}, capacity = #{capacity}.  Called from #{caller(0)[1]}.")
     end
     
     return matching_objects
@@ -361,11 +361,6 @@ class OpenStudio::Model::Model
     ventilation_per_area = data['ventilation_per_area']
     ventilation_per_person = data['ventilation_per_person']
     ventilation_ach = data['ventilation_air_changes']
-    
-    puts "#{name} ventilation_per_area = #{ventilation_per_area}"
-    puts "#{name} ventilation_per_person = #{ventilation_per_person}"
-    puts "#{name} ventilation_ach = #{ventilation_ach}"
-        
     unless ventilation_per_area  == 0 || ventilation_per_area.nil? then make_ventilation = true  end
     unless ventilation_per_person == 0 || ventilation_per_person.nil? then make_ventilation = true end
     unless ventilation_ach == 0 || ventilation_ach.nil? then make_ventilation = true end
@@ -825,8 +820,6 @@ class OpenStudio::Model::Model
   def add_construction_set(template, clim, building_type, spc_type)
 
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
-  
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}")
 
     # Find the climate zone set that this climate zone falls into
     climate_zone_set = find_climate_zone_set(clim, template)
@@ -840,6 +833,8 @@ class OpenStudio::Model::Model
       #OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
       return construction_set
     end 
+  
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}")  
   
     name = make_name(template, clim, building_type, spc_type)
 
