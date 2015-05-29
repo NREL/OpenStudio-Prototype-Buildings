@@ -150,7 +150,7 @@ class OpenStudio::Model::Model
       end
     end
 
-    path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
+    path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
 
     # Load the openstudio_standards.json file
     self.load_openstudio_standards_json(path_to_standards_json)
@@ -230,19 +230,12 @@ class OpenStudio::Model::Model
         internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
         internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
         internal_mass_def.setConstruction(construction)
-        puts "internal_mass_def = #{internal_mass_def}"
-    
         internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
         space = self.getSpaceByName(conditioned_space_name)
         space = space.get
-        puts "space = #{space}"
         internal_mass.setSpace(space)
       end
     end
-    
-    # self.getInternalMassDefinitions.each do |int_mass_def|
-      # int_mass_def.setConstruction(construction)
-    # end
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying constructions')
     
