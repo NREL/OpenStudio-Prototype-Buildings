@@ -106,31 +106,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
     @start_time = Time.new
     @runner = runner
-
-        # Get all the log messages and put into output
-    # for users to see.
-    def log_msgs()
-      @msg_log.logMessages.each do |msg|
-        # DLM: you can filter on log channel here for now
-        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
-          # Skip certain messages that are irrelevant/misleading
-          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
-                  msg.logChannel.include?("runmanager") || # RunManager messages
-                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
-                  
-          # Report the message in the correct way
-          if msg.logLevel == OpenStudio::Info
-            @runner.registerInfo(msg.logMessage)  
-          elsif msg.logLevel == OpenStudio::Warn
-            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
-          elsif msg.logLevel == OpenStudio::Error
-            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
-          end
-        end
-      end
-      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
-    end
     
     # Get all the log messages and put into output
     # for users to see.
@@ -217,7 +192,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Make the prototype building
     space_building_type_search = building_type
     construction_type_search = building_type
-    has_swh = true
 
     case building_type
     when 'SecondarySchool'
@@ -298,10 +272,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-    if has_swh
-      swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
-      model.add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
-    end
+    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
@@ -352,8 +323,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
    
    
     # Add output variables for debugging
-    model.request_timeseries_outputs
-
+    if debug
+      model.request_timeseries_outputs
+    end
+    
     # Finished
     model_status = 'final'
     #model.run("#{osm_directory}/#{model_status}")
