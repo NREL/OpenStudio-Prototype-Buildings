@@ -517,4 +517,20 @@ class OpenStudio::Model::Model
     
   end #add hvac
 
+  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+   
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
+
+    main_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
+    self.add_swh_end_uses(prototype_input, hvac_standards, main_swh_loop, 'main')
+    
+    laundry_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry')
+    self.add_swh_end_uses(prototype_input, hvac_standards, laundry_swh_loop, 'laundry')
+
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding SWH")
+    
+    return true
+    
+  end #add swh  
+  
 end
