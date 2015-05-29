@@ -430,7 +430,7 @@ class OpenStudio::Model::Space
     
     ### Begin the actual daylight area calculations ### 
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Space", "For #{self.name}, calculating daylighted areas.")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "For #{self.name}, calculating daylighted areas.")
     
     result = {'toplighted_area' => nil,
               'primary_sidelighted_area' => nil,
