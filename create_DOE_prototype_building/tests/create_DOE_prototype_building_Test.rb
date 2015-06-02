@@ -282,7 +282,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                   # If both 
                   percent_error = ((osm_val - legacy_val)/legacy_val) * 100
                   if percent_error.abs > acceptable_error_percentage
-                    failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = #{percent_error.round}%"
+                    failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = #{percent_error.round}% (#{osm_val}, #{legacy_val})"
                   end
                 elsif osm_val > 0 && legacy_val == 0
                   # The osm has a fuel/end use that the legacy idf does not
@@ -463,7 +463,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   end
 
-  def test_large_office
+  def dont_test_large_office
 
     bldg_types = ['LargeOffice']
     vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
@@ -487,7 +487,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # Test the Small Office in the QTR vintages and climate zones
-  def dont_test_medium_office
+  def test_medium_office
 
     bldg_types = ['MediumOffice']
     vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'

@@ -817,13 +817,13 @@ class OpenStudio::Model::Model
     fan.setName("#{thermal_zones.size} Zone PVAV Fan")
     fan.setFanEfficiency(0.6045)
     fan.setMotorEfficiency(0.93)
-    fan_static_pressure_in_h2o = 5.58
+    fan_static_pressure_in_h2o = 4.454827023111309
     fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
     fan.setPressureRise(fan_static_pressure_pa)
     fan.addToNode(air_loop.supplyInletNode)
     
     #cooling coil
-    clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(self)
+    clg_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(self)
     clg_coil.setName("#{thermal_zones.size} Zone PVAV Clg Coil")
     clg_coil.addToNode(air_loop.supplyInletNode)
     
@@ -2316,8 +2316,15 @@ class OpenStudio::Model::Model
     swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
     swh_pump.setName('Service Water Loop Pump')
     swh_pump_head_press_pa = 0.001 # As if there is no circulation pump
+    unless prototype_input['service_water_pump_head'].nil?
+      swh_pump_head_press_pa = prototype_input['service_water_pump_head']
+    end
+    swh_pump_motor_efficiency = 0.3
+    unless prototype_input['service_water_pump_motor_efficiency'].nil?
+      swh_pump_motor_efficiency = prototype_input['service_water_pump_motor_efficiency']
+    end
     swh_pump.setRatedPumpHead(swh_pump_head_press_pa)
-    swh_pump.setMotorEfficiency(0.3)
+    swh_pump.setMotorEfficiency(swh_pump_motor_efficiency)
     swh_pump.setPumpControlType('Intermittent')
     swh_pump.addToNode(service_water_loop.supplyInletNode)
     
