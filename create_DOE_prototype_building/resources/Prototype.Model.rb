@@ -150,7 +150,7 @@ class OpenStudio::Model::Model
       end
     end
 
-    path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
+    path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
 
     # Load the openstudio_standards.json file
     self.load_openstudio_standards_json(path_to_standards_json)
@@ -199,9 +199,9 @@ class OpenStudio::Model::Model
     end
     
     # Make skylights have the same construction as fixed windows
-    sub_surface = self.getBuilding.defaultConstructionSet.get.defaultExteriorSubSurfaceConstructions.get
-    window_construction = sub_surface.fixedWindowConstruction.get
-    sub_surface.setSkylightConstruction(window_construction)
+    # sub_surface = self.getBuilding.defaultConstructionSet.get.defaultExteriorSubSurfaceConstructions.get
+    # window_construction = sub_surface.fixedWindowConstruction.get
+    # sub_surface.setSkylightConstruction(window_construction)
 
     # Assign a material to all internal mass objects
     material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
@@ -219,8 +219,22 @@ class OpenStudio::Model::Model
     layers = OpenStudio::Model::MaterialVector.new
     layers << material
     construction.setLayers(layers)
-    self.getInternalMassDefinitions.each do |int_mass_def|
-      int_mass_def.setConstruction(construction)
+    
+    # get all the space types that are conditioned
+    conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)
+    
+    # add internal mass
+    unless building_type == 'SmallHotel' && 
+      (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
+      conditioned_space_names.each do |conditioned_space_name|
+        internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
+        internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
+        internal_mass_def.setConstruction(construction)
+        internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
+        space = self.getSpaceByName(conditioned_space_name)
+        space = space.get
+        internal_mass.setSpace(space)
+      end
     end
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying constructions')
@@ -228,7 +242,19 @@ class OpenStudio::Model::Model
     return true
 
   end  
-
+  
+  # get all the space types that are conditioned
+  def find_conditioned_space_names(building_type, building_vintage, climate_zone)
+    system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
+    conditioned_space_names = OpenStudio::StringVector.new
+    system_to_space_map.each do |system|
+      system['space_names'].each do |space_name|
+        conditioned_space_names << space_name
+      end
+    end
+    return conditioned_space_names
+  end
+  
   def create_thermal_zones(building_type,building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started creating thermal zones')
@@ -492,6 +518,37 @@ class OpenStudio::Model::Model
     
   end
 
+  def set_sizing_parameters(building_type, building_vintage)
+    
+    # Default unless otherwise specified
+    clg = 1.2
+    htg = 1.2
+    case building_vintage
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      case building_type
+      when 'PrimarySchool', 'SecondarySchool'
+        clg = 1.5
+        htg = 1.5
+      when 'LargeHotel'
+        clg = 1.33
+        htg = 1.33
+      end
+    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+      case building_type
+      when 'Hospital', 'LargeHotel', 'MediumOffice', 'LargeOffice', 'OutPatientHealthCare', 'PrimarySchool'
+        clg = 1.0
+        htg = 1.0
+      end
+    end 
+  
+    sizing_params = self.getSizingParameters
+    sizing_params.setHeatingSizingFactor(htg)
+    sizing_params.setCoolingSizingFactor(clg) 
+  
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.prototype.Model', "Set sizing factors to #{htg} for heating and #{clg} for cooling.")
+  
+  end
+  
   def applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     
     # Load the helper libraries for getting the autosized

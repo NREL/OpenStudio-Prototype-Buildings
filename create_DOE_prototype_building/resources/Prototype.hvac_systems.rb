@@ -169,7 +169,7 @@ class OpenStudio::Model::Model
     chiller.setMinimumUnloadingRatio(0.15)
     chiller.setCondenserType('AirCooled')
     chiller.setLeavingChilledWaterLowerTemperatureLimit(OpenStudio.convert(36,'F','C').get)
-    chiller.setChillerFlowMode('VariableFlow')
+    chiller.setChillerFlowMode('ConstantFlow')
     chilled_water_loop.addSupplyBranchForComponent(chiller)  
     
     #chilled water loop pipes
@@ -226,12 +226,15 @@ class OpenStudio::Model::Model
     hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
     hw_stpt_manager.addToNode(air_loop.supplyOutletNode)
     sizing_system = air_loop.sizingSystem
+    sizing_system.setPreheatDesignTemperature(prehtg_sa_temp_c)
+    sizing_system.setCentralCoolingDesignSupplyAirTemperature(clg_sa_temp_c)
+    sizing_system.setCentralHeatingDesignSupplyAirTemperature(htg_sa_temp_c)
     sizing_system.setSizingOption('Coincident')
     sizing_system.setAllOutdoorAirinCooling(false)
     sizing_system.setAllOutdoorAirinHeating(false)
-    sizing_system.setSystemOutdoorAirMethod('VentilationRateProcedure')
+    sizing_system.setSystemOutdoorAirMethod('ZoneSum')
     air_loop.setNightCycleControlType('CycleOnAny')
-    
+        
     #fan
     fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
     fan.setName("#{thermal_zones.size} Zone VAV Fan")
@@ -266,35 +269,10 @@ class OpenStudio::Model::Model
     oa_intake_controller.setEconomizerControlType('NoEconomizer')
     oa_intake_controller.setMinimumLimitType('FixedMinimum')
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
-    oa_intake.addToNode(air_loop.supplyInletNode)
-
-    
-    
-    #heat exchanger on oa system' for some vintages
-    # if prototype_input['template'] == '90.1-2010'
-      # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-      # heat_exchanger.setName("#{thermal_zones.size} Zone VAV HX")
-      # heat_exchanger.setHeatExchangerType('Rotary')
-       # heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-      # heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.6)
-      # heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-      # heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-      # heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-      # heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.6)
-      # heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-      # heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-      # heat_exchanger.setNominalElectricPower(6240.0734)
-      # heat_exchanger.setEconomizerLockout(true)
-      # heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-
-      # oa_node = oa_intake.outboardOANode
-      # if oa_node.is_initialized
-        # heat_exchanger.addToNode(oa_node.get)
-      # else
-        # OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
-        # return false
-      # end
-    # end
+    oa_intake.addToNode(air_loop.supplyInletNode) 
+    controller_mv = oa_intake_controller.controllerMechanicalVentilation
+    controller_mv.setName("#{thermal_zones.size} Zone VAV Ventilation Controller")
+    controller_mv.setSystemOutdoorAirMethod('VentilationRateProcedure')
     
     #hook the VAV system to each zone
     thermal_zones.each do |zone|
@@ -312,9 +290,16 @@ class OpenStudio::Model::Model
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
       terminal.setZoneMinimumAirFlowMethod('Constant')
-      terminal.setConstantMinimumAirFlowFraction(0.3)
-      terminal.setDamperHeatingAction('Normal')
+      #terminal.setConstantMinimumAirFlowFraction(0.7)
+      terminal.setDamperHeatingAction('Reverse')
+      terminal.setMaximumFlowFractionDuringReheat(0.5)
+      terminal.setMaximumReheatAirTemperature(rht_sa_temp_c)
       air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
+    
+      # Zone sizing
+      sizing_zone = zone.sizingZone
+      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(clg_sa_temp_c)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(rht_sa_temp_c)
     
     end
 
@@ -903,6 +888,11 @@ class OpenStudio::Model::Model
       air_loop_sizing.setHeatingDesignAirFlowRate(0.0)
       air_loop_sizing.setSystemOutdoorAirMethod('ZoneSum')
       
+      # Zone sizing
+      sizing_zone = zone.sizingZone
+      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(40.0)
+            
       # Add a setpoint manager single zone reheat to control the
       # supply air temperature based on the needs of this zone
       setpoint_mgr_single_zone_reheat = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(self)
@@ -2281,8 +2271,10 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_swh_loop(prototype_input, hvac_standards)
-
+  def add_swh_loop(prototype_input, hvac_standards, type)
+  
+    puts "Adding water heater type = '#{type}'"
+  
     # Service water heating loop
     service_water_loop = OpenStudio::Model::PlantLoop.new(self)
     service_water_loop.setName('Service Water Loop')
@@ -2296,7 +2288,7 @@ class OpenStudio::Model::Model
     temp_sch_type_limits.setUnitType('Temperature')
     
     # Service water heating loop controls
-    swh_temp_f = prototype_input['service_water_temperature']
+    swh_temp_f = prototype_input["#{type}_service_water_temperature"]
     swh_delta_t_r = 9 #9F delta-T    
     swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
     swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
@@ -2313,17 +2305,16 @@ class OpenStudio::Model::Model
     sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)         
     
     # Service water heating pump
+    swh_pump_head_press_pa = prototype_input["#{type}_service_water_pump_head"]
+    swh_pump_motor_efficiency = prototype_input["#{type}_service_water_pump_motor_efficiency"]
+    if swh_pump_head_press_pa.nil?
+      # As if there is no circulation pump
+      swh_pump_head_press_pa = 0.001
+      swh_pump_motor_efficiency = 1
+    end
     swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
     swh_pump.setName('Service Water Loop Pump')
-    swh_pump_head_press_pa = 0.001 # As if there is no circulation pump
-    unless prototype_input['service_water_pump_head'].nil?
-      swh_pump_head_press_pa = prototype_input['service_water_pump_head']
-    end
-    swh_pump_motor_efficiency = 0.3
-    unless prototype_input['service_water_pump_motor_efficiency'].nil?
-      swh_pump_motor_efficiency = prototype_input['service_water_pump_motor_efficiency']
-    end
-    swh_pump.setRatedPumpHead(swh_pump_head_press_pa)
+    swh_pump.setRatedPumpHead(swh_pump_head_press_pa.to_f)
     swh_pump.setMotorEfficiency(swh_pump_motor_efficiency)
     swh_pump.setPumpControlType('Intermittent')
     swh_pump.addToNode(service_water_loop.supplyInletNode)
@@ -2331,10 +2322,10 @@ class OpenStudio::Model::Model
     # Water heater
     # TODO Standards - Change water heater methodology to follow
     # 'Model Enhancements Appendix A.'
-    water_heater_capacity_btu_per_hr = prototype_input['water_heater_capacity']
+    water_heater_capacity_btu_per_hr = prototype_input["#{type}_water_heater_capacity"]
     water_heater_capacity_kbtu_per_hr = OpenStudio.convert(water_heater_capacity_btu_per_hr, "Btu/hr", "kBtu/hr").get
-    water_heater_vol_gal = prototype_input['water_heater_volume']
-    water_heater_fuel = prototype_input['water_heater_fuel']
+    water_heater_vol_gal = prototype_input["#{type}_water_heater_volume"]
+    water_heater_fuel = prototype_input["#{type}_water_heater_fuel"]
 
     # Assume the water heater is indoors at 70F for now
     default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -2391,8 +2382,120 @@ class OpenStudio::Model::Model
     return service_water_loop
     
   end
+
+  def add_swh_booster(prototype_input, hvac_standards, main_service_water_loop)
+
+    # Booster water heating loop
+    booster_service_water_loop = OpenStudio::Model::PlantLoop.new(self)
+    booster_service_water_loop.setName('Service Water Loop')
+ 
+    # Temperature schedule type limits
+    temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(self)
+    temp_sch_type_limits.setName('Temperature Schedule Type Limits')
+    temp_sch_type_limits.setLowerLimitValue(0.0)
+    temp_sch_type_limits.setUpperLimitValue(100.0)
+    temp_sch_type_limits.setNumericType('Continuous')
+    temp_sch_type_limits.setUnitType('Temperature')
+
+    # Service water heating loop controls
+    swh_temp_f = prototype_input['booster_water_temperature']
+    swh_delta_t_r = 9 #9F delta-T
+    swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
+    swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
+    swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    swh_temp_sch.setName("Hot Water Booster Temp - #{swh_temp_f}F")
+    swh_temp_sch.defaultDaySchedule().setName("Hot Water Booster Temp - #{swh_temp_f}F Default")
+    swh_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
+    swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+    swh_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,swh_temp_sch)    
+    swh_stpt_manager.addToNode(booster_service_water_loop.supplyOutletNode)
+    sizing_plant = booster_service_water_loop.sizingPlant
+    sizing_plant.setLoopType('Heating')
+    sizing_plant.setDesignLoopExitTemperature(swh_temp_c)
+    sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)  
+
+    # Booster water heating pump
+    swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+    swh_pump.setName('Booster Water Loop Pump')
+    swh_pump_head_press_pa = 0.0 # As if there is no circulation pump
+    swh_pump.setRatedPumpHead(swh_pump_head_press_pa)
+    swh_pump.setMotorEfficiency(1)
+    swh_pump.setPumpControlType('Intermittent')
+    swh_pump.addToNode(booster_service_water_loop.supplyInletNode)    
+    
+    # Water heater
+    # TODO Standards - Change water heater methodology to follow
+    # 'Model Enhancements Appendix A.'
+    water_heater_capacity_btu_per_hr = prototype_input['booster_water_heater_capacity']
+    water_heater_capacity_kbtu_per_hr = OpenStudio.convert(water_heater_capacity_btu_per_hr, "Btu/hr", "kBtu/hr").get
+    water_heater_vol_gal = prototype_input['booster_water_heater_volume']
+    water_heater_fuel = prototype_input['booster_water_heater_fuel']
+
+    # Assume the water heater is indoors at 70F for now
+    default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    default_water_heater_ambient_temp_sch.setName('Water Heater Ambient Temp Schedule - 70F')
+    default_water_heater_ambient_temp_sch.defaultDaySchedule.setName('Water Heater Ambient Temp Schedule - 70F Default')
+    default_water_heater_ambient_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio::convert(70,"F","C").get)
+    default_water_heater_ambient_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+    
+    # Water heater depends on the fuel type
+    water_heater = OpenStudio::Model::WaterHeaterMixed.new(self)
+    water_heater.setName("#{water_heater_vol_gal}gal #{water_heater_fuel} Water Heater - #{water_heater_capacity_kbtu_per_hr.round}kBtu/hr")
+    water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
+    water_heater.setSetpointTemperatureSchedule(swh_temp_sch)
+    water_heater.setAmbientTemperatureIndicator('Schedule')
+    water_heater.setAmbientTemperatureSchedule(default_water_heater_ambient_temp_sch)
+    water_heater.setMaximumTemperatureLimit(OpenStudio::convert(180,'F','C').get)
+    water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
+    water_heater.setHeaterControlType('Cycle')
+    water_heater.setHeaterMaximumCapacity(OpenStudio.convert(water_heater_capacity_btu_per_hr,'Btu/hr','W').get)
+    water_heater.setOffCycleParasiticHeatFractiontoTank(0.8)
+    water_heater.setIndirectWaterHeatingRecoveryTime(1.5) # 1.5hrs
+    if water_heater_fuel == 'Electricity'
+      water_heater.setHeaterFuelType('Electricity')
+      water_heater.setOffCycleParasiticFuelType('Electricity')
+      water_heater.setOnCycleParasiticFuelType('Electricity')
+    elsif water_heater_fuel == 'Natural Gas'
+      water_heater.setHeaterFuelType('NaturalGas')
+      water_heater.setOffCycleParasiticFuelType('NaturalGas')
+      water_heater.setOnCycleParasiticFuelType('NaturalGas')
+    end
+    booster_service_water_loop.addSupplyBranchForComponent(water_heater)
+    
+    # Service water heating loop bypass pipes
+    water_heater_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    booster_service_water_loop.addSupplyBranchForComponent(water_heater_bypass_pipe)
+    coil_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    booster_service_water_loop.addDemandBranchForComponent(coil_bypass_pipe)
+    supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    supply_outlet_pipe.addToNode(booster_service_water_loop.supplyOutletNode)    
+    demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_inlet_pipe.addToNode(booster_service_water_loop.demandInletNode) 
+    demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_outlet_pipe.addToNode(booster_service_water_loop.demandOutletNode) 
+
+    # Heat exchanger to supply the booster water heater
+    # with normal hot water from the main service water loop.
+    hx = OpenStudio::Model::HeatExchangerFluidToFluid.new(self)
+    hx.setName("HX for Booster Water Heating")
+    hx.setHeatExchangeModelType("Ideal")
+    hx.setControlType("UncontrolledOn")
+    hx.setHeatTransferMeteringEndUseType("LoopToLoop")    
   
-  def add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
+    # Add the HX to the supply side of the booster loop
+    hx.addToNode(booster_service_water_loop.supplyInletNode)
+  
+    # Add the HX to the demand side of 
+    # the main service water loop.
+    main_service_water_loop.addDemandBranchForComponent(hx)  
+  
+    return booster_service_water_loop
+
+  end
+  
+  def add_swh_end_uses(prototype_input, hvac_standards, swh_loop, type)  
+    
+    puts "Adding water uses type = '#{type}'"
     
     schedules = hvac_standards['schedules']
     
@@ -2400,35 +2503,60 @@ class OpenStudio::Model::Model
     swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
     
     # Water fixture definition
-    # Peak flow rate
     water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
-    rated_flow_rate_gal_per_min = prototype_input['service_water_peak_flowrate']
+    rated_flow_rate_gal_per_min = prototype_input["#{type}_service_water_peak_flowrate"]
     rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
     water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
+    water_fixture_def.setName("#{type.capitalize} Service Water Use Def #{rated_flow_rate_gal_per_min.round(2)}gal/min")
     # Target mixed water temperature
-    mixed_water_temp_f = prototype_input['water_use_temperature']
+    mixed_water_temp_f = prototype_input["#{type}_water_use_temperature"]
     mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     mixed_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(mixed_water_temp_f,'F','C').get)
     water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
-    # Temperature of hot water when it reaches fixture
-    # TODO enable hot water temperature at fixture to be set with OpenStudio
-    #hot_water_temp_at_fixture_f = prototype_input['service_water_temperature_at_fixture']
-    #hot_water_at_fixture_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    #hot_water_at_fixture_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(hot_water_temp_at_fixture_f,'F','C').get)
-    #water_fixture_def.setHotWaterSupplyTemperatureSchedule(hot_water_at_fixture_temp_sch)    
     
     # Water use equipment
-    #make the initial copy of the water fixture
     water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
-    schedule = self.add_schedule(prototype_input['service_water_flowrate_schedule'])
+    schedule = self.add_schedule(prototype_input["#{type}_service_water_flowrate_schedule"])
     water_fixture.setFlowRateFractionSchedule(schedule)
+    water_fixture.setName("#{type.capitalize} Service Water Use #{rated_flow_rate_gal_per_min.round(2)}gal/min")
     swh_connection.addWaterUseEquipment(water_fixture)
-    
+
     # Connect the water use connection to the SWH loop
     swh_loop.addDemandBranchForComponent(swh_connection)
     
   end
 
+  def add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+    
+    schedules = hvac_standards['schedules']
+    
+    # Water use connection
+    swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
+    
+    # Water fixture definition
+    water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
+    rated_flow_rate_gal_per_min = prototype_input['booster_service_water_peak_flowrate']
+    rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+    water_fixture_def.setName("Water Fixture Def - #{rated_flow_rate_gal_per_min} gal/min")
+    water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
+    # Target mixed water temperature
+    mixed_water_temp_f = prototype_input['booster_water_use_temperature']
+    mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    mixed_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(mixed_water_temp_f,'F','C').get)
+    water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
+    
+    # Water use equipment
+    water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
+    water_fixture.setName("Booster Water Fixture - #{rated_flow_rate_gal_per_min} gal/min at #{mixed_water_temp_f}F")
+    schedule = self.add_schedule(prototype_input['booster_service_water_flowrate_schedule'])
+    water_fixture.setFlowRateFractionSchedule(schedule)
+    swh_connection.addWaterUseEquipment(water_fixture)
+    
+    # Connect the water use connection to the SWH loop
+    swh_booster_loop.addDemandBranchForComponent(swh_connection)
+    
+  end  
+  
   def add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
     hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
     # create new air loop if story contains primary zones
@@ -2541,4 +2669,5 @@ class OpenStudio::Model::Model
       airloop_primary.addBranchForZone(zone, air_terminal.to_StraightComponent)
     end
   end
+
 end
