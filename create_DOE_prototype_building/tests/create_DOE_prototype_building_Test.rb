@@ -463,10 +463,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
   end
 
-  def dont_test_large_office
+  def test_large_office
 
     bldg_types = ['LargeOffice']
-    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+    vintages = ['90.1-2010'] # 'DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']
     climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
@@ -487,7 +487,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # Test the Small Office in the QTR vintages and climate zones
-  def test_medium_office
+  def dont_test_medium_office
 
     bldg_types = ['MediumOffice']
     vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']

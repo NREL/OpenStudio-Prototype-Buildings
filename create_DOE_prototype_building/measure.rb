@@ -231,9 +231,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       construction_type_search = 'Office'
     when 'LargeOffice'
       require_relative 'resources/Prototype.large_office'
-      geometry_file = 'Geometry.large_office.osm'
       space_building_type_search = 'Office'
       construction_type_search = 'Office'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.large_office.osm'
+        else
+          geometry_file = 'Geometry.large_office_2010.osm'
+      end
     when 'SmallHotel'
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between

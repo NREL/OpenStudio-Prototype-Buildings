@@ -101,7 +101,6 @@ class OpenStudio::Model::Model
     
     water_heaters.each do |water_heater|
       water_heater = water_heater.to_WaterHeaterMixed.get
-      # puts water_heater
       # water_heater.setAmbientTemperatureIndicator('Zone')
       # water_heater.setAmbientTemperatureThermalZone(default_water_heater_ambient_temp_sch)
       water_heater.setOffCycleParasiticFuelConsumptionRate(1277)
