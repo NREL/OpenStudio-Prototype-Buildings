@@ -490,7 +490,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   def test_medium_office
 
     bldg_types = ['MediumOffice']
-    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+    vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
     climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []

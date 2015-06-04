@@ -755,11 +755,6 @@ class OpenStudio::Model::Model
 
   def add_pvav(prototype_input, hvac_standards, thermal_zones)
 
-    # hw_temp_f = 180 #HW setpoint 180F 
-    # hw_delta_t_r = 20 #20F delta-T    
-    # hw_temp_c = OpenStudio.convert(hw_temp_f,'F','C').get
-    # hw_delta_t_k = OpenStudio.convert(hw_delta_t_r,'R','K').get
-
     # hvac operation schedule
     hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
     
@@ -794,7 +789,7 @@ class OpenStudio::Model::Model
     sizing_system.setSizingOption('Coincident')
     sizing_system.setAllOutdoorAirinCooling(false)
     sizing_system.setAllOutdoorAirinHeating(false)
-    sizing_system.setSystemOutdoorAirMethod('VentilationRateProcedure')
+    sizing_system.setSystemOutdoorAirMethod('ZoneSum')
     air_loop.setNightCycleControlType('CycleOnAny')
     
     #fan
@@ -825,6 +820,9 @@ class OpenStudio::Model::Model
     oa_intake_controller.setMinimumLimitType('FixedMinimum')
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
     oa_intake.addToNode(air_loop.supplyInletNode)
+    controller_mv = oa_intake_controller.controllerMechanicalVentilation
+    controller_mv.setName("#{thermal_zones.size} Zone VAV Ventilation Controller")
+    controller_mv.setSystemOutdoorAirMethod('VentilationRateProcedure')
     
     #hook the VAV system to each zone
     thermal_zones.each do |zone|
