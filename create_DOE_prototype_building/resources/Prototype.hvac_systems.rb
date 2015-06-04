@@ -1570,6 +1570,15 @@ class OpenStudio::Model::Model
         extra_water_htg_coil.addToNode(supply_inlet_node)
         extra_elec_htg_coil.addToNode(supply_inlet_node)
         humidifier.addToNode(supply_inlet_node)
+
+        humidity_spm = OpenStudio::Model::SetpointManagerSingleZoneHumidityMinimum.new(self)
+        humidity_spm.setControlZone(zone)
+
+        humidity_spm.addToNode(humidifier.outletModelObject().get.to_Node.get)
+
+        humidistat = OpenStudio::Model::ZoneControlHumidistat.new(self)
+        humidistat.setHumidifyingRelativeHumiditySetpointSchedule(self.add_schedule('OfficeLarge DC_MinRelHumSetSch'))
+        zone.setZoneControlHumidistat(humidistat)
       end
 
       unitary_system = OpenStudio::Model::AirLoopHVACUnitarySystem.new(self)
