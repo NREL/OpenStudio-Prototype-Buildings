@@ -71,9 +71,9 @@ class OpenStudio::Model::Model
       thermal_zone = thermal_zone.get
 
       zone_exhaust_fan = OpenStudio::Model::FanZoneExhaust.new(self)
-      zone_exhaust_fan.setAvailabilitySchedule(self.add_schedule('RestaurantFastFood Hours_of_operation'))
+      zone_exhaust_fan.setAvailabilitySchedule(self.add_schedule('RestaurantSitDown Hours_of_operation'))
       zone_exhaust_fan.setFanEfficiency(1)
-      zone_exhaust_fan.setMaximumFlowRate(0.416067344516346)
+      zone_exhaust_fan.setMaximumFlowRate(1.33143208408505)
       zone_exhaust_fan.addToThermalZone(thermal_zone)
     end
     
@@ -155,9 +155,9 @@ class OpenStudio::Model::Model
     ref_case1.setCaseOperatingTemperature(-23.0)
     ref_case1.setStandardCaseFanPowerperUnitLength(74)
     ref_case1.setOperatingCaseFanPowerperUnitLength(74)
-    ref_case1.setCaseLightingSchedule(self.add_schedule('RestaurantFastFood BLDG_LIGHT_SCH'))
+    ref_case1.setCaseLightingSchedule(self.add_schedule('RestaurantSitDown BLDG_LIGHT_SCH'))
     ref_case1.setHumidityatZeroAntiSweatHeaterEnergy(0)
-    ref_case1.setCaseDefrostPowerperUnitLength(1291.7)
+    ref_case1.setCaseDefrostPowerperUnitLength(820.0)
     ref_case1.setCaseDefrostType('Electric')
     ref_case1.setDesignEvaporatorTemperatureorBrineInletTemperature(-24.0)
 
@@ -179,7 +179,7 @@ class OpenStudio::Model::Model
     ref_case2.setCaseOperatingTemperature(2.0)
     ref_case2.setStandardCaseFanPowerperUnitLength(66)
     ref_case2.setOperatingCaseFanPowerperUnitLength(66)
-    ref_case2.setCaseLightingSchedule(self.add_schedule('RestaurantFastFood BLDG_LIGHT_SCH'))
+    ref_case2.setCaseLightingSchedule(self.add_schedule('RestaurantSitDown BLDG_LIGHT_SCH'))
     ref_case2.setHumidityatZeroAntiSweatHeaterEnergy(0)
     ref_case2.setCaseDefrostType('None')
 
