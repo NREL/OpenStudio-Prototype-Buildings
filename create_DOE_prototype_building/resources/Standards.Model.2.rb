@@ -381,7 +381,6 @@ class OpenStudio::Model::Model
       unless ventilation_ach == 0 || ventilation_ach.nil?
         ventilation.setOutdoorAirFlowAirChangesperHour(ventilation_ach)
       end
-
     end
 
     # Occupancy

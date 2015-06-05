@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require 'json'
 require_relative '../measure.rb'
 require 'fileutils'
+require 'socket'
 
 # Add a "dig" method to Hash to check if deeply nested elements exist
 # From: http://stackoverflow.com/questions/1820451/ruby-style-how-to-check-whether-a-nested-hash-element-exists
@@ -235,8 +236,15 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             total_osm_water_val = 0
             fuel_types.each do |fuel_type|
               end_uses.each do |end_use|
+                next if end_use == 'Exterior Equipment'
+
                 # Get the legacy results number
                 legacy_val = legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, end_use)
+                # Combine the exterior lighting and exterior equipment
+                if end_use == 'Exterior Lighting'
+                  legacy_val += legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, 'Exterior Equipment')
+                end
+
                 #legacy_val = legacy_idf_results[building_type][building_vintage][climate_zone][fuel_type][end_use]
                 if legacy_val.nil?
                   failures << "Error - #{model_name} - #{fuel_type} #{end_use} legacy idf value not found"
@@ -266,6 +274,22 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                 else
                   failures << "Error - #{model_name} - No sql value found for #{fuel_type}-#{end_use} via #{energy_query}"
                   osm_val = 0
+                end
+
+                # Combine the exterior lighting and exterior equipment
+                if end_use == 'Exterior Lighting'
+                  # End use breakdown query
+                  energy_query = "SELECT Value FROM TabularDataWithStrings WHERE (ReportName='AnnualBuildingUtilityPerformanceSummary') AND (ReportForString='Entire Facility') AND (TableName='End Uses') AND (ColumnName='#{fuel_type}') AND (RowName = 'Exterior Equipment') AND (Units='#{units}')"
+
+                  # Get the end use value
+                  osm_val_2 = sql.execAndReturnFirstDouble(energy_query)
+                  if osm_val_2.is_initialized
+                    osm_val_2 = osm_val_2.get
+                  else
+                    failures << "Error - #{model_name} - No sql value found for #{fuel_type}-Exterior Equipment via #{energy_query}"
+                    osm_val_2 = 0
+                  end
+                  osm_val += osm_val_2
                 end
                 
                 # Add the energy to the total
@@ -363,219 +387,228 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     return failures
   
   end
-  
-  # Test the Secondary School in the PTool vintages and climate zones
-  def dont_test_secondary_school
 
-    bldg_types = ['SecondarySchool']
-    vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
-    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+  hostname = Socket.gethostname
 
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
+  # For Andrew Parker in NREL
+  if hostname == "andrew_pc" # TODO: Andrew update the pc names
+    # Test the Secondary School in the PTool vintages and climate zones
+    def test_secondary_school
 
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
-  end  
-  
-  # "ASHRAE 169-2006-2A" => "USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3",
-  # "ASHRAE 169-2006-3B" => "USA_TX_El.Paso.Intl.AP.722700_TMY3",
-  # "ASHRAE 169-2006-4A" => "USA_MD_Baltimore-Washington.Intl.AP.724060_TMY3",
-  # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",    
-  
-  # Test the Small Office in the PTool vintages and climate zones
-  def dont_test_small_office
+      bldg_types = ['SecondarySchool']
+      vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
-    bldg_types = ['SmallOffice']
-    vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010'] 
-    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+      all_failures = []
 
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
 
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
+
+    # "ASHRAE 169-2006-2A" => "USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3",
+    # "ASHRAE 169-2006-3B" => "USA_TX_El.Paso.Intl.AP.722700_TMY3",
+    # "ASHRAE 169-2006-4A" => "USA_MD_Baltimore-Washington.Intl.AP.724060_TMY3",
+    # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",
+
+    # Test the Small Office in the PTool vintages and climate zones
+    def test_small_office
+
+      bldg_types = ['SmallOffice']
+      vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
+
+    # Test the Small Office in the QTR vintages and climate zones
+    def test_small_office_qtr
+
+      bldg_types = ['SmallOffice']
+      vintages = ['90.1-2010']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def test_primary_school
+
+      bldg_types = ['PrimarySchool']
+      vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',
+      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
   end
 
-  # Test the Small Office in the QTR vintages and climate zones
-  def dont_test_small_office_qtr
+  # For Mark Adams in ORNL
+  if hostname == "Mark_pc" # TODO: Mark update the pc names
+    # Test the Small Office in the QTR vintages and climate zones
+    def test_medium_office
 
-    bldg_types = ['SmallOffice']
-    vintages = ['90.1-2010']#, 'DOE Ref Pre-1980', ']'90.1-2010'
-    climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+      bldg_types = ['MediumOffice']
+      vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
+      all_failures = []
 
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
+
+    def test_large_office
+
+      bldg_types = ['LargeOffice']
+      vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
   end
 
-  def dont_test_small_hotel_ptool
-    bldg_types = ['SmallHotel']
-    vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
-    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+  # For Kaiyu Sun in LBNL
+  if hostname == "kaiyu_pc" # TODO: Kaiyu update PC name
+    def test_small_hotel_ptool
+      bldg_types = ['SmallHotel']
+      vintages = ['90.1-2010', 'DOE Ref 1980-2004', 'DOE Ref Pre-1980']
+      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
+      all_failures = []
 
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
   end
 
-  def test_large_office
+  # For Yixing Chen in LBNL
+  if hostname == "yxc_lbnl"
+    # Test the large hotel in the PTool vintages and climate zones
+    def test_large_hotel
+      bldg_types = ['LargeHotel']
+      vintages = ['DOE Ref Pre-1980']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
 
-    bldg_types = ['LargeOffice']
-    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
-    climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+      all_failures = []
 
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
 
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
   end
 
-  # Test the Small Office in the QTR vintages and climate zones
-  def dont_test_medium_office
-
-    bldg_types = ['MediumOffice']
-    vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
-    climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
-
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
-  end
-
-  # Test the large hotel in the PTool vintages and climate zones
-  def dont_test_large_hotel
-    bldg_types = ['LargeHotel']
-    vintages = ['DOE Ref Pre-1980']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
-    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
-
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
-  end
-  
-  def dont_test_primary_school
-    
-    bldg_types = ['PrimarySchool']
-    vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',
-    climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
-
-    all_failures = []
-    
-    # Create the models
-    all_failures += create_models(bldg_types, vintages, climate_zones)
-    
-    # Run the models
-    all_failures += run_models(bldg_types, vintages, climate_zones)
-    
-    # Compare the results to the legacy idf results
-    all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-    # Assert if there are any errors
-    puts "There were #{all_failures.size} failures"
-    assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
-  end
-  
   def dont_test_all
-    
     bldg_types = ['SecondarySchool', 'PrimarySchool', 'SmallOffice', 'SmallHotel']
     vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
     climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
     all_failures = []
-    
+
     # Create the models
     #all_failures += create_models(bldg_types, vintages, climate_zones)
-    
+
     # Run the models
     #all_failures += run_models(bldg_types, vintages, climate_zones)
-    
+
     # Compare the results to the legacy idf results
     all_failures += compare_results(bldg_types, vintages, climate_zones)
 
     # Assert if there are any errors
     puts "There were #{all_failures.size} failures"
     assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    
   end
 end

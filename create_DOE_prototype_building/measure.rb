@@ -99,56 +99,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     @msg_log.setLogLevel(OpenStudio::Info)
     @start_time = Time.new
     @runner = runner
-
-        # Get all the log messages and put into output
-    # for users to see.
-    def log_msgs()
-      @msg_log.logMessages.each do |msg|
-        # DLM: you can filter on log channel here for now
-        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
-          # Skip certain messages that are irrelevant/misleading
-          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
-                  msg.logChannel.include?("runmanager") || # RunManager messages
-                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
-                  
-          # Report the message in the correct way
-          if msg.logLevel == OpenStudio::Info
-            @runner.registerInfo(msg.logMessage)  
-          elsif msg.logLevel == OpenStudio::Warn
-            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
-          elsif msg.logLevel == OpenStudio::Error
-            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
-          end
-        end
-      end
-      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
-    end
-    
-    # Get all the log messages and put into output
-    # for users to see.
-    def log_msgs()
-      @msg_log.logMessages.each do |msg|
-        # DLM: you can filter on log channel here for now
-        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
-          # Skip certain messages that are irrelevant/misleading
-          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
-                  msg.logChannel.include?("runmanager") || # RunManager messages
-                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-                  msg.logChannel.include?("Translator") # Forward translator and geometry translator
-                  
-          # Report the message in the correct way
-          if msg.logLevel == OpenStudio::Info
-            @runner.registerInfo(msg.logMessage)  
-          elsif msg.logLevel == OpenStudio::Warn
-            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
-          elsif msg.logLevel == OpenStudio::Error
-            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
-          end
-        end
-      end
-      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
-    end    
     
     # Load the libraries
     # HVAC sizing
@@ -187,6 +137,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       log_msgs
       return false
     end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
     prototype_input.each do |key, value|
       next if value.nil?
@@ -247,20 +198,20 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_hotel_pnnl.osm'
       end
-      when 'LargeHotel'
-        require_relative 'resources/Prototype.large_hotel'
+    when 'LargeHotel'
+      require_relative 'resources/Prototype.large_hotel'
 
-        case building_vintage
-          when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
-            geometry_file = 'Geometry.large_hotel.doe.osm'
-          when '90.1-2007'
-            geometry_file = 'Geometry.large_hotel.2004_2007.osm'
-          when '90.1-2010'
-            geometry_file = 'Geometry.large_hotel.2010.osm'
-          else
-            geometry_file = 'Geometry.large_hotel.2013.osm'
-        end
-        space_building_type_search = 'LargeHotel'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.large_hotel.doe.osm'
+        when '90.1-2007'
+          geometry_file = 'Geometry.large_hotel.2004_2007.osm'
+        when '90.1-2010'
+          geometry_file = 'Geometry.large_hotel.2010.osm'
+        else
+          geometry_file = 'Geometry.large_hotel.2013.osm'
+      end
+      space_building_type_search = 'LargeHotel'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
@@ -339,6 +290,31 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     return true
 
   end #end the run method
+
+  # Get all the log messages and put into output
+  # for users to see.
+  def log_msgs
+    @msg_log.logMessages.each do |msg|
+      # DLM: you can filter on log channel here for now
+      if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+        # Skip certain messages that are irrelevant/misleading
+        next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+            msg.logChannel.include?("runmanager") || # RunManager messages
+            msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+            msg.logChannel.include?("Translator") # Forward translator and geometry translator
+
+        # Report the message in the correct way
+        if msg.logLevel == OpenStudio::Info
+          @runner.registerInfo(msg.logMessage)
+        elsif msg.logLevel == OpenStudio::Warn
+          @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+        elsif msg.logLevel == OpenStudio::Error
+          @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+        end
+      end
+    end
+    @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+  end
 
 end #end the measure
 
