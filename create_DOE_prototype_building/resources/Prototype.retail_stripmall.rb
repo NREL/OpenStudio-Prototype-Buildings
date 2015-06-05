@@ -86,4 +86,10 @@ class OpenStudio::Model::Model
     
   end #add swh    
   
+  def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+       
+    return false
+    
+  end #add refrigeration
+  
 end
