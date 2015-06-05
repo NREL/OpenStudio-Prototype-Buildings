@@ -1,67 +1,38 @@
 
-# Extend the class to add Small Office specific stuff
+# Extend the class to add Medium Office specific stuff
 class OpenStudio::Model::Model
  
   def define_space_type_map(building_type, building_vintage, climate_zone)
-
     space_type_map = {
-      'WholeBuilding - Sm Office' => ['Perimeter_ZN_1', 'Perimeter_ZN_2', 'Perimeter_ZN_3', 'Perimeter_ZN_4', 'Core_ZN'],
-      'Attic' => ['Attic']
+      'Back_Space' => ['Back_Space'],
+      'Entry' => ['Front_Entry'],
+      'Point_of_Sale' => ['Point_Of_Sale'],
+      'Retail' => ['Core_Retail', 'Front_Retail']
     }
-
     return space_type_map
-
   end
 
   def define_hvac_system_map(building_type, building_vintage, climate_zone)
-
     system_to_space_map = [
       {
-          'type' => 'PSZ-AC',
-          'space_names' =>
-          [
-              'Perimeter_ZN_1'
-          ]
+          'type' => 'CAV',
+          'space_names' => ['Back_Space', 'Point_Of_Sale', 'Front_Retail'] # 'Core_Retail' should be in here but it is causing warmup convergence errors... I don't know why
       },
       {
-          'type' => 'PSZ-AC',
-          'space_names' =>
-          [
-              'Perimeter_ZN_2'
-          ]
-      },
-      {
-          'type' => 'PSZ-AC',
-          'space_names' =>
-          [
-              'Perimeter_ZN_3'
-          ]
-      },
-      {
-          'type' => 'PSZ-AC',
-          'space_names' =>
-          [
-              'Perimeter_ZN_4'
-          ]
-      },
-      {
-          'type' => 'PSZ-AC',
-          'space_names' =>
-          [
-              'Core_ZN'
-          ]
+          'type' => 'Unit_Heater',
+          'space_names' => ['Front_Entry']
       }
-  ]
-
+    ]
     return system_to_space_map
-
   end
-
+     
   def add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
     
     system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
+
+    # hot_water_loop = self.add_hw_loop(prototype_input, hvac_standards)
     
     system_to_space_map.each do |system|
 
@@ -83,8 +54,10 @@ class OpenStudio::Model::Model
       end
 
       case system['type']
-      when 'PSZ-AC'
+      when 'CAV'
         self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
+      when 'Unit_Heater'
+        self.add_unitheater(prototype_input, hvac_standards, thermal_zones)
       end
 
     end
@@ -99,14 +72,26 @@ class OpenStudio::Model::Model
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
 
-    main_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
-    self.add_swh_end_uses(prototype_input, hvac_standards, main_swh_loop, 'main')
+    # main_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
+    # water_heaters = main_swh_loop.supplyComponents(OpenStudio::Model::WaterHeaterMixed::iddObjectType)
+    
+    # water_heaters.each do |water_heater|
+    #   water_heater = water_heater.to_WaterHeaterMixed.get
+    #   # water_heater.setAmbientTemperatureIndicator('Zone')
+    #   # water_heater.setAmbientTemperatureThermalZone(default_water_heater_ambient_temp_sch)
+    #   water_heater.setOffCycleParasiticFuelConsumptionRate(1860)
+    #   water_heater.setOnCycleParasiticFuelConsumptionRate(1860)
+    #   water_heater.setOffCycleLossCoefficienttoAmbientTemperature(4.10807252)
+    #   water_heater.setOnCycleLossCoefficienttoAmbientTemperature(4.10807252)
+    # end
+
+    # self.add_swh_end_uses(prototype_input, hvac_standards, main_swh_loop, 'main')
     
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding SWH")
     
     return true
     
-  end #add swh  
+  end #add swh    
   
   def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
        

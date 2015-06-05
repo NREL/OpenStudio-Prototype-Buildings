@@ -33,6 +33,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs << 'SmallHotel'
     building_type_chs << 'LargeHotel'
     building_type_chs << 'Warehouse'
+    building_type_chs << 'RetailStandalone'
+    building_type_chs << 'RetailStripmall'
+    building_type_chs << 'QuickServiceRestaurant'
+    building_type_chs << 'FullServiceRestaurant'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -239,6 +243,22 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     when 'Warehouse'
       require_relative 'resources/Prototype.warehouse'
       geometry_file = 'Geometry.warehouse.osm'
+    when 'RetailStandalone'
+      require_relative 'resources/Prototype.retail_standalone'
+      geometry_file = 'Geometry.retail_standalone.osm'
+      space_building_type_search = 'Retail'
+      construction_type_search = 'Retail'
+    when 'RetailStripmall'
+      require_relative 'resources/Prototype.retail_stripmall'
+      geometry_file = 'Geometry.retail_stripmall.osm'
+      space_building_type_search = 'StripMall'
+      construction_type_search = 'StripMall'
+    when 'QuickServiceRestaurant'
+      require_relative 'resources/Prototype.quick_service_restaurant'
+      geometry_file = 'Geometry.quick_service_restaurant.osm'
+    when 'FullServiceRestaurant'
+      require_relative 'resources/Prototype.full_service_restaurant'
+      geometry_file = 'Geometry.full_service_restaurant.osm'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
@@ -255,6 +275,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+    model.add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
