@@ -2526,6 +2526,26 @@ class OpenStudio::Model::Model
     
   end
 
+  def add_high_temp_radiant(prototype_input, hvac_standards, thermal_zones, fuel_type, control_type, combustion_efficiency)
+        
+    # Make a PTAC for each zone
+    thermal_zones.each do |zone|
+      
+      high_temp_radiant = OpenStudio::Model::ZoneHVACHighTemperatureRadiant.new(self)
+      high_temp_radiant.setName("#{zone.name} High Temp Radiant")
+      high_temp_radiant.setFuelType(fuel_type)
+      high_temp_radiant.setCombustionEfficiency(combustion_efficiency)
+      high_temp_radiant.setTemperatureControlType(control_type)
+      high_temp_radiant.setFractionofInputConvertedtoRadiantEnergy(0.8)
+      high_temp_radiant.setHeatingThrottlingRange(2)
+      high_temp_radiant.addToThermalZone(zone)
+      
+    end
+
+    return true
+    
+  end
+
   def add_chiller(hvac_standards, chlr_props)
 
     all_curves_found = true

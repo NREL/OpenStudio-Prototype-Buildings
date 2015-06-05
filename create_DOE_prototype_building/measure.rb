@@ -32,6 +32,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs << 'LargeOffice'
     building_type_chs << 'SmallHotel'
     building_type_chs << 'LargeHotel'
+    building_type_chs << 'Warehouse'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -248,20 +249,23 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_hotel_pnnl.osm'
       end
-      when 'LargeHotel'
-        require_relative 'resources/Prototype.large_hotel'
+    when 'LargeHotel'
+      require_relative 'resources/Prototype.large_hotel'
 
-        case building_vintage
-          when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
-            geometry_file = 'Geometry.large_hotel.doe.osm'
-          when '90.1-2007'
-            geometry_file = 'Geometry.large_hotel.2004_2007.osm'
-          when '90.1-2010'
-            geometry_file = 'Geometry.large_hotel.2010.osm'
-          else
-            geometry_file = 'Geometry.large_hotel.2013.osm'
-        end
-        space_building_type_search = 'LargeHotel'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.large_hotel.doe.osm'
+        when '90.1-2007'
+          geometry_file = 'Geometry.large_hotel.2004_2007.osm'
+        when '90.1-2010'
+          geometry_file = 'Geometry.large_hotel.2010.osm'
+        else
+          geometry_file = 'Geometry.large_hotel.2013.osm'
+      end
+      space_building_type_search = 'LargeHotel'
+    when 'Warehouse'
+      require_relative 'resources/Prototype.warehouse'
+      geometry_file = 'Geometry.warehouse.osm'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
