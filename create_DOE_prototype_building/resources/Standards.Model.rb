@@ -14,6 +14,7 @@ class OpenStudio::Model::Model
   require_relative 'Standards.AirLoopHVAC'
   require_relative 'Standards.WaterHeaterMixed'
   require_relative 'Standards.Space'
+  require_relative 'Standards.Construction'
   
   def applyHVACEfficiencyStandard
     

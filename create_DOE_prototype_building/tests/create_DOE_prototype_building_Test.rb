@@ -306,7 +306,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                   # If both 
                   percent_error = ((osm_val - legacy_val)/legacy_val) * 100
                   if percent_error.abs > acceptable_error_percentage
-                    failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = #{percent_error.round}%"
+                    failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = #{percent_error.round}% (#{osm_val}, #{legacy_val})"
                   end
                 elsif osm_val > 0 && legacy_val == 0
                   # The osm has a fuel/end use that the legacy idf does not
@@ -423,7 +423,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     # Test the Small Office in the PTool vintages and climate zones
     def test_small_office
-
       bldg_types = ['SmallOffice']
       vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
       climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
@@ -442,7 +441,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       # Assert if there are any errors
       puts "There were #{all_failures.size} failures"
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-
     end
 
     # Test the Small Office in the QTR vintages and climate zones
@@ -496,9 +494,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   if hostname == "Mark_pc" # TODO: Mark update the pc names
     # Test the Small Office in the QTR vintages and climate zones
     def test_medium_office
-
       bldg_types = ['MediumOffice']
-      vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
       climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
       all_failures = []
@@ -515,7 +512,27 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       # Assert if there are any errors
       puts "There were #{all_failures.size} failures"
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
 
+    def test_warehouse
+      bldg_types = ['Warehouse']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
 
     def test_large_office

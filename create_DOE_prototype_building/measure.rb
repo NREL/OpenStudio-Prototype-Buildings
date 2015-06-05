@@ -32,6 +32,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs << 'LargeOffice'
     building_type_chs << 'SmallHotel'
     building_type_chs << 'LargeHotel'
+    building_type_chs << 'Warehouse'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -94,12 +95,19 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_vintage = runner.getStringArgumentValue('building_vintage',user_arguments)
     climate_zone = runner.getStringArgumentValue('climate_zone',user_arguments)
 
+    # Turn debugging output on/off
+    debug = false    
+    
     # Open a channel to log info/warning/error messages
     @msg_log = OpenStudio::StringStreamLogSink.new
-    @msg_log.setLogLevel(OpenStudio::Info)
+    if debug
+      @msg_log.setLogLevel(OpenStudio::Debug)
+    else
+      @msg_log.setLogLevel(OpenStudio::Info)
+    end
     @start_time = Time.new
     @runner = runner
-    
+
     # Load the libraries
     # HVAC sizing
     require_relative 'resources/HVACSizing.Model'
@@ -113,7 +121,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # HVAC standards
     require_relative 'resources/Standards.Model'
     require_relative 'resources/Standards.Model.2' # TODO merge these two Standards.Model files after changes calm down
-
+    
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
     # as an instance variable?
@@ -158,15 +166,26 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Make the prototype building
     space_building_type_search = building_type
     construction_type_search = building_type
-    has_swh = true
 
     case building_type
     when 'SecondarySchool'
       require_relative 'resources/Prototype.secondary_school'
-      geometry_file = 'Geometry.secondary_school.osm'
+      # Secondary School geometry is different between
+      # Reference and Prototype vintages (Prototype has skylights)
+      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+        geometry_file = 'Geometry.secondary_school_pre_1980_to_2004.osm'
+      else
+        geometry_file = 'Geometry.secondary_school.osm'
+      end      
     when 'PrimarySchool'
       require_relative 'resources/Prototype.primary_school'
-      geometry_file = 'Geometry.primary_school.osm'      
+      # Primary School geometry is different between
+      # Reference and Prototype vintages (Prototype has skylights)
+      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+        geometry_file = 'Geometry.primary_school_pre_1980_to_2004.osm'
+      else
+        geometry_file = 'Geometry.primary_school.osm'
+      end 
     when 'SmallOffice'
       require_relative 'resources/Prototype.small_office'
       # Small Office geometry is different for pre-1980
@@ -186,9 +205,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       construction_type_search = 'Office'
     when 'LargeOffice'
       require_relative 'resources/Prototype.large_office'
-      geometry_file = 'Geometry.large_office.osm'
       space_building_type_search = 'Office'
       construction_type_search = 'Office'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.large_office.osm'
+        else
+          geometry_file = 'Geometry.large_office_2010.osm'
+      end
     when 'SmallHotel'
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
@@ -212,6 +236,9 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
           geometry_file = 'Geometry.large_hotel.2013.osm'
       end
       space_building_type_search = 'LargeHotel'
+    when 'Warehouse'
+      require_relative 'resources/Prototype.warehouse'
+      geometry_file = 'Geometry.warehouse.osm'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
@@ -227,23 +254,22 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-    if has_swh
-      swh_loop = model.add_swh_loop(prototype_input, hvac_standards)
-      model.add_swh_end_uses(prototype_input, hvac_standards, swh_loop)
-    end
+    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
     # Set the building location, weather files, ddy files, etc.
     model.add_design_days_and_weather_file(climate_zone)
+    
+    # Set the sizing parameters
+    model.set_sizing_parameters(building_type, building_vintage)
 
     # Assign the standards to the model
     model.template = building_vintage
     model.climate_zone = climate_zone
     model_status = '1_initial_creation'
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
     # Perform a sizing run
     if model.runSizingRun("#{osm_directory}/SizingRun1") == false
       log_msgs
@@ -251,15 +277,15 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
     model_status = "2_after_first_sz_run"
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
-    
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
     # on the flow rate of the system.
     model.applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     model_status = '4_after_proto_hvac_assumptions'
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
 
     # Get the equipment sizes from the sizing run
     # and hard-assign them back to the model
@@ -272,15 +298,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.applyHVACEfficiencyStandard
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
-    #model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
    
     # Add daylighting controls per standard
     model.addDaylightingControls
    
    
     # Add output variables for debugging
-    model.request_timeseries_outputs
-
+    if debug
+      model.request_timeseries_outputs
+    end
+    
     # Finished
     model_status = 'final'
     #model.run("#{osm_directory}/#{model_status}")

@@ -34,6 +34,8 @@ class OpenStudio::Model::FanConstantVolume
     allowed_hp = brake_hp * 1.1 # Per PNNL document #TODO add reference
     if allowed_hp > 0.1
       allowed_hp = allowed_hp.round(2)
+    elsif allowed_hp < 0.01
+      allowed_hp = 0.01
     end
     
     # Find the motor that meets these size criteria
@@ -55,7 +57,7 @@ class OpenStudio::Model::FanConstantVolume
     self.setFanEfficiency(total_fan_eff)
     self.setMotorEfficiency(motor_eff)
     
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.FanConstantVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.FanConstantVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(2)}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
     
     return true
     
