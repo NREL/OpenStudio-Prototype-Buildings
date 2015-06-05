@@ -16,7 +16,7 @@ class OpenStudio::Model::Model
     system_to_space_map = [
       {
           'type' => 'CAV',
-          'space_names' => ['Back_Space', 'Core_Retail', 'Point_Of_Sale', 'Front_Retail']
+          'space_names' => ['Back_Space', 'Point_Of_Sale', 'Front_Retail'] # 'Core_Retail' should be in here but it is causing warmup convergence errors... I don't know why
       },
       {
           'type' => 'Unit_Heater',

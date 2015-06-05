@@ -34,7 +34,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs << 'LargeHotel'
     building_type_chs << 'Warehouse'
     building_type_chs << 'RetailStandalone'
-    building_type_chs << 'StripMall'
+    building_type_chs << 'RetailStripMall'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -246,9 +246,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       geometry_file = 'Geometry.retail_standalone.osm'
       space_building_type_search = 'Retail'
       construction_type_search = 'Retail'
-    when 'StripMall'
+    when 'RetailStripMall'
       require_relative 'resources/Prototype.retail_stripmall'
       geometry_file = 'Geometry.retail_stripmall.osm'
+      space_building_type_search = 'StripMall'
+      construction_type_search = 'StripMall'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
