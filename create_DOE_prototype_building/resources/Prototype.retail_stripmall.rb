@@ -4,10 +4,9 @@ class OpenStudio::Model::Model
  
   def define_space_type_map(building_type, building_vintage, climate_zone)
     space_type_map = {
-      'Back_Space' => ['Back_Space'],
-      'Entry' => ['Front_Entry'],
-      'Point_of_Sale' => ['Point_Of_Sale'],
-      'Retail' => ['Core_Retail', 'Front_Retail']
+      'WholeBuilding' => [
+        'LGstore1', 'SMstore1', 'SMstore2', 'SMstore3', 'SMstore4', 'LGstore2', 'SMstore5', 'SMstore6', 'SMstore7', 'SMstore8'
+      ]
     }
     return space_type_map
   end
@@ -16,11 +15,7 @@ class OpenStudio::Model::Model
     system_to_space_map = [
       {
           'type' => 'CAV',
-          'space_names' => ['Back_Space', 'Point_Of_Sale', 'Front_Retail'] # 'Core_Retail' should be in here but it is causing warmup convergence errors... I don't know why
-      },
-      {
-          'type' => 'Unit_Heater',
-          'space_names' => ['Front_Entry']
+          'space_names' => ['LGstore1', 'SMstore1', 'SMstore2', 'SMstore3', 'SMstore4', 'LGstore2', 'SMstore5', 'SMstore6', 'SMstore7', 'SMstore8']
       }
     ]
     return system_to_space_map
@@ -56,8 +51,6 @@ class OpenStudio::Model::Model
       case system['type']
       when 'CAV'
         self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
-      when 'Unit_Heater'
-        self.add_unitheater(prototype_input, hvac_standards, thermal_zones)
       end
 
     end
@@ -79,10 +72,10 @@ class OpenStudio::Model::Model
     #   water_heater = water_heater.to_WaterHeaterMixed.get
     #   # water_heater.setAmbientTemperatureIndicator('Zone')
     #   # water_heater.setAmbientTemperatureThermalZone(default_water_heater_ambient_temp_sch)
-    #   water_heater.setOffCycleParasiticFuelConsumptionRate(1860)
-    #   water_heater.setOnCycleParasiticFuelConsumptionRate(1860)
-    #   water_heater.setOffCycleLossCoefficienttoAmbientTemperature(4.10807252)
-    #   water_heater.setOnCycleLossCoefficienttoAmbientTemperature(4.10807252)
+    #   water_heater.setOffCycleParasiticFuelConsumptionRate(173)
+    #   water_heater.setOnCycleParasiticFuelConsumptionRate(173)
+    #   water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.205980747)
+    #   water_heater.setOnCycleLossCoefficienttoAmbientTemperature(1.205980747)
     # end
 
     # self.add_swh_end_uses(prototype_input, hvac_standards, main_swh_loop, 'main')
