@@ -109,35 +109,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
     @start_time = Time.new
     @runner = runner
-    
-    # Get all the log messages and put into output
-    # for users to see.
-    def log_msgs()
-      @msg_log.logMessages.each do |msg|
-        # DLM: you can filter on log channel here for now
-        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
-          # Skip certain messages that are irrelevant/misleading
-          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
-                  msg.logChannel.include?("runmanager") || # RunManager messages
-                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-                  msg.logChannel.include?("GeometryTranslator") # Forward translator and geometry translator
-                  msg.logChannel.include?("deprecated") # Deprecated method warnings
-                  
-          # Report the message in the correct way
-          if msg.logLevel == OpenStudio::Info
-            @runner.registerInfo(msg.logMessage)  
-          elsif msg.logLevel == OpenStudio::Warn
-            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
-          elsif msg.logLevel == OpenStudio::Error
-            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
-          elsif debug == true && msg.logLevel == OpenStudio::Debug 
-            @runner.registerInfo("DEBUG [#{msg.logChannel}] #{msg.logMessage}")
-          end
-        end
-      end
-      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
-    end    
-    
+
     # Load the libraries
     # HVAC sizing
     require_relative 'resources/HVACSizing.Model'
@@ -175,6 +147,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       log_msgs
       return false
     end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
     prototype_input.each do |key, value|
       next if value.nil?
@@ -355,6 +328,31 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     return true
 
   end #end the run method
+
+  # Get all the log messages and put into output
+  # for users to see.
+  def log_msgs
+    @msg_log.logMessages.each do |msg|
+      # DLM: you can filter on log channel here for now
+      if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+        # Skip certain messages that are irrelevant/misleading
+        next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+            msg.logChannel.include?("runmanager") || # RunManager messages
+            msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+            msg.logChannel.include?("Translator") # Forward translator and geometry translator
+
+        # Report the message in the correct way
+        if msg.logLevel == OpenStudio::Info
+          @runner.registerInfo(msg.logMessage)
+        elsif msg.logLevel == OpenStudio::Warn
+          @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+        elsif msg.logLevel == OpenStudio::Error
+          @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+        end
+      end
+    end
+    @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+  end
 
 end #end the measure
 
