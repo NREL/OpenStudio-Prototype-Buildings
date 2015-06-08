@@ -845,7 +845,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_psz_ac(prototype_input, hvac_standards, thermal_zones, hot_water_loop = nil, chilled_water_loop = nil)
+  def add_psz_ac(prototype_input, hvac_standards, thermal_zones, fan_location = "DrawThrough", hot_water_loop = nil, chilled_water_loop = nil)
 
     unless hot_water_loop.nil? or chilled_water_loop.nil?
       hw_temp_f = 180 #HW setpoint 180F 
@@ -1354,25 +1354,49 @@ class OpenStudio::Model::Model
         setpoint_mgr_single_zone_reheat.setMaximumSupplyAirTemperature(OpenStudio.convert(104,'F','C').get)
  
       else
-      
-        # Add the fan
-        unless fan.nil?
-          fan.addToNode(supply_inlet_node)
-        end
+        if fan_location == 'DrawThrough'
+          # Add the fan
+          unless fan.nil?
+            fan.addToNode(supply_inlet_node)
+          end
+          
+          # Add the supplemental heating coil
+          unless supplemental_htg_coil.nil?
+            supplemental_htg_coil.addToNode(supply_inlet_node)
+          end
         
-        # Add the supplemental heating coil
-        unless supplemental_htg_coil.nil?
-          supplemental_htg_coil.addToNode(supply_inlet_node)
-        end
-      
-        # Add the heating coil
-        unless htg_coil.nil?
-          htg_coil.addToNode(supply_inlet_node)      
-        end
-        
-        # Add the cooling coil
-        unless clg_coil.nil?
-          clg_coil.addToNode(supply_inlet_node)
+          # Add the heating coil
+          unless htg_coil.nil?
+            htg_coil.addToNode(supply_inlet_node)      
+          end
+          
+          # Add the cooling coil
+          unless clg_coil.nil?
+            clg_coil.addToNode(supply_inlet_node)
+          end
+        elsif fan_location == 'BlowThrough'
+          # Add the supplemental heating coil
+          unless supplemental_htg_coil.nil?
+            supplemental_htg_coil.addToNode(supply_inlet_node)
+          end
+
+          # Add the cooling coil
+          unless clg_coil.nil?
+            clg_coil.addToNode(supply_inlet_node)
+          end
+
+          # Add the heating coil
+          unless htg_coil.nil?
+            htg_coil.addToNode(supply_inlet_node)      
+          end
+
+          # Add the fan
+          unless fan.nil?
+            fan.addToNode(supply_inlet_node)
+          end
+        else
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Invalid fan location')
+          return false
         end
       
         setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(OpenStudio.convert(50,'F','C').get)
@@ -2639,6 +2663,27 @@ class OpenStudio::Model::Model
     swh_pump.setPumpControlType('Intermittent')
     swh_pump.addToNode(service_water_loop.supplyInletNode)
     
+    water_heater = add_water_heater(prototype_input, hvac_standards, type, false, temp_sch_type_limits, swh_temp_sch)
+
+    service_water_loop.addSupplyBranchForComponent(water_heater)
+    
+    # Service water heating loop bypass pipes
+    water_heater_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    service_water_loop.addSupplyBranchForComponent(water_heater_bypass_pipe)
+    coil_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    service_water_loop.addDemandBranchForComponent(coil_bypass_pipe)
+    supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    supply_outlet_pipe.addToNode(service_water_loop.supplyOutletNode)    
+    demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_inlet_pipe.addToNode(service_water_loop.demandInletNode) 
+    demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_outlet_pipe.addToNode(service_water_loop.demandOutletNode) 
+
+    return service_water_loop
+    
+  end
+
+  def add_water_heater(prototype_input, hvac_standards, type, set_peak_use_flowrate = false, temp_sch_type_limits = nil, swh_temp_sch = nil)
     # Water heater
     # TODO Standards - Change water heater methodology to follow
     # 'Model Enhancements Appendix A.'
@@ -2646,6 +2691,29 @@ class OpenStudio::Model::Model
     water_heater_capacity_kbtu_per_hr = OpenStudio.convert(water_heater_capacity_btu_per_hr, "Btu/hr", "kBtu/hr").get
     water_heater_vol_gal = prototype_input["#{type}_water_heater_volume"]
     water_heater_fuel = prototype_input["#{type}_water_heater_fuel"]
+
+    if temp_sch_type_limits.nil?
+      # Temperature schedule type limits
+      temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(self)
+      temp_sch_type_limits.setName('Temperature Schedule Type Limits')
+      temp_sch_type_limits.setLowerLimitValue(0.0)
+      temp_sch_type_limits.setUpperLimitValue(100.0)
+      temp_sch_type_limits.setNumericType('Continuous')
+      temp_sch_type_limits.setUnitType('Temperature')
+    end
+
+    if swh_temp_sch.nil?
+      # Service water heating loop controls
+      swh_temp_f = prototype_input["#{type}_service_water_temperature"]
+      swh_delta_t_r = 9 #9F delta-T    
+      swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
+      swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
+      swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      swh_temp_sch.setName("Hot Water Loop Temp - #{swh_temp_f}F")
+      swh_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
+      swh_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
+      swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+    end
 
     # Assume the water heater is indoors at 70F for now
     default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -2685,22 +2753,17 @@ class OpenStudio::Model::Model
       water_heater.setOffCycleLossCoefficienttoAmbientTemperature(6.0)
       water_heater.setOnCycleLossCoefficienttoAmbientTemperature(6.0)
     end
-    service_water_loop.addSupplyBranchForComponent(water_heater)
-    
-    # Service water heating loop bypass pipes
-    water_heater_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    service_water_loop.addSupplyBranchForComponent(water_heater_bypass_pipe)
-    coil_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    service_water_loop.addDemandBranchForComponent(coil_bypass_pipe)
-    supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    supply_outlet_pipe.addToNode(service_water_loop.supplyOutletNode)    
-    demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    demand_inlet_pipe.addToNode(service_water_loop.demandInletNode) 
-    demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
-    demand_outlet_pipe.addToNode(service_water_loop.demandOutletNode) 
 
-    return service_water_loop
-    
+    if set_peak_use_flowrate
+      rated_flow_rate_gal_per_min = prototype_input["#{type}_service_water_peak_flowrate"]
+      rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+      water_heater.setPeakUseFlowRate(rated_flow_rate_m3_per_s)
+
+      schedule = self.add_schedule(prototype_input["#{type}_service_water_flowrate_schedule"])
+      water_heater.setUseFlowRateFractionSchedule(schedule)
+    end
+
+    return water_heater
   end
 
   def add_swh_booster(prototype_input, hvac_standards, main_service_water_loop)

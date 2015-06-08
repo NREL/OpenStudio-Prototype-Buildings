@@ -128,7 +128,7 @@ class OpenStudio::Model::Model
         end
       when 'CAV'
         if hot_water_loop && chilled_water_loop
-          self.add_psz_ac(prototype_input, hvac_standards, thermal_zones, hot_water_loop, chilled_water_loop)
+          self.add_psz_ac(prototype_input, hvac_standards, thermal_zones, 'DrawThrough', hot_water_loop, chilled_water_loop)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false

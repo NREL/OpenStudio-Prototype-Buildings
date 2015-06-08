@@ -122,7 +122,7 @@ class OpenStudio::Model::Model
       when 'VAV'
         self.add_vav(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
       when 'CAV'
-        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones, hot_water_loop, chilled_water_loop)
+        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones, 'DrawThrough', hot_water_loop, chilled_water_loop)
       end
 
     end
