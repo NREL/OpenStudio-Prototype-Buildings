@@ -2492,7 +2492,7 @@ class OpenStudio::Model::Model
     return booster_service_water_loop
 
   end
-  
+
   def add_swh_end_uses(prototype_input, hvac_standards, swh_loop, type)  
     
     puts "Adding water uses type = '#{type}'"
@@ -2519,6 +2519,50 @@ class OpenStudio::Model::Model
     schedule = self.add_schedule(prototype_input["#{type}_service_water_flowrate_schedule"])
     water_fixture.setFlowRateFractionSchedule(schedule)
     water_fixture.setName("#{type.capitalize} Service Water Use #{rated_flow_rate_gal_per_min.round(2)}gal/min")
+    swh_connection.addWaterUseEquipment(water_fixture)
+
+    # Connect the water use connection to the SWH loop
+    swh_loop.addDemandBranchForComponent(swh_connection)
+    
+  end
+
+  def add_swh_end_uses_by_space(building_type, building_vintage, climate_zone, swh_loop, space_type_name, space_name)
+    
+    puts "Adding water uses type = '#{space_type_name}'"
+        
+    # find the specific space_type properties from standard.json
+    search_criteria = {
+      'template' => building_vintage,
+      'building_type' => building_type,
+      'space_type' => space_type_name
+    }
+    data = find_object(@spc_types,search_criteria)
+    space = self.getSpaceByName(space_name)
+    space = space.get
+    space_area = OpenStudio.convert(space.floorArea,'m^2','ft^2').get   # ft2
+    
+    # Water use connection
+    swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
+    
+    # Water fixture definition
+    water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
+    rated_flow_rate_per_area = data['service_water_heating_peak_flow_per_area']   # gal/h.ft2
+    rated_flow_rate_gal_per_hour = rated_flow_rate_per_area * space_area   # gal/h
+    rated_flow_rate_gal_per_min = rated_flow_rate_gal_per_hour/60  # gal/h to gal/min
+    rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+    water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
+    water_fixture_def.setName("#{space_name.capitalize} Service Water Use Def #{rated_flow_rate_gal_per_min.round(2)}gal/min")
+    # Target mixed water temperature
+    mixed_water_temp_c = data['service_water_heating_target_temperature']
+    mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    mixed_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),mixed_water_temp_c)
+    water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
+    
+    # Water use equipment
+    water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
+    schedule = self.add_schedule(data['service_water_heating_schedule'])
+    water_fixture.setFlowRateFractionSchedule(schedule)
+    water_fixture.setName("#{space_name.capitalize} Service Water Use #{rated_flow_rate_gal_per_min.round(2)}gal/min")
     swh_connection.addWaterUseEquipment(water_fixture)
 
     # Connect the water use connection to the SWH loop

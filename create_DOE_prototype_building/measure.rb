@@ -272,7 +272,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+    # model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 

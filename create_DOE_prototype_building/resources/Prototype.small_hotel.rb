@@ -517,13 +517,33 @@ class OpenStudio::Model::Model
     
   end #add hvac
 
-  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
-
-    main_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
-    self.add_swh_end_uses(prototype_input, hvac_standards, main_swh_loop, 'main')
     
+    # the main service water loop except laundry
+    main_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
+    
+    space_type_map.each do |space_type_name, space_names|
+      data = nil
+      search_criteria = {
+        'template' => building_vintage,
+        'building_type' => building_type,
+        'space_type' => space_type_name
+      }
+      data = find_object(@spc_types,search_criteria)
+      
+      if data['service_water_heating_peak_flow_rate'].nil?
+        next
+      elsif space_type_name == "Laundry"
+        next
+      else
+        space_names.each do |space_name|
+          self.add_swh_end_uses_by_space(building_type, building_vintage, climate_zone, main_swh_loop, space_type_name, space_name)
+        end
+      end
+    end
+        
     laundry_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry')
     self.add_swh_end_uses(prototype_input, hvac_standards, laundry_swh_loop, 'laundry')
 

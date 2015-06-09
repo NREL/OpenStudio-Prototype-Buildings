@@ -242,7 +242,7 @@ class OpenStudio::Model::Model
     
   end #add hvac
 
-  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
 
