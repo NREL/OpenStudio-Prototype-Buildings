@@ -1,0 +1,472 @@
+
+OS:Version,
+  {94417274-8b69-42c1-90c8-7ac5918d28eb}, !- Handle
+  1.7.0;                                  !- Version Identifier
+
+OS:Surface,
+  {9e51cf6f-5ed8-42c2-a448-1c69ba23fed6}, !- Handle
+  Dining_Wall_North,                      !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {5198e380-5fbb-4eeb-97bb-f36f69cf7531}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {36b64d4f-87b9-4a0b-bd73-2726d5e04646}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 3.0488;                      !- X,Y,Z Vertex 4 {m}
+
+OS:Connection,
+  {af5bc5c8-c3fe-4436-adc3-f8bd29f06108}, !- Handle
+  {6ce51aa3-4c59-4835-a918-f06cd38a5767}, !- Name
+  ,                                       !- Source Object
+  11,                                     !- Outlet Port
+  ,                                       !- Target Object
+  2;                                      !- Inlet Port
+
+OS:Space,
+  {5198e380-5fbb-4eeb-97bb-f36f69cf7531}, !- Handle
+  Dining,                                 !- Name
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  0,                                      !- Direction of Relative North {deg}
+  0,                                      !- X Origin {m}
+  0,                                      !- Y Origin {m}
+  0,                                      !- Z Origin {m}
+  ,                                       !- Building Story Name
+  ,                                       !- Thermal Zone Name
+  Yes;                                    !- Part of Total Floor Area
+
+OS:Surface,
+  {1bca7f2b-9a4a-4248-91fa-da5ca304cc24}, !- Handle
+  attic-floor-kitchen,                    !- Name
+  Floor,                                  !- Surface Type
+  ,                                       !- Construction Name
+  {1ba13e49-1ea7-4a4d-b99e-805e9b77bb86}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {6bf02edc-cac0-443b-93e6-f1129a84bad1}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 15.2428, 0;                          !- X,Y,Z Vertex 4 {m}
+
+OS:Connection,
+  {87225bbf-c9cb-4d23-8c23-9eafb610fc90}, !- Handle
+  {b6afd35b-c9f4-4152-a2e1-9263501abd16}, !- Name
+  ,                                       !- Source Object
+  11,                                     !- Outlet Port
+  ,                                       !- Target Object
+  2;                                      !- Inlet Port
+
+OS:Space,
+  {1ba13e49-1ea7-4a4d-b99e-805e9b77bb86}, !- Handle
+  attic,                                  !- Name
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  0,                                      !- Direction of Relative North {deg}
+  0,                                      !- X Origin {m}
+  0,                                      !- Y Origin {m}
+  3.0488,                                 !- Z Origin {m}
+  ,                                       !- Building Story Name
+  ,                                       !- Thermal Zone Name
+  No;                                     !- Part of Total Floor Area
+
+OS:SubSurface,
+  {92f64f0a-22e7-4d1a-b820-f4b4f82ff30d}, !- Handle
+  Dining_Wall_South_Window,               !- Name
+  FixedWindow,                            !- Sub Surface Type
+  ,                                       !- Construction Name
+  {2fc7dfec-e35a-430f-9d60-6aeddea638d1}, !- Surface Name
+  ,                                       !- Outside Boundary Condition Object
+  ,                                       !- View Factor to Ground
+  ,                                       !- Shading Control Name
+  ,                                       !- Frame and Divider Name
+  1,                                      !- Multiplier
+  ,                                       !- Number of Vertices
+  0.508, 0, 1.9817,                       !- X,Y,Z Vertex 1 {m}
+  0.508, 0, 1.0671,                       !- X,Y,Z Vertex 2 {m}
+  14.735, 0, 1.0671,                      !- X,Y,Z Vertex 3 {m}
+  14.735, 0, 1.9817;                      !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {2fc7dfec-e35a-430f-9d60-6aeddea638d1}, !- Handle
+  Dining_Wall_South,                      !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {5198e380-5fbb-4eeb-97bb-f36f69cf7531}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 0, 3.0488,                           !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 3 {m}
+  15.2428, 0, 3.0488;                     !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {9ced428b-8c61-4955-9806-768b76bb11b9}, !- Handle
+  north-roof,                             !- Name
+  RoofCeiling,                            !- Surface Type
+  ,                                       !- Construction Name
+  {1ba13e49-1ea7-4a4d-b99e-805e9b77bb86}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  12.7023, 7.6214, 2.5405,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 2 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 3 {m}
+  2.5405, 7.6214, 2.5405;                 !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {4a82589a-9eae-40e8-ba55-80272c51dc50}, !- Handle
+  Kitchen_Floor,                          !- Name
+  Floor,                                  !- Surface Type
+  ,                                       !- Construction Name
+  {576b646b-b702-4c4b-b70f-97814b343c9b}, !- Space Name
+  Ground,                                 !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 15.2428, 0;                          !- X,Y,Z Vertex 4 {m}
+
+OS:Connection,
+  {ed560d53-6ea4-49a1-a80c-c01821134abb}, !- Handle
+  {6be1beaf-c86f-41e0-ad18-004ac86941ff}, !- Name
+  ,                                       !- Source Object
+  11,                                     !- Outlet Port
+  ,                                       !- Target Object
+  2;                                      !- Inlet Port
+
+OS:Space,
+  {576b646b-b702-4c4b-b70f-97814b343c9b}, !- Handle
+  Kitchen,                                !- Name
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  0,                                      !- Direction of Relative North {deg}
+  0,                                      !- X Origin {m}
+  0,                                      !- Y Origin {m}
+  0,                                      !- Z Origin {m}
+  ,                                       !- Building Story Name
+  ,                                       !- Thermal Zone Name
+  Yes;                                    !- Part of Total Floor Area
+
+OS:Surface,
+  {388414d0-e434-4062-8191-13647bb678c0}, !- Handle
+  south-roof,                             !- Name
+  RoofCeiling,                            !- Surface Type
+  ,                                       !- Construction Name
+  {1ba13e49-1ea7-4a4d-b99e-805e9b77bb86}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  2.5405, 7.6214, 2.5405,                 !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 3 {m}
+  12.7023, 7.6214, 2.5405;                !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {250bf169-5d0b-47f8-ae44-addc5b78807c}, !- Handle
+  Dining_Wall_West,                       !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {5198e380-5fbb-4eeb-97bb-f36f69cf7531}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 7.6214, 3.0488,                      !- X,Y,Z Vertex 1 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 3.0488;                           !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {ca17308d-cdca-414e-b836-97fa4cc87541}, !- Handle
+  Kitchen_Wall_West,                      !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {576b646b-b702-4c4b-b70f-97814b343c9b}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 15.2428, 3.0488,                     !- X,Y,Z Vertex 1 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 3.0488;                      !- X,Y,Z Vertex 4 {m}
+
+OS:SubSurface,
+  {9998a58f-dae1-469a-b299-42ff5999f4aa}, !- Handle
+  Dining_Wall_East_Window,                !- Name
+  FixedWindow,                            !- Sub Surface Type
+  ,                                       !- Construction Name
+  {447132cd-93a1-40eb-9c5a-dc37082d7a89}, !- Surface Name
+  ,                                       !- Outside Boundary Condition Object
+  ,                                       !- View Factor to Ground
+  ,                                       !- Shading Control Name
+  ,                                       !- Frame and Divider Name
+  1,                                      !- Multiplier
+  ,                                       !- Number of Vertices
+  15.243, 0.254, 1.9817,                  !- X,Y,Z Vertex 1 {m}
+  15.243, 0.254, 1.0671,                  !- X,Y,Z Vertex 2 {m}
+  15.243, 7.3673, 1.0671,                 !- X,Y,Z Vertex 3 {m}
+  15.243, 7.3673, 1.9817;                 !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {447132cd-93a1-40eb-9c5a-dc37082d7a89}, !- Handle
+  Dining_Wall_East,                       !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {5198e380-5fbb-4eeb-97bb-f36f69cf7531}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 0, 3.0488,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 3 {m}
+  15.2428, 7.6214, 3.0488;                !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {36b64d4f-87b9-4a0b-bd73-2726d5e04646}, !- Handle
+  Dining_Wall_North-PPAutoCreateOther,    !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {576b646b-b702-4c4b-b70f-97814b343c9b}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {9e51cf6f-5ed8-42c2-a448-1c69ba23fed6}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 7.6214, 3.0488,                      !- X,Y,Z Vertex 1 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 2 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 3 {m}
+  15.2428, 7.6214, 3.0488;                !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {f3edcd70-d9be-4fde-96ab-3da3643c4877}, !- Handle
+  Kitchen_Wall_North,                     !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {576b646b-b702-4c4b-b70f-97814b343c9b}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 15.2428, 3.0488,               !- X,Y,Z Vertex 1 {m}
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 2 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 3 {m}
+  0, 15.2428, 3.0488;                     !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {038dd492-9e59-4b57-8cc1-acbfcc7024ad}, !- Handle
+  attic-floor-dinning,                    !- Name
+  Floor,                                  !- Surface Type
+  ,                                       !- Construction Name
+  {1ba13e49-1ea7-4a4d-b99e-805e9b77bb86}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {1255262c-644d-4bd7-86bf-f46019e26f39}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 0;                           !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {de177762-0aa7-4293-ad4b-e4d5fbec25f2}, !- Handle
+  Dining_Floor,                           !- Name
+  Floor,                                  !- Surface Type
+  ,                                       !- Construction Name
+  {5198e380-5fbb-4eeb-97bb-f36f69cf7531}, !- Space Name
+  Ground,                                 !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 0;                           !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {f77e45cf-7e28-40c9-b0a0-7511d2ec63cb}, !- Handle
+  Kitchen_Wall_East,                      !- Name
+  Wall,                                   !- Surface Type
+  ,                                       !- Construction Name
+  {576b646b-b702-4c4b-b70f-97814b343c9b}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 3 {m}
+  15.2428, 15.2428, 3.0488;               !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {1255262c-644d-4bd7-86bf-f46019e26f39}, !- Handle
+  Dining_Ceiling,                         !- Name
+  RoofCeiling,                            !- Surface Type
+  ,                                       !- Construction Name
+  {5198e380-5fbb-4eeb-97bb-f36f69cf7531}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {038dd492-9e59-4b57-8cc1-acbfcc7024ad}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 0, 3.0488,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 3.0488,                      !- X,Y,Z Vertex 3 {m}
+  0, 0, 3.0488;                           !- X,Y,Z Vertex 4 {m}
+
+OS:SubSurface,
+  {69c57dbf-4122-4c04-be67-4302304a30ca}, !- Handle
+  Dining_Wall_West_Window,                !- Name
+  FixedWindow,                            !- Sub Surface Type
+  ,                                       !- Construction Name
+  {250bf169-5d0b-47f8-ae44-addc5b78807c}, !- Surface Name
+  ,                                       !- Outside Boundary Condition Object
+  ,                                       !- View Factor to Ground
+  ,                                       !- Shading Control Name
+  ,                                       !- Frame and Divider Name
+  1,                                      !- Multiplier
+  ,                                       !- Number of Vertices
+  0, 7.3673, 1.9817,                      !- X,Y,Z Vertex 1 {m}
+  0, 7.3673, 1.0671,                      !- X,Y,Z Vertex 2 {m}
+  0, 0.254, 1.0671,                       !- X,Y,Z Vertex 3 {m}
+  0, 0.254, 1.9817;                       !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {6bf02edc-cac0-443b-93e6-f1129a84bad1}, !- Handle
+  Kitchen_Ceiling,                        !- Name
+  RoofCeiling,                            !- Surface Type
+  ,                                       !- Construction Name
+  {576b646b-b702-4c4b-b70f-97814b343c9b}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {1bca7f2b-9a4a-4248-91fa-da5ca304cc24}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 15.2428, 3.0488,               !- X,Y,Z Vertex 2 {m}
+  0, 15.2428, 3.0488,                     !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 3.0488;                      !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {db30c2ac-0654-48ad-8e70-9691141563ff}, !- Handle
+  west-roof,                              !- Name
+  RoofCeiling,                            !- Surface Type
+  ,                                       !- Construction Name
+  {1ba13e49-1ea7-4a4d-b99e-805e9b77bb86}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  2.5405, 7.6214, 2.5405,                 !- X,Y,Z Vertex 1 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 0, 0;                                !- X,Y,Z Vertex 3 {m}
+
+OS:Surface,
+  {c8e1d572-f68b-4fc3-9dec-c2433ceb5248}, !- Handle
+  east-roof,                              !- Name
+  RoofCeiling,                            !- Surface Type
+  ,                                       !- Construction Name
+  {1ba13e49-1ea7-4a4d-b99e-805e9b77bb86}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  12.7023, 7.6214, 2.5405,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  15.2428, 15.2428, 0;                    !- X,Y,Z Vertex 3 {m}
+
+OS:ClimateZones,
+  {fa68c6b8-3b92-4db6-a96c-7597308e1a58}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:LifeCycleCost:Parameters,
+  {7362d46d-d2f5-4298-9b3c-5999832ed265}, !- Handle
+  FEMP,                                   !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ,                                       !- Length of Study Period in Years
+  ,                                       !- Tax Rate
+  ,                                       !- Depreciation Method
+  Yes;                                    !- Use NIST Fuel Escalation Rates
+
+OS:YearDescription,
+  {902318be-4eed-465b-bceb-591b37f21983}; !- Handle
+
+OS:Building,
+  {ebfd0aab-1642-4918-937f-5b3c4f1c73a8}, !- Handle
+  Building 1,                             !- Name
+  ,                                       !- Building Sector Type
+  ,                                       !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+
+OS:Facility,
+  {7719f701-9cde-459d-9c96-b74b70ac07a5}; !- Handle
+

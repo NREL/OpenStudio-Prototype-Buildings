@@ -63,7 +63,7 @@ class OpenStudio::Model::WaterHeaterMixed
     when 'NaturalGas'
       case template # TODO inconsistency; ref buildings don't calculate water heater UA the same way
       when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
-        water_heater_eff = 0.8
+        water_heater_eff = 0.78
         ua_btu_per_hr_per_f = 11.37
       when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
         if capacity_btu_per_hr <= 75000  
