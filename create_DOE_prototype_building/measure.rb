@@ -32,6 +32,13 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     building_type_chs << 'LargeOffice'
     building_type_chs << 'SmallHotel'
     building_type_chs << 'LargeHotel'
+    building_type_chs << 'Warehouse'
+    building_type_chs << 'RetailStandalone'
+    building_type_chs << 'RetailStripmall'
+    building_type_chs << 'QuickServiceRestaurant'
+    building_type_chs << 'FullServiceRestaurant'
+    building_type_chs << 'Hospital'
+    building_type_chs << 'Outpatient'
     building_type = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('building_type', building_type_chs, true)
     building_type.setDisplayName('Select a Building Type.')
     building_type.setDefaultValue('SmallOffice')
@@ -106,35 +113,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
     @start_time = Time.new
     @runner = runner
-    
-    # Get all the log messages and put into output
-    # for users to see.
-    def log_msgs()
-      @msg_log.logMessages.each do |msg|
-        # DLM: you can filter on log channel here for now
-        if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
-          # Skip certain messages that are irrelevant/misleading
-          next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
-                  msg.logChannel.include?("runmanager") || # RunManager messages
-                  msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-                  msg.logChannel.include?("GeometryTranslator") # Forward translator and geometry translator
-                  msg.logChannel.include?("deprecated") # Deprecated method warnings
-                  
-          # Report the message in the correct way
-          if msg.logLevel == OpenStudio::Info
-            @runner.registerInfo(msg.logMessage)  
-          elsif msg.logLevel == OpenStudio::Warn
-            @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
-          elsif msg.logLevel == OpenStudio::Error
-            @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
-          elsif debug == true && msg.logLevel == OpenStudio::Debug 
-            @runner.registerInfo("DEBUG [#{msg.logChannel}] #{msg.logMessage}")
-          end
-        end
-      end
-      @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
-    end    
-    
+
     # Load the libraries
     # HVAC sizing
     require_relative 'resources/HVACSizing.Model'
@@ -172,6 +151,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       log_msgs
       return false
     end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
     prototype_input.each do |key, value|
       next if value.nil?
@@ -231,9 +211,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       construction_type_search = 'Office'
     when 'LargeOffice'
       require_relative 'resources/Prototype.large_office'
-      geometry_file = 'Geometry.large_office.osm'
       space_building_type_search = 'Office'
       construction_type_search = 'Office'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.large_office.osm'
+        else
+          geometry_file = 'Geometry.large_office_2010.osm'
+      end
     when 'SmallHotel'
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
@@ -243,20 +228,45 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_hotel_pnnl.osm'
       end
-      when 'LargeHotel'
-        require_relative 'resources/Prototype.large_hotel'
+    when 'LargeHotel'
+      require_relative 'resources/Prototype.large_hotel'
 
-        case building_vintage
-          when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
-            geometry_file = 'Geometry.large_hotel.doe.osm'
-          when '90.1-2007'
-            geometry_file = 'Geometry.large_hotel.2004_2007.osm'
-          when '90.1-2010'
-            geometry_file = 'Geometry.large_hotel.2010.osm'
-          else
-            geometry_file = 'Geometry.large_hotel.2013.osm'
-        end
-        space_building_type_search = 'LargeHotel'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.large_hotel.doe.osm'
+        when '90.1-2007'
+          geometry_file = 'Geometry.large_hotel.2004_2007.osm'
+        when '90.1-2010'
+          geometry_file = 'Geometry.large_hotel.2010.osm'
+        else
+          geometry_file = 'Geometry.large_hotel.2013.osm'
+      end
+      space_building_type_search = 'LargeHotel'
+    when 'Warehouse'
+      require_relative 'resources/Prototype.warehouse'
+      geometry_file = 'Geometry.warehouse.osm'
+    when 'RetailStandalone'
+      require_relative 'resources/Prototype.retail_standalone'
+      geometry_file = 'Geometry.retail_standalone.osm'
+      space_building_type_search = 'Retail'
+      construction_type_search = 'Retail'
+    when 'RetailStripmall'
+      require_relative 'resources/Prototype.retail_stripmall'
+      geometry_file = 'Geometry.retail_stripmall.osm'
+      space_building_type_search = 'StripMall'
+      construction_type_search = 'StripMall'
+    when 'QuickServiceRestaurant'
+      require_relative 'resources/Prototype.quick_service_restaurant'
+      geometry_file = 'Geometry.quick_service_restaurant.osm'
+    when 'FullServiceRestaurant'
+      require_relative 'resources/Prototype.full_service_restaurant'
+      geometry_file = 'Geometry.full_service_restaurant.osm'
+    when 'Hospital'
+      require_relative 'resources/Prototype.hospital'
+      geometry_file = 'Geometry.hospital.osm'
+    when 'Outpatient'
+      require_relative 'resources/Prototype.outpatient'
+      geometry_file = 'Geometry.outpatient.osm'
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model',"Building Type = #{building_type} not recognized")
       return false
@@ -273,6 +283,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+    model.add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
@@ -336,6 +347,31 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     return true
 
   end #end the run method
+
+  # Get all the log messages and put into output
+  # for users to see.
+  def log_msgs
+    @msg_log.logMessages.each do |msg|
+      # DLM: you can filter on log channel here for now
+      if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
+        # Skip certain messages that are irrelevant/misleading
+        next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
+            msg.logChannel.include?("runmanager") || # RunManager messages
+            msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+            msg.logChannel.include?("Translator") # Forward translator and geometry translator
+
+        # Report the message in the correct way
+        if msg.logLevel == OpenStudio::Info
+          @runner.registerInfo(msg.logMessage)
+        elsif msg.logLevel == OpenStudio::Warn
+          @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
+        elsif msg.logLevel == OpenStudio::Error
+          @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+        end
+      end
+    end
+    @runner.registerInfo("Total Time = #{(Time.new - @start_time).round}sec.")
+  end
 
 end #end the measure
 

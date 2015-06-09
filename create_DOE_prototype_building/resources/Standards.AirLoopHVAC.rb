@@ -542,8 +542,10 @@ class OpenStudio::Model::AirLoopHVAC
         end
       elsif comp.to_AirLoopHVACUnitarySystem.is_initialized
         fan = comp.to_AirLoopHVACUnitarySystem.get.supplyFan
-        if fan.to_FanVariableVolume.is_initialized
-          is_vav = true
+        if fan.is_initialized
+          if fan.get.to_FanVariableVolume.is_initialized
+            is_vav = true
+          end
         end
       end  
     end

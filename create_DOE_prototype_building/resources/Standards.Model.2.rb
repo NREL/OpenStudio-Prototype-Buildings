@@ -167,11 +167,11 @@ class OpenStudio::Model::Model
     #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding schedule: #{schedule_name}")   
     
     # Find all the schedule rules that match the name
-    rules = self.find_objects(@standards['schedules'], {'name'=>schedule_name})
+    rules = self.find_objects(self.hvac_standards['schedules'], {'name'=>schedule_name})
     if rules.size == 0
       # Check the second spreadsheet.
       # TODO Remove this once openstudio_hvac_standards info is merged to openstudio_standards
-      rules = self.find_objects(self.hvac_standards['schedules'], {'name'=>schedule_name})
+      rules = self.find_objects(@standards['schedules'], {'name'=>schedule_name})
       if rules.size == 0
         OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Cannot find data for schedule: #{schedule_name}, will not be created.")
         return false #TODO change to return empty optional schedule:ruleset?
@@ -382,7 +382,6 @@ class OpenStudio::Model::Model
       unless ventilation_ach == 0 || ventilation_ach.nil?
         ventilation.setOutdoorAirFlowAirChangesperHour(ventilation_ach)
       end
-
     end
 
     # Occupancy
