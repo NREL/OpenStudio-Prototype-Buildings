@@ -5,11 +5,11 @@ class OpenStudio::Model::Model
   # Helper method to set the weather file, import the design days, set
   # water mains temperature, and set ground temperature.
   # Based on ChangeBuildingLocation measure by Nicholas Long
-  def add_design_days_and_weather_file(climate_zone)
+  def add_design_days_and_weather_file(hvac_standards, building_type, building_vintage, climate_zone)
 
     require_relative 'Weather.stat_file'
     
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Started adding weather file for climate zone: #{climate_zone}.")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.weather.Model', "Started adding weather file for climate zone: #{climate_zone}.")
     
     # Define the weather file for each climate zone
     climate_zone_weather_file_map = {
@@ -41,7 +41,7 @@ class OpenStudio::Model::Model
     # Get the weather file name from the hash
     weather_file_name = climate_zone_weather_file_map[climate_zone]
     if weather_file_name.nil?
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Could not determine the weather file for climate zone: #{climate_zone}.")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.weather.Model', "Could not determine the weather file for climate zone: #{climate_zone}.")
       return false
     end
     
@@ -67,20 +67,38 @@ class OpenStudio::Model::Model
     site.setTimeZone(weather_time)
     site.setElevation(weather_elev)
 
-    #TODO Add or update ground temperature data
-    groundTemp = self.getSiteGroundTemperatureBuildingSurface
-    groundTemp.setJanuaryGroundTemperature(19.527)
-    groundTemp.setFebruaryGroundTemperature(19.502)
-    groundTemp.setMarchGroundTemperature(19.536)
-    groundTemp.setAprilGroundTemperature(19.598)
-    groundTemp.setMayGroundTemperature(20.002)
-    groundTemp.setJuneGroundTemperature(21.640)
-    groundTemp.setJulyGroundTemperature(22.225)
-    groundTemp.setAugustGroundTemperature(22.375)
-    groundTemp.setSeptemberGroundTemperature(21.449)
-    groundTemp.setOctoberGroundTemperature(20.121)
-    groundTemp.setNovemberGroundTemperature(19.802)
-    groundTemp.setDecemberGroundTemperature(19.633)
+    #Add or update ground temperature data
+    ground_temp_vals = self.find_object(hvac_standards["ground_temperatures"], {'template'=>building_vintage, 'climate_zone'=>climate_zone, 'building_type'=>building_type})
+    if ground_temp_vals
+      groundTemp = self.getSiteGroundTemperatureBuildingSurface
+      groundTemp.setJanuaryGroundTemperature(ground_temp_vals['jan'])
+      groundTemp.setFebruaryGroundTemperature(ground_temp_vals['feb'])
+      groundTemp.setMarchGroundTemperature(ground_temp_vals['mar'])
+      groundTemp.setAprilGroundTemperature(ground_temp_vals['apr'])
+      groundTemp.setMayGroundTemperature(ground_temp_vals['may'])
+      groundTemp.setJuneGroundTemperature(ground_temp_vals['jun'])
+      groundTemp.setJulyGroundTemperature(ground_temp_vals['jul'])
+      groundTemp.setAugustGroundTemperature(ground_temp_vals['aug'])
+      groundTemp.setSeptemberGroundTemperature(ground_temp_vals['sep'])
+      groundTemp.setOctoberGroundTemperature(ground_temp_vals['oct'])
+      groundTemp.setNovemberGroundTemperature(ground_temp_vals['nov'])
+      groundTemp.setDecemberGroundTemperature(ground_temp_vals['dec'])
+    else
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.weather.Model', "Could not find ground temperatures; will use generic temperatures, which will skew results.")
+      groundTemp = self.getSiteGroundTemperatureBuildingSurface
+      groundTemp.setJanuaryGroundTemperature(19.527)
+      groundTemp.setFebruaryGroundTemperature(19.502)
+      groundTemp.setMarchGroundTemperature(19.536)
+      groundTemp.setAprilGroundTemperature(19.598)
+      groundTemp.setMayGroundTemperature(20.002)
+      groundTemp.setJuneGroundTemperature(21.640)
+      groundTemp.setJulyGroundTemperature(22.225)
+      groundTemp.setAugustGroundTemperature(22.375)
+      groundTemp.setSeptemberGroundTemperature(21.449)
+      groundTemp.setOctoberGroundTemperature(20.121)
+      groundTemp.setNovemberGroundTemperature(19.802)
+      groundTemp.setDecemberGroundTemperature(19.633)
+    end
 
     # Add SiteWaterMainsTemperature -- via parsing of STAT file.
     stat_filename = "#{File.join(File.dirname(weather_file), File.basename(weather_file, '.*'))}.stat"
@@ -89,10 +107,10 @@ class OpenStudio::Model::Model
       water_temp = self.getSiteWaterMainsTemperature
       water_temp.setAnnualAverageOutdoorAirTemperature(stat_file.mean_dry_bulb)
       water_temp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(stat_file.delta_dry_bulb)
-      #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Mean dry bulb is #{stat_file.mean_dry_bulb}")
-      #OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Delta dry bulb is #{stat_file.delta_dry_bulb}")
+      #OpenStudio::logFree(OpenStudio::Info, "openstudio.weather.Model", "Mean dry bulb is #{stat_file.mean_dry_bulb}")
+      #OpenStudio::logFree(OpenStudio::Info, "openstudio.weather.Model", "Delta dry bulb is #{stat_file.delta_dry_bulb}")
     else
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Could not find .stat file for: #{stat_filename}.")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.weather.Model', "Could not find .stat file for: #{stat_filename}.")
       return false
     end
 
@@ -109,15 +127,15 @@ class OpenStudio::Model::Model
         ddy_list = /(Htg 99.6. Condns DB)|(Clg .4. Condns WB=>MDB)|(Clg .4% Condns DB=>MWB)/
         if d.name.get =~ ddy_list       
           self.addObject(d.clone)
-          #OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Added #{d.name} design day.")
+          #OpenStudio::logFree(OpenStudio::Info, 'openstudio.weather.Model', "Added #{d.name} design day.")
         end
       end
     else
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Could not find .stat file for: #{stat_filename}.")
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.weather.Model', "Could not find .stat file for: #{stat_filename}.")
       return false
     end
 
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Finished adding weather file for climate zone: #{climate_zone}.")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.weather.Model', "Finished adding weather file for climate zone: #{climate_zone}.")
     
     return true
       
