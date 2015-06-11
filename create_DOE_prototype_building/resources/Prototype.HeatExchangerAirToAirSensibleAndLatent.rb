@@ -11,8 +11,21 @@ class OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent
     elsif self.autosizedNominalSupplyAirFlowRate.is_initialized
       supply_air_flow_m3_per_s = self.autosizedNominalSupplyAirFlowRate.get
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.HeatExchangerAirToAirSensibleAndLatent", "For #{self.name} nominal flow rate is not available, cannot apply prototype assumptions.")
-      return false
+      failed = true
+      oa_system = self.airLoopHVACOutdoorAirSystem
+      if oa_system.is_initialized
+        oa_controller = oa_system.get.getControllerOutdoorAir
+        # This may or may not work for all building types but it is true for RetailStandalone
+        minimumOutdoorAirFlowRate = self.model.getAutosizedValue(oa_controller, 'Minimum Outdoor Air Flow Rate', 'm3/s')
+        if minimumOutdoorAirFlowRate.is_initialized
+          supply_air_flow_m3_per_s = minimumOutdoorAirFlowRate.get
+          failed = false
+        end
+      end
+      if failed
+        OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.HeatExchangerAirToAirSensibleAndLatent", "For #{self.name} nominal flow rate is not available, cannot apply prototype assumptions.")
+        return false
+      end
     end
 
     # Convert the flow rate to cfm
