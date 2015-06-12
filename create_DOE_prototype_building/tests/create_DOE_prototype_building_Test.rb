@@ -242,7 +242,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                 legacy_val = legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, end_use)
                 # Combine the exterior lighting and exterior equipment
                 if end_use == 'Exterior Lighting'
-                  legacy_val += legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, 'Exterior Equipment')
+                  legacy_exterior_equipment = legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, 'Exterior Equipment')
+                  unless legacy_exterior_equipment.nil?
+                    legacy_val += legacy_exterior_equipment
+                  end
                 end
 
                 #legacy_val = legacy_idf_results[building_type][building_vintage][climate_zone][fuel_type][end_use]
@@ -311,11 +314,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                 elsif osm_val > 0 && legacy_val == 0
                   # The osm has a fuel/end use that the legacy idf does not
                   percent_error = 1000
-                  failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = osm has extra fuel/end use that legacy idf does not"
+                  failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = osm has extra fuel/end use that legacy idf does not (#{osm_val})"
                 elsif osm_val == 0 && legacy_val > 0
                   # The osm has a fuel/end use that the legacy idf does not
                   percent_error = 1000
-                  failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = osm is missing a fuel/end use that legacy idf has"
+                  failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = osm is missing a fuel/end use that legacy idf has (#{legacy_val})"
                 else
                   # Both osm and legacy are == 0 for this fuel/end use, no error
                   percent_error = 0
@@ -337,11 +340,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             elsif total_osm_energy_val > 0 && total_legacy_energy_val == 0
               # The osm has a fuel/end use that the legacy idf does not
               total_percent_error = 1000
-              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm has extra fuel/end use that legacy idf does not"
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm has extra fuel/end use that legacy idf does not (#{osm_val})"
             elsif total_osm_energy_val == 0 && total_legacy_energy_val > 0
               # The osm has a fuel/end use that the legacy idf does not
               total_percent_error = 1000
-              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm is missing a fuel/end use that legacy idf has"
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm is missing a fuel/end use that legacy idf has (#{legacy_val})"
             else
               # Both osm and legacy are == 0 for, no error
               total_percent_error = 0
@@ -490,10 +493,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     end
   end
 
-  # For Mark Adams in ORNL
-  if hostname == "Mark_pc" # TODO: Mark update the pc names
-    # Test the Small Office in the QTR vintages and climate zones
-    def test_medium_office
+  if hostname == "m5zmac"
+    # Test the Medium Office in the QTR vintages and climate zones
+    def dont_test_medium_office
       bldg_types = ['MediumOffice']
       vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
       climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
@@ -514,7 +516,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
 
-    def test_warehouse
+    def dont_test_warehouse
       bldg_types = ['Warehouse']
       vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
       climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
@@ -535,7 +537,133 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
 
-    def test_large_office
+    def test_retail_standalone
+      bldg_types = ['RetailStandalone']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_retail_stripmall
+      bldg_types = ['RetailStripmall']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_quick_service_restaurant
+      bldg_types = ['QuickServiceRestaurant']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_full_service_restaurant
+      bldg_types = ['FullServiceRestaurant']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_hospital
+      bldg_types = ['Hospital']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_outpatient
+      bldg_types = ['Outpatient']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_large_office
 
       bldg_types = ['LargeOffice']
       vintages = ['DOE Ref 1980-2004']#, 'DOE Ref Pre-1980', ']'90.1-2010'
