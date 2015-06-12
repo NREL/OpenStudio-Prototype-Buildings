@@ -325,8 +325,8 @@ class OpenStudio::Model::Model
     # Lighting
 
     make_lighting = false
-    lighting_per_area = data['lighting_per_area']
-    lighting_per_person = data['lighting_per_person']
+    lighting_per_area = data['lighting_per_area'].to_f
+    lighting_per_person = data['lighting_per_person'].to_f
     unless lighting_per_area == 0 || lighting_per_area.nil? then make_lighting = true end
     unless lighting_per_person == 0 || lighting_per_person.nil? then make_lighting = true end
 
@@ -819,21 +819,15 @@ class OpenStudio::Model::Model
   def add_construction_set(template, clim, building_type, spc_type)
 
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
-
-    # Find the climate zone set that this climate zone falls into
-    climate_zone_set = find_climate_zone_set(clim, template)
-    if !climate_zone_set
+    construction_set_data = find_construction_set_data(template, clim, building_type, spc_type)
+    if !construction_set_data[0]
       return construction_set
     end
- 
-    # Get the object data
-    data = self.find_object(@standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
-    if !data
-      #OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
-      return construction_set
-    end 
-  
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}")  
+
+    data = construction_set_data[0]
+    climate_zone_set = construction_set_data[1]
+
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}")
   
     name = make_name(template, clim, building_type, spc_type)
 
@@ -984,7 +978,34 @@ class OpenStudio::Model::Model
 
     # Return the construction set
     return OpenStudio::Model::OptionalDefaultConstructionSet.new(construction_set)
-  
+  end
+
+  # Helper method to find out which climate zone set contains a specific climate zone.
+  # Returns climate zone set name as String if success, nil if not found.
+  def find_construction_set_data(template, clim, building_type, spc_type)
+    possible_climate_zones = []
+    climate_zone_set = nil
+    data = nil
+    @standards['climate_zone_sets'].each do |climate_zone_set|
+      if climate_zone_set['climate_zones'].include?(clim)
+        possible_climate_zones << climate_zone_set['name']
+      end
+    end
+
+    # Check the results
+    if possible_climate_zones.size == 0
+      OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Cannot find a climate zone set containing #{clim}")
+   end
+    possible_climate_zones.each do |climate_zone_name|
+      data = self.find_object(@standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_name, 'building_type'=>building_type, 'space_type'=>spc_type})
+      climate_zone_set = climate_zone_name
+      if data != nil
+        OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Climate Zone Set #{climate_zone_name} is used to search the construction sets.")
+        break
+      end
+    end
+
+    return [data,climate_zone_set]
   end
 
   private

@@ -2632,6 +2632,7 @@ class OpenStudio::Model::Model
       swh_pump_head_press_pa = 0.001
       swh_pump_motor_efficiency = 1
     end
+
     swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
     swh_pump.setName('Service Water Loop Pump')
     swh_pump.setRatedPumpHead(swh_pump_head_press_pa.to_f)

@@ -299,9 +299,12 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
-   
+
     # Add daylighting controls per standard
-    model.addDaylightingControls
+    # TODO: There are some bugs in the function
+    if building_type != "LargeHotel"
+      model.addDaylightingControls
+    end
    
    
     # Add output variables for debugging

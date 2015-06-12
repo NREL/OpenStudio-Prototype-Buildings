@@ -5,21 +5,26 @@ class OpenStudio::Model::Model
   def define_space_type_map(building_type, building_vintage, climate_zone)
     space_type_map = {
         'Banquet' => ['Banquet_Flr_6','Dining_Flr_6'],
+        'Basement'=>['Basement'],
         'Cafe' => ['Cafe_Flr_1'],
-        'Corridor'=> ['Corridor_Flr_3','Corridor_Flr_6'],
-        'GuestRoom'=> ['Room_1_Flr_3','Room_2_Flr_3','Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3','Room_5_Flr_3','Room_6_Flr_3','Room_1_Flr_6','Room_2_Flr_6','Room_3_Mult9_Flr_6'],
+        'Corridor'=> ['Corridor_Flr_6'],
+        'Corridor2'=> ['Corridor_Flr_3'],
+        'GuestRoom'=> ['Room_1_Flr_3','Room_2_Flr_3','Room_5_Flr_3','Room_6_Flr_3'],
+        'GuestRoom3'=> ['Room_1_Flr_6','Room_2_Flr_6'],
+        'GuestRoom2'=> ['Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3'],
+        'GuestRoom4'=> ['Room_3_Mult9_Flr_6'],
         'Kitchen'=> ['Kitchen_Flr_6'],
         'Laundry'=> ['Laundry_Flr_1'],
         'Lobby'=> ['Lobby_Flr_1'],
         'Mechanical'=> ['Mech_Flr_1'],
         'Retail'=> ['Retail_1_Flr_1','Retail_2_Flr_1'],
-        'Storage'=> ['Basement','Storage_Flr_1']
+        'Storage'=> ['Storage_Flr_1']
     }
 
     return space_type_map
   end
 
-  def define_hvac_system_map
+  def define_hvac_system_map(building_type, building_vintage, climate_zone)
     system_to_space_map = [
         {
             'type' => 'VAV',
@@ -72,7 +77,7 @@ class OpenStudio::Model::Model
     simulation_control.setTemperatureConvergenceToleranceValue(0.5)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
-    system_to_space_map = define_hvac_system_map
+    system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
 
     #VAV system; hot water reheat, water-cooled chiller
     chilled_water_loop = self.add_chw_loop(prototype_input, hvac_standards)

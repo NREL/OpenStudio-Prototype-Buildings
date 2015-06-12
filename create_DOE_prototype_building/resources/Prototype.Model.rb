@@ -155,7 +155,7 @@ class OpenStudio::Model::Model
     # Load the openstudio_standards.json file
     self.load_openstudio_standards_json(path_to_standards_json)
 
-    # Make the default contruction set for the building
+    # Make the default construction set for the building
     bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil)
     if bldg_def_const_set.is_initialized
       self.getBuilding.setDefaultConstructionSet(bldg_def_const_set.get)
@@ -219,12 +219,22 @@ class OpenStudio::Model::Model
     layers = OpenStudio::Model::MaterialVector.new
     layers << material
     construction.setLayers(layers)
-    
+
+    # Assign the internal mass construction to existing internal mass objects
+    self.getSpaces.each do |space|
+      internal_masses = space.internalMass
+      internal_masses.each do |internal_mass|
+        internal_mass.internalMassDefinition.setConstruction(construction)
+      end
+    end
+
+
+
     # get all the space types that are conditioned
     conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)
     
     # add internal mass
-    unless building_type == 'SmallHotel' && 
+    unless (building_type == 'SmallHotel') &&
       (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
       conditioned_space_names.each do |conditioned_space_name|
         internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
