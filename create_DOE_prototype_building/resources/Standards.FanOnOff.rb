@@ -3,9 +3,9 @@
 class OpenStudio::Model::FanOnOff
 
   # Sets the fan motor efficiency based on the standard
-  def setStandardEfficiency(template, hvac_standards)
+  def setStandardEfficiency(template, standards)
     
-    motors = hvac_standards["motors"]
+    motors = standards["motors"]
     
     # Get the max flow rate from the fan.
     maximum_flow_rate_m3_per_s = nil
@@ -14,7 +14,7 @@ class OpenStudio::Model::FanOnOff
     elsif self.autosizedMaximumFlowRate.is_initialized
       maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.FanOnOff", "For #{self.name} max flow rate is not available, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.FanOnOff", "For #{self.name} max flow rate is not available, cannot apply efficiency standard.")
       return false
     end
     
@@ -40,7 +40,7 @@ class OpenStudio::Model::FanOnOff
     "type" => "Enclosed",
     }
     
-    motor_properties = find_object(motors, search_criteria, allowed_hp)
+    motor_properties = self.model.find_object(motors, search_criteria, allowed_hp)
   
     # Get the nominal motor efficiency
     motor_eff = motor_properties["nominal_full_load_efficiency"]
@@ -60,7 +60,7 @@ class OpenStudio::Model::FanOnOff
     #fan_eff_curve = fan_eff_curve.to_CurveCubic.get
     #fan_eff_curve.setCoefficient1Constant(total_fan_eff)
     
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.hvac_standards.FanOnOff", "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(2)}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.FanOnOff", "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(2)}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
     
     return true
     
@@ -158,10 +158,10 @@ class OpenStudio::Model::FanOnOff
   
   # Determines the minimum fan motor efficiency 
   # for a given motor bhp
-  def standardMinimumMotorEfficiency(template, hvac_standards, motor_bhp)
+  def standardMinimumMotorEfficiency(template, standards, motor_bhp)
   
     # Lookup the minimum motor efficiency
-    motors = hvac_standards["motors"]
+    motors = standards["motors"]
     
     # Assuming all fan motors are 4-pole Enclosed
     search_criteria = {
@@ -170,7 +170,7 @@ class OpenStudio::Model::FanOnOff
       "type" => "Enclosed",
     }
     
-    motor_properties = find_object(motors, search_criteria, motor_bhp)
+    motor_properties = self.model.find_object(motors, search_criteria, motor_bhp)
  
     fan_motor_eff = motor_properties["nominal_full_load_efficiency"]  
 

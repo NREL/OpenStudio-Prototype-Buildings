@@ -1,4 +1,4 @@
-# This script reads OpenStudio_HVAC_Standards.xlsx
+# This script reads OpenStudio_standards.xlsx
 # and creates a JSON file containing all the information
 
 require 'rubygems'
@@ -8,7 +8,7 @@ require 'rubyXL'
 class String
 
   def snake_case
-    self.downcase.gsub(' ','_')
+    downcase.gsub(' ', '_').gsub('-', '_')
   end
 
 end
@@ -60,8 +60,47 @@ end
 begin
 
   # Path to the xlsx file
-  xlsx_path = "#{Dir.pwd}/OpenStudio_HVAC_Standards.xlsx"
+  xlsx_path = "#{Dir.pwd}/OpenStudio_Standards.xlsx"
 
+  # List of worksheets to skip
+  worksheets_to_skip = []
+  worksheets_to_skip << 'ventilation'
+  worksheets_to_skip << 'occupancy'
+  worksheets_to_skip << 'interior_lighting'
+  worksheets_to_skip << 'lookups'
+
+  # List of columns to skip
+  cols_to_skip = []
+  cols_to_skip << 'lookup'
+  cols_to_skip << 'lookupcolumn'
+  cols_to_skip << 'vlookupcolumn'
+  cols_to_skip << 'osm_lighting_per_person'
+  cols_to_skip << 'osm_lighting_per_area'
+  cols_to_skip << 'lighting_per_length'
+  cols_to_skip << 'lighting_fraction_to_return_air'
+  cols_to_skip << 'lighting_fraction_radiant'
+  cols_to_skip << 'lighting_fraction_visible'
+  cols_to_skip << 'gas_equipment_fraction_latent'
+  cols_to_skip << 'gas_equipment_fraction_radiant'
+  cols_to_skip << 'gas_equipment_fraction_lost'
+  cols_to_skip << 'electric_equipment_fraction_latent'
+  cols_to_skip << 'electric_equipment_fraction_radiant'
+  cols_to_skip << 'electric_equipment_fraction_lost'
+  cols_to_skip << 'service_water_heating_peak_flow_rate'
+  cols_to_skip << 'service_water_heating_area'
+  cols_to_skip << 'service_water_heating_peak_flow_per_area'
+  cols_to_skip << 'service_water_heating_target_temperature'
+  cols_to_skip << 'service_water_heating_fraction_sensible'
+  cols_to_skip << 'service_water_heating_fraction_latent'
+  cols_to_skip << 'service_water_heating_schedule'
+  cols_to_skip << 'exhaust_per_area'
+  cols_to_skip << 'exhaust_per_unit'
+  cols_to_skip << 'exhaust_fan_efficiency'
+  cols_to_skip << 'exhaust_fan_pressure_rise'
+  cols_to_skip << 'exhaust_fan_power'
+  cols_to_skip << 'exhaust_fan_power_per_area'
+  cols_to_skip << 'exhaust_schedule'  
+  
   # List of columns that are boolean
   # (rubyXL returns 0 or 1, will translate to true/false)
   bool_cols = []
@@ -70,11 +109,19 @@ begin
   # Open workbook
   workbook = RubyXL::Parser.parse(xlsx_path)
 
-  standards_data = {}
+  # Loop through and export each tab to a separate JSON file
   workbook.worksheets.each do |worksheet|
-    #puts worksheet.methods.sort
     sheet_name = worksheet.sheet_name.snake_case
-    puts "Exporting #{sheet_name}"
+    
+    standards_data = {}
+    
+    # Skip the specified worksheets
+    if worksheets_to_skip.include?(sheet_name)
+      puts "Skipping #{sheet_name}"
+      next
+    else
+      puts "Exporting #{sheet_name}"
+    end
     
     # All spreadsheets must have headers in row 3
     # and data from roworksheet 4 onward.
@@ -106,14 +153,23 @@ begin
     # data for the row to a hash.
     objs = []
     for i in (header_row + 1)..(all_data.size - 1)
-      row = all_data[i]     
+      row = all_data[i]
+      # Stop when reach a blank row
+      break if row.nil?
+      # puts "------row #{i} = #{row}"
       obj = {}
+      # Check if all cells in the row are null
       all_null = true
       for j in 0..headers.size - 1
         val = row[j]
-        if !val.nil?
+        # Don't record nil values
+        # next if val.nil?
+        # Flip the switch if a value is found
+        unless val.nil?
           all_null = false
         end
+        # Skip specified columns
+        next if cols_to_skip.include?(headers[j]['name'])
         # Convert specified columns to boolean
         if bool_cols.include?(headers[j]['name'])
           if val == 1
@@ -124,60 +180,92 @@ begin
             val = nil
           end
         end
-        obj[headers[j]["name"]] = val
+        # Record the value
+        obj[headers[j]['name']] = val
         # Skip recording units for unitless values
-        next if headers[j]["units"].nil?
-        #obj["#{headers[j]["name"]}_units"] = headers[j]["units"]
+        next if headers[j]['units'].nil?
+        # Record the units
+        # obj["#{headers[j]['name']}_units"] = headers[j]['units']
       end
-      
+
       # Skip recording empty rows
       next if all_null == true
-      
-        # Store the array of objects
-        # special cases for some types
-        if sheet_name == 'schedules'
-          new_obj = {}
-          new_obj['name'] = obj['name']
-          items = []
-          obj.each do |key, val|
-            # Skip the key
-            next if key == 'name'
-            # Put materials into an array,
-            # record other fields normally
-            if key.include?('hr')
-              # Skip blank hourly values
-              next if val.nil?
-              items << val
-            else
-              new_obj[key] = val
-            end
-          end
-          new_obj['values'] = items
-          objs << new_obj
-        else
-          objs << obj
+
+      # Store the array of objects
+      # special cases for some types
+      if sheet_name == 'climate_zone_sets'
+        new_obj = {}
+        new_obj['name'] = obj['name']
+        items = []
+        obj.each do |key, val|
+          # Skip the key
+          next if key == 'name'
+          # Skip blank climate zone values
+          next if val.nil?
+          items << val
         end
+        new_obj['climate_zones'] = items
+        objs << new_obj
+      elsif sheet_name == 'constructions'
+        new_obj = {}
+        new_obj['name'] = obj['name']
+        items = []
+        obj.each do |key, val|
+          # Skip the key
+          next if key == 'name'
+          # Put materials into an array,
+          # record other fields normally
+          if key.include?('material')
+            # Skip blank material values
+            next if val.nil?
+            items << val
+          else
+            new_obj[key] = val
+          end
+        end
+        new_obj['materials'] = items
+        objs << new_obj
+      elsif sheet_name == 'schedules'
+        new_obj = {}
+        new_obj['name'] = obj['name']
+        items = []
+        obj.each do |key, val|
+          # Skip the key
+          next if key == 'name'
+          # Put materials into an array,
+          # record other fields normally
+          if key.include?('hr')
+            # Skip blank hourly values
+            next if val.nil?
+            items << val
+          else
+            new_obj[key] = val
+          end
+        end
+        new_obj['values'] = items
+        objs << new_obj
+      else
+        objs << obj
+      end
 
     end
-    
+          
     # Report how many objects were found
     puts "--found #{objs.size} rows"
     
     # Save this hash 
     standards_data[sheet_name] = objs
 
+    # Sort the standard data so it can be diffed easily
+    sorted_standards_data = standards_data.sort_by_key_updated(true) {|x,y| x.to_s <=> y.to_s}
+
+    # Write the hash to a JSON file
+    File.open("#{Dir.pwd}/OpenStudio_Standards_#{sheet_name}.json", 'w') do |file|
+      file << JSON::pretty_generate(sorted_standards_data)
+    end
+    puts "Successfully generated OpenStudio_Standards_#{sheet_name}.json"    
+    
+    
   end
-
-  # Sort the standard data so it can be diffed easily
-  sorted_standards_data = standards_data.sort_by_key_updated(true) {|x,y| x.to_s <=> y.to_s}
-
-  # Write the hash to a JSON file
-  File.open("#{Dir.pwd}/OpenStudio_HVAC_Standards.json", 'w') do |file|
-    file << JSON::pretty_generate(sorted_standards_data)
-  end
-  puts "Successfully generated OpenStudio_HVAC_Standards.json"
-  
-ensure
-
 
 end
