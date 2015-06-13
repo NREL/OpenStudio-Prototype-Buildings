@@ -2,14 +2,14 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::WaterHeaterMixed
 
-  def setStandardEfficiency(template, hvac_standards)
+  def setStandardEfficiency(template, standards)
   
     # Get the capacity of the water heater
     # TODO add capability to pull autosized water heater capacity
     # if the Sizing:WaterHeater object is ever implemented in OpenStudio.
     capacity_w = self.heaterMaximumCapacity
     if capacity_w.empty?
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.WaterHeaterMixed", "For #{self.name}, cannot find capacity, standard will not be applied.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.WaterHeaterMixed", "For #{self.name}, cannot find capacity, standard will not be applied.")
       return false
     else
       capacity_w = capacity_w.get
@@ -22,7 +22,7 @@ class OpenStudio::Model::WaterHeaterMixed
     # if the Sizing:WaterHeater object is ever implemented in OpenStudio. 
     volume_m3 = self.tankVolume
     if volume_m3.empty?
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.WaterHeaterMixed", "For #{self.name}, cannot find volume, standard will not be applied.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.WaterHeaterMixed", "For #{self.name}, cannot find volume, standard will not be applied.")
       return false
     else
       volume_m3 = volume_m3.get
@@ -32,7 +32,7 @@ class OpenStudio::Model::WaterHeaterMixed
     # Get the heater fuel type
     fuel_type = self.heaterFuelType
     if !(fuel_type == 'NaturalGas' || fuel_type == 'Electricity')
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.WaterHeaterMixed", "For #{self.name}, fuel type of #{fuel_type} is not yet supported, standard will not be applied.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.WaterHeaterMixed", "For #{self.name}, fuel type of #{fuel_type} is not yet supported, standard will not be applied.")
     end
     
     # Calculate the water heater efficiency and

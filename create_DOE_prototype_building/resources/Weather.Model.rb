@@ -68,7 +68,7 @@ class OpenStudio::Model::Model
     site.setElevation(weather_elev)
 
     #Add or update ground temperature data
-    ground_temp_vals = self.find_object(hvac_standards["ground_temperatures"], {'template'=>building_vintage, 'climate_zone'=>climate_zone, 'building_type'=>building_type})
+    ground_temp_vals = self.find_object(standards["ground_temperatures"], {'template'=>building_vintage, 'climate_zone'=>climate_zone, 'building_type'=>building_type})
     if ground_temp_vals
       groundTemp = self.getSiteGroundTemperatureBuildingSurface
       groundTemp.setJanuaryGroundTemperature(ground_temp_vals['jan'])
