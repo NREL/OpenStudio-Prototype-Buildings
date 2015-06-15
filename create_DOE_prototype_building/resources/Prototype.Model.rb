@@ -2,11 +2,9 @@
 # open the class to add methods to size all HVAC equipment
 class OpenStudio::Model::Model
 
-  # Let the model store and access its own template and hvac_standards
+  # Let the model store and access its own template and climate zone
   attr_accessor :template
-  attr_accessor :hvac_standards
   attr_accessor :climate_zone
-  #attr_accessor :runner
  
   def add_geometry(geometry_osm_name)
     
@@ -51,14 +49,9 @@ class OpenStudio::Model::Model
     return true
   end
 
-  def add_loads(building_vintage, climate_zone, standards_data_dir)
+  def add_loads(building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying space types (loads)')
-
-    path_to_standards_json = "#{standards_data_dir}/openstudio_standards.json"
-
-    # Load the openstudio_standards.json file
-    self.load_openstudio_standards_json(path_to_standards_json)
 
     # Loop through all the space types currently in the model,
     # which are placeholders, and generate actual space types for them.
@@ -103,7 +96,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_constructions(building_type, building_vintage, climate_zone, standards_data_dir)
+  def add_constructions(building_type, building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
 
@@ -149,11 +142,6 @@ class OpenStudio::Model::Model
         surface.setConstruction(adiabatic_construction)
       end
     end
-
-    path_to_standards_json = "#{standards_data_dir}/OpenStudio_Standards.json"
-
-    # Load the openstudio_standards.json file
-    self.load_openstudio_standards_json(path_to_standards_json)
 
     # Make the default contruction set for the building
     bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil)
@@ -219,12 +207,22 @@ class OpenStudio::Model::Model
     layers = OpenStudio::Model::MaterialVector.new
     layers << material
     construction.setLayers(layers)
-    
+
+    # Assign the internal mass construction to existing internal mass objects
+    self.getSpaces.each do |space|
+      internal_masses = space.internalMass
+      internal_masses.each do |internal_mass|
+        internal_mass.internalMassDefinition.setConstruction(construction)
+      end
+    end
+
+
+
     # get all the space types that are conditioned
     conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)
     
     # add internal mass
-    unless building_type == 'SmallHotel' && 
+    unless (building_type == 'SmallHotel') &&
       (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
       conditioned_space_names.each do |conditioned_space_name|
         internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
@@ -411,7 +409,7 @@ class OpenStudio::Model::Model
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding exterior lights')
 
     if building_type == "LargeHotel"
-      data = self.find_object(@standards['exterior'], {'template'=>building_vintage, 'climate_zone_set'=>'ClimateZone 1-8', 'building_type'=>building_type})
+      data = self.find_object(self.standards['exterior'], {'template'=>building_vintage, 'climate_zone_set'=>'ClimateZone 1-8', 'building_type'=>building_type})
 
       ext_lts_power = data['exterior_lights']
       ext_lts_sch_name = data['exterior_lights_schedule']
@@ -570,8 +568,6 @@ class OpenStudio::Model::Model
     # Heat Exchangers
     self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
     
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
-    
     ##### Add Economizers
     # Create an economizer maximum OA fraction of 70%
     # to reflect damper leakage per PNNL
@@ -669,7 +665,9 @@ class OpenStudio::Model::Model
       end
     
     end
-       
+
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
+    
   end 
 
   def add_debugging_variables(type)
@@ -907,94 +905,4 @@ class OpenStudio::Model::Model
     
   end  
 
-  def add_curve(curve_name, hvac_standards)
-    
-    #OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.addCurve", "Adding curve '#{curve_name}' to the model.")
-    
-    success = false
-    
-    curve_biquadratics = hvac_standards["curve_biquadratics"]
-    curve_quadratics = hvac_standards["curve_quadratics"]
-    curve_bicubics = hvac_standards["curve_bicubics"]
-    curve_cubics = hvac_standards["curve_cubics"]
-    
-    # Make biquadratic curves
-    curve_data = find_object(curve_biquadratics, {"name"=>curve_name})
-    if curve_data
-      curve = OpenStudio::Model::CurveBiquadratic.new(self)
-      curve.setName(curve_data["name"])
-      curve.setCoefficient1Constant(curve_data["coeff_1"])
-      curve.setCoefficient2x(curve_data["coeff_2"])
-      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
-      curve.setCoefficient4y(curve_data["coeff_4"])
-      curve.setCoefficient5yPOW2(curve_data["coeff_5"])
-      curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
-      curve.setMinimumValueofx(curve_data["min_x"])
-      curve.setMaximumValueofx(curve_data["max_x"])
-      curve.setMinimumValueofy(curve_data["min_y"])
-      curve.setMaximumValueofy(curve_data["max_y"])
-      success = true
-      return curve
-    end
-    
-    # Make quadratic curves
-    curve_data = find_object(curve_quadratics, {"name"=>curve_name})
-    if curve_data
-      curve = OpenStudio::Model::CurveQuadratic.new(self)
-      curve.setName(curve_data["name"])
-      curve.setCoefficient1Constant(curve_data["coeff_1"])
-      curve.setCoefficient2x(curve_data["coeff_2"])
-      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
-      curve.setMinimumValueofx(curve_data["min_x"])
-      curve.setMaximumValueofx(curve_data["max_x"])
-      success = true
-      return curve
-    end
-    
-    # Make cubic curves
-    curve_data = find_object(curve_cubics, {"name"=>curve_name})
-    if curve_data
-      curve = OpenStudio::Model::CurveCubic.new(self)
-      curve.setName(curve_data["name"])
-      curve.setCoefficient1Constant(curve_data["coeff_1"])
-      curve.setCoefficient2x(curve_data["coeff_2"])
-      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
-      curve.setCoefficient4xPOW3(curve_data["coeff_4"])
-      curve.setMinimumValueofx(curve_data["min_x"])
-      curve.setMaximumValueofx(curve_data["max_x"])
-      success = true
-      return curve
-    end
-  
-    # Make bicubic curves
-    curve_data = find_object(curve_bicubics, {"name"=>curve_name})
-    if curve_data
-      curve = OpenStudio::Model::CurveBicubic.new(self)
-      curve.setName(eirft_properties["name"])
-      curve.setCoefficient1Constant(curve_data["coeff_1"])
-      curve.setCoefficient2x(curve_data["coeff_2"])
-      curve.setCoefficient3xPOW2(curve_data["coeff_3"])
-      curve.setCoefficient4y(curve_data["coeff_4"])
-      curve.setCoefficient5yPOW2(curve_data["coeff_5"])
-      curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
-      curve.setCoefficient7xPOW3 (curve_data["coeff_7"])
-      curve.setCoefficient8yPOW3 (curve_data["coeff_8"])
-      curve.setCoefficient9xPOW2TIMESY(curve_data["coeff_9"])
-      curve.setCoefficient10xTIMESYPOW2 (curve_data["coeff_10"])
-      curve.setMinimumValueofx(eirft_properties["min_x"])
-      curve.setMaximumValueofx(eirft_properties["max_x"])
-      curve.setMinimumValueofy(eirft_properties["min_y"])
-      curve.setMaximumValueofy(eirft_properties["max_y"])
-      success = true
-      return curve
-    end
-  
-    # Return false if the curve was not created
-    if success == false
-      #OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.addCurve", "Could not find a curve called '#{curve_name}' in the hvac_standards.")
-      return nil
-    end
-    
-  end
-  
 end

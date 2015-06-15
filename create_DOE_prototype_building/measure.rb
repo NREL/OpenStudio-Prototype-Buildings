@@ -102,11 +102,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     climate_zone = runner.getStringArgumentValue('climate_zone',user_arguments)
 
     # Turn debugging output on/off
-    debug = false    
+    @debug = false    
     
     # Open a channel to log info/warning/error messages
     @msg_log = OpenStudio::StringStreamLogSink.new
-    if debug
+    if @debug
       @msg_log.setLogLevel(OpenStudio::Debug)
     else
       @msg_log.setLogLevel(OpenStudio::Info)
@@ -126,26 +126,22 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     require_relative 'resources/Weather.Model'
     # HVAC standards
     require_relative 'resources/Standards.Model'
-    require_relative 'resources/Standards.Model.2' # TODO merge these two Standards.Model files after changes calm down
     
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
     # as an instance variable?
     standards_data_dir = "#{File.dirname(__FILE__)}/resources"
 
-    # Load the hvac standards from JSON
-    hvac_standards_path = "#{File.dirname(__FILE__)}/resources/OpenStudio_HVAC_Standards.json"
-    temp = File.read(hvac_standards_path.to_s)
-    hvac_standards = JSON.parse(temp)
+    # Load the Openstudio_Standards JSON files
+    model.load_openstudio_standards_json(standards_data_dir)
+
+    # Retrieve the Prototype Inputs from JSON
     search_criteria = {
       'template' => building_vintage,
       'climate_zone' => climate_zone,
       'building_type' => building_type,
     }
-    model.hvac_standards = hvac_standards
-
-    # Load the Prototype Inputs from JSON
-    prototype_input = find_object(hvac_standards['prototype_inputs'], search_criteria)
+    prototype_input = model.find_object(model.standards['prototype_inputs'], search_criteria)
     if prototype_input.nil?
       @runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
       log_msgs
@@ -276,19 +272,18 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
     model.assign_space_type_stubs(space_building_type_search, space_type_map)
-    model.add_loads(building_vintage, climate_zone, standards_data_dir)
+    model.add_loads(building_vintage, climate_zone)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
-    # model.add_constructions('Office', building_vintage, climate_zone, standards_data_dir)
-    model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
+    model.add_constructions(construction_type_search, building_vintage, climate_zone)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
-    model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
-    model.add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+    model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, model.standards)
+    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, model.standards, space_type_map)
+    model.add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, model.standards)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
     # Set the building location, weather files, ddy files, etc.
-    model.add_design_days_and_weather_file(climate_zone)
+    model.add_design_days_and_weather_file(model.standards, building_type, building_vintage, climate_zone)
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
@@ -328,13 +323,16 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
-   
+
     # Add daylighting controls per standard
-    model.addDaylightingControls
+    # TODO: There are some bugs in the function
+    if building_type != "LargeHotel"
+      model.addDaylightingControls
+    end
    
    
     # Add output variables for debugging
-    if debug
+    if @debug
       model.request_timeseries_outputs
     end
     
@@ -367,6 +365,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
           @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
         elsif msg.logLevel == OpenStudio::Error
           @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+        elsif msg.logLevel == OpenStudio::Debug && @debug
+          @runner.registerInfo("DEBUG - #{msg.logMessage}")
         end
       end
     end

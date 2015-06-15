@@ -2,7 +2,7 @@
 # open the class to add methods to size all HVAC equipment
 class OpenStudio::Model::Model
 
-  def add_hw_loop(prototype_input, hvac_standards)
+  def add_hw_loop(prototype_input, standards)
 
     #hot water loop
     hot_water_loop = OpenStudio::Model::PlantLoop.new(self)
@@ -64,9 +64,9 @@ class OpenStudio::Model::Model
     
   end  
 
-  def add_chw_loop(prototype_input, hvac_standards)
+  def add_chw_loop(prototype_input, standards)
     
-    chillers = hvac_standards['chillers']
+    chillers = standards['chillers']
     
     # Chilled water loop
     chilled_water_loop = OpenStudio::Model::PlantLoop.new(self)
@@ -150,7 +150,7 @@ class OpenStudio::Model::Model
       'compressor_type' => prototype_input['chiller_compressor_type'],
     }
     
-    chiller_properties = find_object(chillers, search_criteria, prototype_input['chiller_capacity_guess'])
+    chiller_properties = self.find_object(chillers, search_criteria, prototype_input['chiller_capacity_guess'])
     if !chiller_properties
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Could not find chiller with prototype inputs of:  #{prototype_input}")
       return chilled_water_loop
@@ -158,7 +158,7 @@ class OpenStudio::Model::Model
     
     
     # Make the correct type of chiller based these properties
-    chiller = add_chiller(hvac_standards, chiller_properties)
+    chiller = add_chiller(standards, chiller_properties)
     chiller.setReferenceLeavingChilledWaterTemperature(chw_temp_c)
     ref_cond_wtr_temp_f = 95
     ref_cond_wtr_temp_c = OpenStudio.convert(ref_cond_wtr_temp_f,'F','C').get
@@ -188,7 +188,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_vav(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
+  def add_vav(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones)
 
     hw_temp_f = 180 #HW setpoint 180F 
     hw_delta_t_r = 20 #20F delta-T    
@@ -307,7 +307,7 @@ class OpenStudio::Model::Model
 
   end
   
-  # def add_pvav(prototype_input, hvac_standards, hot_water_loop, thermal_zones)
+  # def add_pvav(prototype_input, standards, hot_water_loop, thermal_zones)
 
   #   hw_temp_f = 180 #HW setpoint 180F 
   #   hw_delta_t_r = 20 #20F delta-T    
@@ -520,7 +520,7 @@ class OpenStudio::Model::Model
   # end
   
 =begin # The goofy sizing vs. operation inconsistencies are making this system fail warmup
-  def add_pvav(prototype_input, hvac_standards, hot_water_loop, thermal_zones)
+  def add_pvav(prototype_input, standards, hot_water_loop, thermal_zones)
 
     hw_temp_f = 180 #HW setpoint 180F 
     hw_delta_t_r = 20 #20F delta-T    
@@ -753,7 +753,7 @@ class OpenStudio::Model::Model
   end  
 =end  
 
-  def add_pvav(prototype_input, hvac_standards, thermal_zones)
+  def add_pvav(prototype_input, standards, thermal_zones)
 
     # hvac operation schedule
     hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
@@ -845,7 +845,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_psz_ac(prototype_input, hvac_standards, thermal_zones, fan_location = "DrawThrough", hot_water_loop = nil, chilled_water_loop = nil)
+  def add_psz_ac(prototype_input, standards, thermal_zones, fan_location = "DrawThrough", hot_water_loop = nil, chilled_water_loop = nil)
 
     unless hot_water_loop.nil? or chilled_water_loop.nil?
       hw_temp_f = 180 #HW setpoint 180F 
@@ -1422,7 +1422,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_data_center_hvac(prototype_input, hvac_standards, thermal_zones, hot_water_loop, chilled_water_loop, main_data_center = false)
+  def add_data_center_hvac(prototype_input, standards, thermal_zones, hot_water_loop, chilled_water_loop, main_data_center = false)
 
     hw_temp_f = 180 #HW setpoint 180F 
     hw_delta_t_r = 20 #20F delta-T    
@@ -1640,7 +1640,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_split_AC(prototype_input, hvac_standards, thermal_zones)
+  def add_split_AC(prototype_input, standards, thermal_zones)
 
     # hvac operation schedule
     hvac_op_sch = self.add_schedule(prototype_input['sac_operation_schedule'])
@@ -2095,7 +2095,7 @@ class OpenStudio::Model::Model
     
   end 
   
-  def add_ptac(prototype_input, hvac_standards, thermal_zones)
+  def add_ptac(prototype_input, standards, thermal_zones)
     
     # hvac operation schedule
     hvac_op_sch = self.add_schedule(prototype_input['ptac_operation_schedule'])
@@ -2440,7 +2440,7 @@ class OpenStudio::Model::Model
 
   end
   
-  def add_unitheater(prototype_input, hvac_standards, thermal_zones)
+  def add_unitheater(prototype_input, standards, thermal_zones)
         
     # Make a PTAC for each zone
     thermal_zones.each do |zone|
@@ -2550,7 +2550,7 @@ class OpenStudio::Model::Model
     
   end
 
-  def add_high_temp_radiant(prototype_input, hvac_standards, thermal_zones, fuel_type, control_type, combustion_efficiency)
+  def add_high_temp_radiant(prototype_input, standards, thermal_zones, fuel_type, control_type, combustion_efficiency)
         
     # Make a PTAC for each zone
     thermal_zones.each do |zone|
@@ -2570,19 +2570,19 @@ class OpenStudio::Model::Model
     
   end
 
-  def add_chiller(hvac_standards, chlr_props)
+  def add_chiller(standards, chlr_props)
 
     all_curves_found = true
   
     # Make the CAPFT curve
-    cool_cap_ft = self.add_curve(chlr_props['capft'], hvac_standards)
+    cool_cap_ft = self.add_curve(chlr_props['capft'], standards)
     if cool_cap_ft.nil?
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Cannot find cool_cap_ft curve '#{chlr_props['capft']}', will not be set.")
       all_curves_found = false
     end    
     
     # Make the EIRFT curve
-    cool_eir_ft = self.add_curve(chlr_props['eirft'], hvac_standards)
+    cool_eir_ft = self.add_curve(chlr_props['eirft'], standards)
     if cool_eir_ft.nil?
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Cannot find cool_eir_ft curve '#{chlr_props['eirft']}', will not be set.")
       all_curves_found = false
@@ -2590,7 +2590,7 @@ class OpenStudio::Model::Model
     
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
-    cool_plf_fplr = self.add_curve(chlr_props['eirfplr'], hvac_standards)
+    cool_plf_fplr = self.add_curve(chlr_props['eirfplr'], standards)
     if cool_plf_fplr.nil?
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Cannot find cool_plf_fplr curve '#{chlr_props['eirfplr']}', will not be set.")
       all_curves_found = false
@@ -2615,7 +2615,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_swh_loop(prototype_input, hvac_standards, type)
+  def add_swh_loop(prototype_input, standards, type)
   
     puts "Adding water heater type = '#{type}'"
   
@@ -2656,6 +2656,7 @@ class OpenStudio::Model::Model
       swh_pump_head_press_pa = 0.001
       swh_pump_motor_efficiency = 1
     end
+
     swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
     swh_pump.setName('Service Water Loop Pump')
     swh_pump.setRatedPumpHead(swh_pump_head_press_pa.to_f)
@@ -2663,7 +2664,7 @@ class OpenStudio::Model::Model
     swh_pump.setPumpControlType('Intermittent')
     swh_pump.addToNode(service_water_loop.supplyInletNode)
     
-    water_heater = add_water_heater(prototype_input, hvac_standards, type, false, temp_sch_type_limits, swh_temp_sch)
+    water_heater = add_water_heater(prototype_input, standards, type, false, temp_sch_type_limits, swh_temp_sch)
 
     service_water_loop.addSupplyBranchForComponent(water_heater)
     
@@ -2683,7 +2684,7 @@ class OpenStudio::Model::Model
     
   end
 
-  def add_water_heater(prototype_input, hvac_standards, type, set_peak_use_flowrate = false, temp_sch_type_limits = nil, swh_temp_sch = nil)
+  def add_water_heater(prototype_input, standards, type, set_peak_use_flowrate = false, temp_sch_type_limits = nil, swh_temp_sch = nil)
     # Water heater
     # TODO Standards - Change water heater methodology to follow
     # 'Model Enhancements Appendix A.'
@@ -2766,7 +2767,7 @@ class OpenStudio::Model::Model
     return water_heater
   end
 
-  def add_swh_booster(prototype_input, hvac_standards, main_service_water_loop)
+  def add_swh_booster(prototype_input, standards, main_service_water_loop)
 
     # Booster water heating loop
     booster_service_water_loop = OpenStudio::Model::PlantLoop.new(self)
@@ -2876,11 +2877,11 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_swh_end_uses(prototype_input, hvac_standards, swh_loop, type)  
+  def add_swh_end_uses(prototype_input, standards, swh_loop, type) 
     
     puts "Adding water uses type = '#{type}'"
     
-    schedules = hvac_standards['schedules']
+    schedules = standards['schedules']
     
     # Water use connection
     swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
@@ -2953,9 +2954,10 @@ class OpenStudio::Model::Model
     
   end
 
-  def add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+
+  def add_booster_swh_end_uses(prototype_input, standards, swh_booster_loop)
     
-    schedules = hvac_standards['schedules']
+    schedules = standards['schedules']
     
     # Water use connection
     swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
@@ -2984,7 +2986,7 @@ class OpenStudio::Model::Model
     
   end  
   
-  def add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
+  def add_doas(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones)
     hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
     # create new air loop if story contains primary zones
 
