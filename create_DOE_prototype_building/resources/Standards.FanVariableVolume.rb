@@ -3,9 +3,9 @@
 class OpenStudio::Model::FanVariableVolume
 
   # Sets the fan motor efficiency based on the standard
-  def setStandardEfficiency(template, hvac_standards)
+  def setStandardEfficiency(template, standards)
     
-    motors = hvac_standards['motors']
+    motors = standards['motors']
     
     # Get the max flow rate from the fan.
     maximum_flow_rate_m3_per_s = nil
@@ -14,7 +14,7 @@ class OpenStudio::Model::FanVariableVolume
     elsif self.autosizedMaximumFlowRate.is_initialized
       maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.FanVariableVolume', "For #{self.name} max flow rate is not hard sized, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.FanVariableVolume', "For #{self.name} max flow rate is not hard sized, cannot apply efficiency standard.")
       return false
     end
     
@@ -40,7 +40,7 @@ class OpenStudio::Model::FanVariableVolume
     'type' => 'Enclosed',
     }
     
-    motor_properties = find_object(motors, search_criteria, allowed_hp)
+    motor_properties = self.model.find_object(motors, search_criteria, allowed_hp)
   
     # Get the nominal motor efficiency
     motor_eff = motor_properties['nominal_full_load_efficiency']
@@ -150,10 +150,10 @@ class OpenStudio::Model::FanVariableVolume
   
   # Determines the minimum fan motor efficiency 
   # for a given motor bhp
-  def standardMinimumMotorEfficiency(template, hvac_standards, motor_bhp)
+  def standardMinimumMotorEfficiency(template, standards, motor_bhp)
   
     # Lookup the minimum motor efficiency
-    motors = hvac_standards["motors"]
+    motors = standards["motors"]
     
     # Assuming all fan motors are 4-pole ODP
     search_criteria = {
@@ -162,7 +162,7 @@ class OpenStudio::Model::FanVariableVolume
       "type" => "Enclosed",
     }
     
-    motor_properties = find_object(motors, search_criteria, motor_bhp)
+    motor_properties = self.model.find_object(motors, search_criteria, motor_bhp)
  
     fan_motor_eff = motor_properties["nominal_full_load_efficiency"]  
 
