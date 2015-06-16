@@ -7180,18 +7180,18 @@
       "building_type": "LargeHotel",
       "template": "90.1-2010",
       "climate_zone": "ASHRAE 169-2006-2A",
-      "jan": null,
-      "feb": null,
-      "mar": null,
-      "apr": null,
-      "may": null,
-      "jun": null,
-      "jul": null,
-      "aug": null,
-      "sep": null,
-      "oct": null,
-      "nov": null,
-      "dec": null
+      "jan": 15.8,
+      "feb": 13,
+      "mar": 12.3,
+      "apr": 12.9,
+      "may": 16.6,
+      "jun": 20.8,
+      "jul": 24.7,
+      "aug": 27.5,
+      "sep": 28.4,
+      "oct": 27,
+      "nov": 23.8,
+      "dec": 19.8
     },
     {
       "building_type": "LargeHotel",
@@ -31092,8 +31092,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -31160,8 +31163,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -31228,8 +31234,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -31296,8 +31305,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -31364,8 +31376,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -31432,8 +31447,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -31500,8 +31518,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -31568,8 +31589,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -31636,8 +31660,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -31704,8 +31731,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -31772,8 +31802,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -31840,8 +31873,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SecondarySchool VAV Operation",
       "vav_oa_damper_schedule": "SecondarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -31908,8 +31944,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -31976,8 +32015,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -32044,8 +32086,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -32112,8 +32157,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -32180,8 +32228,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -32248,8 +32299,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -32316,8 +32370,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -32384,8 +32441,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -32452,8 +32512,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -32520,8 +32583,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -32588,8 +32654,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -32656,8 +32725,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -32724,8 +32796,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -32792,8 +32867,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -32860,8 +32938,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -32928,8 +33009,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -32996,8 +33080,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -33064,8 +33151,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -33132,8 +33222,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -33200,8 +33293,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -33268,8 +33364,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -33336,8 +33435,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -33404,8 +33506,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -33472,8 +33577,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -33540,8 +33648,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -33608,8 +33719,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -33676,8 +33790,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -33744,8 +33861,11 @@
       "unitheater_fan_control_type": "Continuous",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -33812,8 +33932,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -33880,8 +34003,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -33948,8 +34074,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2007",
@@ -34016,8 +34145,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -34084,8 +34216,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2013",
@@ -34152,8 +34287,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -34220,8 +34358,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -34288,8 +34429,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -34356,8 +34500,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2007",
@@ -34424,8 +34571,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -34492,8 +34642,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2013",
@@ -34560,8 +34713,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -34628,8 +34784,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -34696,8 +34855,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -34764,8 +34926,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2007",
@@ -34832,8 +34997,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -34900,8 +35068,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2013",
@@ -34968,8 +35139,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -35036,8 +35210,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -35104,8 +35281,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "PrimarySchool VAV Operation",
       "vav_oa_damper_schedule": "PrimarySchool VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2004",
@@ -35172,8 +35352,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2007",
@@ -35240,8 +35423,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -35308,8 +35494,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2013",
@@ -35376,8 +35565,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "SchoolPrimary HVACOperationSchd",
       "vav_oa_damper_schedule": "SchoolPrimary MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -35444,8 +35636,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -35512,8 +35707,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -35580,8 +35778,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeMedium MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -35648,8 +35849,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -35716,8 +35920,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -35784,8 +35991,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeMedium MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -35852,8 +36062,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -35920,8 +36133,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -35988,8 +36204,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeMedium MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -36056,8 +36275,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -36124,8 +36346,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium VAV Operation",
       "vav_oa_damper_schedule": "OfficeMedium VAV OA Damper",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -36192,8 +36417,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeMedium HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeMedium MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS"
+      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -36260,8 +36488,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -36328,8 +36559,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -36396,8 +36630,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -36464,8 +36701,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -36532,8 +36772,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -36600,8 +36843,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -36668,8 +36914,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -36736,8 +36985,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -36804,8 +37056,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -36872,8 +37127,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -36940,8 +37198,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -36963,26 +37224,26 @@
       "occ_sensing_exterior_lighting_schedule": "HotelLarge Exterior_Ltg_Sch",
       "nondimming_exterior_lighting_power": 353.47,
       "nondimming_exterior_lighting_schedule": "HotelLarge Exterior_Ltg_Sch",
-      "main_water_heater_volume": 900,
+      "main_water_heater_volume": 600,
       "main_water_heater_fuel": "Natural Gas",
-      "main_water_heater_capacity": 900000,
+      "main_water_heater_capacity": 600000,
       "main_service_water_temperature": 140,
-      "main_service_water_flowrate_schedule": "HotelLarge BLDG_SWH_SCH",
+      "main_service_water_flowrate_schedule": "HotelLarge GuestRoom_SWH_Sch",
       "main_service_water_peak_flowrate": 4.4,
       "main_water_use_temperature": 140,
       "main_service_water_temperature_at_fixture": null,
-      "main_service_water_pump_head": 140,
-      "main_service_water_pump_motor_efficiency": null,
-      "laundry_water_heater_volume": null,
-      "laundry_water_heater_fuel": null,
-      "laundry_water_heater_capacity": null,
-      "laundry_service_water_temperature": null,
-      "laundry_service_water_flowrate_schedule": null,
-      "laundry_service_water_peak_flowrate": null,
-      "laundry_water_use_temperature": null,
+      "main_service_water_pump_head": 29891,
+      "main_service_water_pump_motor_efficiency": 0.3,
+      "laundry_water_heater_volume": 300,
+      "laundry_water_heater_fuel": "Natural Gas",
+      "laundry_water_heater_capacity": 300000,
+      "laundry_service_water_temperature": 140,
+      "laundry_service_water_flowrate_schedule": "HotelLarge LaundryRoom_SWH_Sch",
+      "laundry_service_water_peak_flowrate": 2.2,
+      "laundry_water_use_temperature": 140,
       "laundry_service_water_temperature_at_fixture": null,
-      "laundry_service_water_pump_head": null,
-      "laundry_service_water_pump_motor_efficiency": null,
+      "laundry_service_water_pump_head": 29891,
+      "laundry_service_water_pump_motor_efficiency": 0.3,
       "booster_water_heater_volume": 6,
       "booster_water_heater_fuel": "Electricity",
       "booster_water_heater_capacity": 27297,
@@ -37007,9 +37268,12 @@
       "unitheater_fan_type": null,
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "HotelLarge HVACOperationSchd",
-      "vav_oa_damper_schedule": "HotelLarge HVACOperationSchd",
+      "vav_oa_damper_schedule": "HotelLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "DifferentialEnthalpy",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": "HotelLarge MinOA_Sched",
+      "doas_economizer_control_type": "DifferentialDryBulb"
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -37076,8 +37340,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -37144,8 +37411,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -37212,8 +37482,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -37280,8 +37553,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -37348,8 +37624,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -37416,8 +37695,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -37484,8 +37766,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -37552,8 +37837,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -37620,8 +37908,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -37688,8 +37979,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -37756,8 +38050,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -37824,8 +38121,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OfficeLarge HVACOperationSchd",
       "vav_oa_damper_schedule": "OfficeLarge MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -37892,8 +38192,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -37960,8 +38263,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -38028,8 +38334,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -38096,8 +38405,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -38164,8 +38476,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -38232,8 +38547,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -38300,8 +38618,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -38368,8 +38689,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -38436,8 +38760,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -38504,8 +38831,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -38572,8 +38902,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -38640,8 +38973,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -38708,8 +39044,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -38776,8 +39115,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -38844,8 +39186,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -38912,8 +39257,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -38980,8 +39328,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -39048,8 +39399,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -39116,8 +39470,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -39184,8 +39541,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -39252,8 +39612,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -39320,8 +39683,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -39388,8 +39754,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -39456,8 +39825,11 @@
       "unitheater_fan_control_type": "OnOff",
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -39524,8 +39896,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -39592,8 +39967,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -39660,8 +40038,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -39728,8 +40109,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -39796,8 +40180,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -39864,8 +40251,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -39932,8 +40322,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -40000,8 +40393,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -40068,8 +40464,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -40136,8 +40535,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -40204,8 +40606,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -40272,8 +40677,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -40340,8 +40748,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -40408,8 +40819,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -40476,8 +40890,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -40544,8 +40961,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -40612,8 +41032,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -40680,8 +41103,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -40748,8 +41174,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -40816,8 +41245,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -40884,8 +41316,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -40952,8 +41387,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -41020,8 +41458,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -41088,8 +41529,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -41156,8 +41600,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -41224,8 +41671,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -41292,8 +41742,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -41360,8 +41813,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -41428,8 +41884,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -41496,8 +41955,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -41564,8 +42026,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -41632,8 +42097,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -41700,8 +42168,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -41768,8 +42239,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -41836,8 +42310,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -41904,8 +42381,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": null,
       "vav_oa_damper_schedule": null,
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -41972,8 +42452,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -42040,8 +42523,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -42108,8 +42594,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -42176,8 +42665,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -42244,8 +42736,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -42312,8 +42807,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -42380,8 +42878,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -42448,8 +42949,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -42516,8 +43020,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -42584,8 +43091,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -42652,8 +43162,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -42720,8 +43233,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "Hospital HVACOperationSchd",
       "vav_oa_damper_schedule": "Hospital BLDG_OA_FRAC_SCH",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -42788,8 +43304,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -42856,8 +43375,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -42924,8 +43446,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -42992,8 +43517,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -43060,8 +43588,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -43128,8 +43659,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -43196,8 +43730,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -43264,8 +43801,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -43332,8 +43872,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -43400,8 +43943,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -43468,8 +44014,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     },
     {
       "template": "90.1-2010",
@@ -43536,8 +44085,11 @@
       "unitheater_fan_control_type": null,
       "vav_operation_schedule": "OutPatientHealthCare HVACOperationSchd",
       "vav_oa_damper_schedule": "OutPatientHealthCare MinOA_MotorizedDamper_Sched",
+      "vav_economizer_control_type": "NoEconomizer",
       "building_elevator_power": null,
-      "building_elevator_schedule": null
+      "building_elevator_schedule": null,
+      "doas_oa_damper_schedule": null,
+      "doas_economizer_control_type": null
     }
   ],
   "schedules": [
