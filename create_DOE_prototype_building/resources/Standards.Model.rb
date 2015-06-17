@@ -82,6 +82,7 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_curve_biquadratics.json'
     standards_files << 'OpenStudio_Standards_curve_cubics.json'
     standards_files << 'OpenStudio_Standards_curve_quadratics.json'
+    standards_files << 'OpenStudio_Standards_exterior.json'
     standards_files << 'OpenStudio_Standards_ground_temperatures.json'
     standards_files << 'OpenStudio_Standards_heat_pumps.json'
     standards_files << 'OpenStudio_Standards_materials.json'
@@ -211,9 +212,9 @@ class OpenStudio::Model::Model
         # Skip objects that don't have values specified for minimum_capacity and maximum_capacity
         next if object['minimum_capacity'].nil? || object['maximum_capacity'].nil?
         # Skip objects whose the minimum capacity is below the specified capacity
-        next if capacity <= object['minimum_capacity']
+        next if capacity <= object['minimum_capacity'].to_f
         # Skip objects whose max
-        next if capacity > object['maximum_capacity']
+        next if capacity > object['maximum_capacity'].to_f
         # Found a matching object      
         matching_objects << object
       end
