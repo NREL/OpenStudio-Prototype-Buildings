@@ -667,14 +667,11 @@ class OpenStudio::Model::Model
     
     end
 
-<<<<<<< HEAD
     # Heat Exchangers
     self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
-       
-=======
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
->>>>>>> master
   end 
 
   def add_debugging_variables(type)
