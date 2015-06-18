@@ -394,7 +394,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   hostname = Socket.gethostname
 
   # For Andrew Parker in NREL
-  if hostname == "andrew_pc" # TODO: Andrew update the pc names
+  if hostname == "aparker-26487s" # TODO: Andrew update the pc names
     # Test the Secondary School in the PTool vintages and climate zones
     def test_secondary_school
 
@@ -425,33 +425,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",
 
     # Test the Small Office in the PTool vintages and climate zones
-    def test_small_office
+    def dont_test_small_office
       bldg_types = ['SmallOffice']
       vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
       climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
-
-      all_failures = []
-
-      # Create the models
-      all_failures += create_models(bldg_types, vintages, climate_zones)
-
-      # Run the models
-      all_failures += run_models(bldg_types, vintages, climate_zones)
-
-      # Compare the results to the legacy idf results
-      all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-      # Assert if there are any errors
-      puts "There were #{all_failures.size} failures"
-      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    end
-
-    # Test the Small Office in the QTR vintages and climate zones
-    def test_small_office_qtr
-
-      bldg_types = ['SmallOffice']
-      vintages = ['90.1-2010']#, 'DOE Ref Pre-1980', ']'90.1-2010'
-      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
       all_failures = []
 
@@ -491,6 +468,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
 
     end
+    
   end
 
   if hostname == "m5zmac"
@@ -716,7 +694,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     # Test the large hotel in the PTool vintages and climate zones
     def test_large_hotel
       bldg_types = ['LargeHotel']
-      vintages = ['DOE Ref Pre-1980']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+      vintages = ['90.1-2010']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
       climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
 
       all_failures = []
