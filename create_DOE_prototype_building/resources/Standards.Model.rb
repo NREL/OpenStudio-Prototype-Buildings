@@ -443,6 +443,10 @@ class OpenStudio::Model::Model
     unless ventilation_per_area  == 0 || ventilation_per_area.nil? then make_ventilation = true  end
     unless ventilation_per_person == 0 || ventilation_per_person.nil? then make_ventilation = true end
     unless ventilation_ach == 0 || ventilation_ach.nil? then make_ventilation = true end
+    puts "ventilation_per_area = #{ventilation_per_area}"
+    puts "ventilation_per_person = #{ventilation_per_person}"
+    puts "ventilation_ach = #{ventilation_ach}"
+    puts "spacetype = #{spc_type}"
 
     if make_ventilation == true
 
