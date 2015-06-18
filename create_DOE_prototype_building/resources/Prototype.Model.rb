@@ -564,9 +564,6 @@ class OpenStudio::Model::Model
     self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
-
-    # Heat Exchangers
-    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
     
     ##### Add Economizers
     # Create an economizer maximum OA fraction of 70%
@@ -655,8 +652,12 @@ class OpenStudio::Model::Model
         erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
         erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
         erv.setNominalElectricPower(power)
-        erv.setSupplyAirOutletTemperatureControl(true) 
+        erv.setSupplyAirOutletTemperatureControl(true)
         erv.setHeatExchangerType('Rotary')
+        erv.setFrostControlType('ExhaustOnly')
+        erv.setThresholdTemperature(-23.3)
+        erv.setInitialDefrostTimeFraction(0.167)
+        erv.setRateofDefrostTimeFractionIncrease(1.44)
         erv.setEconomizerLockout(true)
         
         # Add the ERV to the OA system
@@ -665,6 +666,9 @@ class OpenStudio::Model::Model
       end
     
     end
+
+    # Heat Exchangers
+    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
