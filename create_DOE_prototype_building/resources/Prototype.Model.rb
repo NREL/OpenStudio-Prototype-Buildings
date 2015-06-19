@@ -208,16 +208,6 @@ class OpenStudio::Model::Model
     layers << material
     construction.setLayers(layers)
 
-    # Assign the internal mass construction to existing internal mass objects
-    self.getSpaces.each do |space|
-      internal_masses = space.internalMass
-      internal_masses.each do |internal_mass|
-        internal_mass.internalMassDefinition.setConstruction(construction)
-      end
-    end
-
-
-
     # get all the space types that are conditioned
     conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)
     
