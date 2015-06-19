@@ -72,9 +72,9 @@ class OpenStudio::Model::Model
   end
 
   def add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-    simulation_control =  self.getSimulationControl
-    simulation_control.setLoadsConvergenceToleranceValue(0.4)
-    simulation_control.setTemperatureConvergenceToleranceValue(0.5)
+    #simulation_control =  self.getSimulationControl
+    #simulation_control.setLoadsConvergenceToleranceValue(0.4)
+    #simulation_control.setTemperatureConvergenceToleranceValue(0.5)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding HVAC')
     system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
@@ -117,6 +117,53 @@ class OpenStudio::Model::Model
       end
     end
 
+    # Add Exhaust Fan
+    space_type_map = define_space_type_map(building_type, building_vintage, climate_zone)
+    ['Banquet', 'Kitchen','Laundry'].each do |space_type|
+      space_type_data = self.find_object(self.standards['space_types'], {'template'=>building_vintage, 'building_type'=>building_type, 'space_type'=>space_type})
+      if space_type_data == nil
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find space type #{building_vintage}-#{building_type}-#{space_type}")
+        return false
+      end
+      space_type_data.each_pair do |key, value|
+        puts "#{key}, #{value}"
+      end
+
+      exhaust_schedule = add_schedule(space_type_data['exhaust_schedule'])
+      if exhaust_schedule.class.to_s == "NilClass"
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find Exhaust Schedule for space type #{building_vintage}-#{building_type}-#{space_type}")
+        return false
+      end
+      balanced_exhaust_schedule = add_schedule(space_type_data['balanced_exhaust_fraction_schedule'])
+
+      space_names = space_type_map[space_type]
+      space_names.each do |space_name|
+        space = self.getSpaceByName(space_name).get
+        thermal_zone = space.thermalZone.get
+
+        zone_exhaust_fan = OpenStudio::Model::FanZoneExhaust.new(self)
+        zone_exhaust_fan.setName(space.name.to_s + " Exhaust Fan")
+        zone_exhaust_fan.setAvailabilitySchedule(exhaust_schedule)
+        zone_exhaust_fan.setFanEfficiency(space_type_data['exhaust_fan_efficiency'])
+        zone_exhaust_fan.setPressureRise (space_type_data['exhaust_fan_pressure_rise'])
+        maximum_flow_rate = OpenStudio.convert(space_type_data['exhaust_fan_maximum_flow_rate'], 'cfm', 'm^3/s').get
+
+        zone_exhaust_fan.setMaximumFlowRate(maximum_flow_rate)
+        if balanced_exhaust_schedule.class.to_s != "NilClass"
+          zone_exhaust_fan.setBalancedExhaustFractionSchedule (balanced_exhaust_schedule)
+        end
+        zone_exhaust_fan.setEndUseSubcategory("Zone Exhaust Fans")
+        zone_exhaust_fan.addToThermalZone(thermal_zone)
+      end
+    end
+
+    # Update Sizing Zone
+    zone_sizing = self.getSpaceByName('Kitchen_Flr_6').get.thermalZone.get.sizingZone
+    zone_sizing.setCoolingMinimumAirFlowFraction(0.7)
+
+    zone_sizing = self.getSpaceByName('Laundry_Flr_1').get.thermalZone.get.sizingZone
+    zone_sizing.setCoolingMinimumAirFlow(0.23567919336)
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
     return true
   end #add hvac
@@ -125,14 +172,12 @@ class OpenStudio::Model::Model
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
 
-    main_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
-    self.add_swh_end_uses(prototype_input, hvac_standards, main_swh_loop, 'main')
+    swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
+    self.add_swh_end_uses(prototype_input, hvac_standards, swh_loop, 'main')
+    self.add_swh_end_uses(prototype_input, hvac_standards, swh_loop, 'laundry')
     
-    laundry_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry')
-    self.add_swh_end_uses(prototype_input, hvac_standards, laundry_swh_loop, 'laundry')
-    
-    swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, main_swh_loop)
-    self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+    #swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, main_swh_loop)
+    #self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
     
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding SWH")
     

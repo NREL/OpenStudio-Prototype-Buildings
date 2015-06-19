@@ -52,7 +52,7 @@ class OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent
     # Calculate the motor power for the rotatry wheel per:
     # Power (W) = (Minimum Outdoor Air Flow Rate (m^3/s) * 212.5 / 0.5) + (Minimum Outdoor Air Flow Rate (m^3/s) * 162.5 / 0.5) + 50
     power = (supply_air_flow_m3_per_s * 212.5 / 0.5) + (supply_air_flow_m3_per_s * 0.9 * 162.5 / 0.5) + 50
-    OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.HeatExchangerAirToAirSensibleAndLatent", "For #{self.name}, ERV power is calculated to be #{power.round} W, based on a min OA flow of #{supply_air_flow_m3_per_s.round(1)} m^3/s.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.HeatExchangerAirToAirSensibleAndLatent", "For #{self.name}, ERV power is calculated to be #{power.round} W, based on a min OA flow of #{supply_air_flow_m3_per_s.round(1)} m^3/s.")
 
     # Set the power for the HX
     self.setNominalElectricPower(power)
