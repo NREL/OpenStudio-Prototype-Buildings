@@ -396,11 +396,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # For Andrew Parker in NREL
   if hostname == "aparker-26487s" # TODO: Andrew update the pc names
     # Test the Secondary School in the PTool vintages and climate zones
-    def test_secondary_school
+    def dont_test_secondary_school
 
       bldg_types = ['SecondarySchool']
-      vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
-      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+      vintages = ['90.1-2010'] #['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-5A']#'ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
       all_failures = []
 
@@ -446,7 +446,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
 
-    def test_primary_school
+    def dont_test_primary_school
 
       bldg_types = ['PrimarySchool']
       vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',
@@ -469,6 +469,29 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     end
     
+    def test_large_office
+
+      bldg_types = ['LargeOffice']
+      vintages = ['90.1-2010'] #['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-5A', 'ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end    
+       
   end
 
   if hostname == "m5zmac"
