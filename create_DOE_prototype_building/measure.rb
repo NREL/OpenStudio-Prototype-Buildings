@@ -166,8 +166,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
 
     # Make the prototype building
-    space_building_type_search = building_type
-    construction_type_search = building_type
+    alt_search_name = building_type
 
     case building_type
     when 'SecondarySchool'
@@ -198,17 +197,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_office.osm'
       end
-      space_building_type_search = 'Office'
-      construction_type_search = 'Office'
+      alt_search_name = 'Office'
     when 'MediumOffice'
       require_relative 'resources/Prototype.medium_office'
       geometry_file = 'Geometry.medium_office.osm'
-      space_building_type_search = 'Office'
-      construction_type_search = 'Office'
+      alt_search_name = 'Office'
     when 'LargeOffice'
       require_relative 'resources/Prototype.large_office'
-      space_building_type_search = 'Office'
-      construction_type_search = 'Office'
+      alt_search_name = 'Office'
       case building_vintage
         when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
           geometry_file = 'Geometry.large_office.osm'
@@ -237,20 +233,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         else
           geometry_file = 'Geometry.large_hotel.2013.osm'
       end
-      space_building_type_search = 'LargeHotel'
     when 'Warehouse'
       require_relative 'resources/Prototype.warehouse'
       geometry_file = 'Geometry.warehouse.osm'
     when 'RetailStandalone'
       require_relative 'resources/Prototype.retail_standalone'
       geometry_file = 'Geometry.retail_standalone.osm'
-      space_building_type_search = 'Retail'
-      construction_type_search = 'Retail'
+      alt_search_name = 'Retail'
     when 'RetailStripmall'
       require_relative 'resources/Prototype.retail_stripmall'
       geometry_file = 'Geometry.retail_stripmall.osm'
-      space_building_type_search = 'StripMall'
-      construction_type_search = 'StripMall'
+      alt_search_name = 'StripMall'
     when 'QuickServiceRestaurant'
       require_relative 'resources/Prototype.quick_service_restaurant'
       geometry_file = 'Geometry.quick_service_restaurant.osm'
@@ -271,10 +264,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_geometry(geometry_file)
     model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
-    model.assign_space_type_stubs(space_building_type_search, space_type_map)
+    model.assign_space_type_stubs(alt_search_name, space_type_map)
     model.add_loads(building_vintage, climate_zone)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
-    model.add_constructions(construction_type_search, building_vintage, climate_zone)
+    model.add_constructions(alt_search_name, building_vintage, climate_zone)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, model.standards)
     model.add_swh(building_type, building_vintage, climate_zone, prototype_input, model.standards, space_type_map)
@@ -283,7 +276,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
     # Set the building location, weather files, ddy files, etc.
-    model.add_design_days_and_weather_file(model.standards, building_type, building_vintage, climate_zone)
+    model.add_design_days_and_weather_file(model.standards, alt_search_name, building_vintage, climate_zone)
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)

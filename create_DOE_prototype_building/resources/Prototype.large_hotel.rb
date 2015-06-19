@@ -30,19 +30,19 @@ class OpenStudio::Model::Model
             'type' => 'VAV',
             'space_names' =>
                 [
-                    'Banquet_Flr_6',
-                    'Dining_Flr_6',
-                    'Cafe_Flr_1',
-                    'Corridor_Flr_3',
-                    'Corridor_Flr_6',
-                    'Kitchen_Flr_6',
-                    'Laundry_Flr_1',
-                    'Lobby_Flr_1',
-                    'Mech_Flr_1',
+                    'Basement',
                     'Retail_1_Flr_1',
                     'Retail_2_Flr_1',
-                    'Basement',
+                    'Mech_Flr_1',
                     'Storage_Flr_1',
+                    'Laundry_Flr_1',
+                    'Cafe_Flr_1',
+                    'Lobby_Flr_1',
+                    'Corridor_Flr_3',
+                    'Banquet_Flr_6',
+                    'Dining_Flr_6',
+                    'Corridor_Flr_6',
+                    'Kitchen_Flr_6'
                 ]
         },
         {

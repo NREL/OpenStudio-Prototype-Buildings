@@ -73,7 +73,7 @@ class OpenStudio::Model::Model
     chilled_water_loop.setName('Chilled Water Loop')
 
     # Chilled water loop controls
-    chw_temp_f = 44 #CHW setpoint 44F 
+    chw_temp_f = 45 #CHW setpoint 45F
     chw_delta_t_r = 12 #12F delta-T    
     chw_temp_c = OpenStudio.convert(chw_temp_f,'F','C').get
     chw_delta_t_k = OpenStudio.convert(chw_delta_t_r,'R','K').get
@@ -204,11 +204,13 @@ class OpenStudio::Model::Model
     # control temps used across all air handlers
     clg_sa_temp_f = 55 # Central deck clg temp 55F 
     prehtg_sa_temp_f = 44.6 # Preheat to 44.6F
-    htg_sa_temp_f = 55 # Central deck htg temp 55F
+    preclg_sa_temp_f = 55 # Precool to 55F
+    htg_sa_temp_f = 62 # Central deck htg temp 55F
     rht_sa_temp_f = 104 # VAV box reheat to 104F
     
     clg_sa_temp_c = OpenStudio.convert(clg_sa_temp_f,'F','C').get
     prehtg_sa_temp_c = OpenStudio.convert(prehtg_sa_temp_f,'F','C').get
+    preclg_sa_temp_c = OpenStudio.convert(preclg_sa_temp_f,'F','C').get
     htg_sa_temp_c = OpenStudio.convert(htg_sa_temp_f,'F','C').get
     rht_sa_temp_c = OpenStudio.convert(rht_sa_temp_f,'F','C').get
     
@@ -227,6 +229,7 @@ class OpenStudio::Model::Model
     hw_stpt_manager.addToNode(air_loop.supplyOutletNode)
     sizing_system = air_loop.sizingSystem
     sizing_system.setPreheatDesignTemperature(prehtg_sa_temp_c)
+    sizing_system.setPrecoolDesignTemperature(preclg_sa_temp_c)
     sizing_system.setCentralCoolingDesignSupplyAirTemperature(clg_sa_temp_c)
     sizing_system.setCentralHeatingDesignSupplyAirTemperature(htg_sa_temp_c)
     sizing_system.setSizingOption('Coincident')
@@ -264,15 +267,17 @@ class OpenStudio::Model::Model
     #outdoor air intake system
     oa_intake_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
     oa_intake_controller.setName("#{thermal_zones.size} Zone VAV OA Sys Controller")
-    oa_intake = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, oa_intake_controller)    
-    oa_intake.setName("#{thermal_zones.size} Zone VAV OA Sys")
-    oa_intake_controller.setEconomizerControlType('NoEconomizer')
+    oa_intake_controller.setEconomizerControlType(prototype_input['vav_economizer_control_type'])
     oa_intake_controller.setMinimumLimitType('FixedMinimum')
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
-    oa_intake.addToNode(air_loop.supplyInletNode) 
+
     controller_mv = oa_intake_controller.controllerMechanicalVentilation
     controller_mv.setName("#{thermal_zones.size} Zone VAV Ventilation Controller")
     controller_mv.setSystemOutdoorAirMethod('VentilationRateProcedure')
+
+    oa_intake = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, oa_intake_controller)
+    oa_intake.setName("#{thermal_zones.size} Zone VAV OA Sys")
+    oa_intake.addToNode(air_loop.supplyInletNode)
     
     #hook the VAV system to each zone
     thermal_zones.each do |zone|
@@ -2996,13 +3001,14 @@ class OpenStudio::Model::Model
     sizing_system = airloop_primary.sizingSystem
     # set central heating and cooling temperatures for sizing
     sizing_system.setCentralCoolingDesignSupplyAirTemperature(12.8)
-    sizing_system.setCentralHeatingDesignSupplyAirTemperature(40)     #ML OS default is 16.7
+    sizing_system.setCentralHeatingDesignSupplyAirTemperature(16.7)   #ML OS default is 16.7
+    sizing_system.setSizingOption("Coincident")
     # load specification
     sizing_system.setSystemOutdoorAirMethod("ZoneSum")                #ML OS default is ZoneSum
     sizing_system.setTypeofLoadtoSizeOn("Sensible")         # DOAS
     sizing_system.setAllOutdoorAirinCooling(true)           # DOAS
     sizing_system.setAllOutdoorAirinHeating(true)           # DOAS
-    sizing_system.setMinimumSystemAirFlowRatio(1.0)         # No DCV
+    sizing_system.setMinimumSystemAirFlowRatio(0.3)         # No DCV
 
     air_loop_comps = []
 
@@ -3028,15 +3034,17 @@ class OpenStudio::Model::Model
     cooling_coil = OpenStudio::Model::CoilCoolingWater.new(self, self.alwaysOnDiscreteSchedule)
     air_loop_comps << cooling_coil
 
+    # motorized oa damper schedule
+    motorized_oa_damper_sch = self.add_schedule(prototype_input['doas_oa_damper_schedule'])
+
     # create controller outdoor air
     controller_OA = OpenStudio::Model::ControllerOutdoorAir.new(self)
-    controller_OA.autosizeMinimumOutdoorAirFlowRate
-    controller_OA.autosizeMaximumOutdoorAirFlowRate
+    controller_OA.setEconomizerControlType(prototype_input['doas_economizer_control_type'])
+    controller_OA.setMinimumLimitType('FixedMinimum')
+    controller_OA.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
 
     # create ventilation schedules and assign to OA controller
-    controller_OA.setMinimumFractionofOutdoorAirSchedule(self.alwaysOnDiscreteSchedule)
-    controller_OA.setMaximumFractionofOutdoorAirSchedule(self.alwaysOnDiscreteSchedule)
-    controller_OA.setHeatRecoveryBypassControlType("BypassWhenOAFlowGreaterThanMinimum")
+    controller_OA.setHeatRecoveryBypassControlType("BypassWhenWithinEconomizerLimits")
 
     # create outdoor air system
     system_OA = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, controller_OA)
