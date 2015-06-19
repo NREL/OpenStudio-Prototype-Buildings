@@ -565,9 +565,6 @@ class OpenStudio::Model::Model
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
-    # Heat Exchangers
-    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
-    
     ##### Add Economizers
     # Create an economizer maximum OA fraction of 70%
     # to reflect damper leakage per PNNL
@@ -609,8 +606,6 @@ class OpenStudio::Model::Model
         oa_control.setEconomizerControlType(economizer_type)
         oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
       end
-    
-    
     end
 
     #### Add ERVs
@@ -638,10 +633,6 @@ class OpenStudio::Model::Model
           runner.registerError("ERV not applicable to '#{air_loop.name}' because it has no OA intake.")
           next
         end
-
-        # Calculate the motor power for the rotatry wheel per:
-        # Power (W) = (Nominal Supply Air Flow Rate (CFM) * 0.3386) + 49.5
-        power = (dsn_flow_cfm * 0.3386) + 49.5
       
         # Create an ERV
         erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
@@ -654,10 +645,13 @@ class OpenStudio::Model::Model
         erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
         erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
         erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
-        erv.setNominalElectricPower(power)
         erv.setSupplyAirOutletTemperatureControl(true) 
         erv.setHeatExchangerType('Rotary')
         erv.setEconomizerLockout(true)
+        erv.setFrostControlType('ExhaustOnly')
+        erv.setThresholdTemperature(-23.3) # -10F
+        erv.setInitialDefrostTimeFraction(0.167)
+        erv.setRateofDefrostTimeFractionIncrease(1.44)
         
         # Add the ERV to the OA system
         erv.addToNode(oa_system.outboardOANode.get)    
@@ -665,6 +659,9 @@ class OpenStudio::Model::Model
       end
     
     end
+
+    # Heat Exchanger power
+    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
