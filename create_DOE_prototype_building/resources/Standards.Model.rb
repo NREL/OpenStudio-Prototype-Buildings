@@ -238,7 +238,7 @@ class OpenStudio::Model::Model
   # Create a schedule from the openstudio standards dataset.
   # TODO make return an OptionalScheduleRuleset
   def add_schedule(schedule_name)
-
+    return nil if schedule_name == nil or schedule_name == ""
     # First check model and return schedule if it already exists
     self.getSchedules.each do |schedule|
       if schedule.name.get.to_s == schedule_name

@@ -6,6 +6,7 @@ require_relative '../measure.rb'
 require 'fileutils'
 require 'socket'
 
+
 # Add a "dig" method to Hash to check if deeply nested elements exist
 # From: http://stackoverflow.com/questions/1820451/ruby-style-how-to-check-whether-a-nested-hash-element-exists
 class Hash
@@ -17,6 +18,7 @@ class Hash
 end
 
 class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
+
   # Create a set of models, return a list of failures
   def create_models(bldg_types, vintages, climate_zones)
 
@@ -73,23 +75,24 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           
         end     
       end
-    end 
-        
+    end
+
     #### Return the list of failures
     return failures
-  
+
   end
 
-  # Create a set of models, return a list of failures  
+
+  # Create a set of models, return a list of failures
   def run_models(bldg_types, vintages, climate_zones)
-  
+
     # Open a channel to log info/warning/error messages
     msg_log = OpenStudio::StringStreamLogSink.new
     msg_log.setLogLevel(OpenStudio::Info)
-  
+
     #### Run the specified models
     failures = []
-    
+
     # Make a run manager and queue up the sizing run
     run_manager_db_path = OpenStudio::Path.new("#{Dir.pwd}/run.db")
     run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
@@ -123,7 +126,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             failures << "Error - #{model_name} - #{model_path_string} couldn't be found"
             return failures
           end
-          
+
           # Delete the old ModelToIdf and SizingRun1 directories if they exist
           FileUtils.rm_rf("#{model_directory}/ModelToIdf")
           FileUtils.rm_rf("#{model_directory}/SizingRun1")
@@ -132,9 +135,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
           idf = forward_translator.translateModel(model)
           idf_path_string = "#{model_directory}/#{model_name}.idf"
-          idf_path = OpenStudio::Path.new(idf_path_string)    
+          idf_path = OpenStudio::Path.new(idf_path_string)
           idf.save(idf_path,true)
-          
+
           # Find the weather file
           epw_path = nil
           if model.weatherFile.is_initialized
@@ -154,10 +157,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             failures << "Error - #{model_name} - Model has not been assigned a weather file."
             return failures
           end
-          
+
           # Set the output path
           output_path = OpenStudio::Path.new("#{model_directory}/")
-          
+
           # Create a new workflow for the model to go through
           workflow = OpenStudio::Runmanager::Workflow.new
           workflow.addJob(OpenStudio::Runmanager::JobType.new('ModelToIdf'))
@@ -168,20 +171,20 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           job = workflow.create(output_path, model_path, epw_path)
 
           run_manager.enqueue(job, true)
-          
+
         end
       end
     end
-    
+
     # Start the runs and wait for them to finish.
     while run_manager.workPending
-      sleep 1
+      sleep 5
       OpenStudio::Application::instance.processEvents
     end
-    
+
     #### Return the list of failures
     return failures
-    
+
   end
   
   # Create a set of models, return a list of failures  
