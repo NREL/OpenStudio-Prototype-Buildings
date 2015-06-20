@@ -95,9 +95,13 @@ class OpenStudio::Model::Model
     
     system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
 
-    chilled_water_loop = self.add_chw_loop(prototype_input, hvac_standards)
+    condenser_water_loop = self.add_cw_loop(prototype_input, hvac_standards, 2)
+    
+    chilled_water_loop = self.add_chw_loop(prototype_input, hvac_standards, condenser_water_loop)
 
     hot_water_loop = self.add_hw_loop(prototype_input, hvac_standards)
+    
+    heat_pump_loop = self.add_hp_loop(prototype_input, hvac_standards)
     
     system_to_space_map.each do |system|
 
@@ -135,14 +139,14 @@ class OpenStudio::Model::Model
         end
       when 'DC_main'
         if hot_water_loop && chilled_water_loop
-          self.add_data_center_hvac(prototype_input, hvac_standards, thermal_zones, hot_water_loop, chilled_water_loop, true)
+          self.add_data_center_hvac(prototype_input, hvac_standards, thermal_zones, hot_water_loop, heat_pump_loop, true)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false
         end
       when 'DC'
         if hot_water_loop && chilled_water_loop
-          self.add_data_center_hvac(prototype_input, hvac_standards, thermal_zones, hot_water_loop, chilled_water_loop)
+          self.add_data_center_hvac(prototype_input, hvac_standards, thermal_zones, hot_water_loop, heat_pump_loop)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false

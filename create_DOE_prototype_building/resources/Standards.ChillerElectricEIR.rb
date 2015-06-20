@@ -59,16 +59,12 @@ class OpenStudio::Model::ChillerElectricEIR
     # Convert capacity to tons
     capacity_tons = OpenStudio.convert(capacity_w, "W", "ton").get
 
-    # Get the chiller minimum efficiency
-    kw_per_ton = nil
-    cop = nil
+    # Get the chiller properties
     chlr_props = self.model.find_object(chillers, search_criteria, capacity_tons)
-    if chlr_props
-      kw_per_ton = chlr_props["minimum_full_load_efficiency"]
-      cop = kw_per_ton_to_cop(kw_per_ton)
-    else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name}, cannot find minimum full load eff, will not be set.")
+    if !chlr_props
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name}, cannot find chiller properties, cannot apply standard efficiencies or curves.")
       successfully_set_all_properties = false
+      return successfully_set_all_properties
     end
     
     # Make the CAPFT curve
@@ -100,9 +96,16 @@ class OpenStudio::Model::ChillerElectricEIR
     end     
 
     # Set the efficiency value
-    kw_per_ton = chlr_props['minimum_full_load_efficiency']
-    cop = kw_per_ton_to_cop(kw_per_ton)
-    self.setReferenceCOP(cop)
+    kw_per_ton = nil
+    cop = nil
+    if chlr_props['minimum_full_load_efficiency']
+      kw_per_ton = chlr_props['minimum_full_load_efficiency']
+      cop = kw_per_ton_to_cop(kw_per_ton)
+      self.setReferenceCOP(cop)
+    else
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name}, cannot find minimum full load efficiency, will not be set.")
+      successfully_set_all_properties = false
+    end
 
     # Append the name with size and kw/ton
     self.setName("#{name} #{capacity_tons.round}tons #{kw_per_ton.round(1)}kW/ton")
