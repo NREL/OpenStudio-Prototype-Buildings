@@ -65,7 +65,14 @@ class OpenStudio::Model::Model
     
   end  
 
-  def add_chw_loop(prototype_input, standards)
+  # Creates a chilled water loop and adds it to the model
+  #
+  # @param prototype_input [Hash] the inputs for this building/climate zone/vintage combo
+  # @param standards [Hash] the OpenStudio_Standards spreadsheet in hash format
+  # @param condenser_water_loop [OpenStudio::Model::PlantLoop] optional condenser water loop
+  #   for water-cooled chillers.  If this is not passed in, the chillers will be air cooled.
+  # @return [OpenStudio::Model::PlantLoop] the resulting plant loop  
+  def add_chw_loop(prototype_input, standards, condenser_water_loop = nil)
     
     chillers = standards['chillers']
     
@@ -74,7 +81,6 @@ class OpenStudio::Model::Model
     chilled_water_loop.setName('Chilled Water Loop')
     chilled_water_loop.setMaximumLoopTemperature(98)
     chilled_water_loop.setMinimumLoopTemperature(1)
-    chilled_water_loop.setCommonPipeSimulation('TwoWayCommonPipe')
 
     # Chilled water loop controls
     chw_temp_f = 45 #CHW setpoint 45F
@@ -176,6 +182,13 @@ class OpenStudio::Model::Model
     chiller.setChillerFlowMode('ConstantFlow')
     chilled_water_loop.addSupplyBranchForComponent(chiller)  
     
+    # Connect the chiller to the condenser loop if
+    # one was supplied.
+    if condenser_water_loop
+      condenser_water_loop.addDemandBranchForComponent(chiller)
+      chiller.setCondenserType('WaterCooled')
+    end
+    
     #chilled water loop pipes
     chiller_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
     chilled_water_loop.addSupplyBranchForComponent(chiller_bypass_pipe)
@@ -192,6 +205,213 @@ class OpenStudio::Model::Model
 
   end
 
+  # Creates a condenser water loop and adds it to the model
+  #
+  # @param prototype_input [Hash] the inputs for this building/climate zone/vintage combo
+  # @param standards [Hash] the OpenStudio_Standards spreadsheet in hash format
+  # @param number_cooling_towers [Integer] the number of cooling towers to be added (in parallel)
+  # @return [OpenStudio::Model::PlantLoop] the resulting plant loop
+  def add_cw_loop(prototype_input, standards, number_cooling_towers = 1)
+    
+    # TODO change to cooling towers
+    #chillers = standards['chillers']
+    
+    # Condenser water loop
+    condenser_water_loop = OpenStudio::Model::PlantLoop.new(self)
+    condenser_water_loop.setName('Condenser Water Loop')
+    condenser_water_loop.setMaximumLoopTemperature(80)
+    condenser_water_loop.setMinimumLoopTemperature(5)
+
+    # Condenser water loop controls
+    cw_temp_f = 70 #CW setpoint 70F
+    cw_temp_sizing_f = 85 #CW sized to deliver 85F
+    cw_delta_t_r = 10 #10F delta-T    
+    cw_approach_delta_t_r = 7 #7F approach
+    cw_temp_c = OpenStudio.convert(cw_temp_f,'F','C').get
+    cw_temp_sizing_c = OpenStudio.convert(cw_temp_sizing_f,'F','C').get
+    cw_delta_t_k = OpenStudio.convert(cw_delta_t_r,'R','K').get
+    cw_approach_delta_t_k = OpenStudio.convert(cw_approach_delta_t_r,'R','K').get
+    cw_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    cw_temp_sch.setName("Condenser Water Loop Temp - #{cw_temp_f}F")
+    cw_temp_sch.defaultDaySchedule.setName("Condenser Water Loop Temp - #{cw_temp_f}F Default")
+    cw_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),cw_temp_c)
+    cw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,cw_temp_sch)    
+    cw_stpt_manager.addToNode(condenser_water_loop.supplyOutletNode)
+    sizing_plant = condenser_water_loop.sizingPlant
+    sizing_plant.setLoopType('Condenser')
+    sizing_plant.setDesignLoopExitTemperature(cw_temp_sizing_c)
+    sizing_plant.setLoopDesignTemperatureDifference(cw_delta_t_k)
+ 
+    # Condenser water pump #TODO make this into a HeaderedPump:VariableSpeed
+    cw_pump = OpenStudio::Model::PumpVariableSpeed.new(self)
+    cw_pump.setName('Condenser Water Loop Pump')
+    cw_pump_head_ft_h2o = 49.7
+    cw_pump_head_press_pa = OpenStudio.convert(cw_pump_head_ft_h2o, 'ftH_{2}O','Pa').get
+    cw_pump.setRatedPumpHead(cw_pump_head_press_pa)
+    # Curve makes it perform like variable speed pump
+    cw_pump.setFractionofMotorInefficienciestoFluidStream(0)
+    cw_pump.setCoefficient1ofthePartLoadPerformanceCurve(0)
+    cw_pump.setCoefficient2ofthePartLoadPerformanceCurve(0.0216)
+    cw_pump.setCoefficient3ofthePartLoadPerformanceCurve(-0.0325)
+    cw_pump.setCoefficient4ofthePartLoadPerformanceCurve(1.0095)    
+    cw_pump.setPumpControlType('Intermittent')
+    cw_pump.addToNode(condenser_water_loop.supplyInletNode)
+    
+    # TODO cooling tower properties
+    # Find the initial Cooling Tower properties based on initial inputs
+    # search_criteria = {
+      # 'template' => prototype_input['template'],
+      # 'cooling_type' => prototype_input['chiller_cooling_type'],
+      # 'condenser_type' => prototype_input['chiller_condenser_type'],
+      # 'compressor_type' => prototype_input['chiller_compressor_type'],
+    # }
+    
+    # chiller_properties = self.find_object(chillers, search_criteria, prototype_input['chiller_capacity_guess'])
+    # if !chiller_properties
+      # OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Could not find chiller with prototype inputs of:  #{prototype_input}")
+      # return condenser_water_loop
+    # end
+        
+    # TODO move cooling tower curve to lookup from spreadsheet
+    cooling_tower_fan_curve = OpenStudio::Model::CurveCubic.new(self)
+    cooling_tower_fan_curve.setName('Cooling Tower Fan Curve')
+    cooling_tower_fan_curve.setCoefficient1Constant(0)
+    cooling_tower_fan_curve.setCoefficient2x(0)
+    cooling_tower_fan_curve.setCoefficient3xPOW2(0)
+    cooling_tower_fan_curve.setCoefficient4xPOW3(1)
+    cooling_tower_fan_curve.setMinimumValueofx(0)
+    cooling_tower_fan_curve.setMaximumValueofx(1)        
+        
+    # Cooling towers
+    number_cooling_towers.times do |i|
+      cooling_tower = OpenStudio::Model::CoolingTowerVariableSpeed.new(self)
+      cooling_tower.setName("#{condenser_water_loop.name} Cooling Tower #{i}")
+      cooling_tower.setDesignApproachTemperature(cw_approach_delta_t_k)
+      cooling_tower.setDesignRangeTemperature(cw_delta_t_k)
+      cooling_tower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(cooling_tower_fan_curve)
+      cooling_tower.setMinimumAirFlowRateRatio(0.2)
+      cooling_tower.setFractionofTowerCapacityinFreeConvectionRegime(0.125)
+      cooling_tower.setNumberofCells(2)
+      cooling_tower.setCellControl('MaximalCell')
+      condenser_water_loop.addSupplyBranchForComponent(cooling_tower)  
+    end
+    
+    # Condenser water loop pipes
+    cooling_tower_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    condenser_water_loop.addSupplyBranchForComponent(cooling_tower_bypass_pipe)
+    chiller_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    condenser_water_loop.addDemandBranchForComponent(chiller_bypass_pipe)
+    supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    supply_outlet_pipe.addToNode(condenser_water_loop.supplyOutletNode)    
+    demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_inlet_pipe.addToNode(condenser_water_loop.demandInletNode) 
+    demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_outlet_pipe.addToNode(condenser_water_loop.demandOutletNode)
+
+    return condenser_water_loop
+
+  end  
+
+  # Creates a heat pump loop which has a boiler and fluid cooler
+  #   for supplemental heating/cooling and adds it to the model.
+  #
+  # @param prototype_input [Hash] the inputs for this building/climate zone/vintage combo
+  # @param standards [Hash] the OpenStudio_Standards spreadsheet in hash format
+  # @return [OpenStudio::Model::PlantLoop] the resulting plant loop
+  # @todo replace cooling tower with fluid cooler once added to OS 1.9.0
+  def add_hp_loop(prototype_input, standards)
+    
+    # Heat Pump loop
+    heat_pump_water_loop = OpenStudio::Model::PlantLoop.new(self)
+    heat_pump_water_loop.setName('Heat Pump Loop')
+    heat_pump_water_loop.setMaximumLoopTemperature(80)
+    heat_pump_water_loop.setMinimumLoopTemperature(5)
+
+    # Heat Pump loop controls
+    hp_high_temp_f = 65 # Supplemental heat below 65F
+    hp_low_temp_f = 41 # Supplemental cooling below 41F
+    hp_temp_sizing_f = 102.2 #CW sized to deliver 102.2F
+    hp_delta_t_r = 19.8 #19.8F delta-T   
+    boiler_hw_temp_f = 86 #Boiler makes 86F water
+    
+    hp_high_temp_c = OpenStudio.convert(hp_high_temp_f,'F','C').get
+    hp_low_temp_c = OpenStudio.convert(hp_low_temp_f,'F','C').get
+    hp_temp_sizing_c = OpenStudio.convert(hp_temp_sizing_f,'F','C').get
+    hp_delta_t_k = OpenStudio.convert(hp_delta_t_r,'R','K').get
+    boiler_hw_temp_c = OpenStudio.convert(boiler_hw_temp_f,'F','C').get
+    
+    hp_high_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    hp_high_temp_sch.setName("Heat Pump Loop High Temp - #{hp_high_temp_f}F")
+    hp_high_temp_sch.defaultDaySchedule.setName("Heat Pump Loop High Temp - #{hp_high_temp_f}F Default")
+    hp_high_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),hp_high_temp_c)
+
+    hp_low_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    hp_low_temp_sch.setName("Heat Pump Loop Low Temp - #{hp_low_temp_f}F")
+    hp_low_temp_sch.defaultDaySchedule.setName("Heat Pump Loop Low Temp - #{hp_low_temp_f}F Default")
+    hp_low_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),hp_low_temp_c)    
+        
+    hp_stpt_manager = OpenStudio::Model::SetpointManagerScheduledDualSetpoint.new(self)    
+    hp_stpt_manager.setHighSetpointSchedule(hp_high_temp_sch)
+    hp_stpt_manager.setLowSetpointSchedule(hp_low_temp_sch)
+    hp_stpt_manager.addToNode(heat_pump_water_loop.supplyOutletNode)
+
+    sizing_plant = heat_pump_water_loop.sizingPlant
+    sizing_plant.setLoopType('Heating')
+    sizing_plant.setDesignLoopExitTemperature(hp_temp_sizing_c)
+    sizing_plant.setLoopDesignTemperatureDifference(hp_delta_t_k)
+ 
+    # Heat Pump loop pump
+    hp_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+    hp_pump.setName('Heat Pump Loop Pump')
+    hp_pump_head_ft_h2o = 60
+    hp_pump_head_press_pa = OpenStudio.convert(hp_pump_head_ft_h2o, 'ftH_{2}O','Pa').get
+    hp_pump.setRatedPumpHead(hp_pump_head_press_pa)    
+    hp_pump.setPumpControlType('Intermittent')
+    hp_pump.addToNode(heat_pump_water_loop.supplyInletNode)       
+        
+    # Cooling towers
+    # TODO replace with FluidCooler:TwoSpeed when available
+    cooling_tower = OpenStudio::Model::CoolingTowerTwoSpeed.new(self)
+    cooling_tower.setName("#{heat_pump_water_loop.name} Sup Cooling Tower")
+    heat_pump_water_loop.addSupplyBranchForComponent(cooling_tower)
+    
+    # Boiler
+    boiler = OpenStudio::Model::BoilerHotWater.new(self)
+    boiler.setName("#{heat_pump_water_loop.name} Sup Boiler")
+    boiler.setFuelType('NaturalGas')
+    boiler.setDesignWaterOutletTemperature(boiler_hw_temp_c)
+    boiler.setMinimumPartLoadRatio(0)
+    boiler.setMaximumPartLoadRatio(1.2)
+    boiler.setOptimumPartLoadRatio(1)
+    boiler.setBoilerFlowMode('LeavingBoiler')
+    boiler.setBoilerFlowMode('ConstantFlow')
+    heat_pump_water_loop.addSupplyBranchForComponent(boiler)
+    
+    # Heat Pump water loop pipes
+    supply_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    supply_bypass_pipe.setName("#{heat_pump_water_loop.name} Supply Bypass")
+    heat_pump_water_loop.addSupplyBranchForComponent(supply_bypass_pipe)
+    
+    demand_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_bypass_pipe.setName("#{heat_pump_water_loop.name} Demand Bypass")
+    heat_pump_water_loop.addDemandBranchForComponent(demand_bypass_pipe)
+    
+    supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    supply_outlet_pipe.setName("#{heat_pump_water_loop.name} Supply Outlet")
+    supply_outlet_pipe.addToNode(heat_pump_water_loop.supplyOutletNode)    
+    
+    demand_inlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_inlet_pipe.setName("#{heat_pump_water_loop.name} Demand Inlet")
+    demand_inlet_pipe.addToNode(heat_pump_water_loop.demandInletNode) 
+    
+    demand_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
+    demand_outlet_pipe.setName("#{heat_pump_water_loop.name} Demand Outlet")
+    demand_outlet_pipe.addToNode(heat_pump_water_loop.demandOutletNode)
+
+    return heat_pump_water_loop
+
+  end
+  
   def add_vav(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones)
 
     hw_temp_f = 180 #HW setpoint 180F 
@@ -315,6 +535,7 @@ class OpenStudio::Model::Model
     return true
 
   end
+  
   
   # def add_pvav(prototype_input, standards, hot_water_loop, thermal_zones)
 
@@ -1431,7 +1652,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_data_center_hvac(prototype_input, standards, thermal_zones, hot_water_loop, chilled_water_loop, main_data_center = false)
+  def add_data_center_hvac(prototype_input, standards, thermal_zones, hot_water_loop, heat_pump_loop, main_data_center = false)
 
     hw_temp_f = 180 #HW setpoint 180F 
     hw_delta_t_r = 20 #20F delta-T    
@@ -1520,7 +1741,7 @@ class OpenStudio::Model::Model
       htg_coil.setHeatingPowerConsumptionCoefficient4(-0.177653510577989)
       htg_coil.setHeatingPowerConsumptionCoefficient5(-0.103079864171839)
 
-      hot_water_loop.addDemandBranchForComponent(htg_coil)
+      heat_pump_loop.addDemandBranchForComponent(htg_coil)
 
       clg_coil = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpEquationFit.new(self)
       clg_coil.setName("#{zone.name} PSZ Data Center Water-to-Air HP Clg Coil")
@@ -1543,7 +1764,7 @@ class OpenStudio::Model::Model
       clg_coil.setCoolingPowerConsumptionCoefficient4(0.141605667000125)
       clg_coil.setCoolingPowerConsumptionCoefficient5(-0.168727936032429)
 
-      chilled_water_loop.addDemandBranchForComponent(clg_coil)
+      heat_pump_loop.addDemandBranchForComponent(clg_coil)
 
       supplemental_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(self,self.alwaysOnDiscreteSchedule)
       supplemental_htg_coil.setName("#{zone.name} PSZ Data Center Electric Backup Htg Coil")
@@ -1553,31 +1774,6 @@ class OpenStudio::Model::Model
       oa_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
       oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self,oa_controller)
       oa_system.setName("#{zone.name} PSZ Data Center OA Sys")
-
-      #heat exchanger on oa system
-      # if prototype_input['hx']
-        # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-        # heat_exchanger.setName("#{zone.name} PSZ Data Center HX")
-        # heat_exchanger.setHeatExchangerType('Rotary')
-        # heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.7)
-        # heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.6)
-        # heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.7)
-        # heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-        # heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.75)
-        # heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.6)
-        # heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.75)
-        # heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-        # heat_exchanger.setNominalElectricPower(2210.5647)
-        # heat_exchanger.setEconomizerLockout(true)
-        # heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-        # oa_node = oa_system.outboardOANode
-        # if oa_node.is_initialized
-          # heat_exchanger.addToNode(oa_node.get)
-        # else
-          # OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
-          # return false
-        # end
-      # end
       
       # Add the components to the air loop
       # in order from closest to zone to furthest from zone
