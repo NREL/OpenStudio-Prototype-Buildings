@@ -769,7 +769,7 @@ class OpenStudio::Model::Model
 
       # Find EnergyPlus
       require 'openstudio/energyplus/find_energyplus'
-      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
+      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
       ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
       ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
       idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
