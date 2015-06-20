@@ -1,8 +1,22 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::Construction
 
   # Sets the U-value of a construction to a specified value
+  # by modifying the thickness of the insulation layer.
+  #
+  # @param target_u_value_ip [Double] U-Value (Btu/ft^2*hr*R)
+  # @param insulation_layer_name [String] The name of the insulation layer in this construction
+  # @param intended_surface_type [String] 
+  #   Valid choices:  'AtticFloor', 'AtticWall', 'AtticRoof', 'DemisingFloor', 'InteriorFloor', 'InteriorCeiling', 
+  #   'DemisingWall', 'InteriorWall', 'InteriorPartition', 'InteriorWindow', 'InteriorDoor', 'DemisingRoof',
+  #   'ExteriorRoof', 'Skylight', 'TubularDaylightDome', 'TubularDaylightDiffuser', 'ExteriorFloor', 
+  #   'ExteriorWall', 'ExteriorWindow', 'ExteriorDoor', 'GlassDoor', 'OverheadDoor', 'GroundContactFloor',
+  #   'GroundContactWall', 'GroundContactRoof'
+  # @param target_includes_film_coefficients [Bool] if true, subtracts off standard film coefficients from your
+  #   target_u_value before modifying insulation thickness.  Film values from 90.1-2010 A9.4.1 Air Films  
+  # @return [Bool] returns true if successful, false if not
+  # @todo Put in Phlyroy's logic for inferring the insulation layer of a construction
   def set_u_value(target_u_value_ip, insulation_layer_name = nil, intended_surface_type = 'ExteriorWall',  target_includes_film_coefficients = true)
     
     OpenStudio::logFree(OpenStudio::Debug, 'openstudio.standards.ConstructionBase', "Setting U-Value for #{self.name}.")
@@ -145,6 +159,10 @@ class OpenStudio::Model::Construction
   # Assumes an unheated, fully insulated slab, and modifies
   # the insulation layer according to the values from 90.1-2004 
   # Table A6.3 Assembly F-Factors for Slab-on-Grade Floors.
+  #
+  # @param target_f_factor_ip [Double] F-Factor
+  # @param insulation_layer_name [String] The name of the insulation layer in this construction
+  # @return [Bool] returns true if successful, false if not
   def set_slab_f_factor(target_f_factor_ip, insulation_layer_name = nil)
   
     # Regression from table A6.3 unheated, fully insulated slab
@@ -165,6 +183,10 @@ class OpenStudio::Model::Construction
   # Assumes continuous exterior insulation and modifies
   # the insulation layer according to the values from 90.1-2004 
   # Table A4.2 Assembly C-Factors for Below-Grade walls.
+  #
+  # @param target_c_factor_ip [Double] C-Factor
+  # @param insulation_layer_name [String] The name of the insulation layer in this construction
+  # @return [Bool] returns true if successful, false if not
   def set_underground_wall_c_factor(target_c_factor_ip, insulation_layer_name = nil)
   
     # Regression from table A4.2 continuous exterior insulation
