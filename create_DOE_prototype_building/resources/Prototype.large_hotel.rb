@@ -169,21 +169,105 @@ class OpenStudio::Model::Model
   end #add hvac
   
   def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-   
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
 
-    swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main')
-    self.add_swh_end_uses(prototype_input, hvac_standards, swh_loop, 'main')
-    self.add_swh_end_uses(prototype_input, hvac_standards, swh_loop, 'laundry')
-    
-    #swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, main_swh_loop)
-    #self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
-    
+    # Add the main service hot water loop
+    swh_space_name = "Basement"
+    swh_thermal_zone = self.getSpaceByName(swh_space_name).get.thermalZone.get
+    swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main',swh_thermal_zone)
+
+    # Add the water use equipment
+    guess_room_space_types =['GuestRoom','GuestRoom2','GuestRoom3','GuestRoom4']
+    kitchen_space_types = ['Kitchen']
+    guess_room_water_use_rate = 0.020833333 # gal/min, Reference: NERL Reference building report 5.1.6
+    kitchen_space_use_rate = 2.22 # gal/min, from PNNL prototype building
+    guess_room_water_use_schedule = "HotelLarge GuestRoom_SWH_Sch"
+    kitchen_water_use_schedule = "HotelLarge BLDG_SWH_SCH"
+
+    water_end_uses = []
+    space_type_map = define_space_type_map(building_type, building_vintage, climate_zone)
+    space_multipliers = define_space_multiplier
+
+    guess_room_space_types.each do |space_type|
+      space_names = space_type_map[space_type]
+      space_names.each do |space_name|
+        space_multiplier = 1
+        space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+        water_end_uses.push([space_name, guess_room_water_use_rate * space_multiplier,guess_room_water_use_schedule])
+      end
+    end
+
+    kitchen_space_types.each do |space_type|
+        space_names = space_type_map[space_type]
+        space_names.each do |space_name|
+          space_multiplier = 1
+          space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+          water_end_uses.push([space_name, kitchen_space_use_rate * space_multiplier,kitchen_water_use_schedule])
+        end
+    end
+
+    self.add_large_hotel_swh_end_uses(prototype_input, hvac_standards, swh_loop, 'main', water_end_uses)
+
+    # Add the laundry water heater
+    laundry_water_heater_space_name = "Basement"
+    laundry_water_heater_thermal_zone = self.getSpaceByName(laundry_water_heater_space_name).get.thermalZone.get
+    laundry_water_heater_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry', laundry_water_heater_thermal_zone)
+    self.add_swh_end_uses(prototype_input, hvac_standards, laundry_water_heater_loop,'laundry')
+
+    booster_water_heater_space_name = "KITCHEN_FLR_6"
+    booster_water_heater_thermal_zone = self.getSpaceByName(booster_water_heater_space_name).get.thermalZone.get
+    swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, swh_loop, booster_water_heater_thermal_zone)
+    self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding SWH")
-    
     return true
-    
-  end #add swh    
+  end #add swh
+
+  def add_large_hotel_swh_end_uses(prototype_input, standards, swh_loop, type, water_end_uses)
+    puts "Adding water uses type = '#{type}'"
+
+    schedules = standards['schedules']
+    water_end_uses.each do |water_end_use|
+      space_name = water_end_use[0]
+      use_rate = water_end_use[1] # in gal/min
+
+      # Water use connection
+      swh_connection = OpenStudio::Model::WaterUseConnections.new(self)
+      swh_connection.setName(space_name + "Water Use Connections")
+      # Water fixture definition
+      water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
+      rated_flow_rate_m3_per_s = OpenStudio.convert(use_rate,'gal/min','m^3/s').get
+      water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
+      water_fixture_def.setName("#{space_name} Service Water Use Def #{use_rate.round(2)}gal/min")
+
+      sensible_fraction = 0.2
+      latent_fraction = 0.05
+
+      # Target mixed water temperature
+      mixed_water_temp_f = prototype_input["#{type}_water_use_temperature"]
+      mixed_water_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      mixed_water_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio.convert(mixed_water_temp_f,'F','C').get)
+      water_fixture_def.setTargetTemperatureSchedule(mixed_water_temp_sch)
+
+      sensible_fraction_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      sensible_fraction_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),sensible_fraction)
+      water_fixture_def.setSensibleFractionSchedule(sensible_fraction_sch)
+
+      latent_fraction_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      latent_fraction_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),latent_fraction)
+      water_fixture_def.setSensibleFractionSchedule(latent_fraction_sch)
+
+      # Water use equipment
+      water_fixture = OpenStudio::Model::WaterUseEquipment.new(water_fixture_def)
+      schedule = self.add_schedule(water_end_use[2])
+      water_fixture.setFlowRateFractionSchedule(schedule)
+      water_fixture.setName("#{space_name} Service Water Use #{use_rate.round(2)}gal/min")
+      swh_connection.addWaterUseEquipment(water_fixture)
+
+      # Connect the water use connection to the SWH loop
+      swh_loop.addDemandBranchForComponent(swh_connection)
+    end
+  end
   
   def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
        

@@ -453,13 +453,13 @@ class OpenStudio::Model::Model
       puts "#{name}"
       space_type.setDesignSpecificationOutdoorAir(ventilation)
       ventilation.setOutdoorAirMethod('Sum')
-      unless ventilation_per_area  == 0 || ventilation_per_area.nil?
+      unless ventilation_per_area.nil? || ventilation_per_area.to_f  == 0
         ventilation.setOutdoorAirFlowperFloorArea(OpenStudio.convert(ventilation_per_area, 'ft^3/min*ft^2', 'm^3/s*m^2').get)
       end
-      unless ventilation_per_person == 0 || ventilation_per_person.nil?
+      unless  ventilation_per_person.nil? || ventilation_per_person.to_f == 0
         ventilation.setOutdoorAirFlowperPerson(OpenStudio.convert(ventilation_per_person, 'ft^3/min*person', 'm^3/s*person').get)
       end
-      unless ventilation_ach == 0 || ventilation_ach.nil?
+      unless ventilation_ach.nil? || ventilation_ach.to_f == 0
         ventilation.setOutdoorAirFlowAirChangesperHour(ventilation_ach)
       end
     end

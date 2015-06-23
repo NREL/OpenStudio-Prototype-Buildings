@@ -143,7 +143,7 @@ class OpenStudio::Model::Model
       end
     end
 
-    # Make the default contruction set for the building
+    # Make the default construction set for the building
     bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil)
     if bldg_def_const_set.is_initialized
       self.getBuilding.setDefaultConstructionSet(bldg_def_const_set.get)

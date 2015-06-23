@@ -15423,7 +15423,105 @@
       ]
     },
     {
-      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH",
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2010",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.2197,
+        0.2197,
+        0.0945,
+        0.0945,
+        0.0945,
+        0.0945,
+        0.3852,
+        0.3852,
+        0.5259,
+        0.444267,
+        0.302158,
+        0.2432,
+        0.2432,
+        0.2432,
+        0.2432,
+        0.2432,
+        0.2432,
+        0.253275,
+        0.7973,
+        0.939,
+        0.939,
+        0.939,
+        0.7973,
+        0.3852
+      ]
+    },
+    {
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2010",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2010",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Wkdy",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.1859,
+        0.1452,
+        0.0945,
+        0.0945,
+        0.0945,
+        0.1859,
+        0.4121,
+        0.5259,
+        0.4121,
+        0.4121,
+        0.2087,
+        0.2087,
+        0.2087,
+        0.2087,
+        0.2087,
+        0.2087,
+        0.21304,
+        0.2149,
+        0.6297,
+        0.8342,
+        0.938,
+        0.8342,
+        0.6297,
+        0.3083
+      ]
+    },
+    {
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2010",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "Default",
@@ -15459,7 +15557,7 @@
       ]
     },
     {
-      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH",
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "SmrDsn",
@@ -15472,7 +15570,7 @@
       ]
     },
     {
-      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH",
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "Wkdy",
@@ -15508,7 +15606,7 @@
       ]
     },
     {
-      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH",
+      "name": "HotelSmall BLDG_LIGHT_GUESTROOM_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "WntrDsn",
