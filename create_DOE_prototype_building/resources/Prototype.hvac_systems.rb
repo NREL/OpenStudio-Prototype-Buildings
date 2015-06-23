@@ -2628,13 +2628,13 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_swh_loop(prototype_input, standards, type)
+  def add_swh_loop(prototype_input, standards, type, ambient_temperature_thermal_zone=nil)
   
     puts "Adding water heater type = '#{type}'"
   
     # Service water heating loop
     service_water_loop = OpenStudio::Model::PlantLoop.new(self)
-    service_water_loop.setName('Service Water Loop')
+    service_water_loop.setName("#{type} Service Water Loop")
     service_water_loop.setMaximumLoopTemperature(60)
     service_water_loop.setMinimumLoopTemperature(10)
 
@@ -2679,10 +2679,9 @@ class OpenStudio::Model::Model
     swh_pump.setPumpControlType('Intermittent')
     swh_pump.addToNode(service_water_loop.supplyInletNode)
     
-    water_heater = add_water_heater(prototype_input, standards, type, false, temp_sch_type_limits, swh_temp_sch)
-
+    water_heater = add_water_heater(prototype_input, standards, type, false, temp_sch_type_limits, swh_temp_sch, ambient_temperature_thermal_zone)
     service_water_loop.addSupplyBranchForComponent(water_heater)
-    
+
     # Service water heating loop bypass pipes
     water_heater_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(self)
     service_water_loop.addSupplyBranchForComponent(water_heater_bypass_pipe)
@@ -2696,10 +2695,9 @@ class OpenStudio::Model::Model
     demand_outlet_pipe.addToNode(service_water_loop.demandOutletNode) 
 
     return service_water_loop
-    
   end
 
-  def add_water_heater(prototype_input, standards, type, set_peak_use_flowrate = false, temp_sch_type_limits = nil, swh_temp_sch = nil)
+  def add_water_heater(prototype_input, standards, type, set_peak_use_flowrate = false, temp_sch_type_limits = nil, swh_temp_sch = nil, ambient_temperature_thermal_zone=nil)
     # Water heater
     # TODO Standards - Change water heater methodology to follow
     # 'Model Enhancements Appendix A.'
@@ -2726,25 +2724,31 @@ class OpenStudio::Model::Model
       swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
       swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
       swh_temp_sch.setName("Hot Water Loop Temp - #{swh_temp_f}F")
-      swh_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
-      swh_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
+      swh_temp_sch.defaultDaySchedule.setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
+      swh_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
       swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
     end
-
-    # Assume the water heater is indoors at 70F for now
-    default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    default_water_heater_ambient_temp_sch.setName('Water Heater Ambient Temp Schedule - 70F')
-    default_water_heater_ambient_temp_sch.defaultDaySchedule.setName('Water Heater Ambient Temp Schedule - 70F Default')
-    default_water_heater_ambient_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio::convert(70,"F","C").get)
-    default_water_heater_ambient_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
     
     # Water heater depends on the fuel type
     water_heater = OpenStudio::Model::WaterHeaterMixed.new(self)
     water_heater.setName("#{water_heater_vol_gal}gal #{water_heater_fuel} Water Heater - #{water_heater_capacity_kbtu_per_hr.round}kBtu/hr")
     water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
     water_heater.setSetpointTemperatureSchedule(swh_temp_sch)
-    water_heater.setAmbientTemperatureIndicator('Schedule')
-    water_heater.setAmbientTemperatureSchedule(default_water_heater_ambient_temp_sch)
+
+    if ambient_temperature_thermal_zone.nil?
+      # Assume the water heater is indoors at 70F for now
+      default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      default_water_heater_ambient_temp_sch.setName('Water Heater Ambient Temp Schedule - 70F')
+      default_water_heater_ambient_temp_sch.defaultDaySchedule.setName('Water Heater Ambient Temp Schedule - 70F Default')
+      default_water_heater_ambient_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio::convert(70,"F","C").get)
+      default_water_heater_ambient_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+      water_heater.setAmbientTemperatureIndicator('Schedule')
+      water_heater.setAmbientTemperatureSchedule(default_water_heater_ambient_temp_sch)
+    else
+      water_heater.setAmbientTemperatureIndicator('ThermalZone')
+      water_heater.setAmbientTemperatureThermalZone ambient_temperature_thermal_zone
+    end
+
     water_heater.setMaximumTemperatureLimit(OpenStudio::convert(180,'F','C').get)
     water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
     water_heater.setHeaterControlType('Cycle')
@@ -2754,16 +2758,17 @@ class OpenStudio::Model::Model
     if water_heater_fuel == 'Electricity'
       water_heater.setHeaterFuelType('Electricity')
       water_heater.setHeaterThermalEfficiency(1.0)
-      water_heater.setOffCycleParasiticFuelConsumptionRate(571)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
       water_heater.setOffCycleParasiticFuelType('Electricity')
-      water_heater.setOnCycleParasiticFuelConsumptionRate(571)
       water_heater.setOnCycleParasiticFuelType('Electricity')
-      water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.21)
-      water_heater.setOnCycleLossCoefficienttoAmbientTemperature(1.21)
+      water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.053)
+      water_heater.setOnCycleLossCoefficienttoAmbientTemperature(1.053)
     elsif water_heater_fuel == 'Natural Gas'
       water_heater.setHeaterFuelType('NaturalGas')
       water_heater.setHeaterThermalEfficiency(0.78)
-      water_heater.setOffCycleParasiticFuelConsumptionRate(20)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
       water_heater.setOffCycleParasiticFuelType('NaturalGas')
       water_heater.setOnCycleParasiticFuelType('NaturalGas')
       water_heater.setOffCycleLossCoefficienttoAmbientTemperature(6.0)
@@ -2782,7 +2787,7 @@ class OpenStudio::Model::Model
     return water_heater
   end
 
-  def add_swh_booster(prototype_input, standards, main_service_water_loop)
+  def add_swh_booster(prototype_input, standards, main_service_water_loop, ambient_temperature_thermal_zone=nil)
 
     # Booster water heating loop
     booster_service_water_loop = OpenStudio::Model::PlantLoop.new(self)
@@ -2829,27 +2834,53 @@ class OpenStudio::Model::Model
     water_heater_capacity_kbtu_per_hr = OpenStudio.convert(water_heater_capacity_btu_per_hr, "Btu/hr", "kBtu/hr").get
     water_heater_vol_gal = prototype_input['booster_water_heater_volume']
     water_heater_fuel = prototype_input['booster_water_heater_fuel']
-
-    # Assume the water heater is indoors at 70F for now
-    default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    default_water_heater_ambient_temp_sch.setName('Water Heater Ambient Temp Schedule - 70F')
-    default_water_heater_ambient_temp_sch.defaultDaySchedule.setName('Water Heater Ambient Temp Schedule - 70F Default')
-    default_water_heater_ambient_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio::convert(70,"F","C").get)
-    default_water_heater_ambient_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
     
     # Water heater depends on the fuel type
     water_heater = OpenStudio::Model::WaterHeaterMixed.new(self)
     water_heater.setName("#{water_heater_vol_gal}gal #{water_heater_fuel} Water Heater - #{water_heater_capacity_kbtu_per_hr.round}kBtu/hr")
     water_heater.setTankVolume(OpenStudio.convert(water_heater_vol_gal,'gal','m^3').get)
     water_heater.setSetpointTemperatureSchedule(swh_temp_sch)
-    water_heater.setAmbientTemperatureIndicator('Schedule')
-    water_heater.setAmbientTemperatureSchedule(default_water_heater_ambient_temp_sch)
+
+    if ambient_temperature_thermal_zone.nil?
+      # Assume the water heater is indoors at 70F for now
+      default_water_heater_ambient_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      default_water_heater_ambient_temp_sch.setName('Water Heater Ambient Temp Schedule - 70F')
+      default_water_heater_ambient_temp_sch.defaultDaySchedule.setName('Water Heater Ambient Temp Schedule - 70F Default')
+      default_water_heater_ambient_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),OpenStudio::convert(70,"F","C").get)
+      default_water_heater_ambient_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
+      water_heater.setAmbientTemperatureIndicator('Schedule')
+      water_heater.setAmbientTemperatureSchedule(default_water_heater_ambient_temp_sch)
+    else
+      water_heater.setAmbientTemperatureIndicator('ThermalZone')
+      water_heater.setAmbientTemperatureThermalZone ambient_temperature_thermal_zone
+    end
+
     water_heater.setMaximumTemperatureLimit(OpenStudio::convert(180,'F','C').get)
     water_heater.setDeadbandTemperatureDifference(OpenStudio.convert(3.6,'R','K').get)
     water_heater.setHeaterControlType('Cycle')
     water_heater.setHeaterMaximumCapacity(OpenStudio.convert(water_heater_capacity_btu_per_hr,'Btu/hr','W').get)
     water_heater.setOffCycleParasiticHeatFractiontoTank(0.8)
     water_heater.setIndirectWaterHeatingRecoveryTime(1.5) # 1.5hrs
+    if water_heater_fuel == 'Electricity'
+      water_heater.setHeaterFuelType('Electricity')
+      water_heater.setHeaterThermalEfficiency(1.0)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOffCycleParasiticFuelType('Electricity')
+      water_heater.setOnCycleParasiticFuelType('Electricity')
+      water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.053)
+      water_heater.setOnCycleLossCoefficienttoAmbientTemperature(1.053)
+    elsif water_heater_fuel == 'Natural Gas'
+      water_heater.setHeaterFuelType('NaturalGas')
+      water_heater.setHeaterThermalEfficiency(0.8)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOffCycleParasiticFuelType('NaturalGas')
+      water_heater.setOnCycleParasiticFuelType('NaturalGas')
+      water_heater.setOffCycleLossCoefficienttoAmbientTemperature(6.0)
+      water_heater.setOnCycleLossCoefficienttoAmbientTemperature(6.0)
+    end
+
     if water_heater_fuel == 'Electricity'
       water_heater.setHeaterFuelType('Electricity')
       water_heater.setOffCycleParasiticFuelType('Electricity')
