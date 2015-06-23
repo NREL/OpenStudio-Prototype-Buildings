@@ -179,7 +179,7 @@ class OpenStudio::Model::Model
     # Add the water use equipment
     guess_room_space_types =['GuestRoom','GuestRoom2','GuestRoom3','GuestRoom4']
     kitchen_space_types = ['Kitchen']
-    guess_room_water_use_rate = 0.020833333 # gal/min, Reference: NERL Reference building report 5.1.6
+    guess_room_water_use_rate = 0.020833333 # gal/min, Reference: NREL Reference building report 5.1.6
     kitchen_space_use_rate = 2.22 # gal/min, from PNNL prototype building
     guess_room_water_use_schedule = "HotelLarge GuestRoom_SWH_Sch"
     kitchen_water_use_schedule = "HotelLarge BLDG_SWH_SCH"
@@ -225,8 +225,6 @@ class OpenStudio::Model::Model
 
   def add_large_hotel_swh_end_uses(prototype_input, standards, swh_loop, type, water_end_uses)
     puts "Adding water uses type = '#{type}'"
-
-    schedules = standards['schedules']
     water_end_uses.each do |water_end_use|
       space_name = water_end_use[0]
       use_rate = water_end_use[1] # in gal/min

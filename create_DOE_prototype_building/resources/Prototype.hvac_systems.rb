@@ -3059,8 +3059,8 @@ class OpenStudio::Model::Model
     if water_heater_fuel == 'Electricity'
       water_heater.setHeaterFuelType('Electricity')
       water_heater.setHeaterThermalEfficiency(1.0)
-      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
-      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
       water_heater.setOffCycleParasiticFuelType('Electricity')
       water_heater.setOnCycleParasiticFuelType('Electricity')
       water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.053)
@@ -3068,8 +3068,8 @@ class OpenStudio::Model::Model
     elsif water_heater_fuel == 'Natural Gas'
       water_heater.setHeaterFuelType('NaturalGas')
       water_heater.setHeaterThermalEfficiency(0.8)
-      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
-      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["#{type}_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
       water_heater.setOffCycleParasiticFuelType('NaturalGas')
       water_heater.setOnCycleParasiticFuelType('NaturalGas')
       water_heater.setOffCycleLossCoefficienttoAmbientTemperature(6.0)
