@@ -32,6 +32,7 @@
 - Stand-alone Retail
 - Strip Mall
 - Mid-rise Apartment
+
 ###### FY16
 - Outpatient Healthcare
 - Hospital
