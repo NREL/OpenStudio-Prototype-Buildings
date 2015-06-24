@@ -14,27 +14,29 @@
 ### Building Type Assignments
 
 ##### NREL
+# FY15
 - Small Office
 - Secondary School
 - Primary School
 
 ##### ORNL
+# FY15
 - Medium Office
 - Large Office
 - Warehouse (non-refrigerated)
 
 ##### LBL
+# FY15
 - Small Hotel
 - Large Hotel
-
-##### Unassigned
 - Stand-alone Retail
 - Strip Mall
+- Mid-rise Apartment
+# FY16
 - Outpatient Healthcare
 - Hospital
 - Quick Service Restaurant
 - Full Service Restaurant
-- Mid-rise Apartment
 - High-rise Apartment
 
 #### General TODO
