@@ -1,0 +1,152 @@
+[openstudio.LocalLibraryController] <-2> Creating LocalLibraryController with base app 00000000001BF6E0
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReportRequest
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReportRequest
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddHourlyOutputVariablesToSimulation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddHourlyOutputVariablesToSimulation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/alter_lighting_schedule_based_on_occupancy_schedule_local_resources_copy
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/alter_lighting_schedule_based_on_occupancy_schedule_local_resources_copy
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/archetype_scan
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/archetype_scan
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/change_osm_model
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/change_osm_model
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ColdLakeVintageMaker
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ColdLakeVintageMaker
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/dnd_analysis
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/dnd_analysis
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/hard_size_hvac
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/hard_size_hvac
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/utility_tariffs
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/utility_tariffs
+[openstudio.runmanager.Workflow] <-2> creating workflow
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Temp/OpenStudio.ER7312/resources/run.db) Persisting job status for {bb8cd106-931a-4c47-9b86-787697837ec8}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {bb8cd106-931a-4c47-9b86-787697837ec8}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {bb8cd106-931a-4c47-9b86-787697837ec8}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Temp/OpenStudio.ER7312/resources/run.db) Persisting job status for {b4444e24-fa9d-4f84-8854-722c1274c972}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {b4444e24-fa9d-4f84-8854-722c1274c972}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {b4444e24-fa9d-4f84-8854-722c1274c972}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Temp/OpenStudio.ER7312/resources/run.db) Persisting job status for {8f080b6b-1216-4715-b737-8c1e550648bd}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {8f080b6b-1216-4715-b737-8c1e550648bd}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {8f080b6b-1216-4715-b737-8c1e550648bd}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Temp/OpenStudio.ER7312/resources/run.db) Persisting job status for {54bd2932-1ec2-453e-9ea5-3e9e659db3c9}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {54bd2932-1ec2-453e-9ea5-3e9e659db3c9}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {54bd2932-1ec2-453e-9ea5-3e9e659db3c9}
+[openstudio.runmanager.Job_Impl] <-2> Returning previously saved outputfiles
+[openstudio.runmanager.RunManager] <-2> (C:/Temp/OpenStudio.ER7312/resources/run.db) Persisting job status for {abf8137a-6449-4c64-ab06-49cdb6041594}
+[openstudio.runmanager.RunManager] <-2> Deleted previous data job status for {abf8137a-6449-4c64-ab06-49cdb6041594}
+[openstudio.runmanager.RunManager] <-2> Not persisting, job has not actually finished {abf8137a-6449-4c64-ab06-49cdb6041594}
+[openstudio.project.ProjectDatabase] <-1> DB Message: cannot start a transaction within a transaction Unable to begin transaction
+[saveModel] <-2> Saved model to 'C:/Temp/OpenStudio.ER7312/in.osm'
+[saveModelTempDir] <-2> Copying C:/Temp/OpenStudio.ER7312/resources to C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library
+[copyDir] <-1> copyDir 'C:/Temp/OpenStudio.ER7312/resources' to 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library'
+[copyDir] <-1> Creating directory named = 'BTAP_Construction_Library' in parentDstDir = 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library' with source 'C:/Temp/OpenStudio.ER7312/resources'
+[copyDir] <-1> copyDir 'C:/Temp/OpenStudio.ER7312/resources/files' to 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/files'
+[copyDir] <-1> Creating directory named = 'files' in parentDstDir = 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/files' with source 'C:/Temp/OpenStudio.ER7312/resources/files'
+[copyDir] <-1> copyDir 'C:/Temp/OpenStudio.ER7312/resources/run' to 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/run'
+[copyDir] <-1> Creating directory named = 'run' in parentDstDir = 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/run' with source 'C:/Temp/OpenStudio.ER7312/resources/run'
+[copyDir] <-1> copyDir 'C:/Temp/OpenStudio.ER7312/resources/scripts' to 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/scripts'
+[copyDir] <-1> Creating directory named = 'scripts' in parentDstDir = 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/scripts' with source 'C:/Temp/OpenStudio.ER7312/resources/scripts'
+[openstudio.LocalLibraryController] <-2> Creating LocalLibraryController with base app 00000000001BF6E0
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReportRequest
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReportRequest
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddHourlyOutputVariablesToSimulation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddHourlyOutputVariablesToSimulation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/alter_lighting_schedule_based_on_occupancy_schedule_local_resources_copy
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/alter_lighting_schedule_based_on_occupancy_schedule_local_resources_copy
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/archetype_scan
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/archetype_scan
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/change_osm_model
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/change_osm_model
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ColdLakeVintageMaker
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ColdLakeVintageMaker
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/dnd_analysis
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/dnd_analysis
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/hard_size_hvac
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/hard_size_hvac
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set_old
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set_old
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/utility_tariffs
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/utility_tariffs
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/CalibrationReports
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReportRequest
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/ReportRequest
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/Program Files/OpenStudio 1.6.0/share/openstudio-1.6.0/pat/Measures/StandardReports
+[utilities.bcl.BCLMeasure] <-2> Loading measures in path: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddHourlyOutputVariablesToSimulation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddHourlyOutputVariablesToSimulation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/AddOverhangsByProjectionFactor
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/alter_lighting_schedule_based_on_occupancy_schedule_local_resources_copy
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/alter_lighting_schedule_based_on_occupancy_schedule_local_resources_copy
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/archetype_scan
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/archetype_scan
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ChangeBuildingLocation
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/change_osm_model
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/change_osm_model
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ColdLakeVintageMaker
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ColdLakeVintageMaker
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/dnd_analysis
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/dnd_analysis
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/hard_size_hvac
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/hard_size_hvac
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/ReplaceModel
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set_old
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/set_default_construction_set_old
+[utilities.bcl.BCLMeasure] <-2> Attempting to load measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/utility_tariffs
+[utilities.bcl.BCLMeasure] <-2> Success loading measure: C:/projects/OpenStudio-analysis-spreadsheet/btap/measures/utility_tariffs
+[openstudio.project.ProjectDatabase] <-1> DB Message: cannot start a transaction within a transaction Unable to begin transaction
+[saveModel] <-2> Saved model to 'C:/Temp/OpenStudio.ER7312/in.osm'
+[saveModelTempDir] <-2> Copying C:/Temp/OpenStudio.ER7312/resources to C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library
+[copyDir] <-1> copyDir 'C:/Temp/OpenStudio.ER7312/resources' to 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library' with source 'C:/Temp/OpenStudio.ER7312/resources'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/files' with source 'C:/Temp/OpenStudio.ER7312/resources/files'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/run' with source 'C:/Temp/OpenStudio.ER7312/resources/run'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/scripts' with source 'C:/Temp/OpenStudio.ER7312/resources/scripts'
+[copyDir] <-1> copyDir 'C:/Temp/OpenStudio.ER7312/resources/files' to 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/files'
+[synchDirStructures] <-1> Synching destination 'C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/constructions/BTAP_Construction_Library/files' with source 'C:/Temp/OpenStudio.ER7312/resources/files'
