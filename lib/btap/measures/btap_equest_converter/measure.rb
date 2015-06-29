@@ -6174,7 +6174,7 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     #inp_file = OpenStudio::Ruleset::OSArgument::makePathArgument("INPModelPath",true,"osm")
     inp_file = OpenStudio::Ruleset::OSArgument.makeStringArgument("inp_file", true)
     inp_file.setDisplayName("inp_file")
-    inp_file.setDescription("Full path of DOE 2.2 inp file.")
+    inp_file.setDescription("Full path of DOE 2.2 inp file. USE FORWARD SLASH ONLY IN PATH")
     args << inp_file
 
     return args
