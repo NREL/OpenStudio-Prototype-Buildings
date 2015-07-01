@@ -3,16 +3,16 @@
 class OpenStudio::Model::CoilCoolingDXSingleSpeed
 
 
-  def setStandardEfficiencyAndCurves(template, hvac_standards)
+  def setStandardEfficiencyAndCurves(template, standards)
   
     successfully_set_all_properties = true
   
-    unitary_acs = hvac_standards['unitary_acs']
-    heat_pumps = hvac_standards['heat_pumps']
-    curve_biquadratics = hvac_standards['curve_biquadratics']
-    curve_quadratics = hvac_standards['curve_quadratics']
-    curve_bicubics = hvac_standards['curve_bicubics']
-    curve_cubics = hvac_standards['curve_cubics']
+    unitary_acs = standards['unitary_acs']
+    heat_pumps = standards['heat_pumps']
+    curve_biquadratics = standards['curve_biquadratics']
+    curve_quadratics = standards['curve_quadratics']
+    curve_bicubics = standards['curve_bicubics']
+    curve_cubics = standards['curve_cubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -20,6 +20,10 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     search_criteria['template'] = template
     cooling_type = self.condenserType
     search_criteria['cooling_type'] = cooling_type
+    
+    # TODO Standards - add split system vs single package to model
+    # For now, assume single package as default
+    subcategory = 'Single Package'
     
     # Determine the heating type if unitary or zone hvac
     heat_pump = false
@@ -34,6 +38,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       elsif self.containingZoneHVACComponent.is_initialized
         containing_comp = containingZoneHVACComponent.get
         if containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
+          subcategory = 'PTAC'
           htg_coil = containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.get.heatingCoil
           if htg_coil.to_CoilHeatingElectric.is_initialized
             heating_type = 'Electric Resistance or None'          
@@ -70,12 +75,9 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     unless heating_type.nil?
       search_criteria['heating_type'] = heating_type
     end
-    
-    # TODO Standards - add split system vs single package to model
-    # For now, assume single package
-    subcategory = 'Single Package'
-    search_criteria['subcategory'] = subcategory
 
+    search_criteria['subcategory'] = subcategory
+    
     # Get the coil capacity
     capacity_w = nil
     if self.ratedTotalCoolingCapacity.is_initialized
@@ -83,7 +85,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     elsif self.autosizedRatedTotalCoolingCapacity.is_initialized
       capacity_w = self.autosizedRatedTotalCoolingCapacity.get
     else
-      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
+      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end    
@@ -95,60 +97,60 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     # Lookup efficiencies depending on whether it is a unitary AC or a heat pump
     ac_props = nil
     if heat_pump == true
-      ac_props = find_object(heat_pumps, search_criteria, capacity_btu_per_hr)
+      ac_props = self.model.find_object(heat_pumps, search_criteria, capacity_btu_per_hr)
     else
-      ac_props = find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
+      ac_props = self.model.find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
     end
    
     # Check to make sure properties were found
     if ac_props.nil?
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find efficiency info, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find efficiency info, cannot apply efficiency standard.")
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end
 
     # Make the COOL-CAP-FT curve
-    cool_cap_ft = self.model.add_curve(ac_props["cool_cap_ft"], hvac_standards)
+    cool_cap_ft = self.model.add_curve(ac_props["cool_cap_ft"], standards)
     if cool_cap_ft
       self.setTotalCoolingCapacityFunctionOfTemperatureCurve(cool_cap_ft)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
     # Make the COOL-CAP-FFLOW curve
-    cool_cap_fflow = self.model.add_curve(ac_props["cool_cap_fflow"], hvac_standards)
+    cool_cap_fflow = self.model.add_curve(ac_props["cool_cap_fflow"], standards)
     if cool_cap_fflow
       self.setTotalCoolingCapacityFunctionOfFlowFractionCurve(cool_cap_fflow)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_cap_fflow curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_cap_fflow curve, will not be set.")
       successfully_set_all_properties = false
     end
     
     # Make the COOL-EIR-FT curve
-    cool_eir_ft = self.model.add_curve(ac_props["cool_eir_ft"], hvac_standards)
+    cool_eir_ft = self.model.add_curve(ac_props["cool_eir_ft"], standards)
     if cool_eir_ft
       self.setEnergyInputRatioFunctionOfTemperatureCurve(cool_eir_ft)  
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
     # Make the COOL-EIR-FFLOW curve
-    cool_eir_fflow = self.model.add_curve(ac_props["cool_eir_fflow"], hvac_standards)
+    cool_eir_fflow = self.model.add_curve(ac_props["cool_eir_fflow"], standards)
     if cool_eir_fflow
       self.setEnergyInputRatioFunctionOfFlowFractionCurve(cool_eir_fflow)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_eir_fflow curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_eir_fflow curve, will not be set.")
       successfully_set_all_properties = false
     end
     
     # Make the COOL-PLF-FPLR curve
-    cool_plf_fplr = self.model.add_curve(ac_props["cool_plf_fplr"], hvac_standards)
+    cool_plf_fplr = self.model.add_curve(ac_props["cool_plf_fplr"], standards)
     if cool_plf_fplr
       self.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
       successfully_set_all_properties = false
     end 
  
@@ -160,7 +162,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       min_seer = ac_props['minimum_seasonal_energy_efficiency_ratio']
       cop = seer_to_cop(min_seer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
-      OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
     end
     
     # If specified as EER
@@ -168,7 +170,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       min_eer = ac_props['minimum_energy_efficiency_ratio']
       cop = eer_to_cop(min_eer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER")
-      OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.CoilCoolingDXSingleSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
     end
 
     # Set the efficiency values

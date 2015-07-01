@@ -102,11 +102,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     climate_zone = runner.getStringArgumentValue('climate_zone',user_arguments)
 
     # Turn debugging output on/off
-    debug = false    
+    @debug = false    
     
     # Open a channel to log info/warning/error messages
     @msg_log = OpenStudio::StringStreamLogSink.new
-    if debug
+    if @debug
       @msg_log.setLogLevel(OpenStudio::Debug)
     else
       @msg_log.setLogLevel(OpenStudio::Info)
@@ -126,26 +126,22 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     require_relative 'resources/Weather.Model'
     # HVAC standards
     require_relative 'resources/Standards.Model'
-    require_relative 'resources/Standards.Model.2' # TODO merge these two Standards.Model files after changes calm down
     
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
     # as an instance variable?
     standards_data_dir = "#{File.dirname(__FILE__)}/resources"
 
-    # Load the hvac standards from JSON
-    hvac_standards_path = "#{File.dirname(__FILE__)}/resources/OpenStudio_HVAC_Standards.json"
-    temp = File.read(hvac_standards_path.to_s)
-    hvac_standards = JSON.parse(temp)
+    # Load the Openstudio_Standards JSON files
+    model.load_openstudio_standards_json(standards_data_dir)
+
+    # Retrieve the Prototype Inputs from JSON
     search_criteria = {
       'template' => building_vintage,
       'climate_zone' => climate_zone,
       'building_type' => building_type,
     }
-    model.hvac_standards = hvac_standards
-
-    # Load the Prototype Inputs from JSON
-    prototype_input = find_object(hvac_standards['prototype_inputs'], search_criteria)
+    prototype_input = model.find_object(model.standards['prototype_inputs'], search_criteria)
     if prototype_input.nil?
       @runner.registerError("Could not find prototype inputs for #{search_criteria}, cannot create model.")
       log_msgs
@@ -170,8 +166,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     end
 
     # Make the prototype building
-    space_building_type_search = building_type
-    construction_type_search = building_type
+    alt_search_name = building_type
 
     case building_type
     when 'SecondarySchool'
@@ -202,17 +197,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       else
         geometry_file = 'Geometry.small_office.osm'
       end
-      space_building_type_search = 'Office'
-      construction_type_search = 'Office'
+      alt_search_name = 'Office'
     when 'MediumOffice'
       require_relative 'resources/Prototype.medium_office'
       geometry_file = 'Geometry.medium_office.osm'
-      space_building_type_search = 'Office'
-      construction_type_search = 'Office'
+      alt_search_name = 'Office'
     when 'LargeOffice'
       require_relative 'resources/Prototype.large_office'
-      space_building_type_search = 'Office'
-      construction_type_search = 'Office'
+      alt_search_name = 'Office'
       case building_vintage
         when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
           geometry_file = 'Geometry.large_office.osm'
@@ -241,20 +233,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         else
           geometry_file = 'Geometry.large_hotel.2013.osm'
       end
-      space_building_type_search = 'LargeHotel'
     when 'Warehouse'
       require_relative 'resources/Prototype.warehouse'
       geometry_file = 'Geometry.warehouse.osm'
     when 'RetailStandalone'
       require_relative 'resources/Prototype.retail_standalone'
       geometry_file = 'Geometry.retail_standalone.osm'
-      space_building_type_search = 'Retail'
-      construction_type_search = 'Retail'
+      alt_search_name = 'Retail'
     when 'RetailStripmall'
       require_relative 'resources/Prototype.retail_stripmall'
       geometry_file = 'Geometry.retail_stripmall.osm'
-      space_building_type_search = 'StripMall'
-      construction_type_search = 'StripMall'
+      alt_search_name = 'StripMall'
     when 'QuickServiceRestaurant'
       require_relative 'resources/Prototype.quick_service_restaurant'
       geometry_file = 'Geometry.quick_service_restaurant.osm'
@@ -275,23 +264,33 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_geometry(geometry_file)
     model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
-    model.assign_space_type_stubs(space_building_type_search, space_type_map)
-    model.add_loads(building_vintage, climate_zone, standards_data_dir)
+    
+    if building_type == "SmallHotel"
+      building_story_map = model.define_building_story_map(building_type, building_vintage, climate_zone)
+      model.assign_building_story(building_type, building_vintage, climate_zone, building_story_map)
+    end
+    
+    model.assign_space_type_stubs(alt_search_name, space_type_map)    
+    model.add_loads(building_vintage, climate_zone)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
-    # model.add_constructions('Office', building_vintage, climate_zone, standards_data_dir)
-    model.add_constructions(construction_type_search, building_vintage, climate_zone, standards_data_dir)
+    model.add_constructions(alt_search_name, building_vintage, climate_zone)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
-    model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
-    model.add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+    model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, model.standards)
+    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, model.standards, space_type_map)
+    model.add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, model.standards)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
     # Set the building location, weather files, ddy files, etc.
-    model.add_design_days_and_weather_file(climate_zone)
+    model.add_design_days_and_weather_file(model.standards, alt_search_name, building_vintage, climate_zone)
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
+    
+    # # raise the upper limit of surface temperature
+    # heat_balance_algorithm = Openstudio::Model::getUniqueObject<HeatBalanceAlgorithm>(model)
+    # heat_balance_algorithm = model.getOptionalUniqueObject<HeatBalanceAlgorithm>()
+    # heat_balance_algorithm.setSurfaceTemperatureUpperLimit(250)
 
     # Assign the standards to the model
     model.template = building_vintage
@@ -328,13 +327,16 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
-   
+
     # Add daylighting controls per standard
-    model.addDaylightingControls
+    # TODO: There are some bugs in the function
+    if building_type != "LargeHotel"
+      model.addDaylightingControls
+    end
    
    
     # Add output variables for debugging
-    if debug
+    if @debug
       model.request_timeseries_outputs
     end
     
@@ -367,6 +369,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
           @runner.registerWarning("[#{msg.logChannel}] #{msg.logMessage}")
         elsif msg.logLevel == OpenStudio::Error
           @runner.registerError("[#{msg.logChannel}] #{msg.logMessage}")
+        elsif msg.logLevel == OpenStudio::Debug && @debug
+          @runner.registerInfo("DEBUG - #{msg.logMessage}")
         end
       end
     end

@@ -1,0 +1,54 @@
+{
+  "curve_cubics": [
+    {
+      "name": "Boiler Constant Efficiency Curve",
+      "coeff_1": 1.0,
+      "coeff_2": 0.0,
+      "coeff_3": 0.0,
+      "coeff_4": 0.0,
+      "min_x": 0.0,
+      "max_x": 1.0,
+      "notes": "From DOE Reference Building"
+    },
+    {
+      "name": "Boiler with Minimum Turndown",
+      "coeff_1": 0.7791,
+      "coeff_2": 1.4745,
+      "coeff_3": -2.5795,
+      "coeff_4": 1.3467,
+      "min_x": 0.0,
+      "max_x": 1.3,
+      "notes": "From Regression of Prototype Building EMS"
+    },
+    {
+      "name": "Boiler with No Minimum Turndown",
+      "coeff_1": 0.7463,
+      "coeff_2": 1.3196,
+      "coeff_3": -2.2154,
+      "coeff_4": 1.1674,
+      "min_x": 0.0,
+      "max_x": 1.3,
+      "notes": "From Regression of Prototype Building EMS"
+    },
+    {
+      "name": "DOE Ref DX Clg Coil Cool-CAP-fFlow",
+      "coeff_1": 1.0,
+      "coeff_2": 0.0,
+      "coeff_3": 0.0,
+      "coeff_4": 0.0,
+      "min_x": -100.0,
+      "max_x": 100.0,
+      "notes": "From DOE Pre-1980 Reference Building"
+    },
+    {
+      "name": "DOE Ref DX Clg Coil Cool-EIR-fFlow",
+      "coeff_1": 1.0,
+      "coeff_2": 0.0,
+      "coeff_3": 0.0,
+      "coeff_4": 0.0,
+      "min_x": -100.0,
+      "max_x": 100.0,
+      "notes": "From DOE Pre-1980 Reference Building"
+    }
+  ]
+}

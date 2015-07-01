@@ -2,12 +2,12 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::CoilCoolingDXTwoSpeed
 
-  def setStandardEfficiencyAndCurves(template, hvac_standards)
+  def setStandardEfficiencyAndCurves(template, standards)
   
-    unitary_acs = hvac_standards['unitary_acs']
-    #curve_biquadratics = hvac_standards['curve_biquadratics']
-    #curve_quadratics = hvac_standards['curve_quadratics']
-    #curve_bicubics = hvac_standards['curve_bicubics']
+    unitary_acs = standards['unitary_acs']
+    #curve_biquadratics = standards['curve_biquadratics']
+    #curve_quadratics = standards['curve_quadratics']
+    #curve_bicubics = standards['curve_bicubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -79,69 +79,69 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
     capacity_kbtu_per_hr = OpenStudio.convert(capacity_w, 'W', 'kBtu/hr').get
     
     
-    ac_props = find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
+    ac_props = self.model.find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
     return false if ac_props.nil?
     
     # Make the total COOL-CAP-FT curve
-    tot_cool_cap_ft = self.model.add_curve(ac_props["cool_cap_ft"], hvac_standards)
+    tot_cool_cap_ft = self.model.add_curve(ac_props["cool_cap_ft"], standards)
     if tot_cool_cap_ft
       self.setTotalCoolingCapacityFunctionOfTemperatureCurve(tot_cool_cap_ft)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
     # Make the total COOL-CAP-FFLOW curve
-    tot_cool_cap_fflow = self.model.add_curve(ac_props["cool_cap_fflow"], hvac_standards)
+    tot_cool_cap_fflow = self.model.add_curve(ac_props["cool_cap_fflow"], standards)
     if tot_cool_cap_fflow
       self.setTotalCoolingCapacityFunctionOfFlowFractionCurve(tot_cool_cap_fflow)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_cap_fflow curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_cap_fflow curve, will not be set.")
       successfully_set_all_properties = false
     end
     
     # Make the COOL-EIR-FT curve
-    cool_eir_ft = self.model.add_curve(ac_props["cool_eir_ft"], hvac_standards)
+    cool_eir_ft = self.model.add_curve(ac_props["cool_eir_ft"], standards)
     if cool_eir_ft
       self.setEnergyInputRatioFunctionOfTemperatureCurve(cool_eir_ft)  
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
     # Make the COOL-EIR-FFLOW curve
-    cool_eir_fflow = self.model.add_curve(ac_props["cool_eir_fflow"], hvac_standards)
+    cool_eir_fflow = self.model.add_curve(ac_props["cool_eir_fflow"], standards)
     if cool_eir_fflow
       self.setEnergyInputRatioFunctionOfFlowFractionCurve(cool_eir_fflow)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_eir_fflow curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_eir_fflow curve, will not be set.")
       successfully_set_all_properties = false
     end
     
     # Make the COOL-PLF-FPLR curve
-    cool_plf_fplr = self.model.add_curve(ac_props["cool_plf_fplr"], hvac_standards)
+    cool_plf_fplr = self.model.add_curve(ac_props["cool_plf_fplr"], standards)
     if cool_plf_fplr
       self.setPartLoadFractionCorrelationCurve(cool_plf_fplr)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
       successfully_set_all_properties = false
     end
     
     # Make the low speed COOL-CAP-FT curve
-    low_speed_cool_cap_ft = self.model.add_curve(ac_props["cool_cap_ft"], hvac_standards)
+    low_speed_cool_cap_ft = self.model.add_curve(ac_props["cool_cap_ft"], standards)
     if low_speed_cool_cap_ft
       self.setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(low_speed_cool_cap_ft)
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
     # Make the low speed COOL-EIR-FT curve
-    low_speed_cool_eir_ft = self.model.add_curve(ac_props["cool_eir_ft"], hvac_standards)
+    low_speed_cool_eir_ft = self.model.add_curve(ac_props["cool_eir_ft"], standards)
     if low_speed_cool_eir_ft
       self.setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(low_speed_cool_eir_ft)  
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
       successfully_set_all_properties = false
     end
 
@@ -153,7 +153,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
       min_seer = ac_props['minimum_seasonal_energy_efficiency_ratio']
       cop = seer_to_cop(min_seer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
-      OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
     end
     
     # If specified as EER
@@ -161,7 +161,7 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
       min_eer = ac_props['minimum_energy_efficiency_ratio']
       cop = eer_to_cop(min_eer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER")
-      OpenStudio::logFree(OpenStudio::Info, 'openstudio.hvac_standards.CoilCoolingDXTwoSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
     end
 
     # Set the efficiency values

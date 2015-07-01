@@ -2,12 +2,12 @@
 # open the class to add methods to return sizing values
 class OpenStudio::Model::ChillerElectricEIR
 
-  def setStandardEfficiencyAndCurves(template, hvac_standards)
+  def setStandardEfficiencyAndCurves(template, standards)
   
-    chillers = hvac_standards['chillers']
-    curve_biquadratics = hvac_standards['curve_biquadratics']
-    curve_quadratics = hvac_standards['curve_quadratics']
-    curve_bicubics = hvac_standards['curve_bicubics']
+    chillers = standards['chillers']
+    curve_biquadratics = standards['curve_biquadratics']
+    curve_quadratics = standards['curve_quadratics']
+    curve_bicubics = standards['curve_bicubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -51,7 +51,7 @@ class OpenStudio::Model::ChillerElectricEIR
     elsif self.autosizedReferenceCapacity.is_initialized
       capacity_w = self.autosizedReferenceCapacity.get
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name} capacity is not available, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name} capacity is not available, cannot apply efficiency standard.")
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end
@@ -62,40 +62,40 @@ class OpenStudio::Model::ChillerElectricEIR
     # Get the chiller minimum efficiency
     kw_per_ton = nil
     cop = nil
-    chlr_props = find_object(chillers, search_criteria, capacity_tons)
+    chlr_props = self.model.find_object(chillers, search_criteria, capacity_tons)
     if chlr_props
       kw_per_ton = chlr_props["minimum_full_load_efficiency"]
       cop = kw_per_ton_to_cop(kw_per_ton)
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name}, cannot find minimum full load eff, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name}, cannot find minimum full load eff, will not be set.")
       successfully_set_all_properties = false
     end
     
     # Make the CAPFT curve
-    cool_cap_ft = self.model.add_curve(chlr_props['capft'], hvac_standards)
+    cool_cap_ft = self.model.add_curve(chlr_props['capft'], standards)
     if cool_cap_ft
       self.setCoolingCapacityFunctionOfTemperature(cool_cap_ft)
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_cap_ft curve, will not be set.")
       successfully_set_all_properties = false
     end    
     
     # Make the EIRFT curve
-    cool_eir_ft = self.model.add_curve(chlr_props['eirft'], hvac_standards)
+    cool_eir_ft = self.model.add_curve(chlr_props['eirft'], standards)
     if cool_eir_ft
       self.setElectricInputToCoolingOutputRatioFunctionOfTemperature(cool_eir_ft)  
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_eir_ft curve, will not be set.")
       successfully_set_all_properties = false
     end    
     
     # Make the EIRFPLR curve
     # which may be either a CurveBicubic or a CurveQuadratic based on chiller type
-    cool_plf_fplr = self.model.add_curve(chlr_props['eirfplr'], hvac_standards)
+    cool_plf_fplr = self.model.add_curve(chlr_props['eirfplr'], standards)
     if cool_plf_fplr
       self.setElectricInputToCoolingOutputRatioFunctionOfPLR(cool_plf_fplr)
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.hvac_standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.ChillerElectricEIR", "For #{self.name}, cannot find cool_plf_fplr curve, will not be set.")
       successfully_set_all_properties = false
     end     
 
