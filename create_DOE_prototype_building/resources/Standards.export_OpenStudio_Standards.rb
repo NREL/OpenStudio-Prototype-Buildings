@@ -95,11 +95,8 @@ begin
   # cols_to_skip << 'service_water_heating_schedule'
   cols_to_skip << 'exhaust_per_area'
   cols_to_skip << 'exhaust_per_unit'
-  cols_to_skip << 'exhaust_fan_efficiency'
-  cols_to_skip << 'exhaust_fan_pressure_rise'
   cols_to_skip << 'exhaust_fan_power'
   cols_to_skip << 'exhaust_fan_power_per_area'
-  cols_to_skip << 'exhaust_schedule'  
   
   # List of columns that are boolean
   # (rubyXL returns 0 or 1, will translate to true/false)

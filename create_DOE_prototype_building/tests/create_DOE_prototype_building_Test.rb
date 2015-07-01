@@ -6,6 +6,7 @@ require_relative '../measure.rb'
 require 'fileutils'
 require 'socket'
 
+
 # Add a "dig" method to Hash to check if deeply nested elements exist
 # From: http://stackoverflow.com/questions/1820451/ruby-style-how-to-check-whether-a-nested-hash-element-exists
 class Hash
@@ -17,6 +18,7 @@ class Hash
 end
 
 class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
+
   # Create a set of models, return a list of failures
   def create_models(bldg_types, vintages, climate_zones)
 
@@ -73,23 +75,24 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           
         end     
       end
-    end 
-        
+    end
+
     #### Return the list of failures
     return failures
-  
+
   end
 
-  # Create a set of models, return a list of failures  
+
+  # Create a set of models, return a list of failures
   def run_models(bldg_types, vintages, climate_zones)
-  
+
     # Open a channel to log info/warning/error messages
     msg_log = OpenStudio::StringStreamLogSink.new
     msg_log.setLogLevel(OpenStudio::Info)
-  
+
     #### Run the specified models
     failures = []
-    
+
     # Make a run manager and queue up the sizing run
     run_manager_db_path = OpenStudio::Path.new("#{Dir.pwd}/run.db")
     run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
@@ -123,7 +126,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             failures << "Error - #{model_name} - #{model_path_string} couldn't be found"
             return failures
           end
-          
+
           # Delete the old ModelToIdf and SizingRun1 directories if they exist
           FileUtils.rm_rf("#{model_directory}/ModelToIdf")
           FileUtils.rm_rf("#{model_directory}/SizingRun1")
@@ -132,9 +135,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           forward_translator = OpenStudio::EnergyPlus::ForwardTranslator.new
           idf = forward_translator.translateModel(model)
           idf_path_string = "#{model_directory}/#{model_name}.idf"
-          idf_path = OpenStudio::Path.new(idf_path_string)    
+          idf_path = OpenStudio::Path.new(idf_path_string)
           idf.save(idf_path,true)
-          
+
           # Find the weather file
           epw_path = nil
           if model.weatherFile.is_initialized
@@ -154,10 +157,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             failures << "Error - #{model_name} - Model has not been assigned a weather file."
             return failures
           end
-          
+
           # Set the output path
           output_path = OpenStudio::Path.new("#{model_directory}/")
-          
+
           # Create a new workflow for the model to go through
           workflow = OpenStudio::Runmanager::Workflow.new
           workflow.addJob(OpenStudio::Runmanager::JobType.new('ModelToIdf'))
@@ -168,20 +171,20 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           job = workflow.create(output_path, model_path, epw_path)
 
           run_manager.enqueue(job, true)
-          
+
         end
       end
     end
-    
+
     # Start the runs and wait for them to finish.
     while run_manager.workPending
-      sleep 1
+      sleep 5
       OpenStudio::Application::instance.processEvents
     end
-    
+
     #### Return the list of failures
     return failures
-    
+
   end
   
   # Create a set of models, return a list of failures  
@@ -396,11 +399,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # For Andrew Parker in NREL
   if hostname == "aparker-26487s" # TODO: Andrew update the pc names
     # Test the Secondary School in the PTool vintages and climate zones
-    def test_secondary_school
+    def dont_test_secondary_school
 
       bldg_types = ['SecondarySchool']
-      vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
-      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+      vintages = ['90.1-2010'] #['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-5A']#'ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
       all_failures = []
 
@@ -446,7 +449,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
 
-    def test_primary_school
+    def dont_test_primary_school
 
       bldg_types = ['PrimarySchool']
       vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',
@@ -469,6 +472,29 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     end
     
+    def test_large_office
+
+      bldg_types = ['LargeOffice']
+      vintages = ['90.1-2010'] #['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-5A', 'ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end    
+       
   end
 
   if hostname == "m5zmac"

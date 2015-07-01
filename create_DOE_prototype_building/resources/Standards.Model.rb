@@ -82,6 +82,7 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_curve_biquadratics.json'
     standards_files << 'OpenStudio_Standards_curve_cubics.json'
     standards_files << 'OpenStudio_Standards_curve_quadratics.json'
+    standards_files << 'OpenStudio_Standards_exterior.json'
     standards_files << 'OpenStudio_Standards_ground_temperatures.json'
     standards_files << 'OpenStudio_Standards_heat_pumps.json'
     standards_files << 'OpenStudio_Standards_materials.json'
@@ -211,9 +212,9 @@ class OpenStudio::Model::Model
         # Skip objects that don't have values specified for minimum_capacity and maximum_capacity
         next if object['minimum_capacity'].nil? || object['maximum_capacity'].nil?
         # Skip objects whose the minimum capacity is below the specified capacity
-        next if capacity <= object['minimum_capacity']
+        next if capacity <= object['minimum_capacity'].to_f
         # Skip objects whose max
-        next if capacity > object['maximum_capacity']
+        next if capacity > object['maximum_capacity'].to_f
         # Found a matching object      
         matching_objects << object
       end
@@ -237,7 +238,7 @@ class OpenStudio::Model::Model
   # Create a schedule from the openstudio standards dataset.
   # TODO make return an OptionalScheduleRuleset
   def add_schedule(schedule_name)
-
+    return nil if schedule_name == nil or schedule_name == ""
     # First check model and return schedule if it already exists
     self.getSchedules.each do |schedule|
       if schedule.name.get.to_s == schedule_name
@@ -462,10 +463,10 @@ class OpenStudio::Model::Model
       puts "#{name}"
       space_type.setDesignSpecificationOutdoorAir(ventilation)
       ventilation.setOutdoorAirMethod('Sum')
-      unless ventilation_per_area.nil? || ventilation_per_area.to_f == 0 
+      unless ventilation_per_area.nil? || ventilation_per_area.to_f  == 0
         ventilation.setOutdoorAirFlowperFloorArea(OpenStudio.convert(ventilation_per_area, 'ft^3/min*ft^2', 'm^3/s*m^2').get)
       end
-      unless ventilation_per_person.nil? || ventilation_per_person.to_f == 0 
+      unless  ventilation_per_person.nil? || ventilation_per_person.to_f == 0
         ventilation.setOutdoorAirFlowperPerson(OpenStudio.convert(ventilation_per_person, 'ft^3/min*person', 'm^3/s*person').get)
       end
       unless ventilation_ach.nil? || ventilation_ach.to_f == 0

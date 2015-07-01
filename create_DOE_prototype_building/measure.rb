@@ -147,13 +147,13 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       log_msgs
       return false
     end
-
+    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
     prototype_input.each do |key, value|
       next if value.nil?
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "  #{key} = #{value}")
     end
-
+    
     # Make a directory to save the resulting models for debugging
     build_dir = "#{Dir.pwd}/build"
     if !Dir.exists?(build_dir)
@@ -360,8 +360,9 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
         next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
             msg.logChannel.include?("runmanager") || # RunManager messages
             msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-            msg.logChannel.include?("Translator") # Forward translator and geometry translator
-
+            msg.logChannel.include?("Translator") || # Forward translator and geometry translator
+            msg.logMessage.include?("UseWeatherFile") # 'UseWeatherFile' is not yet a supported option for YearDescription
+            
         # Report the message in the correct way
         if msg.logLevel == OpenStudio::Info
           @runner.registerInfo(msg.logMessage)
