@@ -21,6 +21,10 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     cooling_type = self.condenserType
     search_criteria['cooling_type'] = cooling_type
     
+    # TODO Standards - add split system vs single package to model
+    # For now, assume single package as default
+    subcategory = 'Single Package'
+    
     # Determine the heating type if unitary or zone hvac
     heat_pump = false
     heating_type = nil
@@ -34,6 +38,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       elsif self.containingZoneHVACComponent.is_initialized
         containing_comp = containingZoneHVACComponent.get
         if containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
+          subcategory = 'PTAC'
           htg_coil = containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.get.heatingCoil
           if htg_coil.to_CoilHeatingElectric.is_initialized
             heating_type = 'Electric Resistance or None'          
@@ -70,12 +75,9 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     unless heating_type.nil?
       search_criteria['heating_type'] = heating_type
     end
-    
-    # TODO Standards - add split system vs single package to model
-    # For now, assume single package
-    subcategory = 'Single Package'
-    search_criteria['subcategory'] = subcategory
 
+    search_criteria['subcategory'] = subcategory
+    
     # Get the coil capacity
     capacity_w = nil
     if self.ratedTotalCoolingCapacity.is_initialized

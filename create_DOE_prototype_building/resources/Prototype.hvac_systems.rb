@@ -1655,12 +1655,29 @@ class OpenStudio::Model::Model
       
     # Make a SAC for each group of thermal zones
     parts = Array.new
+    space_type_names = Array.new
     thermal_zones.each do |zone|
       name = zone.name
       parts << name.get
+      #get space types
+      zone.spaces.each do |space|
+        space_type_name = space.spaceType.get.standardsSpaceType.get
+        space_type_names << space_type_name
+      end
+      
+      # Zone sizing
+      sizing_zone = zone.sizingZone
+      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(50.0)
+      sizing_zone.setZoneCoolingDesignSupplyAirHumidityRatio(0.008)
+      sizing_zone.setZoneHeatingDesignSupplyAirHumidityRatio(0.008)
+
     end
     thermal_zone_name = parts.join(' - ')
     
+    if space_type_names.include? 'Meeting'
+      hvac_op_sch = self.add_schedule(prototype_input['sac_operation_schedule_meeting'])
+    end
       
     air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
     air_loop.setName("#{thermal_zone_name} SAC")
@@ -2118,6 +2135,13 @@ class OpenStudio::Model::Model
     
     # Make a PTAC for each zone
     thermal_zones.each do |zone|
+      
+      # Zone sizing
+      sizing_zone = zone.sizingZone
+      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(50.0)
+      sizing_zone.setZoneCoolingDesignSupplyAirHumidityRatio(0.008)
+      sizing_zone.setZoneHeatingDesignSupplyAirHumidityRatio(0.008)
 
       # add fan
       fan = nil
@@ -2925,7 +2949,7 @@ class OpenStudio::Model::Model
       'building_type' => building_type,
       'space_type' => space_type_name
     }
-    data = find_object(@spc_types,search_criteria)
+    data = find_object(self.standards['space_types'],search_criteria)
     space = self.getSpaceByName(space_name)
     space = space.get
     space_area = OpenStudio.convert(space.floorArea,'m^2','ft^2').get   # ft2

@@ -49,6 +49,22 @@ class OpenStudio::Model::Model
     return true
   end
 
+  def assign_building_story(building_type, building_vintage, climate_zone, building_story_map)
+    building_story_map.each do |building_story_name, space_names|
+      stub_building_story = OpenStudio::Model::BuildingStory.new(self)
+      stub_building_story.setName(building_story_name)
+      
+      space_names.each do |space_name|
+        space = self.getSpaceByName(space_name)
+        next if space.empty?
+        space = space.get
+        space.setBuildingStory(stub_building_story)
+      end
+    end
+    
+    return true
+  end
+
   def add_loads(building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying space types (loads)')
@@ -97,8 +113,10 @@ class OpenStudio::Model::Model
   end
 
   def add_constructions(building_type, building_vintage, climate_zone)
+    puts "entering into add_constructions"
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
+    is_residential = "No"  #default is nonresidential for building level
 
     # Assign construction to adiabatic construction
     # Assign a material to all internal mass objects
@@ -144,7 +162,7 @@ class OpenStudio::Model::Model
     end
 
     # Make the default contruction set for the building
-    bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil)
+    bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil, is_residential)
     if bldg_def_const_set.is_initialized
       self.getBuilding.setDefaultConstructionSet(bldg_def_const_set.get)
     else
@@ -179,17 +197,53 @@ class OpenStudio::Model::Model
 
       # Attempt to make a construction set for this space type
       # and assign it if it can be created.
-      spc_type_const_set = self.add_construction_set(building_vintage, climate_zone, stds_building_type, stds_spc_type)
+      spc_type_const_set = self.add_construction_set(building_vintage, climate_zone, stds_building_type, stds_spc_type, is_residential)
       if spc_type_const_set.is_initialized
         space_type.setDefaultConstructionSet(spc_type_const_set.get)
       end
     
     end
     
+    # Add construction from story level, especially for the case when there are residential and nonresidential construction in the same building
+    if building_type == 'SmallHotel'
+      self.getBuildingStorys.each do |story|
+        next if story.name.get == 'AtticStory'
+        puts "story = #{story.name}"
+        is_residential = "No"  #default for building story level
+        exterior_spaces_area = 0
+        story_exterior_residential_area = 0
+        
+        # calculate the propotion of residential area in exterior spaces, see if this story is residential or not
+        story::spaces.each do |space|
+          next if space.exteriorWallArea == 0
+          space_type = space.spaceType.get
+          if space_type.standardsSpaceType.is_initialized
+            space_type_name = space_type.standardsSpaceType.get
+          end
+          data = self.find_object(self.standards['space_types'], {'template'=>building_vintage, 'building_type'=>building_type, 'space_type'=>space_type_name})
+          exterior_spaces_area += space.floorArea
+          story_exterior_residential_area += space.floorArea if data['is_residential'] == "Yes"   # "Yes" is residential, "No" or nil is nonresidential
+        end
+        is_residential = "Yes" if story_exterior_residential_area/exterior_spaces_area >= 0.5
+        next if is_residential == "No"
+        
+        # if the story is identified as residential, assign residential construction set to the spaces on this story.
+        building_story_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil, is_residential)
+        if building_story_const_set.is_initialized
+          story::spaces.each do |space|
+            space.setDefaultConstructionSet(building_story_const_set.get)
+          end
+        end
+      end
+      # Standars: For whole buildings or floors where 50% or more of the spaces adjacent to exterior walls are used primarily for living and sleeping quarters
+      
+    end    
+    
     # Make skylights have the same construction as fixed windows
     # sub_surface = self.getBuilding.defaultConstructionSet.get.defaultExteriorSubSurfaceConstructions.get
     # window_construction = sub_surface.fixedWindowConstruction.get
     # sub_surface.setSkylightConstruction(window_construction)
+
 
     # Assign a material to all internal mass objects
     material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
@@ -215,8 +269,6 @@ class OpenStudio::Model::Model
         internal_mass.internalMassDefinition.setConstruction(construction)
       end
     end
-
-
 
     # get all the space types that are conditioned
     conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)

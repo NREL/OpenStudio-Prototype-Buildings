@@ -204,7 +204,7 @@ class OpenStudio::Model::Model
       # Round up if capacity is an integer
       if capacity == capacity.round
         capacity = capacity + (capacity * 0.01)
-      end    
+      end
       search_criteria_matching_objects.each do |object|
         # Skip objects that don't have fields for minimum_capacity and maximum_capacity
         next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
@@ -414,11 +414,20 @@ class OpenStudio::Model::Model
       # Create the lighting definition
       lights_def = OpenStudio::Model::LightsDefinition.new(self)
       lights_def.setName("#{name} Lights Definition")
+      lights_frac_to_return_air = data['lighting_fraction_to_return_air']
+      lights_frac_radiant = data['lighting_fraction_radiant']
+      lights_frac_visible = data['lighting_fraction_visible']
       unless  lighting_per_area == 0 || lighting_per_area.nil?
         lights_def.setWattsperSpaceFloorArea(OpenStudio.convert(lighting_per_area, 'W/ft^2', 'W/m^2').get)
+        lights_def.setReturnAirFraction(lights_frac_to_return_air)
+        lights_def.setFractionRadiant(lights_frac_radiant)
+        lights_def.setFractionVisible(lights_frac_visible)
       end
       unless lighting_per_person == 0 || lighting_per_person.nil?
         lights_def.setWattsperPerson(OpenStudio.convert(lighting_per_person, 'W/person', 'W/person').get)
+        lights_def.setReturnAirFraction(lights_frac_to_return_air)
+        lights_def.setFractionRadiant(lights_frac_radiant)
+        lights_def.setFractionVisible(lights_frac_visible)
       end
 
       # Create the lighting instance and hook it up to the space type
@@ -443,10 +452,7 @@ class OpenStudio::Model::Model
     unless ventilation_per_area  == 0 || ventilation_per_area.nil? then make_ventilation = true  end
     unless ventilation_per_person == 0 || ventilation_per_person.nil? then make_ventilation = true end
     unless ventilation_ach == 0 || ventilation_ach.nil? then make_ventilation = true end
-    puts "ventilation_per_area = #{ventilation_per_area}"
-    puts "ventilation_per_person = #{ventilation_per_person}"
-    puts "ventilation_ach = #{ventilation_ach}"
-    puts "spacetype = #{spc_type}"
+
 
     if make_ventilation == true
 
@@ -456,13 +462,13 @@ class OpenStudio::Model::Model
       puts "#{name}"
       space_type.setDesignSpecificationOutdoorAir(ventilation)
       ventilation.setOutdoorAirMethod('Sum')
-      unless ventilation_per_area  == 0 || ventilation_per_area.nil?
+      unless ventilation_per_area.nil? || ventilation_per_area.to_f == 0 
         ventilation.setOutdoorAirFlowperFloorArea(OpenStudio.convert(ventilation_per_area, 'ft^3/min*ft^2', 'm^3/s*m^2').get)
       end
-      unless ventilation_per_person == 0 || ventilation_per_person.nil?
+      unless ventilation_per_person.nil? || ventilation_per_person.to_f == 0 
         ventilation.setOutdoorAirFlowperPerson(OpenStudio.convert(ventilation_per_person, 'ft^3/min*person', 'm^3/s*person').get)
       end
-      unless ventilation_ach == 0 || ventilation_ach.nil?
+      unless ventilation_ach.nil? || ventilation_ach.to_f == 0
         ventilation.setOutdoorAirFlowAirChangesperHour(ventilation_ach)
       end
     end
@@ -530,6 +536,9 @@ class OpenStudio::Model::Model
 
     make_electric_equipment = false
     elec_equip_per_area = data['electric_equipment_per_area']
+    elec_equip_frac_latent = data['electric_equipment_fraction_latent']
+    elec_equip_frac_radiant = data['electric_equipment_fraction_radiant']
+    elec_equip_frac_lost = data['electric_equipment_fraction_lost']
     unless elec_equip_per_area == 0 || elec_equip_per_area.nil? then make_electric_equipment = true end
 
     if make_electric_equipment == true
@@ -539,6 +548,9 @@ class OpenStudio::Model::Model
       elec_equip_def.setName("#{name} Electric Equipment Definition")
       unless  elec_equip_per_area == 0 || elec_equip_per_area.nil?
         elec_equip_def.setWattsperSpaceFloorArea(OpenStudio.convert(elec_equip_per_area, 'W/ft^2', 'W/m^2').get)
+        elec_equip_def.setFractionLatent(elec_equip_frac_latent)
+        elec_equip_def.setFractionRadiant(elec_equip_frac_radiant)
+        elec_equip_def.setFractionLost(elec_equip_frac_lost)
       end
 
       # Create the electric equipment instance and hook it up to the space type
@@ -558,6 +570,10 @@ class OpenStudio::Model::Model
 
     make_gas_equipment = false
     gas_equip_per_area = data['gas_equipment_per_area']
+    gas_equip_frac_latent = data['gas_equipment_fraction_latent']
+    gas_equip_frac_radiant = data['gas_equipment_fraction_radiant']
+    gas_equip_frac_lost = data['gas_equipment_fraction_lost']
+
     unless  gas_equip_per_area == 0 || gas_equip_per_area.nil? then make_gas_equipment = true end
 
     if make_gas_equipment == true
@@ -565,6 +581,9 @@ class OpenStudio::Model::Model
       # Create the gas equipment definition
       gas_equip_def = OpenStudio::Model::GasEquipmentDefinition.new(self)
       gas_equip_def.setName("#{name} Gas Equipment Definition")
+      gas_equip_def.setFractionLatent(gas_equip_frac_latent)
+      gas_equip_def.setFractionRadiant(gas_equip_frac_radiant)
+      gas_equip_def.setFractionLost(gas_equip_frac_lost)
       unless  gas_equip_per_area == 0 || gas_equip_per_area.nil?
         gas_equip_def.setWattsperSpaceFloorArea(OpenStudio.convert(gas_equip_per_area, 'Btu/hr*ft^2', 'W/m^2').get)
       end
@@ -677,7 +696,6 @@ class OpenStudio::Model::Model
   # Create a material from the openstudio standards dataset.
   # TODO make return an OptionalMaterial
   def add_material(material_name)
-    
     # First check model and return material if it already exists
     self.getMaterials.each do |material|
       if material.name.get.to_s == material_name
@@ -714,6 +732,7 @@ class OpenStudio::Model::Model
     elsif material_type == 'MasslessOpaqueMaterial'
       material = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
       material.setName(material_name)
+      material.setThermalResistance(OpenStudio.convert(data['resistance'].to_f, 'hr*ft^2*R/Btu', 'm^2*K/W').get)
 
       material.setConductivity(OpenStudio.convert(data['conductivity'].to_f, 'Btu*in/hr*ft^2*R', 'W/m*K').get)
       material.setDensity(OpenStudio.convert(data['density'].to_f, 'lb/ft^3', 'kg/m^3').get)
@@ -901,7 +920,8 @@ class OpenStudio::Model::Model
   
   # Create a construction set from the openstudio standards dataset.
   # Returns an Optional DefaultConstructionSet
-  def add_construction_set(template, clim, building_type, spc_type)
+  def add_construction_set(template, clim, building_type, spc_type, is_residential)
+    puts "entering into add_construction_set"
 
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
 
@@ -912,13 +932,16 @@ class OpenStudio::Model::Model
     end
  
     # Get the object data
-    data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
+    data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type, 'is_residential'=>is_residential})
     if !data
-      #OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
-      return construction_set
+      data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
+      if !data
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
+        return construction_set
+      end
     end 
   
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}")  
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}-is_residential#{is_residential}")  
   
     name = make_name(template, clim, building_type, spc_type)
 

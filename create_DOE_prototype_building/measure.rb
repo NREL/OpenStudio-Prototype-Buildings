@@ -264,7 +264,13 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_geometry(geometry_file)
     model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
-    model.assign_space_type_stubs(alt_search_name, space_type_map)
+    
+    if building_type == "SmallHotel"
+      building_story_map = model.define_building_story_map(building_type, building_vintage, climate_zone)
+      model.assign_building_story(building_type, building_vintage, climate_zone, building_story_map)
+    end
+    
+    model.assign_space_type_stubs(alt_search_name, space_type_map)    
     model.add_loads(building_vintage, climate_zone)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
     model.add_constructions(alt_search_name, building_vintage, climate_zone)
@@ -280,6 +286,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
+    
+    # # raise the upper limit of surface temperature
+    # heat_balance_algorithm = Openstudio::Model::getUniqueObject<HeatBalanceAlgorithm>(model)
+    # heat_balance_algorithm = model.getOptionalUniqueObject<HeatBalanceAlgorithm>()
+    # heat_balance_algorithm.setSurfaceTemperatureUpperLimit(250)
 
     # Assign the standards to the model
     model.template = building_vintage

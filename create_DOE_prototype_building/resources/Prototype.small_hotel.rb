@@ -61,17 +61,21 @@ class OpenStudio::Model::Model
       }
     when '90.1-2010'
       space_type_map = {
-        'Corridor' => ['CorridorFlr1','CorridorFlr2','CorridorFlr3','CorridorFlr4'],
+        'Corridor' => ['CorridorFlr1','CorridorFlr2','CorridorFlr3'],
+        'Corridor4' => ['CorridorFlr4'],
         # 'ElevatorCore' => ['ElevatorCoreFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO put elevators into Mechanical type temperarily
         'Elec/MechRoom' => ['ElevatorCoreFlr1'],
+        'ElevatorCore234' => ['ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],
         'StaffLounge' => ['EmployeeLoungeFlr1'],
         'Exercise' => ['ExerciseCenterFlr1'],
         'GuestLounge' => ['FrontLoungeFlr1'],
         'Office' => ['FrontOfficeFlr1'],
-        'Stair' => ['FrontStairsFlr1','FrontStairsFlr2','FrontStairsFlr3','FrontStairsFlr4',
-                     'RearStairsFlr1','RearStairsFlr2','RearStairsFlr3','RearStairsFlr4'],
-        'Storage' => ['FrontStorageFlr1','FrontStorageFlr2','FrontStorageFlr3','FrontStorageFlr4',
-                      'RearStorageFlr1','RearStorageFlr2','RearStorageFlr3','RearStorageFlr4'],
+        'Stair' => ['FrontStairsFlr1','FrontStairsFlr2','FrontStairsFlr3',
+                     'RearStairsFlr1','RearStairsFlr2','RearStairsFlr3'],
+        'Stair4' => ['FrontStairsFlr4','RearStairsFlr4'],
+        'Storage' => ['FrontStorageFlr1','FrontStorageFlr2','FrontStorageFlr3',
+                      'RearStorageFlr1','RearStorageFlr2','RearStorageFlr3'],
+        'Storage4' => ['FrontStorageFlr4','RearStorageFlr4'],
         'GuestRoom123Occ' => ['GuestRoom103','GuestRoom104','GuestRoom105','GuestRoom202_205','GuestRoom206_208',
                         'GuestRoom209_212','GuestRoom213','GuestRoom214','GuestRoom219','GuestRoom220_223',
                         'GuestRoom224','GuestRoom309_312','GuestRoom314','GuestRoom315_318','GuestRoom320_323'],
@@ -80,7 +84,7 @@ class OpenStudio::Model::Model
         'GuestRoom4Occ' => ['GuestRoom401','GuestRoom409_412','GuestRoom415_418','GuestRoom419','GuestRoom420_423','GuestRoom424'],
         'GuestRoom4Vac' => ['GuestRoom402_405','GuestRoom406_408','GuestRoom413','GuestRoom414'],
         'Laundry' => ['LaundryRoomFlr1'],
-        'Mechanical' => ['MechanicalRoomFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO
+        'Mechanical' => ['MechanicalRoomFlr1'],
         'Meeting' => ['MeetingRoomFlr1'],
         'PublicRestroom' => ['RestroomFlr1'],
         # 'Attic' => ['Attic']
@@ -473,6 +477,39 @@ class OpenStudio::Model::Model
 
   end
 
+  def define_building_story_map(building_type, building_vintage, climate_zone)
+    
+    building_story_map = nil
+      
+    building_story_map = {
+      'BuildingStory1' => [
+                          'GuestRoom101','GuestRoom102','GuestRoom103','GuestRoom104','GuestRoom105',
+                          'CorridorFlr1','ElevatorCoreFlr1','EmployeeLoungeFlr1','ExerciseCenterFlr1',
+                          'FrontLoungeFlr1','FrontOfficeFlr1','FrontStairsFlr1','RearStairsFlr1',
+                          'FrontStorageFlr1','RearStorageFlr1','LaundryRoomFlr1','MechanicalRoomFlr1',
+                          'MeetingRoomFlr1','RestroomFlr1'],
+      'BuildingStory2' => [
+                          'GuestRoom201','GuestRoom202_205','GuestRoom206_208','GuestRoom209_212','GuestRoom213',
+                          'GuestRoom214','GuestRoom215_218','GuestRoom219','GuestRoom220_223','GuestRoom224',
+                          'CorridorFlr2','FrontStairsFlr2','RearStairsFlr2','FrontStorageFlr2','RearStorageFlr2','ElevatorCoreFlr2'],
+      'BuildingStory3' => [
+                          'GuestRoom301','GuestRoom302_305','GuestRoom306_308','GuestRoom309_312','GuestRoom313',
+                          'GuestRoom314','GuestRoom315_318','GuestRoom319','GuestRoom320_323','GuestRoom324',
+                          'CorridorFlr3','FrontStairsFlr3','RearStairsFlr3','FrontStorageFlr3','RearStorageFlr3','ElevatorCoreFlr3'],
+      'BuildingStory4' => [
+                          'GuestRoom401','GuestRoom402_405','GuestRoom406_408','GuestRoom409_412','GuestRoom413',
+                          'GuestRoom414','GuestRoom415_418','GuestRoom419','GuestRoom420_423','GuestRoom424',
+                          'CorridorFlr4','FrontStairsFlr4','RearStairsFlr4','FrontStorageFlr4','RearStorageFlr4','ElevatorCoreFlr4']
+       }
+      
+      # attic only applies to the two DOE vintages.
+      puts "building_vintage = #{building_vintage}"
+      if building_vintage == 'DOE Ref Pre-1980' or building_vintage == 'DOE Ref 1980-2004'
+        building_story_map['AtticStory'] = ['Attic'] 
+      end        
+    return building_story_map
+  end
+
   def add_hvac(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding HVAC")
@@ -511,6 +548,40 @@ class OpenStudio::Model::Model
 
     end
 
+    # add extra infiltration for corridor1 door
+    corridor_space = self.getSpaceByName('CorridorFlr1')
+    corridor_space = corridor_space.get
+    unless building_vintage == 'DOE Ref 1980-2004' or building_vintage == 'DOE Ref Pre-1980'
+      infiltration_corridor = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self)
+      infiltration_corridor.setName("Corridor1 door Infiltration")
+      infiltration_per_zone = 0
+      if building_vintage == '90.1-2010' or building_vintage == '90.1-2007'
+        infiltration_per_zone = 0.591821538
+      else
+        infiltration_per_zone = 0.91557718
+      end
+      infiltration_corridor.setDesignFlowRate(infiltration_per_zone)
+      infiltration_corridor.setSchedule(add_schedule('HotelSmall INFIL_Door_Opening_SCH'))
+      infiltration_corridor.setSpace(corridor_space)
+    end
+    
+    # hardsize corridor1. put in standards in the future  #TODO
+    unless building_vintage == 'DOE Ref 1980-2004' or building_vintage == 'DOE Ref Pre-1980' 
+      self.getZoneHVACPackagedTerminalAirConditioners.sort.each do |ptac|
+        zone = ptac.thermalZone.get
+        if zone.spaces.include?(corridor_space)
+          ptac.setSupplyAirFlowRateDuringCoolingOperation(0.13)
+          ptac.setSupplyAirFlowRateDuringHeatingOperation(0.13)
+          ptac.setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(0.13)
+          ccoil = ptac.coolingCoil
+          if ccoil.to_CoilCoolingDXSingleSpeed.is_initialized
+            ccoil.to_CoilCoolingDXSingleSpeed.get.setRatedTotalCoolingCapacity(2638)  # Unit: W
+            ccoil.to_CoilCoolingDXSingleSpeed.get.setRatedAirFlowRate(0.13)
+          end
+        end
+      end
+    end  
+
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding HVAC")
     
     return true
@@ -531,7 +602,7 @@ class OpenStudio::Model::Model
         'building_type' => building_type,
         'space_type' => space_type_name
       }
-      data = find_object(@spc_types,search_criteria)
+      data = find_object(self.standards['space_types'],search_criteria)
       
       if data['service_water_heating_peak_flow_rate'].nil?
         next

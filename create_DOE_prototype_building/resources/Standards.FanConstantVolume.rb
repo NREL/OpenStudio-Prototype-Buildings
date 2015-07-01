@@ -33,7 +33,7 @@ class OpenStudio::Model::FanConstantVolume
     brake_hp = (pressure_rise_in_h2o * maximum_flow_rate_cfm)/(fan_eff * 6356) 
     allowed_hp = brake_hp * 1.1 # Per PNNL document #TODO add reference
     if allowed_hp > 0.1
-      allowed_hp = allowed_hp.round(2)
+      allowed_hp = allowed_hp.round(3)
     elsif allowed_hp < 0.01
       allowed_hp = 0.01
     end
@@ -46,7 +46,7 @@ class OpenStudio::Model::FanConstantVolume
     }
     
     motor_properties = self.model.find_object(motors, search_criteria, allowed_hp)
-  
+ 
     # Get the nominal motor efficiency
     motor_eff = motor_properties['nominal_full_load_efficiency']
   

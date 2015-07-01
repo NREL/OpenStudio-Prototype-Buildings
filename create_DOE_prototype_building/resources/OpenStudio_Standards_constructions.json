@@ -71,6 +71,17 @@
       ]
     },
     {
+      "name": "Smallhotel 2010 Slab Floor",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "Mass",
+      "insulation_layer": "Typical Insulation",
+      "sort": null,
+      "materials": [
+        "8 in. Normalweight Concrete Floor",
+        "CP02 CARPET PAD"
+      ]
+    },
+    {
       "name": "Typical Attic Floor",
       "intended_surface_type": "AtticFloor",
       "standards_construction_type": "WoodFramed",
@@ -146,7 +157,7 @@
       "materials": [
         "Roof Membrane",
         "Typical Insulation",
-        "Metal Decking"
+        "Metal Roof Surface"
       ]
     },
     {
@@ -1822,6 +1833,39 @@
         "Compliance Insulation R6.46",
         "Air - Metal Wall Framing - 16 or 24 in. OC",
         "Gypsum Board - 3/8 in."
+      ]
+    },
+    {
+      "name": "int_slab_ceiling_smallhotel",
+      "intended_surface_type": "InteriorCeiling",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "CP02 CARPET PAD",
+        "4 in. Normalweight Concrete Floor"
+      ]
+    },
+    {
+      "name": "int_slab_floor_smallhotel",
+      "intended_surface_type": "InteriorFloor",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "4 in. Normalweight Concrete Floor",
+        "CP02 CARPET PAD"
+      ]
+    },
+    {
+      "name": "int_wall_smallhotel",
+      "intended_surface_type": "InteriorWall",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "1/2 in. Gypsum Board",
+        "1/2 in. Gypsum Board"
       ]
     }
   ]
