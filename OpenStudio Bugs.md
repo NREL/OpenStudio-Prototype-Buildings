@@ -6,5 +6,3 @@
 ## WaterHeaterMixed:
 ### Object added and can be found in the osm file, but did not output to the IDF file
 ### It seems the WaterHeater:Mixed has to be included in a plant loop
-
-
