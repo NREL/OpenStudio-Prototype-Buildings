@@ -6,6 +6,12 @@ class OpenStudio::Model::Model
   attr_accessor :template
   attr_accessor :climate_zone
  
+  # Loads an .osm as a starting point.  Typically used to load
+  # a model containing only geometry.
+  #
+  # @param geometry_osm_name [String] the name of 
+  #   a .osm file in the /resources directory
+  # @return [Bool] returns true if successful, false if not 
   def add_geometry(geometry_osm_name)
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding geometry')
@@ -28,6 +34,19 @@ class OpenStudio::Model::Model
     
   end
 
+  # Reads in a mapping between names of space types and
+  # names of spaces in the model, creates an empty OpenStudio::Model::SpaceType
+  # (no loads, occupants, schedules, etc.) for each space type, and assigns this 
+  # space type to the list of spaces named.  Later on, these empty space types
+  # can be used as keys in a lookup to add loads, schedules, and
+  # other inputs that are either typical or governed by a standard.
+  #
+  # @param building_type [String] the name of the building type
+  # @param space_type_map [Hash] a hash where the key is the space type name
+  #   and the value is a vector of space names that should be assigned this space type.
+  #   The hash for each building is defined inside the Prototype.building_name
+  #   e.g. (Prototype.secondary_school.rb) file.
+  # @return [Bool] returns true if successful, false if not  
   def assign_space_type_stubs(building_type, space_type_map)
 
     space_type_map.each do |space_type_name, space_names|
@@ -49,6 +68,16 @@ class OpenStudio::Model::Model
     return true
   end
 
+  # Adds the loads and associated schedules for each space type
+  # as defined in the OpenStudio_Standards_space_types.json file.
+  # This includes lights, plug loads, occupants, ventilation rate requirements,
+  # infiltration, gas equipment (for kitchens, etc.) and typical schedules for each.
+  # Some loads are governed by the standard, others are typical values
+  # pulled from sources such as the DOE Reference and DOE Prototype Buildings.
+  #
+  # @param building_vintage [String] the template/standard to draw data from
+  # @param climate_zone [String] the name of the climate zone the building is in
+  # @return [Bool] returns true if successful, false if not  
   def add_loads(building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying space types (loads)')
@@ -96,6 +125,16 @@ class OpenStudio::Model::Model
 
   end
 
+  # Adds code-minimum constructions based on the building type
+  # as defined in the OpenStudio_Standards_construction_sets.json file.
+  # Where there is a separate construction set specified for the 
+  # individual space type, this construction set will be created and applied
+  # to this space type, overriding the whole-building construction set.
+  #
+  # @param building_type [String] the type of building
+  # @param building_vintage [String] the template/standard to draw data from
+  # @param climate_zone [String] the name of the climate zone the building is in
+  # @return [Bool] returns true if successful, false if not   
   def add_constructions(building_type, building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
@@ -231,7 +270,12 @@ class OpenStudio::Model::Model
 
   end  
   
-  # get all the space types that are conditioned
+  # Get the list of all conditioned spaces, as defined for each building in the
+  # system_to_space_map inside the Prototype.building_name
+  # e.g. (Prototype.secondary_school.rb) file.
+  #
+  # @param (see #add_constructions)
+  # @return [Array<String>] returns an array of space names as strings   
   def find_conditioned_space_names(building_type, building_vintage, climate_zone)
     system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
     conditioned_space_names = OpenStudio::StringVector.new
@@ -242,7 +286,13 @@ class OpenStudio::Model::Model
     end
     return conditioned_space_names
   end
-  
+
+  # Creates thermal zones to contain each space, as defined for each building in the
+  # system_to_space_map inside the Prototype.building_name
+  # e.g. (Prototype.secondary_school.rb) file.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not  
   def create_thermal_zones(building_type,building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started creating thermal zones')
@@ -285,6 +335,12 @@ class OpenStudio::Model::Model
 
   end
 
+  # Adds occupancy sensors to certain space types per
+  # the PNNL documentation.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo genericize and move this method to Standards.Space 
   def add_occupancy_sensors(building_type, building_vintage, climate_zone)
    
     # Only add occupancy sensors for 90.1-2010
@@ -391,6 +447,14 @@ class OpenStudio::Model::Model
     
   end #add occupancy sensors
 
+  # Adds exterior lights to the building, as specified
+  # in OpenStudio_Standards_prototype_inputs
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo translate w/linear foot of facade, door, parking, etc
+  #   into lookup table and implement that way instead of hard-coding as
+  #   inputs in the spreadsheet.   
   def add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     # TODO Standards - translate w/linear foot of facade, door, parking, etc
     # into lookup table and implement that way instead of hard-coding as
@@ -482,6 +546,12 @@ class OpenStudio::Model::Model
     return true
   end #add exterior lights  
   
+  # Changes the infiltration coefficients for the prototype vintages.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo Consistency - make prototype and reference vintages consistent
+  # @todo Add 90.1-2013?
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
   
     # Only modify the infiltration coefficients for 90.1-2010
@@ -506,6 +576,34 @@ class OpenStudio::Model::Model
     
   end
 
+  # Sets the inside and outside convection algorithms for different vintages
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo Consistency - make prototype and reference vintages consistent
+  def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
+  
+    inside = model.getInsideSurfaceConvectionAlgorithm
+    outside = model.getOutsideSurfaceConvectionAlgorithm
+  
+    case building_vintage
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      inside.setAlgorithm('TARP')
+      outside.setAlgorithm('DOE-2')     
+    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+      inside.setAlgorithm('TARP')
+      outside.setAlgorithm('TARP')
+    end
+    
+  end  
+  
+  
+  # Changes the infiltration coefficients for the prototype vintages.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo Consistency - make sizing factors consistent 
+  #   between building types, climate zones, and vintages?
   def set_sizing_parameters(building_type, building_vintage)
     
     # Default unless otherwise specified
@@ -638,11 +736,7 @@ class OpenStudio::Model::Model
         erv.setSupplyAirOutletTemperatureControl(true) 
         erv.setHeatExchangerType('Rotary')
         erv.setFrostControlType('ExhaustOnly')
-        erv.setThresholdTemperature(-23.3)
-        erv.setInitialDefrostTimeFraction(0.167)
-        erv.setRateofDefrostTimeFractionIncrease(1.44)
         erv.setEconomizerLockout(true)
-        erv.setFrostControlType('ExhaustOnly')
         erv.setThresholdTemperature(-23.3) # -10F
         erv.setInitialDefrostTimeFraction(0.167)
         erv.setRateofDefrostTimeFractionIncrease(1.44)

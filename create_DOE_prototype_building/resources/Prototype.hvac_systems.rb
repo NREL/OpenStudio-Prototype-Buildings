@@ -43,6 +43,7 @@ class OpenStudio::Model::Model
     #boiler
     boiler = OpenStudio::Model::BoilerHotWater.new(self)
     boiler.setName('Hot Water Loop Boiler')
+    boiler.setEfficiencyCurveTemperatureEvaluationVariable('LeavingBoiler')
     boiler.setFuelType('NaturalGas')
     boiler.setDesignWaterOutletTemperature(hw_temp_c)
     boiler.setNominalThermalEfficiency(0.78)
@@ -383,7 +384,6 @@ class OpenStudio::Model::Model
     boiler.setMinimumPartLoadRatio(0)
     boiler.setMaximumPartLoadRatio(1.2)
     boiler.setOptimumPartLoadRatio(1)
-    boiler.setBoilerFlowMode('LeavingBoiler')
     boiler.setBoilerFlowMode('ConstantFlow')
     heat_pump_water_loop.addSupplyBranchForComponent(boiler)
     
@@ -468,6 +468,8 @@ class OpenStudio::Model::Model
     fan.setFanEfficiency(prototype_input['vav_fan_efficiency'].to_f)
     fan.setMotorEfficiency(prototype_input['vav_fan_motor_efficiency'].to_f)
     fan.setPressureRise(prototype_input['vav_fan_pressure_rise'].to_f)
+    fan.setMinimumFlowRateMethod('fraction')
+    fan.setMinimumFlowRateFraction(0.25)
     fan.addToNode(air_loop.supplyInletNode)
     fan.setEndUseSubcategory("VAV system Fans")
 
