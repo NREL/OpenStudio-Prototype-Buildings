@@ -29,6 +29,18 @@ This Measure covers 6 vintages:
 
 *90.1-2004 is covered by both vintages.  This Measure used the DOE Prototype Buildings as the starting point for 90.1-2004.
 
+## Online Documentation
+Documentation for the latest code is available online #TODO put code on rubydoc.info
+
+## Local Documentation
+This code uses [YARD](http://yardoc.org/) to create documentation.  To generate a local html copy of the documentation on your computer:
+
+1. Prerequisite - Make sure you have `rake` and `yard` installed on your computer (`gem install rake`, `gem install yard`)
+2. Open a command prompt in the root directory aka `/OpenStudio-Prototype-Buildings`
+3. run `rake yard`.  This will create the models, run them, and compare the simulation results to the results stored in `legacy_idf_results.json`.  The simulations will all be run and stored in: `/create_DOE_prototype_building/tests/build`.  This `/build` directory should not be committed to the repository.
+4. In the root directory you will now see a folder called `/doc`
+5. Click the file `_index.html` to browse the documentation
+
 ## Testing
 The OpenStudio models that are created by this Measure have been run and the results have been compared per-end-use and per-fuel-type to the results of the original Prototype and Reference IDF files.  Results agree within XX% (TODO: Reasonable tolerance?).  You can run the tests yourself by following these steps:
 
