@@ -6199,15 +6199,119 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     end
 
     # report initial condition of model
-    runner.registerInitialCondition("Reading #{inp_file}")
+    runner.registerInitialCondition("Reading #{inp_file} for import.")
 
-    #loading inp file and saving 
-    BTAP::FileIO::save_osm(BTAP::FileIO::load_e_quest(inp_file) , "#{inp_file}.osm")
-    runner.registerInfo("Created #{inp_file}.osm")
+    #validate inp file path. 
 
-    # report final condition of model
-    runner.registerFinalCondition("Finished converting file.")
+    unless File.exist?(inp_file) 
+      runner.registerError("File does not exist: #{inp_file}") 
+      return false
+    end
 
+
+    runner.registerInfo("loading equest inp file #{inp_file}. This will only convert geometry.")
+    #Create an instances of a DOE model
+    doe_model = BTAP::EQuest::DOEBuilding.new()
+    #Load the inp data into the DOE model.
+    doe_model.load_inp(inp_file)
+
+    #Convert the model to a OSM format.
+    newModel = doe_model.create_openstudio_model_new()
+    
+
+    # pull original weather file object over
+    weatherFile = newModel.getOptionalWeatherFile
+    if not weatherFile.empty?
+      weatherFile.get.remove
+      runner.registerInfo("Removed alternate model's weather file object.")
+    end
+    originalWeatherFile = model.getOptionalWeatherFile
+    if not originalWeatherFile.empty?
+      originalWeatherFile.get.clone(newModel)
+    end
+
+    # pull original design days over
+    newModel.getDesignDays.each { |designDay|
+      designDay.remove
+    }
+    model.getDesignDays.each { |designDay|
+      designDay.clone(newModel)
+    }
+
+    # remove existing objects from model
+    handles = OpenStudio::UUIDVector.new
+    model.objects.each do |obj|
+      handles << obj.handle
+    end
+    model.removeObjects(handles)
+    # add new file to empty model
+    model.addObjects( newModel.toIdfFile.objects )
+
+    #do some built in tests
+    # check that number of thermal zones, surfaces or subsurfaces are the same in the inp and osm files. 
+    doe_zones = doe_model.find_all_commands("ZONE")
+    osm_zones = model.getThermalZones
+    puts ("#{doe_zones.size} zones detected in inp file and #{osm_zones.size} thermalzone created in osm.")
+    if  doe_zones.size != osm_zones.size
+      puts ("INP and OSM zone numbers do not match. There may be errors in the import. \n Generating report...") unless doe_zones.size
+      #find zones that were not imported and report them to user. 
+      doe_zones.each do |zone|
+        #Check to see if we already made one like this. If not throw a warning. 
+        thermal_zone = OpenStudio::Model::getThermalZoneByName(model,zone.name)
+        if thermal_zone.empty?
+          puts ("Zone #{zone.name} was not created.")
+        end
+      end
+    end
+    
+    # number of all surfaces
+    doe_surfaces = []
+    doe_surfaces.concat( doe_model.find_all_commands("EXTERIOR-WALL") ) 
+      doe_surfaces.concat( doe_model.find_all_commands("INTERIOR-WALL") )
+      doe_surfaces.concat( doe_model.find_all_commands("UNDERGROUND-WALL") )
+      doe_surfaces.concat( doe_model.find_all_commands("ROOF") )
+    osm_number_of_mirror_surfaces = 0  
+    model.getSurfaces.each do|surface| 
+      if surface.name.to_s.include?("mirror") 
+        osm_number_of_mirror_surfaces = osm_number_of_mirror_surfaces + 1
+      end
+    end
+    osm_surfaces = model.getSurfaces
+    puts ("#{doe_surfaces.size} EXTERIOR-WALL,INTERIOR-WALL, UNDERGROUND_WALL, and ROOF surfaces detected in inp file and #{osm_surfaces.size} Surfaces created in osm and #{osm_number_of_mirror_surfaces} are mirrors.")
+    #test if all surfaces were translated
+    if doe_surfaces.size != ( osm_surfaces.size - osm_number_of_mirror_surfaces)
+      puts ("INP and OSM surface numbers do not match. There may be errors in the import. Generating Report..") 
+      #find items that were not imported and report them to user. 
+      doe_surfaces.each do |surface|
+        #Check to see if we already made one like this. If not throw a warning. 
+        surface = OpenStudio::Model::getSurfaceByName(model,surface.name)
+        if surface.empty?
+          puts("Surface #{surface.name} was not created.")
+        end
+      end
+    end
+    
+    #get number of subsurfaces
+    doe_subsurfaces = []
+    doe_subsurfaces.concat( doe_model.find_all_commands("WINDOW") ) 
+    doe_subsurfaces.concat( doe_model.find_all_commands("DOOR") )
+    osm_subsurfaces = model.getSubSurfaces
+    puts("#{doe_subsurfaces.size} WINDOW, and DOOR subsurfaces detected in inp file and #{osm_subsurfaces.size} SubSurfaces created in osm.")
+    #Check to see if all items were imported. 
+    if doe_subsurfaces.size != osm_subsurfaces.size
+      puts("INP and OSM sub surface numbers do not match. There may be errors in the import. Generating Report")
+      #find items that were not imported and report them to user. 
+      doe_subsurfaces.each do |subsurface|
+        #Check to see if we already made one like this. If not throw a warning. 
+        subsurface = OpenStudio::Model::getSubSurfaceByName(model,subsurface.name)
+        if subsurface.empty?
+          puts("SubSurface #{subsurface.name} was not created.")
+        end
+      end
+    end
+    
+    
+    runner.registerFinalCondition("Model replaced with INP model at #{inp_file}. Weather file and design days retained from original. Please check warnings if any.")
     return true
 
   end
