@@ -41,12 +41,16 @@ class OpenStudio::Model::Model
     hw_pump.addToNode(hot_water_loop.supplyInletNode)
     
     #boiler
+    boiler_max_t_f = 203
+    boiler_max_t_c = OpenStudio.convert(boiler_max_t_f,'F','C').get
     boiler = OpenStudio::Model::BoilerHotWater.new(self)
     boiler.setName('Hot Water Loop Boiler')
     boiler.setEfficiencyCurveTemperatureEvaluationVariable('LeavingBoiler')
     boiler.setFuelType('NaturalGas')
     boiler.setDesignWaterOutletTemperature(hw_temp_c)
     boiler.setNominalThermalEfficiency(0.78)
+    boiler.setMaximumPartLoadRatio(1.2)
+    boiler.setWaterOutletUpperTemperatureLimit(boiler_max_t_c)
     boiler.setBoilerFlowMode('LeavingSetpointModulated')
     hot_water_loop.addSupplyBranchForComponent(boiler)   
     
@@ -176,8 +180,8 @@ class OpenStudio::Model::Model
     chiller.setReferenceEnteringCondenserFluidTemperature(ref_cond_wtr_temp_c)
     chiller.setMinimumPartLoadRatio(0.15)
     chiller.setMaximumPartLoadRatio(1.0)
-    chiller.setOptimumPartLoadRatio(0.8)
-    chiller.setMinimumUnloadingRatio(0.15)
+    chiller.setOptimumPartLoadRatio(1.0)
+    chiller.setMinimumUnloadingRatio(0.25)
     chiller.setCondenserType('AirCooled')
     chiller.setLeavingChilledWaterLowerTemperatureLimit(OpenStudio.convert(36,'F','C').get)
     chiller.setChillerFlowMode('ConstantFlow')
@@ -412,7 +416,7 @@ class OpenStudio::Model::Model
 
   end
   
-  def add_vav(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones)
+  def add_vav(prototype_input, standards, sys_name, hot_water_loop, chilled_water_loop, thermal_zones)
 
     hw_temp_f = 180 #HW setpoint 180F 
     hw_delta_t_r = 20 #20F delta-T    
@@ -445,7 +449,11 @@ class OpenStudio::Model::Model
 
     #air handler
     air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
-    air_loop.setName("#{thermal_zones.size} Zone VAV")
+    if sys_name.nil?
+      air_loop.setName("#{thermal_zones.size} Zone VAV")
+    else
+      air_loop.setName(sys_name)
+    end
     air_loop.setAvailabilitySchedule(hvac_op_sch)
     
     #air handler controls
@@ -468,8 +476,8 @@ class OpenStudio::Model::Model
     fan.setFanEfficiency(prototype_input['vav_fan_efficiency'].to_f)
     fan.setMotorEfficiency(prototype_input['vav_fan_motor_efficiency'].to_f)
     fan.setPressureRise(prototype_input['vav_fan_pressure_rise'].to_f)
-    fan.setMinimumFlowRateMethod('fraction')
-    fan.setMinimumFlowRateFraction(0.25)
+    fan.setFanPowerMinimumFlowRateInputMethod('fraction')
+    fan.setFanPowerMinimumFlowFraction(0.25)
     fan.addToNode(air_loop.supplyInletNode)
     fan.setEndUseSubcategory("VAV system Fans")
 
@@ -494,6 +502,7 @@ class OpenStudio::Model::Model
     oa_intake_controller.setName("#{thermal_zones.size} Zone VAV OA Sys Controller")
     oa_intake_controller.setMinimumLimitType('FixedMinimum')
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
+    oa_intake_controller.setHeatRecoveryBypassControlType('BypassWhenOAFlowGreaterThanMinimum')
 
     controller_mv = oa_intake_controller.controllerMechanicalVentilation
     controller_mv.setName("#{thermal_zones.size} Zone VAV Ventilation Controller")
@@ -1077,7 +1086,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_psz_ac(prototype_input, standards, thermal_zones, fan_location = "DrawThrough", hot_water_loop = nil, chilled_water_loop = nil)
+  def add_psz_ac(prototype_input, standards, sys_name, thermal_zones, fan_location = "DrawThrough", hot_water_loop = nil, chilled_water_loop = nil)
 
     unless hot_water_loop.nil? or chilled_water_loop.nil?
       hw_temp_f = 180 #HW setpoint 180F 
@@ -1107,7 +1116,11 @@ class OpenStudio::Model::Model
     thermal_zones.each do |zone|
       
       air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
-      air_loop.setName("#{zone.name} PSZ-AC")
+      if sys_name.nil?
+        air_loop.setName("#{zone.name} PSZ-AC")
+      else
+        air_loop.setName(sys_name)
+      end
       air_loop.setAvailabilitySchedule(hvac_op_sch)
       
       # When an air_loop is contructed, its constructor creates a sizing:system object

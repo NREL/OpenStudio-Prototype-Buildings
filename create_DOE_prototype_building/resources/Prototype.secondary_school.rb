@@ -55,6 +55,7 @@ class OpenStudio::Model::Model
     system_to_space_map = [
       {
           'type' => 'VAV',
+          'name' => 'VAV_POD_1',
           'space_names' =>
           [
               'Corner_Class_1_Pod_1_ZN_1_FLR_1',
@@ -71,6 +72,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'VAV',
+          'name' => 'VAV_POD_2',
           'space_names' =>
           [
               'Corner_Class_1_Pod_2_ZN_1_FLR_1',
@@ -87,6 +89,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'VAV',
+          'name' => 'VAV_POD_3',
           'space_names' =>
           [
               'Corner_Class_1_Pod_3_ZN_1_FLR_1',
@@ -103,6 +106,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'VAV',
+          'name' => 'VAV_OTHER',
           'space_names' =>
           [
               'Main_Corridor_ZN_1_FLR_1',
@@ -120,6 +124,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC_1-5',
           'space_names' =>
           [
               'Gym_ZN_1_FLR_1'
@@ -127,6 +132,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC_2-6',
           'space_names' =>
           [
               'Aux_Gym_ZN_1_FLR_1'
@@ -134,6 +140,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC_3-7',
           'space_names' =>
           [
               'Auditorium_ZN_1_FLR_1'
@@ -141,6 +148,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC_4-8',
           'space_names' =>
           [
               'Kitchen_ZN_1_FLR_1'
@@ -148,6 +156,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC_5-9',
           'space_names' =>
           [
               'Cafeteria_ZN_1_FLR_1'
@@ -193,13 +202,13 @@ class OpenStudio::Model::Model
       case system['type']
       when 'VAV'
         if hot_water_loop && chilled_water_loop
-          self.add_vav(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
+          self.add_vav(prototype_input, hvac_standards, system['name'], hot_water_loop, chilled_water_loop, thermal_zones)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false
         end
       when 'PSZ-AC'
-        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
+        self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
       end
 
     end
