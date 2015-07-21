@@ -153,7 +153,6 @@ class OpenStudio::Model::Model
   # @param climate_zone [String] the name of the climate zone the building is in
   # @return [Bool] returns true if successful, false if not   
   def add_constructions(building_type, building_vintage, climate_zone)
-    puts "entering into add_constructions"
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
     is_residential = "No"  #default is nonresidential for building level
@@ -318,10 +317,10 @@ class OpenStudio::Model::Model
     # add internal mass
     unless (building_type == 'SmallHotel') &&
       (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
+      internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
+      internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
+      internal_mass_def.setConstruction(construction)
       conditioned_space_names.each do |conditioned_space_name|
-        internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
-        internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
-        internal_mass_def.setConstruction(construction)
         internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
         space = self.getSpaceByName(conditioned_space_name)
         space = space.get
@@ -648,8 +647,8 @@ class OpenStudio::Model::Model
   # @todo Consistency - make prototype and reference vintages consistent
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
   
-    inside = model.getInsideSurfaceConvectionAlgorithm
-    outside = model.getOutsideSurfaceConvectionAlgorithm
+    inside = self.getInsideSurfaceConvectionAlgorithm
+    outside = self.getOutsideSurfaceConvectionAlgorithm
   
     case building_vintage
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
@@ -741,9 +740,9 @@ class OpenStudio::Model::Model
             'ASHRAE 169-2006-2A',
             'ASHRAE 169-2006-3A',
             'ASHRAE 169-2006-4A'
-            economizer_type = 'DifferentialDryBulb'
+            economizer_type = 'DifferentialEnthalpy'
           else
-            economizer_type = 'FixedDryBulb'
+            economizer_type = 'DifferentialDryBulb'
           end
         end
         # Set the economizer type
