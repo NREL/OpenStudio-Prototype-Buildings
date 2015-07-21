@@ -13,10 +13,6 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
   
     unitary_acs = standards['unitary_acs']
     heat_pumps = standards['heat_pumps']
-    curve_biquadratics = standards['curve_biquadratics']
-    curve_quadratics = standards['curve_quadratics']
-    curve_bicubics = standards['curve_bicubics']
-    curve_cubics = standards['curve_cubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
