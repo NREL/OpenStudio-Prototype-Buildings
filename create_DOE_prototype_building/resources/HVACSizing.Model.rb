@@ -37,6 +37,7 @@ class OpenStudio::Model::Model
   require_relative 'HVACSizing.CoolingTowerSingleSpeed'
   require_relative 'HVACSizing.ControllerWaterCoil'
   require_relative 'HVACSizing.SizingSystem'
+  require_relative 'HVACSizing.ThermalZone'
 
   # Methods not yet implemented
   require_relative 'HVACSizing.AirConditionerVariableRefrigerantFlow'

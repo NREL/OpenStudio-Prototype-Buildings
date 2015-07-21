@@ -19,6 +19,7 @@ class OpenStudio::Model::Model
   require_relative 'Standards.WaterHeaterMixed'
   require_relative 'Standards.Space'
   require_relative 'Standards.Construction'
+  require_relative 'Standards.ThermalZone'
   
   # Applies the HVAC parts of the standard to all objects in the model
   # using the the template/standard specified in the model.
@@ -26,10 +27,11 @@ class OpenStudio::Model::Model
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
     
-    #### Economizers
-    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerLimits(self.template, self.climate_zone)}
-    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerIntegration(self.template, self.climate_zone)}    
+    #### Controls
     
+    # Air Loop Controls
+    self.getAirLoopHVACs.sort.each {|obj| obj.applyStandardControls(self.template, self.climate_zone)}  
+
     ##### Apply equipment efficiencies
     
     # Fans
@@ -959,7 +961,6 @@ class OpenStudio::Model::Model
   # Create a construction set from the openstudio standards dataset.
   # Returns an Optional DefaultConstructionSet
   def add_construction_set(template, clim, building_type, spc_type, is_residential)
-    puts "entering into add_construction_set"
 
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
 
@@ -974,7 +975,7 @@ class OpenStudio::Model::Model
     if !data
       data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
       if !data
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
+        #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
         return construction_set
       end
     end 
