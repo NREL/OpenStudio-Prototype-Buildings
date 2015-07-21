@@ -6346,6 +6346,10 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     
     #****Performing geometry validation measure as taken from https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/ruby/openstudio/sketchup_plugin/user_scripts/Reports/OSM_Diagnostic_Script.rb
     #**** on July 21st, 2015. 
+    
+    remove_warnings = true
+    remove_errors = true
+    
     puts "Model has " + model.numObjects.to_s + " objects"
 
     # number of thermal zones
@@ -6664,7 +6668,7 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     puts ">>diagnostic test complete"
 
     if savediagnostic
-      newfilename = open_path.gsub(".osm","_diagnostic.osm")
+      newfilename = inp_file.gsub(".osm","_diagnostic.osm")
       if File.exists? newfilename
         # I would like to add a prompt to ask the user if they want to overwrite their file
       end
