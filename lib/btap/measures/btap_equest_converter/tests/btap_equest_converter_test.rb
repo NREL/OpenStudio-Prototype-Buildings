@@ -33,16 +33,69 @@ class BtapEquestConverterTest < MiniTest::Unit::TestCase
     # run the measure
     measure.run(model, runner, argument_map)
     result = runner.result
+    #save file
+
+    filename = "#{inp_file}.osm"
+    FileUtils.mkdir_p(File.dirname(filename))
+    File.delete(filename) if File.exist?(filename)
+    model.save(OpenStudio::Path.new(filename))
+    puts "File #{filename} saved."
     assert_equal("Success", result.value.valueName)
-
-
-
   end
 
 
-
-  def test_number_of_arguments_and_argument_names()
-    self.import_inp_test("./4StoreyBuilding.inp", 1, 1,1)
+  #
+  def test_4StoreyBuilding()
+    self.import_inp_test("./4StoreyBuilding.inp", 1, 1, 1 )
   end
+  def test_ReaganBuilding_Calibrated()
+    self.import_inp_test("./ReaganBuilding_Calibrated.inp", 1, 1, 1 )
+  end
+  def test_5ZoneFloorRotationTest()
+    self.import_inp_test("./5ZoneFloorRotationTest.inp", 1, 1, 1 )
+  end
+  def test_basic_2storey_with_basement_wizard_geometry
+    self.import_inp_test("./basic_2storey_with_basement_wizard_geometry.inp", 1, 1, 1 )
+  end
+  def test_Custom_Concave_Polygon()
+    self.import_inp_test("./Custom_Concave_Polygon.inp", 1, 1, 1 )
+  end
+  def test_Custom_Convex_Polygon()
+    self.import_inp_test("./Custom_Convex_Polygon.inp", 1, 1, 1 )
+  end
+  def test_H_Shape()
+    self.import_inp_test("./H_Shape.inp", 1, 1, 1 )
+  end
+  def test_Nealon_Calibrated()
+    self.import_inp_test("./Nealon_Calibrated.inp", 1, 1, 1 )
+  end
+  def test_Plus_Shape()
+    self.import_inp_test("./Plus_Shape.inp", 1, 1, 1 )
+  end
+  def test_Rectangle_minus_corner()
+    self.import_inp_test("./Rectangle_minus_corner.inp", 1, 1, 1 )
+  end
+  def test_Rectangle()
+    self.import_inp_test("./Rectangle.inp", 1, 1, 1 )
+  end
+  def test_Rectangular_Atrium()
+    self.import_inp_test("./Rectangular_Atrium.inp", 1, 1, 1 )
+  end
+  def test_SingleZonePerFloorRotation()
+    self.import_inp_test("./SingleZonePerFloorRotation.inp", 1, 1, 1 )
+  end
+  def test_T_Shape()
+    self.import_inp_test("./T_Shape.inp", 1, 1, 1 )
+  end
+  def test_Trapezoid()
+    self.import_inp_test("./Trapezoid.inp", 1, 1, 1 )
+  end
+  def test_Triangle()
+    self.import_inp_test("./Triangle.inp", 1, 1, 1 )
+  end
+  def test_U_Shape()
+    self.import_inp_test("./U_Shape.inp", 1, 1, 1 )
+  end
+
   
 end

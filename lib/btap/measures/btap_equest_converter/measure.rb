@@ -3975,13 +3975,18 @@ module BTAP
       end
 
       def convert_to_openstudio(model)
-        os_zone = OpenStudio::Model::ThermalZone.new(model)
-        os_zone.setAttribute("name", self.name)
-        #set space to thermal zone
-        OpenStudio::Model::getSpaceByName(model,self.space.name).get.setThermalZone(os_zone)
-        puts "\tThermalZone: " + self.name + " created"
+        if self.space.get_shape() == "NO-SHAPE"
+          puts "Thermal Zone contains a NO-SHAPE space. OS does not support no shape spaces.  Thermal Zone will not be created."
+        else
+          os_zone = OpenStudio::Model::ThermalZone.new(model)
+          os_zone.setAttribute("name", self.name)
+          #set space to thermal zone
+          OpenStudio::Model::getSpaceByName(model,self.space.name).get.setThermalZone(os_zone)
+          puts "\tThermalZone: " + self.name + " created"
+        end
       end
     end
+    
     class DOESystem < DOECommand
       def initialize
         super()
@@ -4142,7 +4147,7 @@ module BTAP
             origin = OpenStudio::Point3d.new(width,0.0,0.0)
           end
         when "NO-SHAPE"
-          raise("Using SHAPE = NO-SHAPE deifnition for space is not supported...yet")
+          raise("Using SHAPE = NO-SHAPE deifnition for space is not supported by open Studio")
         end
         
         origin =  OpenStudio::Vector3d.new(origin.x,origin.y,origin.z)
@@ -5205,14 +5210,17 @@ module BTAP
       end
 
       def convert_to_openstudio(model)
-        os_space = OpenStudio::Model::Space.new(model)
-        os_space.setAttribute("name", self.name)
-        #set floor
-        os_space.setBuildingStory(OpenStudio::Model::getBuildingStoryByName(model,self.get_parent("FLOOR").name).get)
-        puts "\tSpace: " + self.name + " created"
-        puts "\t\t Azimuth:#{self.get_azimuth}"
-        puts "\t\t Azimuth:#{self.get_origin}"
-        
+        if self.get_keyword_value("SHAPE") == "NO-SHAPE"
+          puts "OpenStudio does not support NO-SHAPE SPACE definitions currently. Not importing the space #{self.name}."
+        else
+          os_space = OpenStudio::Model::Space.new(model)
+          os_space.setAttribute("name", self.name)
+          #set floor
+          os_space.setBuildingStory(OpenStudio::Model::getBuildingStoryByName(model,self.get_parent("FLOOR").name).get)
+          puts "\tSpace: " + self.name + " created"
+          puts "\t\t Azimuth:#{self.get_azimuth}"
+          puts "\t\t Azimuth:#{self.get_origin}"
+        end
       end
 
     end
@@ -5824,8 +5832,10 @@ module BTAP
           end
           #Find Polygons for space and add reference to the space.
           spaces.each do |space|
-            if ( polygon.utype == space.get_keyword_value("POLYGON") )
-              space.polygon = polygon
+            if space.check_keyword?("POLYGON")
+              if ( polygon.utype == space.get_keyword_value("POLYGON") )
+                space.polygon = polygon
+              end
             end
           end
         end
@@ -6248,18 +6258,38 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     model.addObjects( newModel.toIdfFile.objects )
 
     #do some built in tests
+
+
+    # check that number of thermal zones, surfaces or subsurfaces are the same in the inp and osm files. 
+    doe_spaces = doe_model.find_all_commands("SPACE")
+    osm_spaces = model.getSpaces
+    runner.registerInfo("#{doe_spaces.size} spaces detected in inp file and #{osm_spaces.size} spaces created in osm.")
+    if  doe_spaces.size != osm_spaces.size
+      runner.registerWarning("INP and OSM number of spaces do not match. There may be errors in the import. \n Generating report...") 
+      #find zones that were not imported and report them to user. 
+      doe_spaces.each do |space|
+        #Check to see if we already made one like this. If not throw a warning. 
+        osm_space = OpenStudio::Model::getSpaceByName(model,space.name)
+        if osm_space.empty?
+          runner.registerWarning ("Zone #{space.name} was not created.")
+        end
+      end
+    end
+    
+    
+    
     # check that number of thermal zones, surfaces or subsurfaces are the same in the inp and osm files. 
     doe_zones = doe_model.find_all_commands("ZONE")
     osm_zones = model.getThermalZones
-    puts ("#{doe_zones.size} zones detected in inp file and #{osm_zones.size} thermalzone created in osm.")
+    runner.registerInfo ("#{doe_zones.size} zones detected in inp file and #{osm_zones.size} thermalzone created in osm.")
     if  doe_zones.size != osm_zones.size
-      puts ("INP and OSM zone numbers do not match. There may be errors in the import. \n Generating report...") unless doe_zones.size
+      runner.registerWarning ("INP and OSM zone numbers do not match. There may be errors in the import. \n Generating report...") unless doe_zones.size
       #find zones that were not imported and report them to user. 
       doe_zones.each do |zone|
         #Check to see if we already made one like this. If not throw a warning. 
         thermal_zone = OpenStudio::Model::getThermalZoneByName(model,zone.name)
         if thermal_zone.empty?
-          puts ("Zone #{zone.name} was not created.")
+          runner.registerWarning ("Zone #{zone.name} was not created.")
         end
       end
     end
@@ -6267,9 +6297,9 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     # number of all surfaces
     doe_surfaces = []
     doe_surfaces.concat( doe_model.find_all_commands("EXTERIOR-WALL") ) 
-      doe_surfaces.concat( doe_model.find_all_commands("INTERIOR-WALL") )
-      doe_surfaces.concat( doe_model.find_all_commands("UNDERGROUND-WALL") )
-      doe_surfaces.concat( doe_model.find_all_commands("ROOF") )
+    doe_surfaces.concat( doe_model.find_all_commands("INTERIOR-WALL") )
+    doe_surfaces.concat( doe_model.find_all_commands("UNDERGROUND-WALL") )
+    doe_surfaces.concat( doe_model.find_all_commands("ROOF") )
     osm_number_of_mirror_surfaces = 0  
     model.getSurfaces.each do|surface| 
       if surface.name.to_s.include?("mirror") 
@@ -6277,38 +6307,374 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
       end
     end
     osm_surfaces = model.getSurfaces
-    puts ("#{doe_surfaces.size} EXTERIOR-WALL,INTERIOR-WALL, UNDERGROUND_WALL, and ROOF surfaces detected in inp file and #{osm_surfaces.size} Surfaces created in osm and #{osm_number_of_mirror_surfaces} are mirrors.")
+    runner.registerInfo ("#{doe_surfaces.size} EXTERIOR-WALL,INTERIOR-WALL, UNDERGROUND_WALL, and ROOF surfaces detected in inp file and #{osm_surfaces.size} Surfaces created in osm and #{osm_number_of_mirror_surfaces} are mirror surfaces.")
     #test if all surfaces were translated
     if doe_surfaces.size != ( osm_surfaces.size - osm_number_of_mirror_surfaces)
-      puts ("INP and OSM surface numbers do not match. There may be errors in the import. Generating Report..") 
+      runner.registerWarning ("INP and OSM surface numbers do not match. There may be errors in the import. Generating Report..") 
       #find items that were not imported and report them to user. 
       doe_surfaces.each do |surface|
         #Check to see if we already made one like this. If not throw a warning. 
-        surface = OpenStudio::Model::getSurfaceByName(model,surface.name)
-        if surface.empty?
-          puts("Surface #{surface.name} was not created.")
+        osm_surface = OpenStudio::Model::getSurfaceByName(model,surface.name)
+        if osm_surface.empty?
+          runner.registerWarning("Surface #{surface.name} was not created.")
         end
       end
     end
     
-    #get number of subsurfaces
+    #check subsurfaces
+    #Get doe subsurfaces
     doe_subsurfaces = []
     doe_subsurfaces.concat( doe_model.find_all_commands("WINDOW") ) 
     doe_subsurfaces.concat( doe_model.find_all_commands("DOOR") )
+    #get OS subsurfaces
     osm_subsurfaces = model.getSubSurfaces
-    puts("#{doe_subsurfaces.size} WINDOW, and DOOR subsurfaces detected in inp file and #{osm_subsurfaces.size} SubSurfaces created in osm.")
+    #inform user. 
+    runner.registerInfo("#{doe_subsurfaces.size} WINDOW, and DOOR subsurfaces detected in inp file and #{osm_subsurfaces.size} SubSurfaces created in osm.")
     #Check to see if all items were imported. 
     if doe_subsurfaces.size != osm_subsurfaces.size
-      puts("INP and OSM sub surface numbers do not match. There may be errors in the import. Generating Report")
+      runner.registerWarning("INP and OSM sub surface numbers do not match. There may be errors in the import. Generating Report")
       #find items that were not imported and report them to user. 
       doe_subsurfaces.each do |subsurface|
         #Check to see if we already made one like this. If not throw a warning. 
-        subsurface = OpenStudio::Model::getSubSurfaceByName(model,subsurface.name)
-        if subsurface.empty?
-          puts("SubSurface #{subsurface.name} was not created.")
+        osm_subsurface = OpenStudio::Model::getSubSurfaceByName(model,subsurface.name)
+        if osm_subsurface.empty?
+          runner.registerWarning("SubSurface #{subsurface.name} was not created.")
         end
       end
     end
+    runner.registerInfo("No Construction , Materials, Schedules or HVAC were converted. These are not supported yet.")
+    
+    #****Performing geometry validation measure as taken from https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/ruby/openstudio/sketchup_plugin/user_scripts/Reports/OSM_Diagnostic_Script.rb
+    #**** on July 21st, 2015. 
+    puts "Model has " + model.numObjects.to_s + " objects"
+
+    # number of thermal zones
+    thermal_zones = model.getThermalZones
+    puts "Model has " + thermal_zones.size.to_s + " thermal zones"
+
+    # number of spaces
+    spaces = model.getSpaces
+    puts "Model has " + spaces.size.to_s + " spaces"
+
+    # number of surfaces
+    surfaces = model.getPlanarSurfaces
+    # puts "Model has " + surfaces.size.to_s + " planar surfaces"
+
+    # number of base surfaces
+    base_surfaces = model.getSurfaces
+    puts "Model has " + base_surfaces.size.to_s + " base surfaces"
+
+    # number of base surfaces
+    sub_surfaces = model.getSubSurfaces
+    puts "Model has " + sub_surfaces.size.to_s + " sub surfaces"
+
+    # number of surfaces
+    shading_surfaces = model.getShadingSurfaces
+    puts "Model has " + shading_surfaces.size.to_s + " shading surfaces"
+
+    # number of surfaces
+    partition_surfaces = model.getInteriorPartitionSurfaces
+    puts "Model has " + partition_surfaces.size.to_s + " interior partition surfaces"
+    
+
+    savediagnostic = false # this will change to true later in script if necessary
+
+    puts ""
+    puts "Removing catchall objects (objects unknown to your version of OpenStudio)"
+    switch = 0
+    model.getObjectsByType("Catchall".to_IddObjectType).each do |obj|
+      puts "*(error) '" + obj.name.to_s + "' object type is unkown to OpenStudio"
+      switch = 1
+      if remove_errors
+        puts "**(removing object)  '#{obj.name.to_s}'"
+        remove = obj.remove
+        savediagnostic = true
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    puts ""
+    puts "Removing objects that fail draft validity test"
+    switch = 0
+    model.objects.each do |object|
+      if !object.isValid("Draft".to_StrictnessLevel)
+        report = object.validityReport("Draft".to_StrictnessLevel)
+        puts "*(error)" + report.to_s
+        switch = 1
+        if remove_errors
+          puts "**(removing object)  '#{object.name}'"
+          remove = object.remove
+          savediagnostic = true
+        end
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    base_surfaces = model.getSurfaces
+    # Find base surfaces with less than three vertices
+    puts ""
+    puts "Surfaces with less than three vertices"
+    switch = 0
+    base_surfaces.each do |base_surface|
+      vertices = base_surface.vertices
+      if vertices.size < 3
+        puts "*(warning) '" + base_surface.name.to_s + "' has less than three vertices"
+        switch = 1
+        if remove_errors
+          puts "**(removing object) '#{base_surface.name.to_s}'"
+          # remove surfaces with less than three vertices
+          remove = base_surface.remove
+          savediagnostic = true
+        end
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    sub_surfaces = model.getSubSurfaces
+    # Find base sub-surfaces with less than three vertices
+    puts ""
+    puts "Surfaces with less than three vertices"
+    switch = 0
+    sub_surfaces.each do |sub_surface|
+      vertices = sub_surface.vertices
+      if vertices.size < 3
+        puts "*(warning) '" + sub_surface.name.to_s + "' has less than three vertices"
+        switch = 1
+        if remove_errors
+          puts "**(removing object) '#{sub_surface.name.to_s}'"
+          # remove sub-surfaces with less than three vertices
+          remove = sub_surface.remove
+          savediagnostic = true
+        end
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    surfaces = model.getSurfaces
+    # Find surfaces with greater than 25 vertices (split out sub-surfaces and test if they hvae more than 4 vertices)
+    puts ""
+    puts "Surfaces with more than 25 vertices"
+    switch = 0
+    surfaces.each do |surface|
+      vertexcount = surface.vertices.size
+      if vertexcount > 25
+        puts "*(info) '" + surface.name.to_s + "' has " + vertexcount.to_s + " vertices"
+        switch = 1
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    base_surfaces = model.getSurfaces
+    # Find base surfaces with area < 0.1
+    puts ""
+    puts "Surfaces with area less than 0.1 m^2"
+    switch = 0
+    base_surfaces.each do |base_surface|
+      grossarea = base_surface.grossArea
+      if grossarea < 0.1
+        puts "*(warning) '" + base_surface.name.to_s + "' has area of " + grossarea.to_s + " m^2"
+        switch = 1
+        if remove_warnings
+          puts "**(removing object) '#{base_surface.name.to_s}'"
+          # remove base surfaces with less than 0.1 m^2
+          remove = base_surface.remove
+          savediagnostic = true
+        end
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    sub_surfaces = model.getSubSurfaces
+    # Find sub-surfaces with area < 0.1
+    puts ""
+    puts "Surfaces with area less than 0.1 m^2"
+    switch = 0
+    sub_surfaces.each do |sub_surface|
+      grossarea = sub_surface.grossArea
+      if grossarea < 0.1
+        puts "*(warning) '" + sub_surface.name.to_s + "' has area of " + grossarea.to_s + " m^2"
+        switch = 1
+        if remove_warnings
+          puts "**(removing object) '#{sub_surface.name.to_s}'"
+          # remove sub-surfaces with less than three vertices
+          remove = sub_surface.remove
+          savediagnostic = true
+        end
+      end
+    end
+    if switch == 0 then puts "none" end
+
+    # Find surfaces within surface groups that share same vertices
+    puts ""
+    puts "Surfaces and SubSurfaces which have similar geometry within same surface group"
+    switch = 0
+    planar_surface_groups = model.getPlanarSurfaceGroups
+    planar_surface_groups.each do |planar_surface_group|
+
+      planar_surfaces = []
+      planar_surface_group.children.each do |child|
+        planar_surface = child.to_PlanarSurface
+        next if planar_surface.empty?
+        planar_surfaces << planar_surface.get
+      end
+
+      n = planar_surfaces.size
+
+      sub_surfaces = []
+      (0...n).each do |k|
+        planar_surfaces[k].children.each do |l|
+          sub_surface = l.to_SubSurface
+          next if sub_surface.empty?
+          sub_surfaces << sub_surface.get
+        end
+      end
+
+      all_surfaces = []
+      sub_surfaces.each do |m|  # subsurfaces first so they get removed vs. base surface
+        all_surfaces << m
+      end
+      planar_surfaces.each do |n|
+        all_surfaces << n
+      end
+
+      n2 = all_surfaces.size # updated with sub-surfaces added at the beginning
+      surfaces_to_remove = Hash.new
+      (0...n2).each do |i|
+        (i+1...n2).each do |j|
+
+          p1 = all_surfaces[i]
+          p2 = all_surfaces[j]
+       
+          if p1.equalVertices(p2) or p1.reverseEqualVertices(p2)
+            switch = 1
+            puts "*(error) '#{p1.name.to_s}' has similar geometry to '#{p2.name.to_s}' in the surface group named '#{planar_surface_group.name.to_s}'"
+            if remove_errors
+              puts "**(removing object) '#{p1.name.to_s}'" # remove p1 vs. p2 to avoid failure if three or more similar surfaces in a group
+              # don't remove here, just mark to remove
+              surfaces_to_remove[p1.handle.to_s] = p1
+              savediagnostic = true
+            end
+          end
+        end
+      end
+      surfaces_to_remove.each_pair {|handle, surface| surface.remove}
+
+    end
+    if switch == 0 then puts "none" end
+  
+    # Find duplicate vertices within surface
+    puts ""
+    puts "Surfaces and SubSurfaces which have duplicate vertices"
+    switch = 0
+    planar_surface_groups = model.getPlanarSurfaceGroups
+    planar_surface_groups.each do |planar_surface_group|
+
+      planar_surfaces = []
+      planar_surface_group.children.each do |child|
+        planar_surface = child.to_PlanarSurface
+        next if planar_surface.empty?
+        planar_surfaces << planar_surface.get
+      end
+
+      n = planar_surfaces.size
+
+      sub_surfaces = []
+      (0...n).each do |k|
+        planar_surfaces[k].children.each do |l|
+          sub_surface = l.to_SubSurface
+          next if sub_surface.empty?
+          sub_surfaces << sub_surface.get
+        end
+      end
+
+      all_surfaces = []
+      sub_surfaces.each do |m|  # subsurfaces first so they get removed vs. base surface
+        all_surfaces << m
+      end
+      planar_surfaces.each do |n|
+        all_surfaces << n
+      end
+
+      all_surfaces.each do |surface|
+        # make array of vertices
+        vertices = surface.vertices
+    
+        # loop through looking for duplicates
+        n2 = vertices.size
+        switch2 = 0
+
+        (0...n2).each do |i|
+          (i+1...n2).each do |j|
+
+            p1 = vertices[i]
+            p2 = vertices[j]
+       
+            # set flag if surface needs be removed
+            
+            if p1.x == p2.x and p1.y == p2.y and p1.z == p2.z
+              switch2 = 1
+            end
+
+          end
+        end
+    
+        if switch2 == 1
+          switch == 1
+          puts "*(error) '#{surface.name.to_s}' has duplicate vertices"
+          if remove_errors
+            puts "**(removing object) '#{surface.name.to_s}'" # remove p1 vs. p2 to avoid failure if three or more similar surfaces in a group
+            remove = surface.remove
+            savediagnostic = true
+          end
+        end
+    
+      end
+
+    end
+    if switch == 0 then puts "none" end
+    
+    # find and remove orphan sizing:zone objects
+    puts ""
+    puts "Removing sizing:zone objects that are not connected to any thermal zone"
+    #get all sizing:zone objects in the model
+    sizing_zones = model.getObjectsByType("OS:Sizing:Zone".to_IddObjectType)
+    #make an array to store the names of the orphan sizing:zone objects
+    orphaned_sizing_zones = Array.new
+    #loop through all sizing:zone objects, checking for missing ThermalZone field
+    sizing_zones.each do |sizing_zone|
+      sizing_zone = sizing_zone.to_SizingZone.get
+      if sizing_zone.isEmpty(1)
+        orphaned_sizing_zones << sizing_zone.handle
+        puts "*(error)#{sizing_zone.name} is not connected to a thermal zone"
+        if remove_errors
+          puts "**(removing object)#{sizing_zone.name} is not connected to a thermal zone"
+          sizing_zone.remove
+          savediagnostic = true
+        end
+      end
+    end
+    #summarize the results
+    if orphaned_sizing_zones.length > 0
+      puts "#{orphaned_sizing_zones.length} orphaned sizing:zone objects were found"
+    else
+      puts "no orphaned sizing:zone objects were found"
+    end
+
+    puts ""
+    puts ">>diagnostic test complete"
+
+    if savediagnostic
+      newfilename = open_path.gsub(".osm","_diagnostic.osm")
+      if File.exists? newfilename
+        # I would like to add a prompt to ask the user if they want to overwrite their file
+      end
+      puts ""
+      puts ">>saving temporary diagnostic version " + newfilename
+      model.save(OpenStudio::Path.new(newfilename),true)
+
+    end
+    # End measure excerpt. 
+    
     
     
     runner.registerFinalCondition("Model replaced with INP model at #{inp_file}. Weather file and design days retained from original. Please check warnings if any.")
