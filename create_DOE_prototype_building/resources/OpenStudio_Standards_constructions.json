@@ -71,6 +71,41 @@
       ]
     },
     {
+      "name": "LargeHotel Interior Ceiling",
+      "intended_surface_type": "InteriorCeiling",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "CP02 CARPET PAD",
+        "100mm Normalweight concrete floor",
+        "Nonres_Floor_Insulation"
+      ]
+    },
+    {
+      "name": "LargeHotel Interior Floor",
+      "intended_surface_type": "InteriorFloor",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "Nonres_Floor_Insulation",
+        "100mm Normalweight concrete floor",
+        "CP02 CARPET PAD"
+      ]
+    },
+    {
+      "name": "LargeHotel Interior Wall",
+      "intended_surface_type": "InteriorWall",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "G01 13mm gypsum board",
+        "G01 13mm gypsum board"
+      ]
+    },
+    {
       "name": "Smallhotel 2010 Slab Floor",
       "intended_surface_type": "GroundContactFloor",
       "standards_construction_type": "Mass",

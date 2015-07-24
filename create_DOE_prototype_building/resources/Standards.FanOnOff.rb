@@ -4,7 +4,11 @@ class OpenStudio::Model::FanOnOff
 
   # Sets the fan motor efficiency based on the standard
   def setStandardEfficiency(template, standards)
-    
+    # TODO: Yixing Check the model of the Fan Coil Unit
+    # The difference between this standard efficiency and the prototype is large (0.6 vs 0.2)
+    # Now, don't change the Fan Coil Unit fan efficiency
+    return if self.name.to_s.include?("Fan Coil fan")
+
     motors = standards["motors"]
     
     # Get the max flow rate from the fan.

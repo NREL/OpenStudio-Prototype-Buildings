@@ -343,11 +343,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             elsif total_osm_energy_val > 0 && total_legacy_energy_val == 0
               # The osm has a fuel/end use that the legacy idf does not
               total_percent_error = 1000
-              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm has extra fuel/end use that legacy idf does not (#{osm_val})"
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm has extra fuel/end use that legacy idf does not (#{total_osm_energy_val})"
             elsif total_osm_energy_val == 0 && total_legacy_energy_val > 0
               # The osm has a fuel/end use that the legacy idf does not
               total_percent_error = 1000
-              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm is missing a fuel/end use that legacy idf has (#{legacy_val})"
+              failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = osm is missing a fuel/end use that legacy idf has (#{total_legacy_energy_val})"
             else
               # Both osm and legacy are == 0 for, no error
               total_percent_error = 0
