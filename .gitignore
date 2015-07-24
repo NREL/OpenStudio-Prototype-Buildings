@@ -3,3 +3,5 @@ create_DOE_prototype_building/tests/build
 /temporary junk/
 .idea/
 .project
+/.yardoc/
+/doc/

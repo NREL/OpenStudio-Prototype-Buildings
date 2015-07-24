@@ -1,9 +1,14 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::AirLoopHVAC
 
   # Determine the fan power limitation pressure drop adjustment
   # Per Table 6.5.3.1.1B
+  #
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @return [Double] fan power limitation pressure drop adjustment
+  #   units = horsepower
+  # @todo Determine the presence of MERV filters and other stuff in Table 6.5.3.1.1B.  May need to extend AirLoopHVAC data model
   def fanPowerLimitationPressureDropAdjustmentBrakeHorsepower(template = "ASHRAE 90.1-2007")
   
    # Get design supply air flow rate (whether autosized or hard-sized)
@@ -45,6 +50,10 @@ class OpenStudio::Model::AirLoopHVAC
 
   # Determine the allowable fan system brake horsepower
   # Per Table 6.5.3.1.1A
+  #
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @return [Double] allowable fan system brake horsepower
+  #   units = horsepower
   def allowableSystemBrakeHorsepower(template = "ASHRAE 90.1-2007")
   
    # Get design supply air flow rate (whether autosized or hard-sized)
@@ -112,7 +121,9 @@ class OpenStudio::Model::AirLoopHVAC
 
   end
 
-  # Get all of the supply, return, exhaust, and relief fans on this system.
+  # Get all of the supply, return, exhaust, and relief fans on this system
+  #
+  # @return [Array] an array of FanConstantVolume, FanVariableVolume, and FanOnOff objects
   def supplyReturnExhaustReliefFans() 
     
     # Fans on the supply side of the airloop directly, or inside of unitary equipment.
@@ -147,6 +158,11 @@ class OpenStudio::Model::AirLoopHVAC
   
   # Determine the total brake horsepower of the fans on the system
   # with or without the fans inside of fan powered terminals.
+  #
+  # @param include_terminal_fans [Bool] if true, power from fan powered terminals will be included
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @return [Double] total brake horsepower of the fans on the system
+  #   units = horsepower  
   def systemFanBrakeHorsepower(include_terminal_fans = true, template = "ASHRAE 90.1-2007")
 
     # TODO get the template from the parent model itself?
@@ -188,6 +204,8 @@ class OpenStudio::Model::AirLoopHVAC
   
   # Set the fan pressure rises that will result in
   # the system hitting the baseline allowable fan power
+  #
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013' 
   def setBaselineFanPressureRise(template = "ASHRAE 90.1-2007")
 
     OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "#{self.name} - Setting #{template} baseline fan power.")
@@ -270,6 +288,11 @@ class OpenStudio::Model::AirLoopHVAC
   end
 
   # Get the total cooling capacity for the air loop
+  #
+  # @return [Double] total cooling capacity
+  #   units = Watts (W)
+  # @todo Change to pull water coil nominal capacity instead of design load; not a huge difference, but water coil nominal capacity not available in sizing table.
+  # @todo Handle all additional cooling coil types.  Currently only handles CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, and CoilCoolingWater
   def totalCoolingCapacity
   
     # Sum the cooling capacity for all cooling components
@@ -329,6 +352,13 @@ class OpenStudio::Model::AirLoopHVAC
   
   # Determine whether or not this system
   # is required to have an economizer.
+  #
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @param climate_zone [String] valid choices: 'ASHRAE 169-2006-1A', 'ASHRAE 169-2006-1B', 'ASHRAE 169-2006-2A', 'ASHRAE 169-2006-2B',
+  # 'ASHRAE 169-2006-3A', 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-3C', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-4B', 'ASHRAE 169-2006-4C',
+  # 'ASHRAE 169-2006-5A', 'ASHRAE 169-2006-5B', 'ASHRAE 169-2006-5C', 'ASHRAE 169-2006-6A', 'ASHRAE 169-2006-6B', 'ASHRAE 169-2006-7A',
+  # 'ASHRAE 169-2006-7B', 'ASHRAE 169-2006-8A', 'ASHRAE 169-2006-8B'   
+  # @return [Bool] returns true if an economizer is required, false if not
   def isEconomizerRequired(template, climate_zone)
   
     economizer_required = false
@@ -401,7 +431,11 @@ class OpenStudio::Model::AirLoopHVAC
   
   end
   
-  # Set the economizer limits per the standard
+  # Set the economizer limits per the standard.  Limits are based on the economizer
+  # type currently specified in the ControllerOutdoorAir object on this air loop.
+  #
+  # @param (see #isEconomizerRequired)
+  # @return [Bool] returns true if successful, false if not
   def setEconomizerLimits(template, climate_zone)
   
     # EnergyPlus economizer types
@@ -527,6 +561,11 @@ class OpenStudio::Model::AirLoopHVAC
 
   # For systems required to have an economizer, set the economizer
   # to integrated on non-integrated per the standard.
+  #
+  # @note this method assumes you previously checked that an economizer is required at all
+  #   via #isEconomizerRequired
+  # @param (see #isEconomizerRequired)
+  # @return [Bool] returns true if successful, false if not
   def setEconomizerIntegration(template, climate_zone)
   
     # Determine if the system is a VAV system based on the fan
@@ -623,13 +662,21 @@ class OpenStudio::Model::AirLoopHVAC
     
   end
   
-  # Add economizer per Appendix G baseline
+  # Add economizer to the airloop per Appendix G baseline
+  #
+  # @param (see #isEconomizerRequired)
+  # @return [Bool] returns true if successful, false if not
+  # @todo This method is not yet functional
   def addBaselineEconomizer(template, climate_zone)
   
   end
   
-  # Check the economizer type.  Returns true if allowable
-  # or if the system has no economizer or no OA system.
+  # Check the economizer type currently specified in the ControllerOutdoorAir object on this air loop
+  # is acceptable per the standard.
+  #
+  # @param (see #isEconomizerRequired)
+  # @return [Bool] Returns true if allowable, if the system has no economizer or no OA system.
+  # Returns false if the economizer type is not allowable.
   def isEconomizerTypeAllowable(template, climate_zone)
   
     # EnergyPlus economizer types
@@ -724,7 +771,11 @@ class OpenStudio::Model::AirLoopHVAC
   
   end
   
-  # Check if ERV is required
+  # Check if ERV is required on this airloop.
+  #
+  # @param (see #isEconomizerRequired)
+  # @return [Bool] Returns true if required, false if not.  
+  # @todo Add exception logic for systems serving parking garage, warehouse, or multifamily
   def isEnergyRecoveryVentilatorRequired(template, climate_zone)
       
     # ERV Not Applicable for AHUs that serve 

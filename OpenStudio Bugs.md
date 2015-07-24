@@ -5,6 +5,4 @@
 
 ## WaterHeaterMixed:
 ### Object added and can be found in the osm file, but did not output to the IDF file
-### It seems the WaterHeater:Mixed has to be included in a plant loop
-
-
+### [It seems the WaterHeater:Mixed has to be included in a plant loop](https://github.com/NREL/OpenStudio/issues/1675)
