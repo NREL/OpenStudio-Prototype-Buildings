@@ -152,71 +152,61 @@ class OpenStudio::Model::Model
     floor_layers << nonres_floor_insulation
     floor_adiabatic_construction.setLayers(floor_layers)
 
+    g01_13mm_gypsum_board = OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    g01_13mm_gypsum_board.setName('G01 13mm gypsum board')
+    g01_13mm_gypsum_board.setRoughness('Smooth')
+    g01_13mm_gypsum_board.setThickness(0.0127)
+    g01_13mm_gypsum_board.setConductivity(0.1600)
+    g01_13mm_gypsum_board.setDensity(800)
+    g01_13mm_gypsum_board.setSpecificHeat(1090)
+    g01_13mm_gypsum_board.setThermalAbsorptance(0.9)
+    g01_13mm_gypsum_board.setSolarAbsorptance(0.7)
+    g01_13mm_gypsum_board.setVisibleAbsorptance(0.5)
 
-    # g01_13mm_gypsum_board = OpenStudio::Model::StandardOpaqueMaterial.new(self)
-    # g01_13mm_gypsum_board.setName('G01 13mm gypsum board')
-    # g01_13mm_gypsum_board.setRoughness('Smooth')
-    # g01_13mm_gypsum_board.setThickness(0.0127)
-    # g01_13mm_gypsum_board.setConductivity(0.1600)
-    # g01_13mm_gypsum_board.setDensity(800)
-    # g01_13mm_gypsum_board.setSpecificHeat(1090)
-    # g01_13mm_gypsum_board.setThermalAbsorptance(0.9)
-    # g01_13mm_gypsum_board.setSolarAbsorptance(0.7)
-    # g01_13mm_gypsum_board.setVisibleAbsorptance(0.5)
-    #
-    # wall_adiabatic_construction = OpenStudio::Model::Construction.new(self)
-    # wall_adiabatic_construction.setName('Wall Adiabatic construction')
-    # wall_layers = OpenStudio::Model::MaterialVector.new
-    # wall_layers << g01_13mm_gypsum_board
-    # wall_layers << g01_13mm_gypsum_board
-    # wall_adiabatic_construction.setLayers(wall_layers)
-    #
-    # m10_200mm_concrete_block_basement_wall= OpenStudio::Model::StandardOpaqueMaterial.new(self)
-    # m10_200mm_concrete_block_basement_wall.setName('M10 200mm concrete block basement wall')
-    # m10_200mm_concrete_block_basement_wall.setRoughness('MediumRough')
-    # m10_200mm_concrete_block_basement_wall.setThickness(0.2032)
-    # m10_200mm_concrete_block_basement_wall.setConductivity(1.326)
-    # m10_200mm_concrete_block_basement_wall.setDensity(1842)
-    # m10_200mm_concrete_block_basement_wall.setSpecificHeat(912)
-    #
-    # basement_wall_construction = OpenStudio::Model::Construction.new(self)
-    # basement_wall_construction.setName('Basement Wall construction')
-    # basement_wall_layers = OpenStudio::Model::MaterialVector.new
-    # basement_wall_layers << m10_200mm_concrete_block_basement_wall
-    # basement_wall_construction.setLayers(basement_wall_layers)
-    #
-    # basement_floor_construction = OpenStudio::Model::Construction.new(self)
-    # basement_floor_construction.setName('Basement Floor construction')
-    # basement_floor_layers = OpenStudio::Model::MaterialVector.new
-    # basement_floor_layers << m10_200mm_concrete_block_basement_wall
-    # basement_floor_layers << cp02_carpet_pad
-    # basement_floor_construction.setLayers(basement_floor_layers)
-    #
-    # self.getSurfaces.each do |surface|
-    #   if surface.outsideBoundaryCondition.to_s == "Adiabatic"
-    #     if surface.surfaceType.to_s == "Wall"
-    #       surface.setConstruction(wall_adiabatic_construction)
-    #     else
-    #       surface.setConstruction(floor_adiabatic_construction)
-    #     end
-    #   elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
-    #     # Ground
-    #     if surface.surfaceType.to_s == "Wall"
-    #       surface.setOutsideBoundaryCondition("Ground")
-    #       surface.setConstruction(basement_wall_construction)
-    #     else
-    #       surface.setOutsideBoundaryCondition("Ground")
-    #       surface.setConstruction(basement_floor_construction)
-    #     end
-    #   end
-    # end
+    wall_adiabatic_construction = OpenStudio::Model::Construction.new(self)
+    wall_adiabatic_construction.setName('Wall Adiabatic construction')
+    wall_layers = OpenStudio::Model::MaterialVector.new
+    wall_layers << g01_13mm_gypsum_board
+    wall_layers << g01_13mm_gypsum_board
+    wall_adiabatic_construction.setLayers(wall_layers)
+
+    m10_200mm_concrete_block_basement_wall= OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    m10_200mm_concrete_block_basement_wall.setName('M10 200mm concrete block basement wall')
+    m10_200mm_concrete_block_basement_wall.setRoughness('MediumRough')
+    m10_200mm_concrete_block_basement_wall.setThickness(0.2032)
+    m10_200mm_concrete_block_basement_wall.setConductivity(1.326)
+    m10_200mm_concrete_block_basement_wall.setDensity(1842)
+    m10_200mm_concrete_block_basement_wall.setSpecificHeat(912)
+
+    basement_wall_construction = OpenStudio::Model::Construction.new(self)
+    basement_wall_construction.setName('Basement Wall construction')
+    basement_wall_layers = OpenStudio::Model::MaterialVector.new
+    basement_wall_layers << m10_200mm_concrete_block_basement_wall
+    basement_wall_construction.setLayers(basement_wall_layers)
+
+    basement_floor_construction = OpenStudio::Model::Construction.new(self)
+    basement_floor_construction.setName('Basement Floor construction')
+    basement_floor_layers = OpenStudio::Model::MaterialVector.new
+    basement_floor_layers << m10_200mm_concrete_block_basement_wall
+    basement_floor_layers << cp02_carpet_pad
+    basement_floor_construction.setLayers(basement_floor_layers)
 
     self.getSurfaces.each do |surface|
       if surface.outsideBoundaryCondition.to_s == "Adiabatic"
-        surface.setConstruction(floor_adiabatic_construction)
+        if surface.surfaceType.to_s == "Wall"
+          surface.setConstruction(wall_adiabatic_construction)
+        else
+          surface.setConstruction(floor_adiabatic_construction)
+        end
       elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
-        surface.setOutsideBoundaryCondition("Adiabatic")
-        surface.setConstruction(floor_adiabatic_construction)
+        # Ground
+        if surface.surfaceType.to_s == "Wall"
+          surface.setOutsideBoundaryCondition("Ground")
+          surface.setConstruction(basement_wall_construction)
+        else
+          surface.setOutsideBoundaryCondition("Ground")
+          surface.setConstruction(basement_floor_construction)
+        end
       end
     end
 
