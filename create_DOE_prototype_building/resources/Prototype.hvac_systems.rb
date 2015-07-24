@@ -3441,11 +3441,11 @@ class OpenStudio::Model::Model
     heat_exchanger.addToNode(system_OA.outboardOANode.get)
 
 
-    # setpoint_manager_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(self)
-    # setpoint_manager_pretreat.setName("VAV oa pretreat")
-    # setpoint_manager_pretreat.setControlVariable('Temperature')
-    # setpoint_manager_pretreat.addToNode(heat_exchanger.primaryAirOutletModelObject.get.to_Node.get)
-    # setpoint_manager_pretreat.setOutdoorAirStreamNode(heat_exchanger.primaryAirInletModelObject.get.to_Node.get)
+    setpoint_manager_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(self)
+    setpoint_manager_pretreat.setName("VAV oa pretreat")
+    setpoint_manager_pretreat.setControlVariable('Temperature')
+    setpoint_manager_pretreat.addToNode(heat_exchanger.primaryAirOutletModelObject.get.to_Node.get)
+    setpoint_manager_pretreat.setOutdoorAirStreamNode(heat_exchanger.primaryAirInletModelObject.get.to_Node.get)
 
 
     # create scheduled setpoint manager for airloop

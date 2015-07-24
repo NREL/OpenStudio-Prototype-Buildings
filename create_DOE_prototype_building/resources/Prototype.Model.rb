@@ -773,11 +773,11 @@ class OpenStudio::Model::Model
         # Add the ERV to the OA system
         erv.addToNode(oa_system.outboardOANode.get)
 
-        # setpoint_manager_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(self)
-        # setpoint_manager_pretreat.setName("VAV oa pretreat")
-        # setpoint_manager_pretreat.setControlVariable('Temperature')
-        # setpoint_manager_pretreat.addToNode(erv.primaryAirOutletModelObject.get.to_Node.get)
-        # setpoint_manager_pretreat.setOutdoorAirStreamNode(erv.primaryAirInletModelObject.get.to_Node.get)
+        setpoint_manager_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(self)
+        setpoint_manager_pretreat.setName("VAV oa pretreat")
+        setpoint_manager_pretreat.setControlVariable('Temperature')
+        setpoint_manager_pretreat.addToNode(erv.primaryAirOutletModelObject.get.to_Node.get)
+        setpoint_manager_pretreat.setOutdoorAirStreamNode(erv.primaryAirInletModelObject.get.to_Node.get)
 
       end
     
