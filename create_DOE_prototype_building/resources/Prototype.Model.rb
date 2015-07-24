@@ -139,7 +139,7 @@ class OpenStudio::Model::Model
     nonres_floor_insulation = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
     nonres_floor_insulation.setName('Nonres_Floor_Insulation')
     nonres_floor_insulation.setRoughness("MediumSmooth")
-    nonres_floor_insulation.setThermalResistance(4.13066404430099)
+    nonres_floor_insulation.setThermalResistance(2.88291975297193)
     nonres_floor_insulation.setThermalAbsorptance(0.9)
     nonres_floor_insulation.setSolarAbsorptance(0.7)
     nonres_floor_insulation.setVisibleAbsorptance(0.7)

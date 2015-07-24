@@ -64,9 +64,11 @@ class OpenStudio::Model::Model
       boiler.setWaterOutletUpperTemperatureLimit(95)
     end
 
-    boiler_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,hw_temp_sch)
-    boiler_stpt_manager.setName("Boiler outlet setpoint manager")
-    boiler_stpt_manager.addToNode(boiler.outletModelObject.get.to_Node.get)
+    # TODO: Yixing. Add the temperature setpoint will cost the simulation with
+    # thousands of Severe Errors. Need to figure this out later.
+    #boiler_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,hw_temp_sch)
+    #boiler_stpt_manager.setName("Boiler outlet setpoint manager")
+    #boiler_stpt_manager.addToNode(boiler.outletModelObject.get.to_Node.get)
 
 
     #hot water loop pipes
@@ -104,12 +106,12 @@ class OpenStudio::Model::Model
 
     # Chilled water loop controls
     # TODO: Yixing check the CHW Setpoint from standards
-    #if building_type == 'LargeHotel'
-    #  chw_temp_f = 44 #CHW setpoint 44F
-    #  chilled_water_loop.setCommonPipeSimulation("TwoWayCommonPipe")
-    #else
+    if building_type == 'LargeHotel'
+     chw_temp_f = 44 #CHW setpoint 44F
+     chilled_water_loop.setCommonPipeSimulation("TwoWayCommonPipe")
+    else
       chw_temp_f = 45 #CHW setpoint 45F
-    #end
+    end
 
     chw_delta_t_r = 12 #12F delta-T    
     chw_temp_c = OpenStudio.convert(chw_temp_f,'F','C').get
@@ -121,6 +123,7 @@ class OpenStudio::Model::Model
     chw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,chw_temp_sch)
     chw_stpt_manager.setName("Chilled water loop setpoint manager")
     chw_stpt_manager.addToNode(chilled_water_loop.supplyOutletNode)
+
     sizing_plant = chilled_water_loop.sizingPlant
     sizing_plant.setLoopType('Cooling')
     sizing_plant.setDesignLoopExitTemperature(chw_temp_c)
@@ -198,6 +201,7 @@ class OpenStudio::Model::Model
     
     # Make the correct type of chiller based these properties
     chiller = add_chiller(standards, chiller_properties)
+    chilled_water_loop.addSupplyBranchForComponent(chiller)
     chiller.setReferenceLeavingChilledWaterTemperature(chw_temp_c)
     ref_cond_wtr_temp_f = 95
     ref_cond_wtr_temp_c = OpenStudio.convert(ref_cond_wtr_temp_f,'F','C').get
@@ -208,17 +212,16 @@ class OpenStudio::Model::Model
     chiller.setMinimumUnloadingRatio(0.15)
     chiller.setCondenserType('AirCooled')
     chiller.setLeavingChilledWaterLowerTemperatureLimit(OpenStudio.convert(36,'F','C').get)
-    # TODO: Yixing check other building types
-    #if building_type == "LargeHotel"
-   #   chiller.setChillerFlowMode('LeavingSetpointModulated')
-   # else
-      chiller.setChillerFlowMode('ConstantFlow')
-   # end
-    chilled_water_loop.addSupplyBranchForComponent(chiller)
+    chiller.setChillerFlowMode('ConstantFlow')
 
-    #chiller_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,chw_temp_sch)
-   # chiller_stpt_manager.setName("chiller outlet setpoint manager")
-   # chiller_stpt_manager.addToNode(chiller.supplyOutletModelObject.get.to_Node.get)
+    #if building_type == "LargeHotel"
+      # TODO: Yixing. Add the temperature setpoint and change the flow mode will cost the simulation with
+      # thousands of Severe Errors. Need to figure this out later.
+      #chiller.setChillerFlowMode('LeavingSetpointModulated')
+      #chiller_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,chw_temp_sch)
+      #chiller_stpt_manager.setName("chiller outlet setpoint manager")
+      #chiller_stpt_manager.addToNode(chiller.supplyOutletModelObject.get.to_Node.get)
+    #end
 
     # Connect the chiller to the condenser loop if
     # one was supplied.
