@@ -2891,7 +2891,11 @@ class OpenStudio::Model::Model
       swh_pump_motor_efficiency = 1
     end
 
-    swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+    if prototype_input['template'] == 'DOE Ref 1980-2004' or prototype_input['template'] == 'DOE Ref Pre-1980'
+      swh_pump = OpenStudio::Model::PumpVariableSpeed.new(self)
+    else
+      swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+    end
     swh_pump.setName('Service Water Loop Pump')
     swh_pump.setRatedPumpHead(swh_pump_head_press_pa.to_f)
     swh_pump.setMotorEfficiency(swh_pump_motor_efficiency)

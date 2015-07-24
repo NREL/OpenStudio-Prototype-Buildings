@@ -523,7 +523,7 @@ class OpenStudio::Model::Model
         nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
         #
         nondimming_ext_lts_sch = nil
-        if building_vintage == '90.1-2010'
+        if building_vintage == '90.1-2010' || building_vintage == '90.1-2007' || building_vintage == '90.1-2004' || building_vintage == '90.1-2013' 
           nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
           nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
           nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")

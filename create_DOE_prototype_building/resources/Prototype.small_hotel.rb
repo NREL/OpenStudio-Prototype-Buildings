@@ -10,8 +10,8 @@ class OpenStudio::Model::Model
     when 'DOE Ref Pre-1980'
       space_type_map = {
         'Corridor' => ['CorridorFlr1','CorridorFlr2','CorridorFlr3','CorridorFlr4'],
-        # 'ElevatorCore' => ['ElevatorCoreFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO put elevators into Mechanical type temperarily
         'Elec/MechRoom' => ['ElevatorCoreFlr1'],
+        'ElevatorCore' => ['ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],
         'StaffLounge' => ['EmployeeLoungeFlr1'],
         'Exercise' => ['ExerciseCenterFlr1'],
         'GuestLounge' => ['FrontLoungeFlr1'],
@@ -28,7 +28,7 @@ class OpenStudio::Model::Model
                         'GuestRoom401','GuestRoom402_405','GuestRoom406_408','GuestRoom409_412','GuestRoom413',
                         'GuestRoom414','GuestRoom415_418','GuestRoom419','GuestRoom420_423','GuestRoom424'],
         'Laundry' => ['LaundryRoomFlr1'],
-        'Mechanical' => ['MechanicalRoomFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO
+        'Mechanical' => ['MechanicalRoomFlr1'],
         'Meeting' => ['MeetingRoomFlr1'],
         'PublicRestroom' => ['RestroomFlr1'],
         'Attic' => ['Attic']
@@ -38,6 +38,7 @@ class OpenStudio::Model::Model
         'Corridor' => ['CorridorFlr1','CorridorFlr2','CorridorFlr3','CorridorFlr4'],
         # 'ElevatorCore' => ['ElevatorCoreFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO put elevators into Mechanical type temperarily
         'Elec/MechRoom' => ['ElevatorCoreFlr1'],
+        'ElevatorCore' => ['ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],
         'StaffLounge' => ['EmployeeLoungeFlr1'],
         'Exercise' => ['ExerciseCenterFlr1'],
         'GuestLounge' => ['FrontLoungeFlr1'],
@@ -54,18 +55,18 @@ class OpenStudio::Model::Model
                         'GuestRoom401','GuestRoom402_405','GuestRoom406_408','GuestRoom409_412','GuestRoom413',
                         'GuestRoom414','GuestRoom415_418','GuestRoom419','GuestRoom420_423','GuestRoom424'],
         'Laundry' => ['LaundryRoomFlr1'],
-        'Mechanical' => ['MechanicalRoomFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO
+        'Mechanical' => ['MechanicalRoomFlr1'],
         'Meeting' => ['MeetingRoomFlr1'],
         'PublicRestroom' => ['RestroomFlr1'],
         'Attic' => ['Attic']
       }
-    when '90.1-2010'
+    when '90.1-2010','90.1-2007','90.1-2004','90.1-2013'
       space_type_map = {
         'Corridor' => ['CorridorFlr1','CorridorFlr2','CorridorFlr3'],
         'Corridor4' => ['CorridorFlr4'],
-        # 'ElevatorCore' => ['ElevatorCoreFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO put elevators into Mechanical type temperarily
         'Elec/MechRoom' => ['ElevatorCoreFlr1'],
-        'ElevatorCore234' => ['ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],
+        'ElevatorCore' => ['ElevatorCoreFlr2','ElevatorCoreFlr3'],
+        'ElevatorCore4' => ['ElevatorCoreFlr4'],
         'StaffLounge' => ['EmployeeLoungeFlr1'],
         'Exercise' => ['ExerciseCenterFlr1'],
         'GuestLounge' => ['FrontLoungeFlr1'],
@@ -75,7 +76,8 @@ class OpenStudio::Model::Model
         'Stair4' => ['FrontStairsFlr4','RearStairsFlr4'],
         'Storage' => ['FrontStorageFlr1','FrontStorageFlr2','FrontStorageFlr3',
                       'RearStorageFlr1','RearStorageFlr2','RearStorageFlr3'],
-        'Storage4' => ['FrontStorageFlr4','RearStorageFlr4'],
+        'Storage4Front' => ['FrontStorageFlr4'],
+        'Storage4Rear' => ['RearStorageFlr4'],
         'GuestRoom123Occ' => ['GuestRoom103','GuestRoom104','GuestRoom105','GuestRoom202_205','GuestRoom206_208',
                         'GuestRoom209_212','GuestRoom213','GuestRoom214','GuestRoom219','GuestRoom220_223',
                         'GuestRoom224','GuestRoom309_312','GuestRoom314','GuestRoom315_318','GuestRoom320_323'],
@@ -90,6 +92,7 @@ class OpenStudio::Model::Model
         # 'Attic' => ['Attic']
 
       }
+      
     end  
 
     return space_type_map
@@ -362,7 +365,7 @@ class OpenStudio::Model::Model
         {'type' => 'UnitHeater',
         'space_names' => ['RearStorageFlr4']}
       ] 
-    when '90.1-2010'
+    when '90.1-2010','90.1-2007','90.1-2004','90.1-2013'
       system_to_space_map = [
         {'type' => 'PTAC',
         'space_names' => ['GuestRoom101']},
@@ -606,7 +609,7 @@ class OpenStudio::Model::Model
       
       if data['service_water_heating_peak_flow_rate'].nil?
         next
-      elsif space_type_name == "Laundry"
+      elsif space_type_name == "Laundry" and building_vintage != 'DOE Ref 1980-2004' and building_vintage != 'DOE Ref Pre-1980'
         next
       else
         space_names.each do |space_name|
@@ -614,9 +617,11 @@ class OpenStudio::Model::Model
         end
       end
     end
-        
-    laundry_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry')
-    self.add_swh_end_uses(prototype_input, hvac_standards, laundry_swh_loop, 'laundry')
+    
+    unless building_vintage == 'DOE Ref 1980-2004' or building_vintage == 'DOE Ref Pre-1980'
+      laundry_swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry')
+      self.add_swh_end_uses(prototype_input, hvac_standards, laundry_swh_loop, 'laundry')
+    end
 
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding SWH")
     

@@ -60,25 +60,25 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Make an argument for the climate zone
     climate_zone_chs = OpenStudio::StringVector.new
-    #climate_zone_chs << 'ASHRAE 169-2006-1A'
-    #climate_zone_chs << 'ASHRAE 169-2006-1B'
+    climate_zone_chs << 'ASHRAE 169-2006-1A'
+    climate_zone_chs << 'ASHRAE 169-2006-1B'
     climate_zone_chs << 'ASHRAE 169-2006-2A'
-    #climate_zone_chs << 'ASHRAE 169-2006-2B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3A'
+    climate_zone_chs << 'ASHRAE 169-2006-2B'
+    climate_zone_chs << 'ASHRAE 169-2006-3A'
     climate_zone_chs << 'ASHRAE 169-2006-3B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3C'
+    climate_zone_chs << 'ASHRAE 169-2006-3C'
     climate_zone_chs << 'ASHRAE 169-2006-4A'
-    #climate_zone_chs << 'ASHRAE 169-2006-4B'
-    #climate_zone_chs << 'ASHRAE 169-2006-4C'
+    climate_zone_chs << 'ASHRAE 169-2006-4B'
+    climate_zone_chs << 'ASHRAE 169-2006-4C'
     climate_zone_chs << 'ASHRAE 169-2006-5A'
-    #climate_zone_chs << 'ASHRAE 169-2006-5B'
-    #climate_zone_chs << 'ASHRAE 169-2006-5C'
-    #climate_zone_chs << 'ASHRAE 169-2006-6A'
-    #climate_zone_chs << 'ASHRAE 169-2006-6B'
-    #climate_zone_chs << 'ASHRAE 169-2006-7A'
-    #climate_zone_chs << 'ASHRAE 169-2006-7B'
-    #climate_zone_chs << 'ASHRAE 169-2006-8A'
-    #climate_zone_chs << 'ASHRAE 169-2006-8B'
+    climate_zone_chs << 'ASHRAE 169-2006-5B'
+    climate_zone_chs << 'ASHRAE 169-2006-5C'
+    climate_zone_chs << 'ASHRAE 169-2006-6A'
+    climate_zone_chs << 'ASHRAE 169-2006-6B'
+    climate_zone_chs << 'ASHRAE 169-2006-7A'
+    climate_zone_chs << 'ASHRAE 169-2006-7B'
+    climate_zone_chs << 'ASHRAE 169-2006-8A'
+    climate_zone_chs << 'ASHRAE 169-2006-8B'
     climate_zone = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('climate_zone', climate_zone_chs, true)
     climate_zone.setDisplayName('Select a Climate Zone.')
     climate_zone.setDefaultValue('ASHRAE 169-2006-2A')
@@ -138,7 +138,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Retrieve the Prototype Inputs from JSON
     search_criteria = {
       'template' => building_vintage,
-      'climate_zone' => climate_zone,
+      # 'climate_zone' => climate_zone,
       'building_type' => building_type,
     }
     prototype_input = model.find_object(model.standards['prototype_inputs'], search_criteria)
@@ -215,10 +215,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
       # Reference and Prototype vintages
-      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+      case building_vintage
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
         geometry_file = 'Geometry.small_hotel_doe.osm'
-      else
-        geometry_file = 'Geometry.small_hotel_pnnl.osm'
+      when '90.1-2004'
+        geometry_file = 'Geometry.small_hotel_pnnl2004.osm'
+      when '90.1-2007'
+        geometry_file = 'Geometry.small_hotel_pnnl2007.osm'
+      when '90.1-2010'
+        geometry_file = 'Geometry.small_hotel_pnnl2010.osm'
+      when '90.1-2013'
+        geometry_file = 'Geometry.small_hotel_pnnl2013.osm'
       end
     when 'LargeHotel'
       require_relative 'resources/Prototype.large_hotel'

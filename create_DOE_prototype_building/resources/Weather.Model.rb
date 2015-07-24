@@ -14,7 +14,7 @@ class OpenStudio::Model::Model
     # Define the weather file for each climate zone
     climate_zone_weather_file_map = {
       'ASHRAE 169-2006-1A' => 'USA_FL_Miami.Intl.AP.722020_TMY3.epw',
-      'ASHRAE 169-2006-1B' => 'TODO Riyadh.epw',
+      'ASHRAE 169-2006-1B' => 'SAU_Riyadh.404380_IWEC.epw',
       'ASHRAE 169-2006-2A' => 'USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3.epw',
       'ASHRAE 169-2006-2B' => 'USA_AZ_Phoenix-Sky.Harbor.Intl.AP.722780_TMY3.epw',
       'ASHRAE 169-2006-3A' => 'USA_TN_Memphis.Intl.AP.723340_TMY3.epw',
@@ -25,7 +25,7 @@ class OpenStudio::Model::Model
       'ASHRAE 169-2006-4C' => 'USA_OR_Salem-McNary.Field.726940_TMY3.epw',
       'ASHRAE 169-2006-5A' => 'USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw',
       'ASHRAE 169-2006-5B' => 'USA_ID_Boise.Air.Terminal.726810_TMY3.epw',
-      'ASHRAE 169-2006-5C' => 'TODO Vancouver.epw',
+      'ASHRAE 169-2006-5C' => 'CAN_BC_Vancouver.718920_CWEC.epw',
       'ASHRAE 169-2006-6A' => 'USA_VT_Burlington.Intl.AP.726170_TMY3.epw',
       'ASHRAE 169-2006-6B' => 'USA_MT_Helena.Rgnl.AP.727720_TMY3.epw',
       'ASHRAE 169-2006-7A' => 'USA_MN_Duluth.Intl.AP.727450_TMY3.epw',
