@@ -397,9 +397,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   hostname = Socket.gethostname
 
   # For Andrew Parker in NREL
-  if hostname == "aparker-26487s" # TODO: Andrew update the pc names
+  if hostname == "aparker-26487s"|| hostname == "MLEACH-19193S" # TODO: Andrew update the pc names
     # Test the Secondary School in the PTool vintages and climate zones
-    def dont_test_secondary_school
+    def test_secondary_school
 
       bldg_types = ['SecondarySchool']
       vintages = ['90.1-2010'] #['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
@@ -472,7 +472,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     end
     
-    def test_large_office
+    def dont_test_large_office
 
       bldg_types = ['LargeOffice']
       vintages = ['90.1-2010'] #['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
