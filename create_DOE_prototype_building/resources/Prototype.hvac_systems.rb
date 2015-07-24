@@ -459,10 +459,10 @@ class OpenStudio::Model::Model
 
     if building_type == "LargeHotel"
       rht_sa_temp_f = 90 # VAV box reheat to 90F for large hotel
-      #zone_htg_sa_temp_f = 104 # Zone heating design supply air temperature to 104 F
+      zone_htg_sa_temp_f = 104 # Zone heating design supply air temperature to 104 F
     else
       rht_sa_temp_f = 104 # VAV box reheat to 104F
-      #zone_htg_sa_temp_f = 104 # Zone heating design supply air temperature to 104 F
+      zone_htg_sa_temp_f = 104 # Zone heating design supply air temperature to 104 F
     end
 
     # hvac operation schedule
@@ -482,7 +482,7 @@ class OpenStudio::Model::Model
     preclg_sa_temp_c = OpenStudio.convert(preclg_sa_temp_f,'F','C').get
     htg_sa_temp_c = OpenStudio.convert(htg_sa_temp_f,'F','C').get
     rht_sa_temp_c = OpenStudio.convert(rht_sa_temp_f,'F','C').get
-    #zone_htg_sa_temp_c = OpenStudio.convert(zone_htg_sa_temp_f,'F','C').get
+    zone_htg_sa_temp_c = OpenStudio.convert(zone_htg_sa_temp_f,'F','C').get
     
     sa_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     sa_temp_sch.setName("Supply Air Temp - #{clg_sa_temp_f}F")
@@ -599,8 +599,8 @@ class OpenStudio::Model::Model
       sizing_zone.setCoolingDesignAirFlowMethod("DesignDayWithLimit")
       sizing_zone.setHeatingDesignAirFlowMethod("DesignDay")
       sizing_zone.setZoneCoolingDesignSupplyAirTemperature(clg_sa_temp_c)
-      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(rht_sa_temp_c)
-      #sizing_zone.setZoneHeatingDesignSupplyAirTemperature(zone_htg_sa_temp_c)
+      #sizing_zone.setZoneHeatingDesignSupplyAirTemperature(rht_sa_temp_c)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(zone_htg_sa_temp_c)
     
     end
 
