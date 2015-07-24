@@ -163,7 +163,7 @@ class OpenStudio::Model::Model
     zone_sizing.setCoolingMinimumAirFlow(0.23567919336)
 
     # Add the daylighting controls for lobby, cafe, dinning and banquet
-    #self.add_daylighting_controls(building_vintage)
+    self.add_daylighting_controls(building_vintage)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
     return true

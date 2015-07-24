@@ -11,11 +11,11 @@ class OpenStudio::Model::Model
 
     #hot water loop controls
     # TODO: Yixing check other building types and add the parameter to the prototype input if more values comes out.
-   # if building_type == "LargeHotel"
-    #  hw_temp_f = 140 #HW setpoint 140F
-    #else
+    if building_type == "LargeHotel"
+      hw_temp_f = 140 #HW setpoint 140F
+    else
       hw_temp_f = 180 #HW setpoint 180F
-   # end
+    end
 
     hw_delta_t_r = 20 #20F delta-T    
     hw_temp_c = OpenStudio.convert(hw_temp_f,'F','C').get
@@ -56,13 +56,13 @@ class OpenStudio::Model::Model
     boiler.setBoilerFlowMode('LeavingSetpointModulated')
     hot_water_loop.addSupplyBranchForComponent(boiler)
 
-    # if building_type == "LargeHotel"
-    #   boiler.setEfficiencyCurveTemperatureEvaluationVariable("LeavingBoiler")
-    #   boiler.setDesignWaterOutletTemperature(81)
-    #   boiler.setMaximumPartLoadRatio(1.2)
-    #   boiler.setSizingFactor(1.2)
-    #   boiler.setWaterOutletUpperTemperatureLimit(95)
-    # end
+    if building_type == "LargeHotel"
+      boiler.setEfficiencyCurveTemperatureEvaluationVariable("LeavingBoiler")
+      boiler.setDesignWaterOutletTemperature(81)
+      boiler.setMaximumPartLoadRatio(1.2)
+      boiler.setSizingFactor(1.2)
+      boiler.setWaterOutletUpperTemperatureLimit(95)
+    end
 
     boiler_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,hw_temp_sch)
     boiler_stpt_manager.setName("Boiler outlet setpoint manager")
