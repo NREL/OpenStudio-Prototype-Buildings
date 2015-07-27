@@ -17,7 +17,7 @@
 # *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 # **********************************************************************/
 
-require "#{File.dirname(__FILE__)}/btap/btap"
+require "#{File.dirname(__FILE__)}/../lib/btap"
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
 

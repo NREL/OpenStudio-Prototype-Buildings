@@ -3,3 +3,5 @@ create_DOE_prototype_building/tests/build
 /temporary junk/
 .idea/
 .project
+/netbean_project/nbproject/private/
+/BTAP/nbproject/private/
