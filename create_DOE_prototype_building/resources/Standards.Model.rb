@@ -30,7 +30,7 @@ class OpenStudio::Model::Model
     #### Controls
     
     # Air Loop Controls
-    self.getAirLoopHVACs.sort.each {|obj| obj.applyStandardControls(self.template, self.climate_zone)}  
+    self.getAirLoopHVACs.sort.each {|obj| obj.apply_standard_controls(self.template, self.climate_zone)}  
 
     ##### Apply equipment efficiencies
     
