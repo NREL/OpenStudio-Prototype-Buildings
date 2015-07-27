@@ -727,7 +727,7 @@ class OpenStudio::Model::Model
     
     # Check each airloop
     self.getAirLoopHVACs.each do |air_loop|
-      if air_loop.isEconomizerRequired(self.template, self.climate_zone) == true
+      if air_loop.is_economizer_required(self.template, self.climate_zone) == true
         # If an economizer is required, determine the economizer type
         # in the prototype buildings, which depends on climate zone.
         economizer_type = nil
@@ -759,61 +759,6 @@ class OpenStudio::Model::Model
         oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
       end
     end
-
-    #### Add ERVs
-    # Check each airloop and add an ERV if required
-    self.getAirLoopHVACs.each do |air_loop|
-      if air_loop.isEnergyRecoveryVentilatorRequired(self.template, self.climate_zone) == true
-    
-        # Get the AHU design supply air flow rate
-        dsn_flow_m3_per_s = nil
-        if air_loop.designSupplyAirFlowRate.is_initialized
-          dsn_flow_m3_per_s = air_loop.designSupplyAirFlowRate.get
-        elsif air_loop.autosizedDesignSupplyAirFlowRate.is_initialized
-          dsn_flow_m3_per_s = air_loop.autosizedDesignSupplyAirFlowRate.get
-        else
-          OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.AirLoopHVAC", "For #{air_loop.name} design supply air flow rate is not available, cannot apply ERV.")
-          return false
-        end
-        dsn_flow_cfm = OpenStudio.convert(dsn_flow_m3_per_s, 'm^3/s', 'cfm').get    
-    
-        # Get the oa system
-        oa_system = nil
-        if air_loop.airLoopHVACOutdoorAirSystem.is_initialized
-          oa_system = air_loop.airLoopHVACOutdoorAirSystem.get
-        else
-          runner.registerError("ERV not applicable to '#{air_loop.name}' because it has no OA intake.")
-          next
-        end
-      
-        # Create an ERV
-        erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-        erv.setName("#{air_loop.name} ERV")
-        erv.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-        erv.setLatentEffectivenessat100HeatingAirFlow(0.6)
-        erv.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-        erv.setLatentEffectivenessat75HeatingAirFlow(0.6)
-        erv.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-        erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
-        erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-        erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
-        erv.setSupplyAirOutletTemperatureControl(true) 
-        erv.setHeatExchangerType('Rotary')
-        erv.setFrostControlType('ExhaustOnly')
-        erv.setEconomizerLockout(true)
-        erv.setThresholdTemperature(-23.3) # -10F
-        erv.setInitialDefrostTimeFraction(0.167)
-        erv.setRateofDefrostTimeFractionIncrease(1.44)
-        
-        # Add the ERV to the OA system
-        erv.addToNode(oa_system.outboardOANode.get)    
-    
-      end
-    
-    end
-
-    # Heat Exchanger power
-    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
@@ -926,11 +871,10 @@ class OpenStudio::Model::Model
       OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Running sizing run with RunManager.")
 
       # Find EnergyPlus
-      require 'openstudio/energyplus/find_energyplus'
-      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
-      ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+      ep_dir = OpenStudio.getEnergyPlusDirectory
+      ep_path = OpenStudio.getEnergyPlusExecutable
       ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-      idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+      idd_path = OpenStudio::Path.new(ep_dir.to_s + "/Energy+.idd")
       output_path = OpenStudio::Path.new("#{run_dir}/")
       
       # Make a run manager and queue up the sizing run
@@ -1019,34 +963,47 @@ class OpenStudio::Model::Model
     # "monthly"
    
     vars = []
-    vars << ['Heating Coil Gas Rate', 'detailed']
-    vars << ['Zone Thermostat Air Temperature', 'detailed']
-    vars << ['Zone Thermostat Heating Setpoint Temperature', 'detailed']
-    vars << ['Zone Thermostat Cooling Setpoint Temperature', 'detailed']
-    vars << ['Zone Air System Sensible Heating Rate', 'detailed']
-    vars << ['Zone Air System Sensible Cooling Rate', 'detailed']
-    vars << ['Fan Electric Power', 'detailed']
-    vars << ['Zone Mechanical Ventilation Standard Density Volume Flow Rate', 'detailed']
-    vars << ['Air System Outdoor Air Mass Flow Rate', 'detailed']
-    vars << ['Air System Outdoor Air Flow Fraction', 'detailed']
-    vars << ['Air System Outdoor Air Minimum Flow Fraction', 'detailed']
+    # vars << ['Heating Coil Gas Rate', 'detailed']
+    # vars << ['Zone Thermostat Air Temperature', 'detailed']
+    # vars << ['Zone Thermostat Heating Setpoint Temperature', 'detailed']
+    # vars << ['Zone Thermostat Cooling Setpoint Temperature', 'detailed']
+    # vars << ['Zone Air System Sensible Heating Rate', 'detailed']
+    # vars << ['Zone Air System Sensible Cooling Rate', 'detailed']
+    # vars << ['Fan Electric Power', 'detailed']
+    # vars << ['Zone Mechanical Ventilation Standard Density Volume Flow Rate', 'detailed']
+    # vars << ['Air System Outdoor Air Mass Flow Rate', 'detailed']
+    # vars << ['Air System Outdoor Air Flow Fraction', 'detailed']
+    # vars << ['Air System Outdoor Air Minimum Flow Fraction', 'detailed']
     
-    vars << ['Water Use Equipment Hot Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Cold Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Total Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Hot Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Cold Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Target Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Mixed Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Hot Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Cold Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Total Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Hot Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Cold Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Target Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Mixed Water Temperature', 'hourly']
     
-    vars << ['Water Use Connections Hot Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Cold Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Total Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Hot Water Temperature', 'hourly']
-    vars << ['Water Use Connections Cold Water Temperature', 'hourly']
-    vars << ['Water Use Connections Plant Hot Water Energy', 'hourly']
-    vars << ['Water Use Connections Return Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Hot Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Cold Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Total Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Hot Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Cold Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Plant Hot Water Energy', 'hourly']
+    # vars << ['Water Use Connections Return Water Temperature', 'hourly']
   
+    vars << ['Air System Outdoor Air Economizer Status','timestep']
+    vars << ['Air System Outdoor Air Heat Recovery Bypass Status','timestep']
+    vars << ['Air System Outdoor Air High Humidity Control Status','timestep']
+    vars << ['Air System Outdoor Air Flow Fraction','timestep']
+    vars << ['Air System Outdoor Air Minimum Flow Fraction','timestep']
+    vars << ['Air System Outdoor Air Mass Flow Rate','timestep']
+    vars << ['Air System Mixed Air Mass Flow Rate','timestep']
+  
+    vars << ['Heating Coil Gas Rate','timestep']
+    vars << ['Boiler Part Load Ratio','timestep']
+    vars << ['Boiler Gas Rate','timestep']
+    vars << ['Fan Electric Power','timestep']
+    
     vars.each do |var, freq|  
       outputVariable = OpenStudio::Model::OutputVariable.new(var, self)
       outputVariable.setReportingFrequency(freq)
