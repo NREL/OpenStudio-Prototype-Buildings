@@ -433,7 +433,7 @@ class OpenStudio::Model::Model
     clg_sa_temp_f = 55.04 # Central deck clg temp 55F
     prehtg_sa_temp_f = 44.6 # Preheat to 44.6F
     preclg_sa_temp_f = 55.04 # Precool to 55F
-    htg_sa_temp_f = 62 # Central deck htg temp 55F
+    htg_sa_temp_f = 55.04 # Central deck htg temp 55F
     rht_sa_temp_f = 104 # VAV box reheat to 104F
     
     clg_sa_temp_c = OpenStudio.convert(clg_sa_temp_f,'F','C').get
@@ -472,7 +472,7 @@ class OpenStudio::Model::Model
         
     #fan
     fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
-    fan.setName("#{thermal_zones.size} Zone VAV Fan")
+    fan.setName("#{air_loop.name} Fan")
     fan.setFanEfficiency(prototype_input['vav_fan_efficiency'].to_f)
     fan.setMotorEfficiency(prototype_input['vav_fan_motor_efficiency'].to_f)
     fan.setPressureRise(prototype_input['vav_fan_pressure_rise'].to_f)
@@ -481,15 +481,9 @@ class OpenStudio::Model::Model
     fan.addToNode(air_loop.supplyInletNode)
     fan.setEndUseSubcategory("VAV system Fans")
 
-    #cooling coil
-    clg_coil = OpenStudio::Model::CoilCoolingWater.new(self,self.alwaysOnDiscreteSchedule)
-    clg_coil.setName("#{thermal_zones.size} Zone VAV Clg Coil")
-    clg_coil.addToNode(air_loop.supplyInletNode)
-    chilled_water_loop.addDemandBranchForComponent(clg_coil)
-    
     #heating coil
     htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
-    htg_coil.setName("#{thermal_zones.size} Zone VAV Main Htg Coil")
+    htg_coil.setName("#{air_loop.name} Main Htg Coil")
     htg_coil.setRatedInletWaterTemperature(hw_temp_c)
     htg_coil.setRatedInletAirTemperature(prehtg_sa_temp_c)
     htg_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
@@ -497,19 +491,25 @@ class OpenStudio::Model::Model
     htg_coil.addToNode(air_loop.supplyInletNode)
     hot_water_loop.addDemandBranchForComponent(htg_coil)
     
+    #cooling coil
+    clg_coil = OpenStudio::Model::CoilCoolingWater.new(self,self.alwaysOnDiscreteSchedule)
+    clg_coil.setName("#{air_loop.name} Clg Coil")
+    clg_coil.addToNode(air_loop.supplyInletNode)
+    chilled_water_loop.addDemandBranchForComponent(clg_coil)    
+    
     #outdoor air intake system
     oa_intake_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
-    oa_intake_controller.setName("#{thermal_zones.size} Zone VAV OA Sys Controller")
+    oa_intake_controller.setName("#{air_loop.name} OA Controller")
     oa_intake_controller.setMinimumLimitType('FixedMinimum')
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
     oa_intake_controller.setHeatRecoveryBypassControlType('BypassWhenOAFlowGreaterThanMinimum')
 
     controller_mv = oa_intake_controller.controllerMechanicalVentilation
-    controller_mv.setName("#{thermal_zones.size} Zone VAV Ventilation Controller")
+    controller_mv.setName("#{air_loop.name} Vent Controller")
     controller_mv.setSystemOutdoorAirMethod('VentilationRateProcedure')
 
     oa_intake = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, oa_intake_controller)
-    oa_intake.setName("#{thermal_zones.size} Zone VAV OA Sys")
+    oa_intake.setName("#{air_loop.name} OA Sys")
     oa_intake.addToNode(air_loop.supplyInletNode)
     
     #hook the VAV system to each zone
@@ -1163,7 +1163,7 @@ class OpenStudio::Model::Model
       if prototype_input['pszac_fan_type'] == 'ConstantVolume'
       
         fan = OpenStudio::Model::FanConstantVolume.new(self,self.alwaysOnDiscreteSchedule)
-        fan.setName("#{zone.name} PSZ-AC Fan")
+        fan.setName("#{air_loop.name} Fan")
         fan_static_pressure_in_h2o = 2.5    
         fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
         fan.setPressureRise(fan_static_pressure_pa)  
@@ -1172,7 +1172,7 @@ class OpenStudio::Model::Model
       elsif prototype_input['pszac_fan_type'] == 'Cycling'
       
         fan = OpenStudio::Model::FanOnOff.new(self,hvac_op_sch) # Set fan op sch manually since fwd translator doesn't
-        fan.setName("#{zone.name} PSZ-AC Fan")
+        fan.setName("#{air_loop.name} Fan")
         fan_static_pressure_in_h2o = 2.5    
         fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
         fan.setPressureRise(fan_static_pressure_pa)  
@@ -1184,14 +1184,14 @@ class OpenStudio::Model::Model
       htg_coil = nil
       if prototype_input['pszac_heating_type'] == 'Gas'
         htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
-        htg_coil.setName("#{zone.name} PSZ-AC Gas Htg Coil")
+        htg_coil.setName("#{air_loop.name} Gas Htg Coil")
       elsif prototype_input['pszac_heating_type'] == 'Water'
           if hot_water_loop.nil?
             OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water plant loop supplied')
             return false
           end
         htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
-        htg_coil.setName("#{zone.name} PSZ-AC Water Htg Coil")
+        htg_coil.setName("#{air_loop.name} Water Htg Coil")
         htg_coil.setRatedInletWaterTemperature(hw_temp_c)
         htg_coil.setRatedInletAirTemperature(prehtg_sa_temp_c)
         htg_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
@@ -1244,7 +1244,7 @@ class OpenStudio::Model::Model
                                                                   htg_energy_input_ratio_f_of_flow,
                                                                   htg_part_load_fraction) 
 
-        htg_coil.setName("#{zone.name} PSZ-AC HP Htg Coil")                                                          
+        htg_coil.setName("#{air_loop.name} HP Htg Coil")                                                          
         htg_coil.setRatedCOP(3.3) # TODO add this to standards
         htg_coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-12.2)
         htg_coil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(1.67)
@@ -1273,7 +1273,7 @@ class OpenStudio::Model::Model
           return false
         end
         htg_coil = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpEquationFit.new(self)
-        htg_coil.setName("#{zone.name} PSZ-AC Water-to-Air HP Htg Coil")
+        htg_coil.setName("#{air_loop.name} Water-to-Air HP Htg Coil")
         htg_coil.setRatedHeatingCoefficientofPerformance(4.2) # TODO add this to standards
         htg_coil.setHeatingCapacityCoefficient1(0.237847462869254)
         htg_coil.setHeatingCapacityCoefficient2(-3.35823796081626)
@@ -1292,10 +1292,10 @@ class OpenStudio::Model::Model
       supplemental_htg_coil = nil
       if prototype_input['pszac_supplemental_heating_type'] == 'Electric'
         supplemental_htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
-        supplemental_htg_coil.setName("#{zone.name} PSZ-AC Electric Backup Htg Coil")
+        supplemental_htg_coil.setName("#{air_loop.name} Electric Backup Htg Coil")
       elsif prototype_input['pszac_supplemental_heating_type'] == 'Gas'
         supplemental_htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
-        supplemental_htg_coil.setName("#{zone.name} PSZ-AC Gas Backup Htg Coil") 
+        supplemental_htg_coil.setName("#{air_loop.name} Gas Backup Htg Coil") 
       end
 
 
@@ -1306,7 +1306,7 @@ class OpenStudio::Model::Model
             return false
           end
         clg_coil = OpenStudio::Model::CoilCoolingWater.new(self,self.alwaysOnDiscreteSchedule)
-        clg_coil.setName("#{zone.name} PSZ-AC Water Clg Coil")
+        clg_coil.setName("#{air_loop.name} Water Clg Coil")
         chilled_water_loop.addDemandBranchForComponent(clg_coil)
       elsif prototype_input['pszac_cooling_type'] == 'Two Speed DX AC'
       
@@ -1389,7 +1389,7 @@ class OpenStudio::Model::Model
                                                         clg_cap_f_of_temp_low_spd,
                                                         clg_energy_input_ratio_f_of_temp_low_spd)
 
-        clg_coil.setName("#{zone.name} PSZ-AC 2spd DX AC Clg Coil")
+        clg_coil.setName("#{air_loop.name} 2spd DX AC Clg Coil")
         clg_coil.setRatedLowSpeedSensibleHeatRatio(OpenStudio::OptionalDouble.new(0.69))
         clg_coil.setBasinHeaterCapacity(10)
         clg_coil.setBasinHeaterSetpointTemperature(2.0)
@@ -1451,7 +1451,7 @@ class OpenStudio::Model::Model
                                                         clg_energy_input_ratio_f_of_flow,
                                                         clg_part_load_ratio)
 
-        clg_coil.setName("#{zone.name} PSZ-AC 1spd DX AC Clg Coil")
+        clg_coil.setName("#{air_loop.name} 1spd DX AC Clg Coil")
       
       elsif prototype_input['pszac_cooling_type'] == 'Single Speed Heat Pump'
       
@@ -1508,7 +1508,7 @@ class OpenStudio::Model::Model
                                                         clg_energy_input_ratio_f_of_flow,
                                                         clg_part_load_ratio)
 
-        clg_coil.setName("#{zone.name} PSZ-AC 1spd DX HP Clg Coil")
+        clg_coil.setName("#{air_loop.name} 1spd DX HP Clg Coil")
         #clg_coil.setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(OpenStudio::OptionalDouble.new(10.0))
         #clg_coil.setRatedSensibleHeatRatio(0.69)
         #clg_coil.setBasinHeaterCapacity(10)
@@ -1520,7 +1520,7 @@ class OpenStudio::Model::Model
           return false
         end
         clg_coil = OpenStudio::Model::CoilCoolingingWaterToAirHeatPumpEquationFit.new(self)
-        clg_coil.setName("#{zone.name} PSZ-AC Water-to-Air HP Clg Coil")
+        clg_coil.setName("#{air_loop.name} Water-to-Air HP Clg Coil")
         clg_coil.setRatedCoolingCoefficientofPerformance(3.4) # TODO add this to standards
 
         clg_coil.setTotalCoolingCapacityCoefficient1(-4.30266987344639)
@@ -1544,15 +1544,15 @@ class OpenStudio::Model::Model
       end
        
       oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
-      oa_controller.setName("#{zone.name} PSZ-AC OA Sys Controller")
+      oa_controller.setName("#{air_loop.name} OA Sys Controller")
       oa_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
       oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self,oa_controller)
-      oa_system.setName("#{zone.name} PSZ-AC OA Sys")
+      oa_system.setName("#{air_loop.name} OA Sys")
 
       #heat exchanger on oa system
       # if prototype_input['hx']
         # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-        # heat_exchanger.setName("#{zone.name} PSZ-AC HX")
+        # heat_exchanger.setName("#{air_loop.name} HX")
         # heat_exchanger.setHeatExchangerType('Rotary')
         # heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.7)
         # heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.6)
@@ -1588,7 +1588,7 @@ class OpenStudio::Model::Model
                                                                                   htg_coil,
                                                                                   clg_coil,
                                                                                   supplemental_htg_coil)
-        unitary_system.setName("#{zone.name} Unitary HP")
+        unitary_system.setName("#{air_loop.name} Unitary HP")
         unitary_system.setControllingZone(zone)
         unitary_system.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(OpenStudio.convert(40,'F','C').get)
         unitary_system.setFanPlacement('BlowThrough')
@@ -1658,7 +1658,7 @@ class OpenStudio::Model::Model
       
       # Create a diffuser and attach the zone/diffuser pair to the air loop
       diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(self,self.alwaysOnDiscreteSchedule)
-      diffuser.setName("#{zone.name} PSZ-AC Diffuser")
+      diffuser.setName("#{air_loop.name} Diffuser")
       air_loop.addBranchForZone(zone,diffuser.to_StraightComponent)    
 
     end
