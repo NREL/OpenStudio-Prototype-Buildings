@@ -293,66 +293,66 @@ module BTAP
         #Create a new DX cooling coil with NECB curve characteristics
         def self.add_onespeed_DX_coil(model,always_on)
 
-              #clg_cap_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
-              clg_cap_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
-              clg_cap_f_of_temp.setCoefficient1Constant(0.867905)
-              clg_cap_f_of_temp.setCoefficient2x(0.0142459)
-              clg_cap_f_of_temp.setCoefficient3xPOW2(0.000554364)
-              clg_cap_f_of_temp.setCoefficient4y(-0.00755748)
-              clg_cap_f_of_temp.setCoefficient5yPOW2(3.3048e-05)
-              clg_cap_f_of_temp.setCoefficient6xTIMESY(-0.000191808)
-              clg_cap_f_of_temp.setMinimumValueofx(13.0)
-              clg_cap_f_of_temp.setMaximumValueofx(24.0)
-              clg_cap_f_of_temp.setMinimumValueofy(24.0)
-              clg_cap_f_of_temp.setMaximumValueofy(46.0)
+          #clg_cap_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
+          clg_cap_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
+          clg_cap_f_of_temp.setCoefficient1Constant(0.867905)
+          clg_cap_f_of_temp.setCoefficient2x(0.0142459)
+          clg_cap_f_of_temp.setCoefficient3xPOW2(0.000554364)
+          clg_cap_f_of_temp.setCoefficient4y(-0.00755748)
+          clg_cap_f_of_temp.setCoefficient5yPOW2(3.3048e-05)
+          clg_cap_f_of_temp.setCoefficient6xTIMESY(-0.000191808)
+          clg_cap_f_of_temp.setMinimumValueofx(13.0)
+          clg_cap_f_of_temp.setMaximumValueofx(24.0)
+          clg_cap_f_of_temp.setMinimumValueofy(24.0)
+          clg_cap_f_of_temp.setMaximumValueofy(46.0)
 
-              #clg_cap_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
-              clg_cap_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
-              clg_cap_f_of_flow.setCoefficient1Constant(1.0)
-              clg_cap_f_of_flow.setCoefficient2x(0.0)
-              clg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
-              clg_cap_f_of_flow.setMinimumValueofx(0.0)
-              clg_cap_f_of_flow.setMaximumValueofx(1.0)
+          #clg_cap_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
+          clg_cap_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
+          clg_cap_f_of_flow.setCoefficient1Constant(1.0)
+          clg_cap_f_of_flow.setCoefficient2x(0.0)
+          clg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
+          clg_cap_f_of_flow.setMinimumValueofx(0.0)
+          clg_cap_f_of_flow.setMaximumValueofx(1.0)
 
-              #clg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
-              clg_energy_input_ratio_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
-              clg_energy_input_ratio_f_of_temp.setCoefficient1Constant(0.116936)
-              clg_energy_input_ratio_f_of_temp.setCoefficient2x(0.0284933)
-              clg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(-0.000411156)
-              clg_energy_input_ratio_f_of_temp.setCoefficient4y(0.0214108)
-              clg_energy_input_ratio_f_of_temp.setCoefficient5yPOW2(0.000161028)
-              clg_energy_input_ratio_f_of_temp.setCoefficient6xTIMESY(-0.000679104)
-              clg_energy_input_ratio_f_of_temp.setMinimumValueofx(13.0)
-              clg_energy_input_ratio_f_of_temp.setMaximumValueofx(24.0)
-              clg_energy_input_ratio_f_of_temp.setMinimumValueofy(24.0)
-              clg_energy_input_ratio_f_of_temp.setMaximumValueofy(46.0)
+          #clg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
+          clg_energy_input_ratio_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
+          clg_energy_input_ratio_f_of_temp.setCoefficient1Constant(0.116936)
+          clg_energy_input_ratio_f_of_temp.setCoefficient2x(0.0284933)
+          clg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(-0.000411156)
+          clg_energy_input_ratio_f_of_temp.setCoefficient4y(0.0214108)
+          clg_energy_input_ratio_f_of_temp.setCoefficient5yPOW2(0.000161028)
+          clg_energy_input_ratio_f_of_temp.setCoefficient6xTIMESY(-0.000679104)
+          clg_energy_input_ratio_f_of_temp.setMinimumValueofx(13.0)
+          clg_energy_input_ratio_f_of_temp.setMaximumValueofx(24.0)
+          clg_energy_input_ratio_f_of_temp.setMinimumValueofy(24.0)
+          clg_energy_input_ratio_f_of_temp.setMaximumValueofy(46.0)
 
-              #clg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
-              clg_energy_input_ratio_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
-              clg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.0)
-              clg_energy_input_ratio_f_of_flow.setCoefficient2x(0.0)
-              clg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0)
-              clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
-              clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
+          #clg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
+          clg_energy_input_ratio_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
+          clg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.0)
+          clg_energy_input_ratio_f_of_flow.setCoefficient2x(0.0)
+          clg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0)
+          clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
+          clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
 
-              #clg_part_load_ratio = OpenStudio::Model::CurveCubic.new(model)
-              #clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
-              #these coefficients are directly from NECB
-              #clg_part_load_ratio.setCoefficient1Constant(0.2012301)
-              #clg_part_load_ratio.setCoefficient2x(-0.0312175)
-              #clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
-              #clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
-              #clg_part_load_ratio.setMinimumValueofx(0.0)
-              #clg_part_load_ratio.setMaximumValueofx(1.0)
+          #clg_part_load_ratio = OpenStudio::Model::CurveCubic.new(model)
+          #clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
+          #these coefficients are directly from NECB
+          #clg_part_load_ratio.setCoefficient1Constant(0.2012301)
+          #clg_part_load_ratio.setCoefficient2x(-0.0312175)
+          #clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
+          #clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
+          #clg_part_load_ratio.setMinimumValueofx(0.0)
+          #clg_part_load_ratio.setMaximumValueofx(1.0)
 
-              # NECB curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)
-              clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
-              clg_part_load_ratio.setCoefficient1Constant(0.0277)
-              clg_part_load_ratio.setCoefficient2x(4.9151)
-              clg_part_load_ratio.setCoefficient3xPOW2(-8.184)
-              clg_part_load_ratio.setCoefficient4xPOW3(4.2702)
-              clg_part_load_ratio.setMinimumValueofx(0.7)
-              clg_part_load_ratio.setMaximumValueofx(1.0)
+          # NECB curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)
+          clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
+          clg_part_load_ratio.setCoefficient1Constant(0.0277)
+          clg_part_load_ratio.setCoefficient2x(4.9151)
+          clg_part_load_ratio.setCoefficient3xPOW2(-8.184)
+          clg_part_load_ratio.setCoefficient4xPOW3(4.2702)
+          clg_part_load_ratio.setMinimumValueofx(0.7)
+          clg_part_load_ratio.setMaximumValueofx(1.0)
 
 
           return OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model,
@@ -367,52 +367,52 @@ module BTAP
         #Create a new DX heating coil with NECB curve characteristics
         def self.add_onespeed_DX_coil_heating(model,always_on)
 
-              htg_cap_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
-              htg_cap_f_of_temp.setCoefficient1Constant(0.729)
-              htg_cap_f_of_temp.setCoefficient2x(0.031927)
-              htg_cap_f_of_temp.setCoefficient3xPOW2(0.0001364)
-              htg_cap_f_of_temp.setCoefficient4xPOW3(-0.000008748)
-              htg_cap_f_of_temp.setMinimumValueofx(-20.0)
-              htg_cap_f_of_temp.setMaximumValueofx(20.0)
+          htg_cap_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
+          htg_cap_f_of_temp.setCoefficient1Constant(0.729)
+          htg_cap_f_of_temp.setCoefficient2x(0.031927)
+          htg_cap_f_of_temp.setCoefficient3xPOW2(0.0001364)
+          htg_cap_f_of_temp.setCoefficient4xPOW3(-0.000008748)
+          htg_cap_f_of_temp.setMinimumValueofx(-20.0)
+          htg_cap_f_of_temp.setMaximumValueofx(20.0)
 
-              htg_cap_f_of_flow = OpenStudio::Model::CurveCubic.new(model)
-              htg_cap_f_of_flow.setCoefficient1Constant(0.84)
-              htg_cap_f_of_flow.setCoefficient2x(0.16)
-              htg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
-              htg_cap_f_of_flow.setCoefficient4xPOW3(0.0)
-              htg_cap_f_of_flow.setMinimumValueofx(0.5)
-              htg_cap_f_of_flow.setMaximumValueofx(1.5)
+          htg_cap_f_of_flow = OpenStudio::Model::CurveCubic.new(model)
+          htg_cap_f_of_flow.setCoefficient1Constant(0.84)
+          htg_cap_f_of_flow.setCoefficient2x(0.16)
+          htg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
+          htg_cap_f_of_flow.setCoefficient4xPOW3(0.0)
+          htg_cap_f_of_flow.setMinimumValueofx(0.5)
+          htg_cap_f_of_flow.setMaximumValueofx(1.5)
 
-              htg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
-              htg_energy_input_ratio_f_of_temp.setCoefficient1Constant(1.2183)
-              htg_energy_input_ratio_f_of_temp.setCoefficient2x(-0.036117)
-              htg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(0.0014204)
-              htg_energy_input_ratio_f_of_temp.setCoefficient4xPOW3(-0.000026827)
-              htg_energy_input_ratio_f_of_temp.setMinimumValueofx(-20.0)
-              htg_energy_input_ratio_f_of_temp.setMaximumValueofx(20.0)
+          htg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
+          htg_energy_input_ratio_f_of_temp.setCoefficient1Constant(1.2183)
+          htg_energy_input_ratio_f_of_temp.setCoefficient2x(-0.036117)
+          htg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(0.0014204)
+          htg_energy_input_ratio_f_of_temp.setCoefficient4xPOW3(-0.000026827)
+          htg_energy_input_ratio_f_of_temp.setMinimumValueofx(-20.0)
+          htg_energy_input_ratio_f_of_temp.setMaximumValueofx(20.0)
 
-              htg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
-              htg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.3824)
-              htg_energy_input_ratio_f_of_flow.setCoefficient2x(-0.4336)
-              htg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0512)
-              htg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
-              htg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
+          htg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
+          htg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.3824)
+          htg_energy_input_ratio_f_of_flow.setCoefficient2x(-0.4336)
+          htg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0512)
+          htg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
+          htg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
 
-              htg_part_load_fraction = OpenStudio::Model::CurveCubic.new(model)
-              htg_part_load_fraction.setCoefficient1Constant(0.3696)
-              htg_part_load_fraction.setCoefficient2x(2.3362)
-              htg_part_load_fraction.setCoefficient3xPOW2(-2.9577)
-              htg_part_load_fraction.setCoefficient4xPOW3(1.2596)
-              htg_part_load_fraction.setMinimumValueofx(0.7)
-              htg_part_load_fraction.setMaximumValueofx(1.0)
+          htg_part_load_fraction = OpenStudio::Model::CurveCubic.new(model)
+          htg_part_load_fraction.setCoefficient1Constant(0.3696)
+          htg_part_load_fraction.setCoefficient2x(2.3362)
+          htg_part_load_fraction.setCoefficient3xPOW2(-2.9577)
+          htg_part_load_fraction.setCoefficient4xPOW3(1.2596)
+          htg_part_load_fraction.setMinimumValueofx(0.7)
+          htg_part_load_fraction.setMaximumValueofx(1.0)
 
-              return OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model,
-                always_on,
-                htg_cap_f_of_temp,
-                htg_cap_f_of_flow,
-                htg_energy_input_ratio_f_of_temp,
-                htg_energy_input_ratio_f_of_flow,
-                htg_part_load_fraction)
+          return OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model,
+            always_on,
+            htg_cap_f_of_temp,
+            htg_cap_f_of_flow,
+            htg_energy_input_ratio_f_of_temp,
+            htg_energy_input_ratio_f_of_flow,
+            htg_part_load_fraction)
         end
  
         #Create a new outdoor air controller
@@ -497,11 +497,11 @@ module BTAP
         # Create an electric chiller. This differs from add_chiller_electric_eir_to_water_loop in
         # that it does not connect the chiller to a water loop
         def self.add_elec_chiller(model,clg_cap_f_of_temp,
-              eir_f_of_avail_to_nom_cap,
-              eir_f_of_plr)
+            eir_f_of_avail_to_nom_cap,
+            eir_f_of_plr)
           return OpenStudio::Model::ChillerElectricEIR.new(model,clg_cap_f_of_temp,
-              eir_f_of_avail_to_nom_cap,
-              eir_f_of_plr)
+            eir_f_of_avail_to_nom_cap,
+            eir_f_of_plr)
         end
 
         # Create a one speed cooling tower. This routine does not attach cooling tower
@@ -573,19 +573,19 @@ module BTAP
           raise("setInitialDefrostTimeFraction for erv not correct") unless   erv.setInitialDefrostTimeFraction(setInitialDefrostTimeFraction.to_f)
           raise("setNominalElectricPower for erv not correct")  unless   erv.setNominalElectricPower(nominal_electric_power)
 
-        # Temporary solution, may need to fix later. 12/22/2013 Da
-        #erv.setEconomizerLockout('Yes')
-        #erv.setEconomizerLockout(true)
-        #erv.setString(23, "Yes")
+          # Temporary solution, may need to fix later. 12/22/2013 Da
+          #erv.setEconomizerLockout('Yes')
+          #erv.setEconomizerLockout(true)
+          #erv.setString(23, "Yes")
 
-        #erv.setSupplyAirOutletTemperatureControl ('No')
-        #erv.setSupplyAirOutletTemperatureControl (false)
-        #erv.setString(17, "No")
+          #erv.setSupplyAirOutletTemperatureControl ('No')
+          #erv.setSupplyAirOutletTemperatureControl (false)
+          #erv.setString(17, "No")
 
-        return erv
-      end
-      def self.add_economizer(
-          model,
+          return erv
+        end
+        def self.add_economizer(
+            model,
             air_loop,
             setEconomizerControlType = "FixedDryBulb",
             setEconomizerControlActionType = "ModulateFlow",
@@ -2308,8 +2308,40 @@ module BTAP
 
         module NECB2011
 
+          #wrapper methods for the auto_zoner
+          def self.assign_zones_sys1( model, zones, boiler_fueltype, mau, mau_heating_coil_type, baseboard_type )
+            return self.add_sys1_unitary_ac_baseboard_heating( model,zones,boiler_fueltype,mau,mau_heating_coil_type,baseboard_type)
+          end
+          
+          def self.assign_zones_sys2(model, zones, boiler_fueltype,chiller_type,mua_cooling_type)
+            self.add_sys2_FPFC_sys5_TPFC(model, zones, boiler_fueltype,chiller_type,"FPFC",mua_cooling_type)
+          end
+          
+          def self.assign_zones_sys3(model, zones, boiler_fueltype,  heating_coil_type, baseboard_type)
+            self.add_sys3and8_single_zone_packaged_rooftop_unit_with_baseboard_heating( model, zones, boiler_fueltype,  heating_coil_type, baseboard_type)
+          end
+          
+          def self.assign_zones_sys4( model, zones, boiler_fueltype, heating_coil_type, baseboard_type)
+            self.add_sys4_single_zone_make_up_air_unit_with_baseboard_heating( model, zones, boiler_fueltype, heating_coil_type, baseboard_type)
+          end
+          
+          def self.assign_zones_sys5(model, zones, boiler_fueltype,chiller_type,mua_cooling_type)
+            self.add_sys2_FPFC_sys5_TPFC(model, zones, boiler_fueltype,chiller_type,"TPFC",mua_cooling_type)
+          end
+          
+          #To do: must unravel story vav assignment. 
+          def self.assign_zones_sys6( model ,zones,  boiler_fueltype, heating_coil_type, baseboard_type, chiller_type, fan_type )
+            self.add_sys6_multi_zone_built_up_system_with_baseboard_heating( model ,zones,  boiler_fueltype, heating_coil_type, baseboard_type, chiller_type, fan_type )
+          end
+          
+          def self.assign_zones_sys7()
+            # where is this method?
+          end
+          
+          
+          
 
-          def self.add_sys1_unitary_ac_baseboard_heating(model,mau,mau_heating_coil_type,baseboard_type,boiler_fueltype)
+          def self.add_sys1_unitary_ac_baseboard_heating(model,zones, boiler_fueltype, mau ,mau_heating_coil_type,baseboard_type)
 
             # System Type 1: PTAC with no heating (unitary AC) 
             # Zone baseboards, electric or hot water depending on argument baseboard_type
@@ -2319,7 +2351,7 @@ module BTAP
             # a PTAC  unit for each zone in the building; DX cooling coil
             # and heating coil that is always off
             # Baseboards ("Hot Water or "Electric") in zones connected to hot water loop
-            # MAU is present if argument mau="Yes", not present if argument mau="No"
+            # MAU is present if argument mau == true, not present if argument mau == false
             # MAU is PSZ; DX cooling 
             # MAU heating coil: hot water coil or electric, depending on argument mau_heating_coil_type
             # mau_heating_coil_type choices are "Hot Water", "Electric"
@@ -2340,7 +2372,7 @@ module BTAP
 
             #Create hot water loop if there is a MAU and its heating coil is hydronic or if baseboard type is hydronic
 
-            if ( (mau == "Yes" and mau_heating_coil_type == "Hot Water") or baseboard_type == "Hot Water" ) then
+            if ( (mau == true and mau_heating_coil_type == "Hot Water") or baseboard_type == "Hot Water" ) then
 
               #hw_loop = OpenStudio::Model::PlantLoop.new(model)
               hw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
@@ -2348,10 +2380,10 @@ module BTAP
 
             end  #of if statement
             
-             #Create MAU 
-             # TO DO: MAU sizing, characteristics (fan operation schedules, temperature setpoints, outdoor air, etc)
+            #Create MAU 
+            # TO DO: MAU sizing, characteristics (fan operation schedules, temperature setpoints, outdoor air, etc)
            
-            if ( mau == "Yes") then
+            if ( mau == true) then
               
               mau_air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
 
@@ -2398,7 +2430,7 @@ module BTAP
               end
 
 
-            # Set up DX coil with NECB performance curve characteristics;
+              # Set up DX coil with NECB performance curve characteristics;
 
               mau_clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
@@ -2462,7 +2494,7 @@ module BTAP
             #TO DO: PTAC characteristics: sizing, fan schedules, temperature setpoints, interaction with MAU
             
             
-           model.getThermalZones.each do |zone|
+            zones.each do |zone|
             
               # Set up PTAC heating coil; apply always off schedule            
  
@@ -2512,21 +2544,21 @@ module BTAP
               
               
               #  # Create a diffuser and attach the zone/diffuser pair to the MAU air loop, if applicable
-              if (mau == "Yes") then
+              if (mau == true) then
           
                 diffuser = BTAP::Resources::HVAC::Plant::add_diffuser(model, always_on)
                 mau_air_loop.addBranchForZone(zone,diffuser.to_StraightComponent)
                  
               end #components for MAU
                           
-           end # of zone loop
+            end # of zone loop
             
 
             return true
             
           end #sys1_unitary_ac_baseboard_heating
 		  
-          def self.add_sys2_FPFC_sys5_TPFC(model,boiler_fueltype,chiller_type,fan_coil_type,mua_cooling_type)
+          def self.add_sys2_FPFC_sys5_TPFC(model,zones, boiler_fueltype,chiller_type,fan_coil_type,mua_cooling_type)
 
             # System Type 2: FPFC or System 5: TPFC
             # This measure creates:
@@ -2537,6 +2569,7 @@ module BTAP
             #   boiler_fueltype: "NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"
             #   chiller_type: "Scroll";"Centrifugal";""Screw";"Reciprocating"
             #   mua_cooling_type: make-up air unit cooling type "DX";"Hydronic"
+            #   fan_coil_type options are "TPFC" or "FPFC"
 
             # TODO: Add arguments as needed when the sizing routine is finalized. For example we will need to know the 
             # required size of the boilers to decide on how many units are needed based on NECB rules.
@@ -2705,7 +2738,7 @@ module BTAP
 
             # Set up FC (ZoneHVAC,cooling coil, heating coil, fan) in each zone
 
-            model.getThermalZones.each do |zone| 
+            zones.each do |zone| 
 
               # fc supply fan
               fc_fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
@@ -2740,7 +2773,7 @@ module BTAP
 
           end  # add_sys2_FPFC_sys5_TPFC
 
-          def self.add_sys3and8_single_zone_packaged_rooftop_unit_with_baseboard_heating( model, heating_coil_type, baseboard_type, boiler_fueltype)
+          def self.add_sys3and8_single_zone_packaged_rooftop_unit_with_baseboard_heating( model, zones, boiler_fueltype,  heating_coil_type, baseboard_type)
             # System Type 3: PSZ-AC
             # This measure creates:
             # -a constant volume packaged single-zone A/C unit
@@ -2768,17 +2801,7 @@ module BTAP
 
             end  #of if statement
 
-            # Create a PSZ for each zone
-            # TO DO: need to apply this system to space types:
-            #(1) conference/meeting spaces when building <= 4 storeys
-            #(2) industrial spaces
-            #(3) hospital spaces
-            #(4) retail/general use spaces (library, bank,etc) when building <= 2 storeys
-            #(5) supermarket/restaurant spaces (without kitchen exhaust hoods)
-            #(6) dormitory spaces
-
-
-            model.getThermalZones.each do |zone|
+            zones.each do |zone|
 
               air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
 
@@ -2815,23 +2838,26 @@ module BTAP
               fan.setPressureRise(640)
               fan.setFanEfficiency(0.4)
 
-              if ( heating_coil_type == "Electric") then           # electric coil
+              case heating_coil_type
+              when "Electric"           # electric coil
                 htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
-              end
+              
 
-              if ( heating_coil_type == "Gas") then
+              when "Gas"
                 htg_coil = BTAP::Resources::HVAC::Plant::add_gas_heating_coil(model, always_on)
-              end
+            
 
-              if(heating_coil_type == "DX") then
+              when "DX"
                 htg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil_heating(model, always_on)  
                 supplemental_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
+              else
+                raise("#{heating_coil_type} is not a valid heating coil type.)")
               end
 
               #TO DO: other fuel-fired heating coil types? (not available in OpenStudio/E+ - may need to play with efficiency to mimic other fuel types)
 
 
-            # Set up DX coil with NECB performance curve characteristics;
+              # Set up DX coil with NECB performance curve characteristics;
 
               clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
@@ -2847,7 +2873,7 @@ module BTAP
               # in order from closest to zone to furthest from zone
               supply_inlet_node = air_loop.supplyInletNode
               fan.addToNode(supply_inlet_node)
-              supplemental_htg_coil.addToNode(supply_inlet_node)
+              supplemental_htg_coil.addToNode(supply_inlet_node) if heating_coil_type == "DX" 
               htg_coil.addToNode(supply_inlet_node)
               clg_coil.addToNode(supply_inlet_node)
               oa_system.addToNode(supply_inlet_node)
@@ -2907,7 +2933,7 @@ module BTAP
             return true
           end  #end add_sys3_single_zone_packaged_rooftop_unit_with_baseboard_heating
 
-          def self.add_sys4_single_zone_make_up_air_unit_with_baseboard_heating( model, heating_coil_type, baseboard_type, boiler_fueltype)
+          def self.add_sys4_single_zone_make_up_air_unit_with_baseboard_heating( model, zones, boiler_fueltype, heating_coil_type, baseboard_type)
             # System Type 4: PSZ-AC
             # This measure creates:
             # -a constant volume packaged single-zone A/C unit
@@ -2944,7 +2970,7 @@ module BTAP
             #(3) warehouse area (non-refrigerated spaces)
           
 
-            model.getThermalZones.each do |zone|
+            zones.each do |zone|
 
               air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
 
@@ -2992,7 +3018,7 @@ module BTAP
               #TO DO: other fuel-fired heating coil types? (not available in OpenStudio/E+ - may need to play with efficiency to mimic other fuel types)
 
 
-            # Set up DX coil with NECB performance curve characteristics;
+              # Set up DX coil with NECB performance curve characteristics;
 
               clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
@@ -3067,11 +3093,8 @@ module BTAP
             return true
           end  #end add_sys4_single_zone_make_up_air_unit_with_baseboard_heating
 
-          def self.add_sys5_two_pipe_fane_coil( model )
-            #Todo
-          end
 
-          def self.add_sys6_multi_zone_built_up_system_with_baseboard_heating( model , boiler_fueltype, heating_coil_type, baseboard_type, chiller_type, fan_type )
+          def self.add_sys6_multi_zone_built_up_system_with_baseboard_heating( model ,zones,  boiler_fueltype, heating_coil_type, baseboard_type, chiller_type, fan_type )
 
             # System Type 6: VAV w/ Reheat
             # This measure creates:
@@ -3167,7 +3190,7 @@ module BTAP
               clg_coil.addToNode(supply_inlet_node)
               oa_system.addToNode(supply_inlet_node)
               
-#              return_inlet_node = air_loop.returnAirNode
+              #              return_inlet_node = air_loop.returnAirNode
 
               # Add a setpoint manager to control the
               # supply air to a constant temperature
@@ -3211,9 +3234,7 @@ module BTAP
 
           end
 
-          def self.add_sys7_multi_zone_built_up_system_with_baseboard_heating( model , boiler_fuel_type )
-            #todo
-          end
+
 
           def self.setup_hw_loop_with_components(model,hw_loop,boiler_fueltype,pump_flow_sch)
 
@@ -3229,8 +3250,8 @@ module BTAP
             #was sent to NREL to let them know about this. Once there is a fix for this,
             #use the proper pump schedule depending on whether we have two-pipe or four-pipe
             #fan coils.
-#            pump.resetPumpFlowRateSchedule()
-#            pump.setPumpFlowRateSchedule(pump_flow_sch)
+            #            pump.resetPumpFlowRateSchedule()
+            #            pump.setPumpFlowRateSchedule(pump_flow_sch)
 
             #boiler 
             boiler = BTAP::Resources::HVAC::Plant::add_hw_boiler(model)
@@ -3378,7 +3399,7 @@ module BTAP
             eir_f_of_plr.setMaximumValueofx(1.0)
 
             chiller = BTAP::Resources::HVAC::Plant::add_elec_chiller(model,
-            clg_cap_f_of_temp,eir_f_of_avail_to_nom_cap,eir_f_of_plr)
+              clg_cap_f_of_temp,eir_f_of_avail_to_nom_cap,eir_f_of_plr)
             chiller.setReferenceCOP(2.5)
             chiller.setCondenserType("WaterCooled")
             
