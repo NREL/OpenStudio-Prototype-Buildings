@@ -1,15 +1,4 @@
 # Bugs found when calibrating the OSM
-## WaterHeater:Mixed:
-### water_heater.setAmbientTemperatureIndicator("Zone") doesn't work
-### Fixed: it should be water_heater.setAmbientTemperatureIndicator("ThermalZone")
-
-## WaterHeaterMixed:
-### Object added and can be found in the osm file, but did not output to the IDF file
-### [It seems the WaterHeater:Mixed has to be included in a plant loop](https://github.com/NREL/OpenStudio/issues/1675)
-
-## Missing Refrigeration:CompressorRack object
-### Fixed: This object is purposefully not in OpenStudio. Have to build a detailed refrigeration system.  
-
 ## OpenStudio::Model::RefrigerationCase
 ### setRefrigeratedCaseRestockingSchedule don't work
 
@@ -20,10 +9,6 @@
 ### Need to separate the Fan Coil fan with AHU Fans
 
 ## Missing ZoneMixing object
-
-## Space.addDaylightingControls 
-### Error info: undefined method 'substract' for OpenStudio::Module;
-### Fixed: update the OpenStuio to 1.8
 
 ## Missing ZoneVentilation:WindandStackOpenArea
 
@@ -50,5 +35,13 @@
 ### I set the schedule to "Always off", and checked the final.osm. 
 ### The final.osm has the right information. However, the final IDF output is the same as the "Minimum Outdoor Air Schedule Name" of the Controller:OutdoorAir
 
+## prototype.hvac_system.rb
+### in master branch line 521-522: fan.setMinimumFlowRateInputMethod ('fraction')   fan.setMinimumFlowFraction (0.25)
+### for OpenStudio 1.8, it should be: fan.setFanPowerMinimumFlowRateInputMethod ('fraction')   fan.setFanPowerMinimumFlowFraction (0.25)
 
+## prototype.model.rb 
+### inside = model.getInsideSurfaceConvectionAlgorithm, outside = model.getOutsideSurfaceConvectionAlgorithm
+### change to: inside = self.getInsideSurfaceConvectionAlgorithm and outside = self.getOutsideSurfaceConvectionAlgorithm
 
+## prototype.model.rb 
+### two identical methods: modify_infiltration_coefficients
