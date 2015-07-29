@@ -71,6 +71,41 @@
       ]
     },
     {
+      "name": "LargeHotel Interior Ceiling",
+      "intended_surface_type": "InteriorCeiling",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "CP02 CARPET PAD",
+        "100mm Normalweight concrete floor",
+        "Nonres_Floor_Insulation"
+      ]
+    },
+    {
+      "name": "LargeHotel Interior Floor",
+      "intended_surface_type": "InteriorFloor",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "Nonres_Floor_Insulation",
+        "100mm Normalweight concrete floor",
+        "CP02 CARPET PAD"
+      ]
+    },
+    {
+      "name": "LargeHotel Interior Wall",
+      "intended_surface_type": "InteriorWall",
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "G01 13mm gypsum board",
+        "G01 13mm gypsum board"
+      ]
+    },
+    {
       "name": "Smallhotel 2010 Slab Floor",
       "intended_surface_type": "GroundContactFloor",
       "standards_construction_type": "Mass",
@@ -116,6 +151,18 @@
       ]
     },
     {
+      "name": "Typical Built Up Roof - Highly Reflective",
+      "intended_surface_type": "ExteriorRoof",
+      "standards_construction_type": "IEAD",
+      "insulation_layer": "Typical Insulation",
+      "sort": 24.0,
+      "materials": [
+        "Built-up Roofing - Highly Reflective",
+        "Typical Insulation",
+        "Metal Surface"
+      ]
+    },
+    {
       "name": "Typical Carpeted 4in Slab Floor",
       "intended_surface_type": "ExteriorFloor",
       "standards_construction_type": null,
@@ -156,6 +203,18 @@
       "sort": 27.0,
       "materials": [
         "Roof Membrane",
+        "Typical Insulation",
+        "Metal Roof Surface"
+      ]
+    },
+    {
+      "name": "Typical IEAD Roof - Highly Reflective",
+      "intended_surface_type": "ExteriorRoof",
+      "standards_construction_type": "IEAD",
+      "insulation_layer": "Typical Insulation",
+      "sort": 27.0,
+      "materials": [
+        "Roof Membrane - Highly Reflective",
         "Typical Insulation",
         "Metal Roof Surface"
       ]
@@ -266,6 +325,17 @@
       "sort": 25.0,
       "materials": [
         "Metal Roof Surface",
+        "Typical Insulation"
+      ]
+    },
+    {
+      "name": "Typical Insulated Metal Building Roof - Highly Reflective",
+      "intended_surface_type": "ExteriorRoof",
+      "standards_construction_type": "Metal",
+      "insulation_layer": "Typical Insulation",
+      "sort": 25.0,
+      "materials": [
+        "Metal Roof Surface - Highly Reflective",
         "Typical Insulation"
       ]
     },
@@ -466,6 +536,16 @@
       "sort": 26.0,
       "materials": [
         "Metal Roofing"
+      ]
+    },
+    {
+      "name": "Typical Uninsulated Metal Building Roof - Highly Reflective",
+      "intended_surface_type": "ExteriorRoof",
+      "standards_construction_type": "Metal",
+      "insulation_layer": null,
+      "sort": 26.0,
+      "materials": [
+        "Metal Roofing - Highly Reflective"
       ]
     },
     {
