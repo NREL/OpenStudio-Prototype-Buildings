@@ -2,14 +2,22 @@
 # open the class to add methods to apply HVAC efficiency standards
 class OpenStudio::Model::Space
   
-  # Returns a hash of values for the daylighted areas in the space.
-  # {toplighted_area, primary_sidelighted_area, secondary_sidelighted_area, total_window_area, total_skylight_area}
-  # Debugging input will  daylight 
-  # areas added to the model as surfaces.
-  # Yellow = toplighted area
-  # Red = primary sidelighted area
-  # Blue = secondary sidelighted area
-  # Light Blue = floor
+  # Returns values for the different types of daylighted areas in the space.
+  # Definitions for each type of area follow the respective standard.  
+  # @note This method is super complicated because of all the polygon/geometry math required.
+  #   and therefore may not return perfect results.  However, it works well in most tested
+  #   situations.  When it fails, it will log warnings/errors for users to see.
+  # 
+  # @param vintage [String] standard to use.  valid choices: 
+  # @param draw_daylight_areas_for_debugging [Bool] If this argument is set to true,
+  #   daylight areas will be added to the model as surfaces for visual debugging.
+  #   Yellow = toplighted area, Red = primary sidelighted area,
+  #   Blue = secondary sidelighted area, Light Blue = floor  
+  # @return [Hash] returns a hash of resulting areas (m^2).
+  #   Hash keys are: 'toplighted_area', 'primary_sidelighted_area', 
+  #   'secondary_sidelighted_area', 'total_window_area', 'total_skylight_area'
+  # @todo add a list of valid choices for vintage argument
+  # TODO stop skipping non-vertical walls
   def daylighted_areas(vintage, draw_daylight_areas_for_debugging = false)
 
     # A series of methods to modify polygons.  Most are 
@@ -17,6 +25,7 @@ class OpenStudio::Model::Space
     # workarounds for known issues or limitations.
 
     # Check the z coordinates of a polygon
+    # @api private
     def check_z_zero(polygons, name, space)
       fails = []
       errs = 0
@@ -38,6 +47,7 @@ class OpenStudio::Model::Space
     
     # A method to convert an array of arrays to
     # an array of OpenStudio::Point3ds.
+    # @api private
     def ruby_polygons_to_point3d_z_zero(ruby_polygons)
     
       # Convert the final polygons back to OpenStudio
@@ -56,6 +66,7 @@ class OpenStudio::Model::Space
     end
     
     # A method to zero-out the z vertex of an array of polygons
+    # @api private
     def polygons_set_z(polygons, new_z)
     
       #puts "### #{polygons}"
@@ -77,6 +88,7 @@ class OpenStudio::Model::Space
     
     # A method to returns the number of duplicate vertices in a polygon.
     # TODO does not actually wor
+    # @api private
     def find_duplicate_vertices(ruby_polygon, tol = 0.001)
     
       puts "***"
@@ -103,6 +115,7 @@ class OpenStudio::Model::Space
     
     # Subtracts one array of polygons from the next,
     # returning an array of resulting polygons.
+    # @api private
     def a_polygons_minus_b_polygons(a_polygons, b_polygons, a_name, b_name)
       
       final_polygons_ruby = []
@@ -222,6 +235,7 @@ class OpenStudio::Model::Space
 
     # Wrapper to catch errors in joinAll method
     # [utilities.geometry.joinAll] <1> Expected polygons to join together
+    # @api private
     def join_polygons(polygons, tol, name)
     
       OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "Joining #{name} from #{self.name}")
@@ -314,6 +328,7 @@ class OpenStudio::Model::Space
     end
 
     # Gets the total area of a series of polygons
+    # @api private
     def total_area_of_polygons(polygons)
       total_area_m2 = 0
       polygons.each do |polygon|
@@ -331,6 +346,7 @@ class OpenStudio::Model::Space
         
     # Returns an array of resulting polygons.
     # Assumes that a_polygons don't overlap one another, and that b_polygons don't overlap one another
+    # @api private
     def area_a_polygons_overlap_b_polygons(a_polygons, b_polygons, a_name, b_name)
     
       OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "#{a_polygons.size} #{a_name} overlaps #{b_polygons.size} #{b_name}")
@@ -960,6 +976,10 @@ class OpenStudio::Model::Space
   end
 
   # Returns the sidelighting effective aperture
+  # sidelighting_effective_aperture = E(window area * window VT) / primary_sidelighted_area
+  #
+  # @param primary_sidelighted_area [Double] the primary sidelighted area (m^2) of the space
+  # @return [Double] the unitless sidelighting effective aperture metric  
   def sidelightingEffectiveAperture(primary_sidelighted_area)
     
     # sidelighting_effective_aperture = E(window area * window VT) / primary_sidelighted_area
@@ -1068,7 +1088,11 @@ class OpenStudio::Model::Space
     
   end
 
-  # Returns the sidelighting effective aperture
+  # Returns the skylight effective aperture
+  # skylight_effective_aperture = E(0.85 * skylight area * skylight VT * WF) / toplighted_area
+  #
+  # @param toplighted_area [Double] the toplighted area (m^2) of the space
+  # @return [Double] the unitless skylight effective aperture metric
   def skylightEffectiveAperture(toplighted_area)
     
     # skylight_effective_aperture = E(0.85 * skylight area * skylight VT * WF) / toplighted_area
@@ -1182,13 +1206,27 @@ class OpenStudio::Model::Space
   end
   
   # Adds daylighting controls (sidelighting and toplighting) per the standard
-  # remove_existing_controls = true will remove existing controls then add new ones
-  # draw_daylight_areas_for_debugging = true will add daylighting 
-  # areas added to the model as surfaces.
-  # Yellow = toplighted area
-  # Red = primary sidelighted area
-  # Blue = secondary sidelighted area
-  # Light Blue = floor
+  # @note This method is super complicated because of all the polygon/geometry math required.
+  #   and therefore may not return perfect results.  However, it works well in most tested
+  #   situations.  When it fails, it will log warnings/errors for users to see.
+  #
+  # @param vintage [String] standard to use.  valid choices: 
+  # @param remove_existing_controls [Bool] if true, will remove existing controls then add new ones
+  # @param draw_daylight_areas_for_debugging [Bool] If this argument is set to true,
+  #   daylight areas will be added to the model as surfaces for visual debugging.
+  #   Yellow = toplighted area, Red = primary sidelighted area,
+  #   Blue = secondary sidelighted area, Light Blue = floor  
+  # @return [Hash] returns a hash of resulting areas (m^2).
+  #   Hash keys are: 'toplighted_area', 'primary_sidelighted_area', 
+  #   'secondary_sidelighted_area', 'total_window_area', 'total_skylight_area'
+  # @todo add a list of valid choices for vintage argument
+  # @todo add exception for retail spaces
+  # @todo add exception 2 for skylights with VT < 0.4
+  # @todo add exception 3 for CZ 8 where lighting < 200W
+  # @todo stop skipping non-vertical walls
+  # @todo stop skipping non-horizontal roofs
+  # @todo Determine the illuminance setpoint for the controls based on space type
+  # @todo rotate sensor to face window (only needed for glare calcs)
   def addDaylightingControls(vintage, remove_existing_controls, draw_daylight_areas_for_debugging = false)
   
     OpenStudio::logFree(OpenStudio::Debug, "openstudio.model.Space", "******For #{self.name}, adding daylight controls.")

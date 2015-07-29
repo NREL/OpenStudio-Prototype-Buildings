@@ -1,8 +1,11 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::FanVariableVolume
 
-  # Sets the fan motor efficiency based on the standard
+  # Sets the fan motor efficiency based on the standard.
+  # Assumes 65% fan efficiency and 4-pole, enclosed motor.
+  #
+  # @return [Bool] true if successful, false if not
   def setStandardEfficiency(template, standards)
     
     motors = standards['motors']
@@ -58,7 +61,11 @@ class OpenStudio::Model::FanVariableVolume
     
   end
 
-  # Determines the fan power (W)
+  # Determines the fan power (W) based on 
+  # flow rate, pressure rise, and total fan efficiency(impeller eff * motor eff) 
+  # 
+  # @return [Double] fan power
+  #   @units Watts (W)
   def fanPower()
     
     # Get design supply air flow rate (whether autosized or hard-sized)
@@ -83,6 +90,10 @@ class OpenStudio::Model::FanVariableVolume
   end
 
   # Determines the brake horsepower of the fan
+  # based on fan power and fan motor efficiency.
+  # 
+  # @return [Double] brake horsepower
+  #   @units horsepower (hp)
   def brakeHorsepower()
   
     # Get the fan motor efficiency
@@ -100,6 +111,8 @@ class OpenStudio::Model::FanVariableVolume
 
   # Changes the fan motor efficiency and also the fan total efficiency
   # at the same time, preserving the impeller efficiency.
+  #
+  # @param motor_eff [Double] motor efficiency (0.0 to 1.0).
   def changeMotorEfficiency(motor_eff)
     
     # Calculate the existing impeller efficiency
@@ -118,6 +131,8 @@ class OpenStudio::Model::FanVariableVolume
 
   # Changes the fan impeller efficiency and also the fan total efficiency
   # at the same time, preserving the motor efficiency.
+  #
+  # @param impeller_eff [Double] impeller efficiency (0.0 to 1.0)
   def changeImpellerEfficiency(impeller_eff)
     
     # Get the existing motor efficiency
@@ -132,7 +147,11 @@ class OpenStudio::Model::FanVariableVolume
   end
   
   # Determines the baseline fan impeller efficiency
-  # based on the specified fan type.
+  # based on the specified fan type.  
+  # Currently always returns 65% impeller efficiency.
+  #
+  # @return [Double] impeller efficiency (0.0 to 1.0)
+  # @todo Add fan type to data model and modify this method
   def baselineImpellerEfficiency(template)
   
     # Assume that the fan efficiency is 65% based on
@@ -150,6 +169,9 @@ class OpenStudio::Model::FanVariableVolume
   
   # Determines the minimum fan motor efficiency 
   # for a given motor bhp
+  #
+  # @param motor_bhp [Double] motor brake horsepower (hp)
+  # @return [Double] minimum motor efficiency (0.0 to 1.0)
   def standardMinimumMotorEfficiency(template, standards, motor_bhp)
   
     # Lookup the minimum motor efficiency

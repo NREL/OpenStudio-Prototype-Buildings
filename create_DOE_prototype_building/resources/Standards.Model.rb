@@ -20,6 +20,8 @@ class OpenStudio::Model::Model
   require_relative 'Standards.Space'
   require_relative 'Standards.Construction'
   
+  # Applies the HVAC parts of the standard to all objects in the model
+  # using the the template/standard specified in the model.
   def applyHVACEfficiencyStandard
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
@@ -53,7 +55,9 @@ class OpenStudio::Model::Model
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying HVAC efficiency standards.')
   
   end
-  
+ 
+  # Applies daylighting controls to each space in the model
+  # per the standard.
   def addDaylightingControls
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding daylighting controls.')
@@ -67,7 +71,11 @@ class OpenStudio::Model::Model
   
   end
 
-  # Load the openstudio standards dataset and attach it to the model.
+  # Loads the openstudio standards dataset and attach it to the model
+  # via the :standards instance variable.
+  #
+  # @param standards_data_dir [Directory] The directory that contains all the OpenStudio_Standards_*.json files
+  # @todo test to verify that standards were loaded properly.
   def load_openstudio_standards_json(standards_data_dir)
     
     standards_files = []
@@ -109,10 +117,21 @@ class OpenStudio::Model::Model
   end
 
   # Method to search through a hash for the objects that meets the
-  # desired search criteria, as passed via a hash.  If capacity is supplied,
-  # the objects will only be returned if the specified capacity is between
-  # the minimum_capacity and maximum_capacity values.
+  # desired search criteria, as passed via a hash.  
   # Returns an Array (empty if nothing found) of matching objects.
+  #
+  # @param hash_of_objects [Hash] hash of objects to search through
+  # @param search_criteria [Hash] hash of search criteria
+  # @param capacity [Double] capacity of the object in question.  If capacity is supplied,
+  #   the objects will only be returned if the specified capacity is between
+  #   the minimum_capacity and maximum_capacity values.
+  # @return [Array] returns an array of hashes, one hash per object.  Array is empty if no results.
+  # @example Find all the schedule rules that match the name
+  #   rules = self.find_objects(self.standards['schedules'], {'name'=>schedule_name})
+  #   if rules.size == 0
+  #     OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Cannot find data for schedule: #{schedule_name}, will not be created.")
+  #     return false #TODO change to return empty optional schedule:ruleset?
+  #   end
   def find_objects(hash_of_objects, search_criteria, capacity = nil)
     
     desired_object = nil
@@ -173,7 +192,21 @@ class OpenStudio::Model::Model
   # desired search criteria, as passed via a hash.  If capacity is supplied,
   # the object will only be returned if the specified capacity is between
   # the minimum_capacity and maximum_capacity values.
-  # Returns tbe first matching object if successful, nil if not.
+  # 
+  #
+  # @param hash_of_objects [Hash] hash of objects to search through
+  # @param search_criteria [Hash] hash of search criteria
+  # @param capacity [Double] capacity of the object in question.  If capacity is supplied,
+  #   the objects will only be returned if the specified capacity is between
+  #   the minimum_capacity and maximum_capacity values.
+  # @return [Hash] Return tbe first matching object hash if successful, nil if not.
+  # @example Find the motor that meets these size criteria
+  #   search_criteria = {
+  #   'template' => template,
+  #   'number_of_poles' => 4.0,
+  #   'type' => 'Enclosed',
+  #   }
+  #   motor_properties = self.model.find_object(motors, search_criteria, 2.5)
   def find_object(hash_of_objects, search_criteria, capacity = nil)
     
     desired_object = nil
@@ -235,8 +268,12 @@ class OpenStudio::Model::Model
    
   end
   
-  # Create a schedule from the openstudio standards dataset.
-  # TODO make return an OptionalScheduleRuleset
+  # Create a schedule from the openstudio standards dataset and
+  # add it to the model.
+  #
+  # @param schedule_name [String} name of the schedule
+  # @return [ScheduleRuleset] the resulting schedule ruleset
+  # @todo make return an OptionalScheduleRuleset
   def add_schedule(schedule_name)
     return nil if schedule_name == nil or schedule_name == ""
     # First check model and return schedule if it already exists
@@ -364,7 +401,7 @@ class OpenStudio::Model::Model
   end
     
   # Create a space type from the openstudio standards dataset.
-  # TODO make return an OptionalSpaceType
+  # @todo make return an OptionalSpaceType
   def add_space_type(template, clim, building_type, spc_type)
     #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
 
@@ -695,7 +732,7 @@ class OpenStudio::Model::Model
   end # end generate_space_type
   
   # Create a material from the openstudio standards dataset.
-  # TODO make return an OptionalMaterial
+  # @todo make return an OptionalMaterial
   def add_material(material_name)
     # First check model and return material if it already exists
     self.getMaterials.each do |material|
@@ -797,7 +834,7 @@ class OpenStudio::Model::Model
 
   # Create a construction from the openstudio standards dataset.
   # If construction_props are specified, modifies the insulation layer accordingly.
-  # TODO make return an OptionalConstruction
+  # @todo make return an OptionalConstruction
   def add_construction(construction_name, construction_props = nil)
 
     # First check model and return construction if it already exists

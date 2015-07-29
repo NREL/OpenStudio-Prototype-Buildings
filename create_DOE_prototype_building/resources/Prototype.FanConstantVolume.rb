@@ -1,5 +1,5 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::FanConstantVolume
 
   # Sets the fan pressure rise based on the Prototype buildings inputs
