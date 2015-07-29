@@ -397,7 +397,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   hostname = Socket.gethostname
 
   # For Andrew Parker in NREL
-  if hostname == "aparker-26487s"|| hostname == "MLEACH-19193S" # TODO: Andrew update the pc names
+  if hostname == "aparker-26487s"|| hostname == "MLEACH-19193S" || hostname == "Anns-iMac.local" # TODO: Andrew update the pc names
     # Test the Secondary School in the PTool vintages and climate zones
     def test_secondary_school
 
