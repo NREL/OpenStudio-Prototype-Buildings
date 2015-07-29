@@ -518,8 +518,8 @@ class OpenStudio::Model::Model
     fan.setFanEfficiency(prototype_input['vav_fan_efficiency'].to_f)
     fan.setMotorEfficiency(prototype_input['vav_fan_motor_efficiency'].to_f)
     fan.setPressureRise(prototype_input['vav_fan_pressure_rise'].to_f)
-    fan.setMinimumFlowRateMethod('fraction')
-    fan.setMinimumFlowRateFraction(0.25)
+    fan.setFanPowerMinimumFlowRateInputMethod ('fraction')
+    fan.setFanPowerMinimumFlowFraction (0.25)
     fan.addToNode(air_loop.supplyInletNode)
     fan.setEndUseSubcategory("VAV system Fans")
 

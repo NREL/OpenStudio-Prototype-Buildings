@@ -694,10 +694,10 @@ class OpenStudio::Model::Model
   # @param (see #add_constructions)
   # @return [Bool] returns true if successful, false if not   
   # @todo Consistency - make prototype and reference vintages consistent
-  def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
+  def modify_surface_convection_algorithm(building_vintage)
   
-    inside = model.getInsideSurfaceConvectionAlgorithm
-    outside = model.getOutsideSurfaceConvectionAlgorithm
+    inside = self.getInsideSurfaceConvectionAlgorithm
+    outside = self.getOutsideSurfaceConvectionAlgorithm
   
     case building_vintage
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
