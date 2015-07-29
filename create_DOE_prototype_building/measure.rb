@@ -60,24 +60,24 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Make an argument for the climate zone
     climate_zone_chs = OpenStudio::StringVector.new
-    #climate_zone_chs << 'ASHRAE 169-2006-1A'
+    climate_zone_chs << 'ASHRAE 169-2006-1A'
     #climate_zone_chs << 'ASHRAE 169-2006-1B'
     climate_zone_chs << 'ASHRAE 169-2006-2A'
-    #climate_zone_chs << 'ASHRAE 169-2006-2B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3A'
+    climate_zone_chs << 'ASHRAE 169-2006-2B'
+    climate_zone_chs << 'ASHRAE 169-2006-3A'
     climate_zone_chs << 'ASHRAE 169-2006-3B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3C'
+    climate_zone_chs << 'ASHRAE 169-2006-3C'
     climate_zone_chs << 'ASHRAE 169-2006-4A'
-    #climate_zone_chs << 'ASHRAE 169-2006-4B'
-    #climate_zone_chs << 'ASHRAE 169-2006-4C'
+    climate_zone_chs << 'ASHRAE 169-2006-4B'
+    climate_zone_chs << 'ASHRAE 169-2006-4C'
     climate_zone_chs << 'ASHRAE 169-2006-5A'
-    #climate_zone_chs << 'ASHRAE 169-2006-5B'
+    climate_zone_chs << 'ASHRAE 169-2006-5B'
     #climate_zone_chs << 'ASHRAE 169-2006-5C'
-    #climate_zone_chs << 'ASHRAE 169-2006-6A'
-    #climate_zone_chs << 'ASHRAE 169-2006-6B'
-    #climate_zone_chs << 'ASHRAE 169-2006-7A'
+    climate_zone_chs << 'ASHRAE 169-2006-6A'
+    climate_zone_chs << 'ASHRAE 169-2006-6B'
+    climate_zone_chs << 'ASHRAE 169-2006-7A'
     #climate_zone_chs << 'ASHRAE 169-2006-7B'
-    #climate_zone_chs << 'ASHRAE 169-2006-8A'
+    climate_zone_chs << 'ASHRAE 169-2006-8A'
     #climate_zone_chs << 'ASHRAE 169-2006-8B'
     climate_zone = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('climate_zone', climate_zone_chs, true)
     climate_zone.setDisplayName('Select a Climate Zone.')
@@ -273,6 +273,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.assign_space_type_stubs(alt_search_name, space_type_map)    
     model.add_loads(building_vintage, climate_zone)
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
+    model.modify_surface_convection_algorithm(building_vintage)
     model.add_constructions(alt_search_name, building_vintage, climate_zone)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, model.standards)
