@@ -2,133 +2,58 @@
   "schedules": [
     {
       "name": "Always Off",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "Always On",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
-      "values": [
-        1.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise ALWAYS_ON",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        1.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise APT_DHW_SCH",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.08,
-        0.04,
-        0.01,
-        0.01,
-        0.04,
-        0.27,
-        0.94,
-        1.0,
-        0.96,
-        0.84,
-        0.76,
-        0.61,
-        0.53,
-        0.47,
-        0.41,
-        0.47,
-        0.55,
-        0.73,
-        0.86,
-        0.82,
-        0.75,
-        0.61,
-        0.53,
-        0.29
-      ]
-    },
-    {
-      "name": "ApartmentHighRise Activity Schedule",
-      "category": "Activity",
-      "units": "W",
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        95.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise All Off",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise All On",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        1.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise Ambient Temp Schedule",
-      "category": "Unknown",
+      "category": "Thermostat Setpoint",
       "units": "C",
-      "day_types": "Default|WntrDsn|SmrDsn",
+      "day_types": "Default",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        22.0
+        29.4
       ]
     },
     {
-      "name": "ApartmentHighRise BLDG_ELEVATORS",
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        29.4
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        23.9
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        29.4
+      ]
+    },
+    {
+      "name": "Always Off",
       "category": "Elevator",
       "units": null,
       "day_types": "Default",
@@ -164,7 +89,186 @@
       ]
     },
     {
-      "name": "ApartmentHighRise BLDG_ELEVATORS",
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": "C",
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        22.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.08,
+        0.04,
+        0.01,
+        0.01,
+        0.04,
+        0.27,
+        0.94,
+        1.0,
+        0.96,
+        0.84,
+        0.76,
+        0.61,
+        0.53,
+        0.47,
+        0.41,
+        0.47,
+        0.55,
+        0.73,
+        0.86,
+        0.82,
+        0.75,
+        0.61,
+        0.53,
+        0.29
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Activity",
+      "units": "W",
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        95.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Always Off",
       "category": "Elevator",
       "units": null,
       "day_types": "SmrDsn",
@@ -177,7 +281,7 @@
       ]
     },
     {
-      "name": "ApartmentHighRise BLDG_ELEVATORS",
+      "name": "Always Off",
       "category": "Elevator",
       "units": null,
       "day_types": "WntrDsn",
@@ -190,46 +294,7 @@
       ]
     },
     {
-      "name": "ApartmentHighRise CLGSETP_APT_SCH",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise CLGSETP_DESIGN_OFF_SCH",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_No_Optimum",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.4
-      ]
-    },
-    {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_No_Optimum",
+      "name": "Always Off",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "WntrDsn|SmrDsn",
@@ -265,20 +330,7 @@
       ]
     },
     {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_No_Setback",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        23.9
-      ]
-    },
-    {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_No_Setback",
+      "name": "Always Off",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "WntrDsn|SmrDsn",
@@ -314,20 +366,7 @@
       ]
     },
     {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_Yes_Optimum",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.4
-      ]
-    },
-    {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_Yes_Optimum",
+      "name": "Always Off",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "WntrDsn|SmrDsn",
@@ -363,20 +402,7 @@
       ]
     },
     {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_Yes_Optimum_Original",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.4
-      ]
-    },
-    {
-      "name": "ApartmentHighRise CLGSETP_OFF_SCH_Yes_Optimum_Original",
+      "name": "Always Off",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "WntrDsn|SmrDsn",
@@ -412,27 +438,14 @@
       ]
     },
     {
-      "name": "ApartmentHighRise COMPACT HVAC-ALWAYS 0",
+      "name": "Always On",
       "category": "Unknown",
       "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
+      "day_types": "Default",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "ApartmentHighRise COMPACT HVAC-ALWAYS 1",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
+      "notes": null,
       "values": [
         1.0
       ]
@@ -66888,7 +66901,7 @@
         0.0,
         0.0,
         0.0,
-        0.0,
+        1.0,
         1.0,
         1.0,
         1.0,
@@ -66912,43 +66925,7 @@
       "name": "SecondarySchool VAV OA Damper",
       "category": "Operation",
       "units": "Dimensionless",
-      "day_types": "Sat|WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": null,
-      "values": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    {
-      "name": "SecondarySchool VAV OA Damper",
-      "category": "Operation",
-      "units": "Dimensionless",
-      "day_types": "Sun",
+      "day_types": "Sat|Sun|WntrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
