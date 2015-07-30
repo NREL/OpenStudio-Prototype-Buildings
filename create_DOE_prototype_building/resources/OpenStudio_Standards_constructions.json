@@ -395,9 +395,8 @@
       "insulation_layer": null,
       "sort": 174.0,
       "materials": [
-        "M11 100mm lightweight concrete",
-        "F05 Ceiling air space resistance",
-        "F16 Acoustic tile"
+        "CP02 CARPET PAD",
+        "100mm Normalweight concrete floor"
       ]
     },
     {
@@ -417,9 +416,8 @@
       "insulation_layer": null,
       "sort": 177.0,
       "materials": [
-        "F16 Acoustic tile",
-        "F05 Ceiling air space resistance",
-        "M11 100mm lightweight concrete"
+        "100mm Normalweight concrete floor",
+        "CP02 CARPET PAD"
       ]
     },
     {
@@ -450,9 +448,8 @@
       "insulation_layer": null,
       "sort": 182.0,
       "materials": [
-        "G01a 19mm gypsum board",
-        "F04 Wall air space resistance",
-        "G01a 19mm gypsum board"
+        "G01 13mm gypsum board",
+        "G01 13mm gypsum board"
       ]
     },
     {

@@ -2,6 +2,42 @@
   "schedules": [
     {
       "name": "Always Off",
+      "category": "Elevator",
+      "units": null,
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.1,
+        0.2,
+        0.4,
+        0.5,
+        0.5,
+        0.35,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.35,
+        0.5,
+        0.5,
+        0.4,
+        0.4,
+        0.3,
+        0.2,
+        0.1
+      ]
+    },
+    {
+      "name": "Always Off",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Default",
@@ -54,49 +90,13 @@
     },
     {
       "name": "Always Off",
-      "category": "Elevator",
-      "units": null,
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.05,
-        0.05,
-        0.05,
-        0.05,
-        0.1,
-        0.2,
-        0.4,
-        0.5,
-        0.5,
-        0.35,
-        0.15,
-        0.15,
-        0.15,
-        0.15,
-        0.15,
-        0.15,
-        0.35,
-        0.5,
-        0.5,
-        0.4,
-        0.4,
-        0.3,
-        0.2,
-        0.1
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Unknown",
-      "units": null,
+      "category": "Thermostat Setpoint",
+      "units": "C",
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
+      "notes": "From DOE Prototype Buildings",
       "values": [
         0.0
       ]
@@ -158,22 +158,9 @@
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
+      "notes": "From DOE Reference Buildings ",
       "values": [
-        1.0
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        1.0
+        0.0
       ]
     },
     {
@@ -191,34 +178,34 @@
     },
     {
       "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
+      "category": "Unknown",
+      "units": null,
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.0
+        1.0
       ]
     },
     {
       "name": "Always Off",
       "category": "Unknown",
       "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
@@ -252,6 +239,19 @@
       "notes": "From DOE Prototype Buildings",
       "values": [
         95.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
       ]
     },
     {
@@ -61695,7 +61695,30 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        24.0
+        29.44,
+        29.44,
+        29.44,
+        29.44,
+        29.44,
+        29.44,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        24.0,
+        29.44,
+        29.44,
+        29.44
       ]
     },
     {
@@ -61712,7 +61735,7 @@
       ]
     },
     {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_1_5",
+      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Default|WntrDsn",
@@ -61725,56 +61748,7 @@
       ]
     },
     {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_1_5",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        24.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_1_5",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        29.44,
-        29.44,
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_2_6",
+      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Default|WntrDsn",
@@ -61783,60 +61757,11 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_2_6",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
         24.0
       ]
     },
     {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_2_6",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        29.44,
-        29.44,
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_3_7",
+      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Default|WntrDsn",
@@ -61845,32 +61770,6 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_3_7",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        24.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_3_7",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
         29.44,
         29.44,
         29.44,
@@ -61898,144 +61797,20 @@
       ]
     },
     {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_4_8",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_4_8",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        24.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_4_8",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        29.44,
-        29.44,
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_5_9",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_5_9",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        24.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_PSZ_AC_5_9",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        29.44,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        24.0,
-        29.44,
-        29.44,
-        29.44
-      ]
-    },
-    {
-      "name": "SchoolSecondary CLGSETP_SCH_Setup",
+      "name": "SchoolSecondary CLGSETP_SCH_Setback",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Default|WntrDsn|Wkdy",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
+      "type": "Hourly",
       "notes": "From DOE Prototype Buildings",
       "values": [
         29.44
       ]
     },
     {
-      "name": "SchoolSecondary CLGSETP_SCH_Setup",
+      "name": "SchoolSecondary CLGSETP_SCH_Setback",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "SmrDsn",
@@ -62511,7 +62286,7 @@
       ]
     },
     {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_1_5",
+      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Default|SmrDsn",
@@ -62524,7 +62299,7 @@
       ]
     },
     {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_1_5",
+      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Wkdy",
@@ -62560,255 +62335,7 @@
       ]
     },
     {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_1_5",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        21.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_2_6",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_2_6",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        15.6,
-        15.6,
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_2_6",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        21.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_3_7",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_3_7",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        15.6,
-        15.6,
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_3_7",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        21.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_4_8",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_4_8",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        15.6,
-        15.6,
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_4_8",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        21.0
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_5_9",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_5_9",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Wkdy",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        15.6,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        21.0,
-        15.6,
-        15.6,
-        15.6
-      ]
-    },
-    {
-      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC_5_9",
+      "name": "SchoolSecondary HTGSETP_SCH_PSZ_AC",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "WntrDsn",
