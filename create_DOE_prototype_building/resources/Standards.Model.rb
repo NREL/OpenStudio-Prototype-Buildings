@@ -104,8 +104,8 @@ class OpenStudio::Model::Model
     # Combine the data from the JSON files into a single hash
     standards_hash = {}
     standards_files.sort.each do |standards_file|
-      temp = File.read("#{standards_data_dir}/#{standards_file}")
-      file_hash = JSON.parse(temp)
+      temp = File.open("#{standards_data_dir}/#{standards_file}", 'r:UTF-8')
+      file_hash = JSON.load(temp)
       standards_hash = standards_hash.merge(file_hash)
     end  
       
@@ -974,7 +974,6 @@ class OpenStudio::Model::Model
     if !data
       data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
       if !data
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
         return construction_set
       end
     end 

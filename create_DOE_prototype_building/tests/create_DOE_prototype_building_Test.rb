@@ -530,7 +530,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
   if hostname == "m5zmac"
     # Test the Medium Office in the QTR vintages and climate zones
-    def dont_test_medium_office
+    def test_medium_office
       bldg_types = ['MediumOffice']
       vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
       climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
@@ -572,7 +572,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
 
-    def test_retail_standalone
+    def dont_test_retail_standalone
       bldg_types = ['RetailStandalone']
       vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
       climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']

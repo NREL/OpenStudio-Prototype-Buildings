@@ -283,7 +283,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
     # Set the building location, weather files, ddy files, etc.
-    model.add_design_days_and_weather_file(model.standards, alt_search_name, building_vintage, climate_zone)
+    model.add_design_days_and_weather_file(model.standards, building_type, building_vintage, climate_zone)
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
