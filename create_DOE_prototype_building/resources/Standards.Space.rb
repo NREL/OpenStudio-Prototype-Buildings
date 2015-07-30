@@ -1973,5 +1973,81 @@ Warehouse.Office
     return true
     
   end
+
+  # Determine the component infiltration rate for this surface
+  #
+  # @param type [String] choices are 'baseline' and 'advanced'
+  # @return [Double] infiltration rate
+  #   @units cubic meters per second (m^3/s)
+  # @todo handle floors over unconditioned spaces
+  # @todo make subsurface infil rates part of Surface.component_infiltration_rate?
+  def component_infiltration_rate(template)
+    
+    # Define the total building baseline infiltration rate
+    basic_infil_rate_cfm_per_ft2 = nil
+    infil_type = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, infiltration rates are not defined using this method, no changes have been made to the model.")
+      return true
+    when '90.1-2004', '90.1-2007'
+      basic_infil_rate_cfm_per_ft2 = 1.8
+    when '90.1-2010', '90.1-2013'
+      basic_infil_rate_cfm_per_ft2 = 1.0
+    end    
+    
+    # Calculate the basic infiltration rate
+    ext_area_m2 = self.exteriorArea
+    ext_area_ft2 = OpenStudio.convert(ext_area_m2,'m^2','ft^2').get
+    basic_infil_cfm = basic_infil_rate_cfm_per_ft2 * ext_area_ft2
+    basic_infil_m3_per_s = OpenStudio.convert(basic_infil_cfm,'cfm','m^3/s').get
+     
+    # Calculate the baseline component infiltration rate
+    infil_type = 'baseline'
+    base_comp_infil_m3_per_s = 0.0
+    self.surfaces.each do |surface|
+      # This surface
+      base_comp_infil_m3_per_s += surface.component_infiltration_rate(infil_type)
+      # Subsurfaces in this surface
+      # TODO make this part of Surface.component_infiltration_rate?
+      surface.subSurfaces.each do |subsurface|
+        base_comp_infil_m3_per_s += subsurface.component_infiltration_rate(infil_type)
+      end
+    end
+    base_comp_infil_cfm = OpenStudio.convert(base_comp_infil_m3_per_s,'m^3/s','cfm').get
+  
+    # Calculate the advanced component infiltration rate
+    infil_type = 'advanced'
+    adv_comp_infil_m3_per_s = 0.0
+    self.surfaces.each do |surface|
+      # This surface
+      adv_comp_infil_m3_per_s += surface.component_infiltration_rate(infil_type)
+      # Subsurfaces in this surface
+      # TODO make this part of Surface.component_infiltration_rate?
+      surface.subSurfaces.each do |subsurface|
+        adv_comp_infil_m3_per_s += subsurface.component_infiltration_rate(infil_type)
+      end
+    end
+    adv_comp_infil_cfm = OpenStudio.convert(adv_comp_infil_m3_per_s,'m^3/s','cfm').get
+
+    # Calculate the adjusted infiltration rate
+    infil_m3_per_s = basic_infil_m3_per_s - base_comp_infil_m3_per_s + adv_comp_infil_m3_per_s
+    
+    # Adjust the infiltration from 75Pa to 4Pa
+    intial_pressure_pa = 75.0
+    final_pressure_pa = 4.0
+    adj_infil_m3_per_s = adjust_infiltration_to_lower_pressure(infil_m3_per_s, intial_pressure_pa, final_pressure_pa, )
+    
+    # Calculate the rate per exterior area
+    adj_infil_m3_per_s_per_m2 = adj_infil_m3_per_s / ext_area_m2
+    
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+    #=> infil = #{comp_infil_rate_m3_per_s.round(2)} m^3/s, ext area = #{tot_ext_area_m2.round} m^2")
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, comp infil = #{comp_infil_rate_cfm_per_ft2.round(4)} cfm/ft2 => infil = #{comp_infil_rate_cfm.round(2)} cfm, ext area = #{tot_ext_area_ft2.round} ft2")
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}")
+
+    return adj_infil_m3_per_s
+    
+  end
   
 end

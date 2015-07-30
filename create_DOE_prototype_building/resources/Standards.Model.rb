@@ -20,6 +20,8 @@ class OpenStudio::Model::Model
   require_relative 'Standards.Space'
   require_relative 'Standards.Construction'
   require_relative 'Standards.ThermalZone'
+  require_relative 'Standards.Surface'
+  require_relative 'Standards.SubSurface'
   
   # Applies the HVAC parts of the standard to all objects in the model
   # using the the template/standard specified in the model.
@@ -73,6 +75,94 @@ class OpenStudio::Model::Model
   
   end
 
+  # Apply the air leakage requirements to the model,
+  # as described in PNNL section 5.2.1.6.
+  #
+  # @param template [String} name of the template/standard to
+  # base infiltration rates off of.
+  # @return [Bool] true if successful, false if not
+  # @todo This infiltration method is not used by the Reference
+  # buildings, fix this inconsistency.
+  # @todo handle infiltration in floors over unconditioned spaces
+  def apply_infiltration_standard(template)
+  
+    # Define the total building baseline infiltration rate
+    tot_building_baseline_infil_rate_cfm_per_ft2 = nil
+    infil_type = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, infiltration rates are not defined using this method, no changes have been made to the model.")
+      return true
+    when '90.1-2004', '90.1-2007'
+      tot_building_baseline_infil_rate_cfm_per_ft2 = 1.8
+      infil_type = 'baseline'
+    when '90.1-2010', '90.1-2013'
+      tot_building_baseline_infil_rate_cfm_per_ft2 = 1.0
+      infil_type = 'advanced'
+    end
+     
+    # Define the envelope component infiltration rates
+    component_infil_rates_cfm_per_ft2 = {
+      'baseline'=>{
+        'roof'=>0.12,
+        'exterior_wall'=>0.12,
+        'below_grade_wall'=>0.12,
+        'floor_over_unconditioned'=>0.12,
+        'slab_on_grade'=>0.12,
+        'opaque_door'=>0.40,
+        'loading_dock_door'=>0.40,
+        'swinging_or_revolving_glass_door'=>1.0,
+        'vestibule'=>1.0,
+        'sliding_glass_door'=>0.40,
+        'window'=>0.40,
+        'skylight'=>0.40
+      },
+      'advanced'=>{
+        'roof'=>0.04,
+        'exterior_wall'=>0.04,
+        'below_grade_wall'=>0.04,
+        'floor_over_unconditioned'=>0.04,
+        'slab_on_grade'=>0.04,
+        'opaque_door'=>0.20,
+        'loading_dock_door'=>0.20,
+        'swinging_or_revolving_glass_door'=>1.0,
+        'vestibule'=>1.0,
+        'sliding_glass_door'=>0.20,
+        'window'=>0.20,
+        'skylight'=>0.20
+      }
+    }
+    
+    # Calculate the total component infiltration
+    # rate for the building.
+    tot_ext_area_m2 = 0.0
+    comp_infil_rate_m3_per_s = 0.0
+    all_surfaces_and_subsurfaces = model.getSurfaces
+    all_surfaces_and_subsurfaces += model.getSubSurfaces
+    all_surfaces_and_subsurfaces.each do |surface|
+      # Get the component infiltration rate
+      comp_infil_rate_m3_per_s += surface.component_infiltration_rate(infil_type)
+      
+      # Skip non-outdoor surfaces when tallying up exterior area
+      next unless surface.outsideBoundaryCondition == 'Outdoors' || surface.outsideBoundaryCondition == 'Ground'
+
+      # Area of the surface
+      tot_ext_area_m2 += surface.netArea
+ 
+    end
+  
+    # Calculate the total building baseline rate
+    tot_ext_area_ft2 = OpenStudio.convert(tot_ext_area_m2,'m^2','ft^2').get
+    bldg_baseline_rate_cfm = tot_building_baseline_infil_rate_cfm_per_ft2 * tot_ext_area_ft2
+    bldg_baseline_rate_m3_per_s = OpenStudio.convert(bldg_baseline_rate_cfm,'cfm','m^3/s').get
+    
+    # Calculate the construction quality adjustment (CQA)
+    cqa_m3_per_s = bldg_baseline_rate_m3_per_s - comp_infil_rate_m3_per_s
+    
+  
+  
+  end
+  
   # Loads the openstudio standards dataset and attach it to the model
   # via the :standards instance variable.
   #
@@ -975,7 +1065,6 @@ class OpenStudio::Model::Model
     if !data
       data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
       if !data
-        #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
         return construction_set
       end
     end 
@@ -1223,6 +1312,70 @@ class OpenStudio::Model::Model
     end
     
   end  
+ 
+  # Apply the air leakage requirements to the model,
+  # as described in PNNL section 5.2.1.6.
+  #
+  # @param template [String} name of the template/standard to
+  # base infiltration rates off of.
+  # @return [Bool] true if successful, false if not
+  # @todo This infiltration method is not used by the Reference
+  # buildings, fix this inconsistency.
+  def apply_infiltration_standard(template)
+  
+    # Define the total building baseline infiltration rate
+    tot_building_baseline_infil_rate_cfm_per_ft2 = nil
+    infil_type = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, infiltration rates are not defined using this method, no changes have been made to the model.")
+      return true
+    when '90.1-2004', '90.1-2007'
+      tot_building_baseline_infil_rate_cfm_per_ft2 = 1.8
+      infil_type = 'baseline'
+    when '90.1-2010', '90.1-2013'
+      tot_building_baseline_infil_rate_cfm_per_ft2 = 1.0
+      infil_type = 'advanced'
+    end
+    
+    # Calculate the total component infiltration
+    # rate and exterior area for the building.
+    tot_ext_area_m2 = 0.0
+    comp_infil_rate_m3_per_s = 0.0
+    self.getSpaces.sort.each do |space|
+      # Get the space exterior area
+      tot_ext_area_m2 += space.exteriorArea
+      # Get the component infiltration rate
+      comp_infil_rate_m3_per_s += space.component_infiltration_rate(template)
+    end
+    
+    comp_infil_rate_m3_per_s_per_m2 = comp_infil_rate_m3_per_s / tot_ext_area_m2
+    
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For Model, total infil = #{comp_infil_rate_m3_per_s.round(4)} m3/s")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For Model, infil rate = #{comp_infil_rate_m3_per_s_per_m2.round(8)} m3/s*m^2")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For Model, total area = #{tot_ext_area_m2.round} m2")
+
+    return true
+    
+    # Convert to IP for reporting
+    tot_ext_area_ft2 = OpenStudio.convert(tot_ext_area_m2,'m^2','ft^2').get
+    comp_infil_rate_cfm = OpenStudio.convert(comp_infil_rate_m3_per_s,'m^3/s','cfm').get
+    
+    # Calculate the total building baseline rate
+    bldg_baseline_rate_cfm = tot_building_baseline_infil_rate_cfm_per_ft2 * tot_ext_area_ft2
+    bldg_baseline_rate_m3_per_s = OpenStudio.convert(bldg_baseline_rate_cfm,'cfm','m^3/s').get    
+    comp_infil_rate_m3_per_s_per_m2 = comp_infil_rate_m3_per_s / tot_ext_area_m2
+    comp_infil_rate_cfm_per_ft2 = comp_infil_rate_cfm / tot_ext_area_ft2
+    
+    # Calculate the construction quality adjustment (CQA)
+    cqa_m3_per_s = bldg_baseline_rate_m3_per_s - comp_infil_rate_m3_per_s
+    cqa_cfm = OpenStudio.convert(cqa_m3_per_s,'m^3/s','cfm').get
+    
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For Model, baseline infil = #{tot_building_baseline_infil_rate_cfm_per_ft2.round(4)} cfm/ft2 => infil = #{bldg_baseline_rate_cfm.round} cfm, ext area = #{tot_ext_area_ft2.round} m^2")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For Model, comp infil = #{comp_infil_rate_cfm_per_ft2.round(4)} cfm/ft2 => infil = #{comp_infil_rate_cfm.round} cfm, ext area = #{tot_ext_area_ft2.round} ft2")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For Model, Construction Quality Adjustment (CQA) = #{cqa_cfm.round} cfm.")
+    
+  end 
   
   private
 
@@ -1329,5 +1482,5 @@ class OpenStudio::Model::Model
     return result
   
   end
-  
+
 end
