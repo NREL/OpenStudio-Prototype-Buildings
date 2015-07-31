@@ -1974,9 +1974,58 @@ Warehouse.Office
     
   end
 
-  # Determine the component infiltration rate for this surface
+  # Set the infiltration rate for this space to include
+  # the impact of air leakage requirements in the standard.
   #
-  # @param type [String] choices are 'baseline' and 'advanced'
+  # @param template [String] choices are 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @return [Double] true if successful, false if not
+  def set_infiltration_rate(template)
+    
+    # Define the total building baseline infiltration rate
+    basic_infil_rate_cfm_per_ft2 = nil
+    infil_type = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, infiltration rates are not defined using this method, no changes have been made to the model.")
+      return true
+    when '90.1-2004', '90.1-2007'
+      basic_infil_rate_cfm_per_ft2 = 1.8
+    when '90.1-2010', '90.1-2013'
+      basic_infil_rate_cfm_per_ft2 = 1.0
+    end    
+    
+    # Conversion factor
+    # 1 m^3/s*m^2 = 196.85 cfm/ft2
+    conv_fact = 196.85
+    
+    # Adjust the infiltration rate to the average pressure
+    # for the prototype buildings.
+    adj_infil_rate_cfm_per_ft2 = adjust_infiltration_to_prototype_building_conditions(basic_infil_rate_cfm_per_ft2)
+    adj_infil_rate_m3_per_s_per_m2 = adj_infil_rate_cfm_per_ft2 / conv_fact
+    
+    #OpenStudio::logFree(OpenStudio::Error, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_cfm_per_ft2.round(8)} cfm/ft2.")
+    #OpenStudio::logFree(OpenStudio::Error, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+        
+    # Get the exterior wall area
+    exterior_wall_and_window_area_m2 = self.exterior_wall_and_window_area 
+    
+    # Calculate the total infiltration, assuming
+    # that it only occurs through exterior walls
+    tot_infil_m3_per_s = adj_infil_rate_m3_per_s_per_m2 * exterior_wall_and_window_area_m2
+    
+    # Now spread the total infiltration rate over all
+    # exterior surface area (for the E+ input field)
+    all_ext_infil_m3_per_s_per_m2 = tot_infil_m3_per_s / self.exteriorArea
+    
+    OpenStudio::logFree(OpenStudio::Error, "openstudio.Standards.Space", "For #{self.name}, adj infil = #{all_ext_infil_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+
+    return true
+    
+  end
+   
+  # Determine the component infiltration rate for this space
+  #
+  # @param template [String] choices are 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
   # @return [Double] infiltration rate
   #   @units cubic meters per second (m^3/s)
   # @todo handle floors over unconditioned spaces
@@ -2048,6 +2097,32 @@ Warehouse.Office
 
     return adj_infil_m3_per_s
     
+  end
+  
+  # Calculate the area of the exterior walls,
+  # including the area of the windows on these walls.
+  #
+  # @return [Double] area in m^2
+  def exterior_wall_and_window_area()
+    
+    area_m2 = 0.0
+    
+    # Loop through all surfaces in this space
+    self.surfaces.each do |surface|
+      # Skip non-outdoor surfaces
+      next unless surface.outsideBoundaryCondition == 'Outdoors'
+      # Skip non-walls
+      next unless surface.surfaceType == 'Wall'
+      # This surface
+      area_m2 += surface.netArea
+      # Subsurfaces in this surface
+      surface.subSurfaces.each do |subsurface|
+        area_m2 += subsurface.netArea
+      end
+    end
+
+    return area_m2
+  
   end
   
 end

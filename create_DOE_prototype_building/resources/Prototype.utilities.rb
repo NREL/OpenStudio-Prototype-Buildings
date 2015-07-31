@@ -248,3 +248,30 @@ def adjust_infiltration_to_lower_pressure(initial_infiltration_rate_m3_per_s, in
   return adjusted_infiltration_rate_m3_per_s
 
 end 
+
+# Convert the infiltration rate at a 75 Pa
+# to an infiltration rate at the typical value for the prototype buildings
+# per method described here:  http://www.taskair.net/knowledge/Infiltration%20Modeling%20Guidelines%20for%20Commercial%20Building%20Energy%20Analysis.pdf
+#
+# @param initial_infiltration_rate_m3_per_s [Double] initial infiltration rate in m^3/s
+# @return [Double] 
+def adjust_infiltration_to_prototype_building_conditions(initial_infiltration_rate_m3_per_s)
+
+  # Details of these coefficients can be found in paper
+  alpha = 0.22 # unitless - terrain adjustment factor
+  intial_pressure_pa = 75.0 # 75 Pa
+  uh = 4.47 # m/s - wind speed
+  rho = 1.18 # kg/m^3 - air density
+  cs = 0.1617 # unitless - positive surface pressure coefficient
+  n = 0.65 # unitless - infiltration coefficient
+  
+  # Calculate the typical pressure - same for all building types
+  final_pressure_pa = 0.5 * cs * rho * uh**2
+  
+  #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "Final pressure PA = #{final_pressure_pa.round(3)} Pa.")
+
+  adjusted_infiltration_rate_m3_per_s = (1.0 + alpha) * initial_infiltration_rate_m3_per_s * (final_pressure_pa/intial_pressure_pa)**n
+
+  return adjusted_infiltration_rate_m3_per_s
+
+end 
