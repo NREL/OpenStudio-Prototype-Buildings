@@ -645,7 +645,7 @@ class OpenStudio::Model::Model
   # @param (see #add_constructions)
   # @return [Bool] returns true if successful, false if not   
   # @todo Consistency - make prototype and reference vintages consistent
-  def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
+  def modify_surface_convection_algorithm(building_vintage)
   
     inside = self.getInsideSurfaceConvectionAlgorithm
     outside = self.getOutsideSurfaceConvectionAlgorithm
@@ -756,7 +756,7 @@ class OpenStudio::Model::Model
         end
         oa_control = oa_sys.getControllerOutdoorAir
         oa_control.setEconomizerControlType(economizer_type)
-        oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
+        #oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
       end
     end
 
@@ -964,9 +964,9 @@ class OpenStudio::Model::Model
    
     vars = []
     # vars << ['Heating Coil Gas Rate', 'detailed']
-    # vars << ['Zone Thermostat Air Temperature', 'detailed']
-    # vars << ['Zone Thermostat Heating Setpoint Temperature', 'detailed']
-    # vars << ['Zone Thermostat Cooling Setpoint Temperature', 'detailed']
+    vars << ['Zone Thermostat Air Temperature', 'detailed']
+    vars << ['Zone Thermostat Heating Setpoint Temperature', 'detailed']
+    vars << ['Zone Thermostat Cooling Setpoint Temperature', 'detailed']
     # vars << ['Zone Air System Sensible Heating Rate', 'detailed']
     # vars << ['Zone Air System Sensible Cooling Rate', 'detailed']
     # vars << ['Fan Electric Power', 'detailed']

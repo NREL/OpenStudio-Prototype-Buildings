@@ -64,7 +64,39 @@ class OpenStudio::Model::ThermalZone
     tot_oa_flow_rate += sum_oa_rate
     tot_oa_flow_rate += sum_oa_for_volume
     
+    # Convert to cfm
+    tot_oa_flow_rate_cfm = OpenStudio.convert(tot_oa_flow_rate,'m^3/s','cfm').get
+    
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Model", "For #{self.name}, design min OA = #{tot_oa_flow_rate_cfm.round} cfm.")
+    
     return tot_oa_flow_rate
+
+  end
+
+  # Calculates the zone outdoor airflow requirement and
+  # divides by the zone area.
+  #
+  # @return [Double] the zone outdoor air flow rate per area
+  #   @units cubic meters per second (m^3/s)
+  def outdoor_airflow_rate_per_area()
+
+    tot_oa_flow_rate_per_area = 0.0
+
+    # Find total area of the zone
+    sum_floor_area = 0.0
+    self.spaces.sort.each do |space|
+      sum_floor_area += space.floorArea
+    end
+
+    # Get the OA flow rate
+    tot_oa_flow_rate = outdoor_airflow_rate
+    
+    # Calculate the per-area value
+    tot_oa_flow_rate_per_area = tot_oa_flow_rate / sum_floor_area
+
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{self.name}, OA per area = #{tot_oa_flow_rate_per_area.round(8)} m^3/s*m^2.")
+
+    return tot_oa_flow_rate_per_area
 
   end
   

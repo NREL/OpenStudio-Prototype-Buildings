@@ -2,6 +2,25 @@
 # Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::AirLoopHVAC
 
+
+  # Apply multizone vav outdoor air method and
+  # adjust multizone VAV damper positions
+  # to achieve a system minimum ventilation effectiveness
+  # of 0.6 per PNNL.  Hard-size the resulting min OA
+  # into the sizing:system object.
+  #
+  # return [Bool] returns true if successful, false if not
+  def apply_multizone_vav_outdoor_air_sizing()
+
+    # Only applies to multi-zone vav systems
+    if self.is_multizone_vav_system
+      self.set_minimum_vav_damper_positions
+    end
+    
+    return true
+ 
+  end  
+
   # Apply all standard required controls to the airloop
   #
   # @param (see #is_economizer_required)
@@ -17,15 +36,6 @@ class OpenStudio::Model::AirLoopHVAC
       self.apply_energy_recovery_ventilator
     end
     
-    # Apply multizone vav outdoor air method,
-    # adjust multizone VAV damper positions
-    # to achieve a minimum ventilation effectiveness
-    # of 0.6 per PNNL.  Hard-size the resulting min OA
-    # into the sizing:system object.
-    if self.is_multizone_vav_system
-      self.set_minimum_vav_damper_positions
-    end
-
     # Economizers
     self.set_economizer_limits(template, climate_zone)
     self.set_economizer_integration(template, climate_zone)    
@@ -1304,7 +1314,7 @@ class OpenStudio::Model::AirLoopHVAC
     e_vzs = []
     e_vzs_adj = []
     num_zones_adj = 0
-    self.thermalZones.each do |zone|
+    self.thermalZones.sort.each do |zone|
       
       # Breathing zone airflow rate
       v_bz = zone.outdoor_airflow_rate 
@@ -1410,7 +1420,7 @@ class OpenStudio::Model::AirLoopHVAC
         
         num_zones_adj += 1
         
-        OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For: #{self.name}: Zone #{zone.name} has a ventilation effectiveness of #{e_vz.round(2)}.  Increasing to #{e_vz_adj} by increasing minimum damper position from #{mdp.round(2)} to #{mdp_adj.round(2)}.")
+        OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For: #{self.name}: Zone #{zone.name} has a ventilation effectiveness of #{e_vz.round(2)}.  Increasing to #{e_vz_adj.round(2)} by increasing minimum damper position from #{mdp.round(2)} to #{mdp_adj.round(2)}.")
 
       else
         # Store the unadjusted value
@@ -1468,7 +1478,7 @@ class OpenStudio::Model::AirLoopHVAC
    
     # Not required for systems that require an ERV
     if self.has_energy_recovery
-      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{template} #{climate_zone}:  #{self.name}: DCV is not required since the system is required to have Energy Recovery.")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{template} #{climate_zone}:  #{self.name}: DCV is not required since the system has Energy Recovery.")
       return dcv_required
     end
    
@@ -1669,6 +1679,7 @@ class OpenStudio::Model::AirLoopHVAC
     
     # Create a setpoint manager
     sat_oa_reset = OpenStudio::Model::SetpointManagerOutdoorAirReset.new(model)
+    sat_oa_reset.setName("#{self.name} SAT Reset")
     sat_oa_reset.setControlVariable('Temperature')
     sat_oa_reset.setSetpointatOutdoorLowTemperature(sat_at_lo_oat_c)
     sat_oa_reset.setOutdoorLowTemperature(lo_oat_c)
@@ -1679,7 +1690,7 @@ class OpenStudio::Model::AirLoopHVAC
     # supply outlet node of the system.
     sat_oa_reset.addToNode(self.supplyOutletNode)
     
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: Supply air temperature reset was enabled.  When OAT > #{hi_oat_f}F, SAT is #{sat_at_hi_oat_f}F.  When OAT < #{lo_oat_f}F, SAT is #{sat_at_lo_oat_f}F.  It varies linearly in between these points.")
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: Supply air temperature reset was enabled.  When OAT > #{hi_oat_f.round}F, SAT is #{sat_at_hi_oat_f.round}F.  When OAT < #{lo_oat_f.round}F, SAT is #{sat_at_lo_oat_f.round}F.  It varies linearly in between these points.")
     
     return true
   

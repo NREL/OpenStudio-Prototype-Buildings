@@ -1979,6 +1979,7 @@ Warehouse.Office
   #
   # @param template [String] choices are 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
   # @return [Double] true if successful, false if not
+  # @todo handle doors and vestibules
   def set_infiltration_rate(template)
     
     # Define the total building baseline infiltration rate
@@ -2003,8 +2004,8 @@ Warehouse.Office
     adj_infil_rate_cfm_per_ft2 = adjust_infiltration_to_prototype_building_conditions(basic_infil_rate_cfm_per_ft2)
     adj_infil_rate_m3_per_s_per_m2 = adj_infil_rate_cfm_per_ft2 / conv_fact
     
-    #OpenStudio::logFree(OpenStudio::Error, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_cfm_per_ft2.round(8)} cfm/ft2.")
-    #OpenStudio::logFree(OpenStudio::Error, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_cfm_per_ft2.round(8)} cfm/ft2.")
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
         
     # Get the exterior wall area
     exterior_wall_and_window_area_m2 = self.exterior_wall_and_window_area 
@@ -2017,8 +2018,33 @@ Warehouse.Office
     # exterior surface area (for the E+ input field)
     all_ext_infil_m3_per_s_per_m2 = tot_infil_m3_per_s / self.exteriorArea
     
-    OpenStudio::logFree(OpenStudio::Error, "openstudio.Standards.Space", "For #{self.name}, adj infil = #{all_ext_infil_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, adj infil = #{all_ext_infil_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
 
+    # Get any infiltration schedule already
+    # assigned to this space
+    infil_sch = nil
+    if self.spaceInfiltrationDesignFlowRates.size > 0
+      old_infil = self.spaceInfiltrationDesignFlowRates[0]
+      if old_infil.schedule.is_initialized
+        infil_sch = old_infil.schedule.get
+      end
+    end
+    
+    # Create an infiltration rate object for this space
+    infiltration = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self.model)
+    infiltration.setName("#{self.name} Infiltration")
+    #infiltration.setFlowperExteriorWallArea(adj_infil_rate_m3_per_s_per_m2)
+    infiltration.setFlowperExteriorSurfaceArea(all_ext_infil_m3_per_s_per_m2)
+    if infil_sch
+      infiltration.setSchedule(infil_sch)
+    end
+    infiltration.setConstantTermCoefficient(0.0)
+    infiltration.setTemperatureTermCoefficient (0.0)
+    infiltration.setVelocityTermCoefficient(0.224)
+    infiltration.setVelocitySquaredTermCoefficient(0.0)   
+    
+    infiltration.setSpace(self)
+    
     return true
     
   end

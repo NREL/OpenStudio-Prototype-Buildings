@@ -23,6 +23,20 @@ class OpenStudio::Model::Model
   require_relative 'Standards.Surface'
   require_relative 'Standards.SubSurface'
   
+  # Applies the multi-zone VAV outdoor air sizing requirements
+  # to all applicable air loops in the model.
+  #
+  # @note This must be performed before the sizing run because
+  # it impacts component sizes, which in turn impact efficiencies.
+  def apply_multizone_vav_outdoor_air_sizing()
+    
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
+     
+    # Multi-zone VAV outdoor air sizing
+    self.getAirLoopHVACs.sort.each {|obj| obj.apply_multizone_vav_outdoor_air_sizing}  
+
+  end
+  
   # Applies the HVAC parts of the standard to all objects in the model
   # using the the template/standard specified in the model.
   def applyHVACEfficiencyStandard()
@@ -84,8 +98,16 @@ class OpenStudio::Model::Model
   # buildings, fix this inconsistency.
   def apply_infiltration_standard()
   
+    # Set the infiltration rate at each space
     self.getSpaces.sort.each do |space|
       space.set_infiltration_rate(self.template)
+    end
+    
+    # Remove infiltration rates set at the space type
+    self.getSpaceTypes.each do |space_type|
+      space_type.spaceInfiltrationDesignFlowRates.each do |infil|
+        infil.remove
+      end
     end
 
   end

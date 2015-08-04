@@ -528,15 +528,26 @@ class OpenStudio::Model::Model
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
       terminal.setZoneMinimumAirFlowMethod('Constant')
-      #terminal.setConstantMinimumAirFlowFraction(0.7)
+      if prototype_input['building_type'] == 'SecondarySchool'
+        terminal.setConstantMinimumAirFlowFraction(0.7)
+      end
       terminal.setDamperHeatingAction('Reverse')
+      if prototype_input['building_type'] == 'SecondarySchool'
+        terminal.setMaximumFlowPerZoneFloorAreaDuringReheat(0.0)
+      end
       terminal.setMaximumFlowFractionDuringReheat(0.5)
       terminal.setMaximumReheatAirTemperature(rht_sa_temp_c)
       air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
     
       # Zone sizing
+      # TODO Create general logic for cooling airflow method.
+      # Large hotel uses design day with limit, school uses design day.
       sizing_zone = zone.sizingZone
-      sizing_zone.setCoolingDesignAirFlowMethod("DesignDayWithLimit")
+      if prototype_input['building_type'] == 'SecondarySchool'
+        sizing_zone.setCoolingDesignAirFlowMethod('DesignDay')
+      else
+        sizing_zone.setCoolingDesignAirFlowMethod("DesignDayWithLimit")
+      end
       sizing_zone.setHeatingDesignAirFlowMethod("DesignDay")
       sizing_zone.setZoneCoolingDesignSupplyAirTemperature(clg_sa_temp_c)
       sizing_zone.setZoneHeatingDesignSupplyAirTemperature(rht_sa_temp_c)
@@ -709,7 +720,7 @@ class OpenStudio::Model::Model
   #   oa_intake.addToNode(air_loop.supplyInletNode)
 
   #   #heat exchanger on oa system' for some vintages
-  #   # if prototype_input['template'] == '90.1-2010'
+  #   # if prototype_input['template'] == '90.1-2010'if prototype_input['template'] == '90.1-2010'
   #     # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
   #     # heat_exchanger.setName("#{thermal_zones.size} Zone VAV HX")
   #     # heat_exchanger.setHeatExchangerType('Rotary')
