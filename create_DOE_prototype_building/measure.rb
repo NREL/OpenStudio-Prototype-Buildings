@@ -138,8 +138,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Retrieve the Prototype Inputs from JSON
     search_criteria = {
       'template' => building_vintage,
-      'climate_zone' => climate_zone,
-      'building_type' => building_type,
+      'building_type' => building_type
     }
     prototype_input = model.find_object(model.standards['prototype_inputs'], search_criteria)
     if prototype_input.nil?
