@@ -763,8 +763,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # For Yixing Chen in LBNL
-  if hostname == "yxc_lbnl"
-    # Test the large hotel in the PTool vintages and climate zones
+  if hostname == "yxc_lbnl" or hostname == "cbes2"
+      # Test the large hotel in the PTool vintages and climate zones
     def test_large_hotel
       bldg_types = ['LargeHotel']
       #vintages = ['90.1-2010']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
