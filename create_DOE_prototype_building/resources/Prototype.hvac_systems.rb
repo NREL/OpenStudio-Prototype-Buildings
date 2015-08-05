@@ -576,7 +576,13 @@ class OpenStudio::Model::Model
 
     # The oa system need to be added before setting the night cycle control
     air_loop.setNightCycleControlType('CycleOnAny')
-    
+
+
+    minimum_airflow_fraction_map = nil
+    if building_type == "LargeHotel"
+      minimum_airflow_fraction_map = self.define_minimum_airflow_fraction_map
+    end
+
     #hook the VAV system to each zone
     thermal_zones.each do |zone|
     
@@ -592,8 +598,10 @@ class OpenStudio::Model::Model
       #vav terminal
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
+      if minimum_airflow_fraction_map != nil
+        terminal.setConstantMinimumAirFlowFraction(minimum_airflow_fraction_map[zone.name.to_s])
+      end
       terminal.setZoneMinimumAirFlowMethod('Constant')
-      #terminal.setConstantMinimumAirFlowFraction(0.7)
       terminal.setDamperHeatingAction('Reverse')
       terminal.setMaximumFlowFractionDuringReheat(0.5)
       terminal.setMaximumReheatAirTemperature(rht_sa_temp_c)
