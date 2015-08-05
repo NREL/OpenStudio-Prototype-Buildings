@@ -25,6 +25,27 @@ class OpenStudio::Model::Model
     return space_type_map
   end
 
+  def define_minimum_airflow_fraction_map
+    minimum_airflow_fraction_map = {
+        'Banquet_Flr_6 ZN' => 0.88,
+        'Dining_Flr_6 ZN' => 0.86,
+        'Basement ZN'=> 0.471095733,
+        'Cafe_Flr_1 ZN' => 0.9,
+        'Corridor_Flr_6 ZN'=> 0.242350247,
+        'Corridor_Flr_3 ZN'=> 0.562749076,
+        'Kitchen_Flr_6 ZN'=> 0.2,
+        'Laundry_Flr_1 ZN'=> 0.2,
+        'Lobby_Flr_1 ZN'=> 0.64,
+        'Mech_Flr_1 ZN'=> 0.2,
+        'Retail_1_Flr_1 ZN'=> 0.288554758,
+        'Retail_2_Flr_1 ZN'=> 0.525833126,
+        'Storage_Flr_1 ZN'=> 0.721809182
+    }
+
+    return minimum_airflow_fraction_map
+
+  end
+
   def define_hvac_system_map(building_type, building_vintage, climate_zone)
     system_to_space_map = [
         {
@@ -111,7 +132,7 @@ class OpenStudio::Model::Model
             return false
           end
         when 'DOAS'
-          self.add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type)
+          self.add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type, building_vintage, climate_zone)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Undefined HVAC system type called #{system['type']}")
           return false

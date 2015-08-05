@@ -368,30 +368,53 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       end
     end
 
-    time_str = Time.now.strftime "%Y-%m-%d %H_%M_%S"
+    # Get all the fuel type and end user combination
+    all_fuel_end_user_hash = Hash.new{|h,k| h[k]=Hash.new(&h.default_proc) }
+    all_results_hash.each_pair do |building_type, value1|
+      value1.each_pair do |building_vintage, value2|
+        value2.each_pair do |climate_zone, value3|
+          value3.each_pair do |fuel_type, value4|# fuel type
+            value4.each_pair do |end_use, value5| # end use
+              all_fuel_end_user_hash[fuel_type][end_use] = true
+            end
+          end
+        end
+      end
+    end
+
+    # Fill in the missing value with 0,0,0
+    all_results_hash.each_pair do |building_type, value1|
+      value1.each_pair do |building_vintage, value2|
+        value2.each_pair do |climate_zone, value3|
+          all_fuel_end_user_hash.each_pair do |fuel_type, end_users|
+            end_users.each_pair do |end_use, value|
+              if value3[fuel_type][end_use].empty?
+                value3[fuel_type][end_use]['Legacy Val'] = 0
+                value3[fuel_type][end_use]['OpenStudio Val'] = 0
+                value3[fuel_type][end_use]['Percent Error'] = 0
+              end
+            end
+          end
+        end
+      end
+    end
 
     # Create a CSV to store the results
-    csv_file = File.open("#{Dir.pwd}/build/comparison_#{time_str}.csv", 'w')
-    # Create a CSV to store the percent difference results
-    csv_file_diff = File.open("#{Dir.pwd}/build/comparison_#{time_str}_diff.csv", 'w')
+    csv_file = File.open("#{Dir.pwd}/build/comparison.csv", 'w')
+    csv_file_simple = File.open("#{Dir.pwd}/build/comparison_simple.csv", 'w')
 
     # Write the header
     csv_file.write("building_type,building_vintage,climate_zone,")
-    csv_file_diff.write("building_type,building_vintage,climate_zone,")
+    csv_file_simple.write("building type,building vintage,climate zone,fuel type,end use,legacy val,openstudio val, percent error\n")
     line2_str =",,,"
     #results_hash=Hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val']
     all_results_hash.values[0].values[0].values[0].each_pair do |fuel_type, end_users|
-      end_users.each_pair do |end_user, values|
+      end_users.keys.each do |end_user|
         csv_file.write("#{fuel_type}-#{end_user},,,")
-        csv_file_diff.write("#{fuel_type}-#{end_user},")
         line2_str+= "Legacy Val,OSM Val,Diff (%),"
       end
-      csv_file.write("#{fuel_type} total,,,")
-      csv_file_diff.write("#{fuel_type} total,")
-      line2_str+= "Legacy Val,OSM Val,Diff (%),"
     end
     csv_file.write("\n")
-    csv_file_diff.write("\n")
     csv_file.write(line2_str + "\n")
 
     # Save the results to CSV
@@ -399,28 +422,21 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       value1.each_pair do |building_vintage, value2|
         value2.each_pair do |climate_zone, value3|
           csv_file.write("#{building_type},#{building_vintage},#{climate_zone},")
-          csv_file_diff.write("#{building_type},#{building_vintage},#{climate_zone},")
           value3.each_pair do |fuel_type, value4|# fuel type
-            fuel_type_legacy_val_total = 0
-            fuel_type_openstudio_val_total = 0
             value4.each_pair do |end_use, value5| # end use
-              fuel_type_legacy_val_total += value5['Legacy Val'].to_f
-              fuel_type_openstudio_val_total += value5['OpenStudio Val'].to_f
               csv_file.write("#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},")
-              csv_file_diff.write("#{value5['Percent Error']},")
+              if value5['Percent Error'].abs > 0.1
+                csv_file_simple.write("#{building_type},#{building_vintage},#{climate_zone},#{fuel_type},#{end_use},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
+              end
             end
-            fuel_type_diff_percent = (fuel_type_openstudio_val_total-fuel_type_legacy_val_total)/fuel_type_legacy_val_total*100
-            csv_file.write("#{fuel_type_legacy_val_total},#{fuel_type_openstudio_val_total},#{fuel_type_diff_percent},")
-            csv_file_diff.write("#{fuel_type_diff_percent},")
           end
           csv_file.write("\n")
-          csv_file_diff.write("\n")
         end
       end
     end
 
     csv_file.close
-    csv_file_diff.close
+    csv_file_simple.close
     #### Return the list of failures
     return failures
   end
@@ -747,16 +763,17 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
 
   # For Yixing Chen in LBNL
-  if hostname == "yxc_lbnl"
-    # Test the large hotel in the PTool vintages and climate zones
+  if hostname == "yxc_lbnl" or hostname == "cbes2"
+      # Test the large hotel in the PTool vintages and climate zones
     def test_large_hotel
       bldg_types = ['LargeHotel']
-      vintages = ['90.1-2010']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
-      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
-      #climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
-      #                 'ASHRAE 169-2006-3B','ASHRAE 169-2006-3C','ASHRAE 169-2006-4A','ASHRAE 169-2006-4B',
-      #                 'ASHRAE 169-2006-4C','ASHRAE 169-2006-5A','ASHRAE 169-2006-5B','ASHRAE 169-2006-6A',
-      #                 'ASHRAE 169-2006-6B','ASHRAE 169-2006-7A','ASHRAE 169-2006-8A']
+      #vintages = ['90.1-2010']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+      vintages = ['90.1-2004','90.1-2007','90.1-2010','90.1-2013']
+      #climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
+      climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
+                      'ASHRAE 169-2006-3B','ASHRAE 169-2006-3C','ASHRAE 169-2006-4A','ASHRAE 169-2006-4B',
+                      'ASHRAE 169-2006-4C','ASHRAE 169-2006-5A','ASHRAE 169-2006-5B','ASHRAE 169-2006-6A',
+                      'ASHRAE 169-2006-6B','ASHRAE 169-2006-7A','ASHRAE 169-2006-8A']
 
       # Specify the climate zones you want to run.
       # for PTool: El Paso, Houston, Chicago, and Baltimore

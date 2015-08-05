@@ -576,7 +576,13 @@ class OpenStudio::Model::Model
 
     # The oa system need to be added before setting the night cycle control
     air_loop.setNightCycleControlType('CycleOnAny')
-    
+
+
+    minimum_airflow_fraction_map = nil
+    if building_type == "LargeHotel"
+      minimum_airflow_fraction_map = self.define_minimum_airflow_fraction_map
+    end
+
     #hook the VAV system to each zone
     thermal_zones.each do |zone|
     
@@ -592,8 +598,10 @@ class OpenStudio::Model::Model
       #vav terminal
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
+      if minimum_airflow_fraction_map != nil
+        terminal.setConstantMinimumAirFlowFraction(minimum_airflow_fraction_map[zone.name.to_s])
+      end
       terminal.setZoneMinimumAirFlowMethod('Constant')
-      #terminal.setConstantMinimumAirFlowFraction(0.7)
       terminal.setDamperHeatingAction('Reverse')
       terminal.setMaximumFlowFractionDuringReheat(0.5)
       terminal.setMaximumReheatAirTemperature(rht_sa_temp_c)
@@ -3330,7 +3338,7 @@ class OpenStudio::Model::Model
     
   end  
   
-  def add_doas(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type =nil)
+  def add_doas(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type =nil,building_vintage=nil, climate_zone=nil)
     hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
     # create new air loop if story contains primary zones
 
@@ -3412,46 +3420,58 @@ class OpenStudio::Model::Model
 
     system_OA.addToNode(airloop_supply_inlet)
     # create ERV
-    heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-    heat_exchanger.setName("DOAS Heat Exchanger")
-    heat_exchanger.setAvailabilitySchedule(self.alwaysOnDiscreteSchedule)
-    heating_sensible_eff = 0.7
-    heating_latent_eff = 0.6
-    cooling_sensible_eff = 0.75
-    cooling_latent_eff =0.6
-    nominal_electric_power = 1510.21
+    case climate_zone
+      when "ASHRAE 169-2006-1A","ASHRAE 169-2006-2A","ASHRAE 169-2006-2B","ASHRAE 169-2006-3A",
+           "ASHRAE 169-2006-4A","ASHRAE 169-2006-5A","ASHRAE 169-2006-6A","ASHRAE 169-2006-6B",
+           "ASHRAE 169-2006-7A","ASHRAE 169-2006-8A"
 
-    heat_exchanger.autosizeNominalSupplyAirFlowRate
+        heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
+        heat_exchanger.setName("DOAS Heat Exchanger")
+        heat_exchanger.setAvailabilitySchedule(self.alwaysOnDiscreteSchedule)
+        heating_sensible_eff = 0.7
+        heating_latent_eff = 0.6
+        cooling_sensible_eff = 0.75
+        cooling_latent_eff =0.6
+        nominal_electric_power = 1510.21
 
-    heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(heating_sensible_eff)
-    heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(heating_latent_eff)
-    heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(heating_sensible_eff)
-    heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(heating_latent_eff)
+        heat_exchanger.autosizeNominalSupplyAirFlowRate
 
-    heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(cooling_sensible_eff)
-    heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(cooling_latent_eff)
-    heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(cooling_sensible_eff)
-    heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(cooling_latent_eff)
+        heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(heating_sensible_eff)
+        heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(heating_latent_eff)
+        heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(heating_sensible_eff)
+        heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(heating_latent_eff)
 
-    heat_exchanger.setNominalElectricPower(nominal_electric_power)
-    heat_exchanger.setSupplyAirOutletTemperatureControl(true)
-    heat_exchanger.setHeatExchangerType("Rotary")
-    heat_exchanger.setFrostControlType("ExhaustOnly")
-    heat_exchanger.setThresholdTemperature(-23.3)
-    heat_exchanger.setInitialDefrostTimeFraction(0.1670)
-    heat_exchanger.setRateofDefrostTimeFractionIncrease(1.44)
-    heat_exchanger.setEconomizerLockout(true)
+        heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(cooling_sensible_eff)
+        heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(cooling_latent_eff)
+        heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(cooling_sensible_eff)
+        heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(cooling_latent_eff)
 
-    # add erv to outdoor air system
-    heat_exchanger.addToNode(system_OA.outboardOANode.get)
+        heat_exchanger.setNominalElectricPower(nominal_electric_power)
+        heat_exchanger.setSupplyAirOutletTemperatureControl(true)
+        heat_exchanger.setHeatExchangerType("Rotary")
+        heat_exchanger.setFrostControlType("ExhaustOnly")
+        heat_exchanger.setThresholdTemperature(-23.3)
+        heat_exchanger.setInitialDefrostTimeFraction(0.1670)
+        heat_exchanger.setRateofDefrostTimeFractionIncrease(1.44)
+        heat_exchanger.setEconomizerLockout(true)
 
+        # add erv to outdoor air system
+        heat_exchanger.addToNode(system_OA.outboardOANode.get)
 
-    setpoint_manager_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(self)
-    setpoint_manager_pretreat.setName("VAV oa pretreat")
-    setpoint_manager_pretreat.setControlVariable('Temperature')
-    setpoint_manager_pretreat.addToNode(heat_exchanger.primaryAirOutletModelObject.get.to_Node.get)
-    setpoint_manager_pretreat.setOutdoorAirStreamNode(heat_exchanger.primaryAirInletModelObject.get.to_Node.get)
+        setpoint_manager_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(self)
+        setpoint_manager_pretreat.setName("VAV oa pretreat")
+        setpoint_manager_pretreat.setControlVariable('Temperature')
+        setpoint_manager_pretreat.addToNode(heat_exchanger.primaryAirOutletModelObject.get.to_Node.get)
+        setpoint_manager_pretreat.setOutdoorAirStreamNode(heat_exchanger.primaryAirInletModelObject.get.to_Node.get)
 
+        # add erv to outdoor air system
+        heat_exchanger.addToNode(system_OA.outboardOANode.get)
+      when "ASHRAE 169-2006-3B","ASHRAE 169-2006-3C","ASHRAE 169-2006-4B","ASHRAE 169-2006-4C",
+          "ASHRAE 169-2006-5B"
+        # Do nothing yet
+      else
+        # Do nothing yet
+    end
 
     # create scheduled setpoint manager for airloop
     # DOAS or VAV for cooling and not ventilation
@@ -3464,9 +3484,6 @@ class OpenStudio::Model::Model
 
     # connect components to airloop
     # find the supply inlet node of the airloop
-
-    # add erv to outdoor air system
-    heat_exchanger.addToNode(system_OA.outboardOANode.get)
 
     # add setpoint manager to supply equipment outlet node
     setpoint_manager.addToNode(airloop_primary.supplyOutletNode)
