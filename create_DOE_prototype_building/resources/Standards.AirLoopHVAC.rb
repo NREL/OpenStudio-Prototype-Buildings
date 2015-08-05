@@ -388,6 +388,8 @@ class OpenStudio::Model::AirLoopHVAC
         'ASHRAE 169-2006-6B'
         minimum_capacity_btu_per_hr = 54000
       end
+    when 'NECB 2011'
+      minimum_capacity_btu_per_hr = 68243       # NECB requires economizer for cooling cap > 20 kW
     end
   
     # Check whether the system requires an economizer by comparing
@@ -495,6 +497,11 @@ class OpenStudio::Model::AirLoopHVAC
         drybulb_limit_f = 75
         dewpoint_limit_f = 55
       end
+    #when 'NECB 2011'
+     #  case economizer_type
+      # when 'DifferentialEnthalpy'
+    # TO DO: put in economizer characteristics
+     # end
     end 
  
     # Set the limits
@@ -601,6 +608,8 @@ class OpenStudio::Model::AirLoopHVAC
       end
     when '90.1-2010', '90.1-2013'
       integrated_economizer_required = true
+    when 'NECB 2011'
+      integrated_economizer_required = false
     end
   
     # Get the OA system and OA controller
@@ -922,6 +931,9 @@ class OpenStudio::Model::AirLoopHVAC
           erv_cfm = 0
         end
       end
+    when 'NECB 2011'
+      # TO DO: need to implement logic to calculate sensible heat content of exhaust
+      # if > 150 kW, erv is required; need to also modify logic to set erv_required below
     end
     
     # Determine if an ERV is required

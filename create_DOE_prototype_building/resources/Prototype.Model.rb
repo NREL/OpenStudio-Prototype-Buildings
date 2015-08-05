@@ -582,6 +582,8 @@ class OpenStudio::Model::Model
           else
             economizer_type = 'FixedDryBulb'
           end
+        when 'NECB 2011'
+          economizer_type = 'DifferentialEnthalpy'
         end
         # Set the economizer type
         # Get the OA system and OA controller

@@ -336,14 +336,14 @@ module BTAP
               clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
 
               #clg_part_load_ratio = OpenStudio::Model::CurveCubic.new(model)
-              #clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
+              clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
               #these coefficients are directly from NECB
-              #clg_part_load_ratio.setCoefficient1Constant(0.2012301)
-              #clg_part_load_ratio.setCoefficient2x(-0.0312175)
-              #clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
-              #clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
-              #clg_part_load_ratio.setMinimumValueofx(0.0)
-              #clg_part_load_ratio.setMaximumValueofx(1.0)
+              clg_part_load_ratio.setCoefficient1Constant(0.2012301)
+              clg_part_load_ratio.setCoefficient2x(-0.0312175)
+              clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
+              clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
+              clg_part_load_ratio.setMinimumValueofx(0.0)
+              clg_part_load_ratio.setMaximumValueofx(1.0)
 
               # NECB curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)
               clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
@@ -2430,20 +2430,20 @@ module BTAP
 
               #TO DO: Does MAU have a heat exchanger
               #Create sensible heat exchanger
-              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
+              #heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
+              #heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
+              #heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
+              #heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
+              #heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
+              #heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
+              #heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
+              #heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
+              #heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
+              #heat_exchanger.setSupplyAirOutletTemperatureControl(false)
 
               #Connect heat exchanger
-              oa_node = oa_system.outboardOANode
-              heat_exchanger.addToNode(oa_node.get)
+              #oa_node = oa_system.outboardOANode
+              #heat_exchanger.addToNode(oa_node.get)
             
             end # Create MAU
             
@@ -2478,7 +2478,7 @@ module BTAP
               # Set up PTAC constant volume supply fan
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)         
               fan.setPressureRise(640)
-              fan.setFanEfficiency(0.4)              
+              #fan.setFanEfficiency(0.4)              
               
 
               ptac = OpenStudio::Model::ZoneHVACPackagedTerminalAirConditioner.new(model,

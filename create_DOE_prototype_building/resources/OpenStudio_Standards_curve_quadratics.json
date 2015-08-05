@@ -14,8 +14,8 @@
       "coeff_1": 0.141,
       "coeff_2": 0.655,
       "coeff_3": 0.203,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "Based on Dick Lord's study dated January 17, 2010.  EIRFPLR curve is identical for all AirCooled Chillers"
     },
     {
@@ -23,8 +23,8 @@
       "coeff_1": 0.141,
       "coeff_2": 0.655,
       "coeff_3": 0.203,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "Based on Dick Lord's study dated January 17, 2010."
     },
     {
@@ -32,8 +32,8 @@
       "coeff_1": 0.141,
       "coeff_2": 0.655,
       "coeff_3": 0.203,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "Based on Dick Lord's study dated January 17, 2010."
     },
     {
@@ -41,8 +41,8 @@
       "coeff_1": 0.141,
       "coeff_2": 0.655,
       "coeff_3": 0.203,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "Based on Dick Lord's study dated January 17, 2010."
     },
     {
@@ -50,8 +50,8 @@
       "coeff_1": 0.141,
       "coeff_2": 0.655,
       "coeff_3": 0.203,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "Based on Dick Lord's study dated January 17, 2010."
     },
     {
@@ -59,8 +59,8 @@
       "coeff_1": 0.90949556,
       "coeff_2": 0.09864773,
       "coeff_3": -0.00819488,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "From PNNL Prototype FullServiceRestaurant"
     },
     {
@@ -77,18 +77,36 @@
       "coeff_1": 0.90949556,
       "coeff_2": 0.09864773,
       "coeff_3": -0.00819488,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": null
     },
     {
       "name": "DX Coil Cap-FF",
       "coeff_1": 0.8,
       "coeff_2": 0.2,
-      "coeff_3": 0.0,
+      "coeff_3": 0,
       "min_x": 0.5,
       "max_x": 1.5,
       "notes": "From PNNL Prototype Buildings ApartmentMidRise, HotelSmall, OfficeSmall, RetailStandAlone, RetailStripmall, SchoolPrimary, Warehouse"
+    },
+    {
+      "name": "DXCOIL-NECB2011-REF-CAPFFLOW",
+      "coeff_1": 1,
+      "coeff_2": 0,
+      "coeff_3": 0,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXCOIL-NECB2011-REF-COOLEIRFFLOW",
+      "coeff_1": 1,
+      "coeff_2": 0,
+      "coeff_3": 0,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
     },
     {
       "name": "FURNACE_PACU_VAV_CoolCCarrier48TM014_12tons_EIRFFF",
@@ -112,16 +130,16 @@
       "name": "HPACCOOLPLFFPLR",
       "coeff_1": 0.85,
       "coeff_2": 0.15,
-      "coeff_3": 0.0,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "coeff_3": 0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": null
     },
     {
       "name": "HPACCoolCapFFF",
       "coeff_1": 0.8,
       "coeff_2": 0.2,
-      "coeff_3": 0.0,
+      "coeff_3": 0,
       "min_x": 0.5,
       "max_x": 1.5,
       "notes": null
@@ -130,7 +148,7 @@
       "name": "Measured_CoolCStandard10Ton_EIRFFF",
       "coeff_1": 1.192,
       "coeff_2": -0.1917,
-      "coeff_3": 0.0,
+      "coeff_3": 0,
       "min_x": 0.776,
       "max_x": 1.197,
       "notes": "From PNNL Prototype FullServiceRestaurant"
@@ -148,18 +166,18 @@
       "name": "PSZ-AC_CoolCLennoxStandard10Ton_TGA120S2B_PLR",
       "coeff_1": 0.771,
       "coeff_2": 0.229,
-      "coeff_3": 0.0,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "coeff_3": 0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "From PNNL Prototype Buildings OutPatientHealtCare, RestaurantFastFood, RestaurantSitDown, SchoolPrimary, SchoolSecondary"
     },
     {
       "name": "PSZ-AC_Unitary_PackagecoolPLR",
       "coeff_1": 0.75,
       "coeff_2": 0.25,
-      "coeff_3": 0.0,
-      "min_x": 0.0,
-      "max_x": 1.0,
+      "coeff_3": 0,
+      "min_x": 0,
+      "max_x": 1,
       "notes": "From PNNL Prototype Buildings RetailStandAlone, RetailStripMall, SchoolPrimary"
     },
     {
@@ -170,6 +188,42 @@
       "min_x": 0.5,
       "max_x": 1.5,
       "notes": "From PNNL Prototype Buildings ApartmentMidRise, HotelSmall, Warehouse"
+    },
+    {
+      "name": "WaterCooled_Centrifugal_EIRFPLR_NECB2011",
+      "coeff_1": 0.17149273,
+      "coeff_2": 0.58820208,
+      "coeff_3": 0.23737257,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Reciprocating_EIRFPLR_NECB2011",
+      "coeff_1": 0.08144133,
+      "coeff_2": 0.41927141,
+      "coeff_3": 0.49939604,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Screw_EIRFPLR_NECB2011",
+      "coeff_1": 0.33018833,
+      "coeff_2": 0.23554291,
+      "coeff_3": 0.46070828,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Scroll_EIRFPLR_NECB2011",
+      "coeff_1": 0.04411957,
+      "coeff_2": 0.64036703,
+      "coeff_3": 0.31955532,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
     }
   ]
 }
