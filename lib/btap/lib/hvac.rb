@@ -2334,12 +2334,12 @@ module BTAP
             self.add_sys6_multi_zone_built_up_system_with_baseboard_heating( model ,zones,  boiler_fueltype, heating_coil_type, baseboard_type, chiller_type, fan_type )
           end
           
-          def self.assign_zones_sys7()
-            # where is this method?
+          def self.assign_zones_sys7(model, zones, boiler_fueltype,chiller_type,mua_cooling_type)
+            #System 7 
+            self.add_sys2_FPFC_sys5_TPFC(model, zones, boiler_fueltype,chiller_type,"FPFC",mua_cooling_type)
           end
           
-          
-          
+    
 
           def self.add_sys1_unitary_ac_baseboard_heating(model,zones, boiler_fueltype, mau ,mau_heating_coil_type,baseboard_type)
 
@@ -2558,7 +2558,7 @@ module BTAP
             
           end #sys1_unitary_ac_baseboard_heating
 		  
-          def self.add_sys2_FPFC_sys5_TPFC(model,zones, boiler_fueltype,chiller_type,fan_coil_type,mua_cooling_type)
+          def self.add_sys2_FPFC_sys5_TPFC( model,zones, boiler_fueltype,chiller_type,fan_coil_type,mua_cooling_type )
 
             # System Type 2: FPFC or System 5: TPFC
             # This measure creates:
@@ -3093,7 +3093,6 @@ module BTAP
             return true
           end  #end add_sys4_single_zone_make_up_air_unit_with_baseboard_heating
 
-
           def self.add_sys6_multi_zone_built_up_system_with_baseboard_heating( model ,zones,  boiler_fueltype, heating_coil_type, baseboard_type, chiller_type, fan_type )
 
             # System Type 6: VAV w/ Reheat
@@ -3134,6 +3133,7 @@ module BTAP
             
             # Make a Packaged VAV w/ PFP Boxes for each story of the building
             model.getBuildingStorys.sort.each do |story|
+              if not ( BTAP::Geometry::BuildingStoreys::get_zones_from_storey(story) & zones).empty?
 
               air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
               air_loop.setName("VAV with Reheat")
@@ -3202,17 +3202,11 @@ module BTAP
               sat_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model,sat_sch)
               sat_stpt_manager.addToNode(supply_outlet_node)
 
-              # Get all zones on this story
-              zones = []
-              story.spaces.each do |space|
-                if space.thermalZone.is_initialized
-                  zones << space.thermalZone.get
-                end
-              end
+              # TO-do ask Kamel about zonal assignments per storey. 
 
-              # Make a VAV terminal with HW reheat for each zone on this story
+              # Make a VAV terminal with HW reheat for each zone on this story that is in instersection with the zones array. 
               # and hook the reheat coil to the HW loop
-              zones.each do |zone|
+              ( BTAP::Geometry::BuildingStoreys::get_zones_from_storey(story) & zones).each do |zone|
                 if(heating_coil_type == "Hot Water")
                   reheat_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
                 elsif(heating_coil_type == "Electric")
@@ -3227,14 +3221,12 @@ module BTAP
                 min_flow_rate = 0.002*zone.floorArea
                 vav_terminal.setFixedMinimumAirFlowRate(min_flow_rate) 
               end
-              
+            end
             end # next story
 
             return true
 
           end
-
-
 
           def self.setup_hw_loop_with_components(model,hw_loop,boiler_fueltype,pump_flow_sch)
 

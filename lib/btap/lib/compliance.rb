@@ -1541,7 +1541,11 @@ module BTAP
           unless space.spaceType.empty?
             space_zoning_data_array << SpacezoningData.new(space,system,building_story, horizontal_placement,vertical_placement,space.spaceType.get.people)
             people_obj_array << space.spaceType.get.people.first
-            space.spaceType.empty? ? space_type_name = "undefined" : space_type_name = space.spaceType.get.name
+            if space.spaceType.empty? 
+              space_type_name = "undefined" 
+            else 
+              space_type_name = space.spaceType.get.name
+            end
           end
         end
         

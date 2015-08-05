@@ -2165,6 +2165,19 @@ module BTAP
         end
       end
       
+      #Get the zones in a storey
+      def self.get_zones_from_storey(storey)
+        #check to see if the storey has a zone that is part of the zone list. 
+        zones = Array.new
+        storey.spaces.each do |space|
+          if not space.thermalZone.empty?  and not zones.include?(space.thermalZone.get)
+            zones.push( space.thermalZone.get )
+          end
+        end
+        return zones
+      end
+      
+      
       # override run to implement the functionality of your script
       # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
       def self.auto_assign_stories(model)    

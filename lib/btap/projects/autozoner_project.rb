@@ -34,8 +34,9 @@ fan_types = ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_
 
 #Load doe inp file change path as necessary.
 
+
 #try loading the file. 
-BTAP::FileIO::get_find_files_from_folder_by_extension( "C:/projects/OpenStudio-analysis-spreadsheet/lib/btap/resources/models/DOEArchetypes/OSM_NECB_Space_Types", '.osm' ).each do |file|
+BTAP::FileIO::get_find_files_from_folder_by_extension( "C:/projects/test/OpenStudio-Prototype-Buildings/lib/btap/resources/models/DOEArchetypes/OSM_NECB_Space_Types", '.osm' ).each do |file|
   model = BTAP::FileIO::load_osm( file )
   system_zone_array = BTAP::Compliance::NECB2011::necb_autozoner( model )
   system_zone_array.each_with_index do |zones,system_index|
@@ -56,7 +57,6 @@ BTAP::FileIO::get_find_files_from_folder_by_extension( "C:/projects/OpenStudio-a
       when 6
         BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys6(model, zones, boiler_fueltypes[0], heating_coil_types_sys4and6[0], baseboard_types[0], chiller_types[0], fan_types[0])
       when 7
-        #system 7 is undefined... using system 2 until Kamel gets back. 
         BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys2(model, zones, boiler_fueltypes[0], chiller_types[0], mua_cooling_types[0])
       end
 
