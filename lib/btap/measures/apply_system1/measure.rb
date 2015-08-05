@@ -81,11 +81,11 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
     
     
     
-    
+    zones = model.getThermalZones
     
     # Add a Canadian unitary system to each zone
-    BTAP::Resources::HVAC::HVACTemplates::NECB2011.add_sys1_unitary_ac_baseboard_heating(model,'No', 'Electric', 'Hot Water', 'NaturalGas')
-   
+    BTAP::Resources::HVAC::HVACTemplates::NECB2011.add_sys1_unitary_ac_baseboard_heating(model,zones, 'NaturalGas', 'false', 'Electric', 'Hot Water')
+
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
     # as an instance variable?
