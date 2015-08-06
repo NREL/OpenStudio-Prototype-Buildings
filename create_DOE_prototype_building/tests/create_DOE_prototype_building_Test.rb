@@ -770,7 +770,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       # Test the large hotel in the PTool vintages and climate zones
     def test_large_hotel
       bldg_types = ['LargeHotel']
-      #vintages = ['90.1-2010']#['90.1-2010','DOE Ref Pre-1980', 'DOE Ref 1980-2004']
+      #vintages = ['90.1-2007']#,'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
       vintages = ['90.1-2004','90.1-2007','90.1-2010','90.1-2013']
       #climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B','ASHRAE 169-2006-4A','ASHRAE 169-2006-5A']
       climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
@@ -790,10 +790,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       all_failures = []
 
       # Create the models
-      #all_failures += create_models(bldg_types, vintages, climate_zones)
+      all_failures += create_models(bldg_types, vintages, climate_zones)
 
       # Run the models
-      #all_failures += run_models(bldg_types, vintages, climate_zones)
+      all_failures += run_models(bldg_types, vintages, climate_zones)
 
       # Compare the results to the legacy idf results
       all_failures += compare_results(bldg_types, vintages, climate_zones)

@@ -796,6 +796,21 @@
       "notes": null
     },
     {
+      "template": "90.1-2007",
+      "cooling_type": "AirCooled",
+      "condenser_type": "WithCondenser",
+      "compressor_type": null,
+      "absorption_type": null,
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999.0,
+      "minimum_full_load_efficiency": 1.29,
+      "minimum_integrated_part_load_value": 1.164,
+      "capft": "AirCooled_Chiller_2010_PathA_CAPFT",
+      "eirft": "AirCooled_Chiller_2010_PathA_EIRFT",
+      "eirfplr": "AirCooled_Chiller_AllCapacities_2004_2010_EIRFPLR",
+      "notes": "Form 90.1-2007 Table 6.8.1A"
+    },
+    {
       "template": "90.1-2010",
       "cooling_type": "AirCooled",
       "condenser_type": "WithCondenser",
