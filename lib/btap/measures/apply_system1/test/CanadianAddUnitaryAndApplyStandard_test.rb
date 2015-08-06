@@ -39,14 +39,10 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     result = runner.result
     #save file
 
-    BTAP::FileIO::save_osm(model, "#{File.dirname(__FILE__)}/necbsys1-test.osm")
+    BTAP::FileIO::save_osm(model, "#{File.dirname(__FILE__)}/necbsys4-test.osm")
     puts "File saved."
     assert_equal("Success", result.value.valueName)
   end
 
-
-  #
-
-
-  
+ 
 end

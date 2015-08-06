@@ -2357,6 +2357,8 @@ module BTAP
             # mau_heating_coil_type choices are "Hot Water", "Electric"
             # boiler_fueltype choices match OS choices for Boiler component fuel type, i.e.
             # "NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"
+            
+            # Some system parameters are set after system is set up; by applying method 'applyHVACEfficiencyStandard'
 
 
             always_on = model.alwaysOnDiscreteSchedule
@@ -2365,16 +2367,10 @@ module BTAP
             always_off = BTAP::Resources::Schedules::StandardSchedules::ON_OFF::always_off(model)
 
             # Create a hot water loop; MAU hydronic heating coil and hot water baseboards will be
-            # connected to this loop
-
-            #TO DO: Include logic to determine whether MAU heating coil is hydronic (versus electric)
-            #and whether baseboards should be hydronic (versus electric)
-
-            #Create hot water loop if there is a MAU and its heating coil is hydronic or if baseboard type is hydronic
+            # connected to this loop (if MAU and its heating coil is hydronic or if baseboard type is hydronic)
 
             if ( (mau == true and mau_heating_coil_type == "Hot Water") or baseboard_type == "Hot Water" ) then
 
-              #hw_loop = OpenStudio::Model::PlantLoop.new(model)
               hw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
               BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_hw_loop_with_components(model,hw_loop,boiler_fueltype, always_on)
 
@@ -2418,7 +2414,7 @@ module BTAP
 
               mau_fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
               mau_fan.setPressureRise(640)
-              mau_fan.setFanEfficiency(0.4)
+              
 
               if ( mau_heating_coil_type == "Electric") then           # electric coil
                 mau_htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
@@ -2430,7 +2426,7 @@ module BTAP
               end
 
 
-            # Set up DX coil with NECB performance curve characteristics;
+            # Set up DX coil with default curves (set to NECB);
 
               mau_clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
@@ -2510,7 +2506,7 @@ module BTAP
               # Set up PTAC constant volume supply fan
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)         
               fan.setPressureRise(640)
-              #fan.setFanEfficiency(0.4)              
+                        
               
 
               ptac = OpenStudio::Model::ZoneHVACPackagedTerminalAirConditioner.new(model,
@@ -2788,11 +2784,7 @@ module BTAP
 
             always_on = model.alwaysOnDiscreteSchedule
 
-            # Create a hot water loop; hot water baseboards will be connected to this loop
-
-            #TO DO: Include logic to determine whether baseboards should be hydronic or electric
-
-            #Create hot water loop if baseboard type is hydronic
+            # Create a hot water loop (if baseboard type is hydronic); hot water baseboards will be connected to this loop
 
             if ( baseboard_type == "Hot Water" ) then
 
@@ -2836,7 +2828,7 @@ module BTAP
 
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
               fan.setPressureRise(640)
-              fan.setFanEfficiency(0.4)
+             
 
               case heating_coil_type
               when "Electric"           # electric coil
@@ -2887,20 +2879,20 @@ module BTAP
 
 
               #Create sensible heat exchanger
-              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-
-              #Connect heat exchanger
-              oa_node = oa_system.outboardOANode
-              heat_exchanger.addToNode(oa_node.get)
+#              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
+#              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
+#              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
+#              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
+#              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
+#              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
+#              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
+#              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
+#              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
+#              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
+#
+#              #Connect heat exchanger
+#              oa_node = oa_system.outboardOANode
+#              heat_exchanger.addToNode(oa_node.get)
 
 
               # Create a diffuser and attach the zone/diffuser pair to the air loop
@@ -3005,7 +2997,7 @@ module BTAP
 
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
               fan.setPressureRise(640)
-              fan.setFanEfficiency(0.4)
+              
 
               if ( heating_coil_type == "Electric") then           # electric coil
                 htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
@@ -3047,20 +3039,20 @@ module BTAP
 
 
               #Create sensible heat exchanger
-              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-
-              #Connect heat exchanger
-              oa_node = oa_system.outboardOANode
-              heat_exchanger.addToNode(oa_node.get)
+#              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
+#              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
+#              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
+#              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
+#              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
+#              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
+#              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
+#              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
+#              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
+#              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
+#
+#              Connect heat exchanger
+#              oa_node = oa_system.outboardOANode
+#              heat_exchanger.addToNode(oa_node.get)
 
 
               # Create a diffuser and attach the zone/diffuser pair to the air loop
