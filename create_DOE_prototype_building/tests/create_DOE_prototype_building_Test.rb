@@ -330,11 +330,13 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
               results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val'] = legacy_val.round(2)
               results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['OpenStudio Val'] = osm_val.round(2)
               results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Percent Error'] = percent_error.round(2)
+              results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Absolute Error'] = (legacy_val-osm_val).abs.round(2)
 
               if add_to_all_results
                 all_results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val'] = legacy_val.round(2)
                 all_results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['OpenStudio Val'] = osm_val.round(2)
                 all_results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Percent Error'] = percent_error.round(2)
+                all_results_hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Absolute Error'] = (legacy_val-osm_val).abs.round(2)
               end
 
             end # Next end use
@@ -392,6 +394,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                 value3[fuel_type][end_use]['Legacy Val'] = 0
                 value3[fuel_type][end_use]['OpenStudio Val'] = 0
                 value3[fuel_type][end_use]['Percent Error'] = 0
+                value3[fuel_type][end_use]['Absolute Error'] = 0
               end
             end
           end
@@ -405,13 +408,13 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     # Write the header
     csv_file.write("building_type,building_vintage,climate_zone,")
-    csv_file_simple.write("building type,building vintage,climate zone,fuel type,end use,legacy val,openstudio val, percent error\n")
+    csv_file_simple.write("building type,building vintage,climate zone,fuel type,end use,legacy val,openstudio val,percent error,absolute error\n")
     line2_str =",,,"
     #results_hash=Hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val']
     all_results_hash.values[0].values[0].values[0].each_pair do |fuel_type, end_users|
       end_users.keys.each do |end_user|
-        csv_file.write("#{fuel_type}-#{end_user},,,")
-        line2_str+= "Legacy Val,OSM Val,Diff (%),"
+        csv_file.write("#{fuel_type}-#{end_user},,,,")
+        line2_str+= "Legacy Val,OSM Val,Diff (%),Absolute Diff"
       end
     end
     csv_file.write("\n")
@@ -424,9 +427,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           csv_file.write("#{building_type},#{building_vintage},#{climate_zone},")
           value3.each_pair do |fuel_type, value4|# fuel type
             value4.each_pair do |end_use, value5| # end use
-              csv_file.write("#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},")
+              csv_file.write("#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']},")
               if value5['Percent Error'].abs > 0.1
-                csv_file_simple.write("#{building_type},#{building_vintage},#{climate_zone},#{fuel_type},#{end_use},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']}\n")
+                csv_file_simple.write("#{building_type},#{building_vintage},#{climate_zone},#{fuel_type},#{end_use},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']}\n")
               end
             end
           end
@@ -787,10 +790,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       all_failures = []
 
       # Create the models
-      all_failures += create_models(bldg_types, vintages, climate_zones)
+      #all_failures += create_models(bldg_types, vintages, climate_zones)
 
       # Run the models
-      all_failures += run_models(bldg_types, vintages, climate_zones)
+      #all_failures += run_models(bldg_types, vintages, climate_zones)
 
       # Compare the results to the legacy idf results
       all_failures += compare_results(bldg_types, vintages, climate_zones)
