@@ -414,7 +414,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     all_results_hash.values[0].values[0].values[0].each_pair do |fuel_type, end_users|
       end_users.keys.each do |end_user|
         csv_file.write("#{fuel_type}-#{end_user},,,,")
-        line2_str+= "Legacy Val,OSM Val,Diff (%),Absolute Diff"
+        line2_str+= "Legacy Val,OSM Val,Diff (%),Absolute Diff,"
       end
     end
     csv_file.write("\n")
