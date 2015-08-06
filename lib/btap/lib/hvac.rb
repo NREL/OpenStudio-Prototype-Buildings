@@ -2323,6 +2323,7 @@ module BTAP
           
           def self.assign_zones_sys4( model, zones, boiler_fueltype, heating_coil_type, baseboard_type)
             self.add_sys4_single_zone_make_up_air_unit_with_baseboard_heating( model, zones, boiler_fueltype, heating_coil_type, baseboard_type)
+            return model
           end
           
           def self.assign_zones_sys5(model, zones, boiler_fueltype,chiller_type,mua_cooling_type)

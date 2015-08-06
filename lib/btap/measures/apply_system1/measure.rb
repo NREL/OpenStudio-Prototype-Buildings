@@ -1,6 +1,6 @@
 
  # for testing 
-require "C:/Users/mmottill/Documents/GitHub/bTAP/OpenStudio-Prototype-Buildings/lib/btap/lib/btap"
+require "#{File.dirname(__FILE__)}/../../lib/btap"
 
 
 #Load OSM file change path as necessary.
@@ -65,7 +65,7 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
     @runner = runner
 
     # Load the libraries
-    resource_path = "C:/Users/mmottill/Documents/GitHub/bTAP/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/"
+    resource_path = "#{File.dirname(__FILE__)}/../../../../create_DOE_prototype_building/resources/"
     # HVAC sizing
     require_relative "#{resource_path}/HVACSizing.Model"
     # Canadian HVAC library
@@ -81,21 +81,11 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
     
     
     
-    zones = model.getThermalZones
-    
-    # Add a Canadian unitary system to each zone
-    #BTAP::Resources::HVAC::HVACTemplates::NECB2011.add_sys1_unitary_ac_baseboard_heating(model,zones, 'NaturalGas', 'false', 'Electric', 'Hot Water')
-    #BTAP::Resources::HVAC::HVACTemplates::NECB2011.add_sys1_unitary_ac_baseboard_heating(model,zones, 'NaturalGas', true, 'Hot Water', 'Hot Water')
-    #BTAP::Resources::HVAC::HVACTemplates::NECB2011.add_sys3and8_single_zone_packaged_rooftop_unit_with_baseboard_heating(model,zones, 'NaturalGas', 'Electric', 'Electric')
-    BTAP::Resources::HVAC::HVACTemplates::NECB2011.add_sys4_single_zone_make_up_air_unit_with_baseboard_heating(model,zones, 'NaturalGas', 'Electric', 'Electric')
 
-    
     # Create a variable for the standard data directory
     # TODO Extend the OpenStudio::Model::Model class to store this
     # as an instance variable?
-    standards_data_dir = "C:/Users/mmottill/Documents/GitHub/bTAP/OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources"   
-    
-
+    standards_data_dir = resource_path
    
     # Load the Openstudio_Standards JSON files
     model.load_openstudio_standards_json(standards_data_dir)
@@ -113,8 +103,12 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
     # Perform a sizing run
     if model.runSizingRun("#{sizing_dir}/SizingRun1") == false
       log_msgs
+      puts "could not find sizing run #{sizing_dir}/SizingRun1"
       return false
+    else
+      puts "found sizing run #{sizing_dir}/SizingRun1"
     end
+    
 
     BTAP::FileIO::save_osm(model, "#{File.dirname(__FILE__)}/before.osm")
     
