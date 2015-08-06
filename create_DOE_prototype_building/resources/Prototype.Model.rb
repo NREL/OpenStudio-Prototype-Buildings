@@ -559,19 +559,12 @@ class OpenStudio::Model::Model
       # which reduce to 70% power when no one is around.
       unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
         occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
+        occ_sens_ext_lts_sch_name = prototype_input['occ_sensing_exterior_lighting_schedule']
         occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
         occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
         occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
         occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
-        occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-        occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
-        occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
-        if building_type == "SmallHotel"
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-        else
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0.7)
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-        end
+        occ_sens_ext_lts_sch = self.add_schedule(occ_sens_ext_lts_sch_name)
         occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
         occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
         occ_sens_ext_lts.setControlOption('AstronomicalClock')
@@ -581,25 +574,12 @@ class OpenStudio::Model::Model
       # that don't dim at all at night.
       unless prototype_input['nondimming_exterior_lighting_power'].nil?
         nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
+        nondimming_ext_lts_sch_name = prototype_input['nondimming_exterior_lighting_schedule']
         nondimming_ext_lts_name = 'NonDimming Exterior Lights'
         nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
         nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
         nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
-        #
-        nondimming_ext_lts_sch = nil
-        if building_vintage == '90.1-2010'
-          nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-          nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
-          nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
-          if building_type == "SmallHotel"
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-          else
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-          end
-        elsif building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
-          nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
-        end
+        nondimming_ext_lts_sch = self.add_schedule(nondimming_ext_lts_sch_name)
         nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
         nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
         nondimming_ext_lts.setControlOption('AstronomicalClock')
