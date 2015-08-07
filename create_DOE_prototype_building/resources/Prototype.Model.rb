@@ -153,8 +153,6 @@ class OpenStudio::Model::Model
   # @param climate_zone [String] the name of the climate zone the building is in
   # @return [Bool] returns true if successful, false if not   
   def add_constructions(building_type, building_vintage, climate_zone)
-    puts "entering into add_constructions"
-
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
     is_residential = "No"  #default is nonresidential for building level
 

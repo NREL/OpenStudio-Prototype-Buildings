@@ -313,11 +313,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
                 if percent_error.abs > acceptable_error_percentage
                   failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = #{percent_error.round}% (#{osm_val}, #{legacy_val})"
                 end
-              elsif osm_val > 0 && legacy_val == 0
+              elsif osm_val > 0 && legacy_val.abs < 1e-6
                 # The osm has a fuel/end use that the legacy idf does not
                 percent_error = 1000
                 failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = osm has extra fuel/end use that legacy idf does not (#{osm_val})"
-              elsif osm_val == 0 && legacy_val > 0
+              elsif osm_val.abs < 1e-6 && legacy_val > 0
                 # The osm has a fuel/end use that the legacy idf does not
                 percent_error = 1000
                 failures << "#{building_type}-#{building_vintage}-#{climate_zone}-#{fuel_type}-#{end_use} Error = osm is missing a fuel/end use that legacy idf has (#{legacy_val})"
@@ -402,6 +402,16 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       end
     end
 
+    fuel_type_names = []
+    end_uses_names =[]
+
+    all_fuel_end_user_hash.each_pair do |fuel_type, end_users|
+      end_users.each_pair do |end_use, value|
+        fuel_type_names.push(fuel_type)
+        end_uses_names.push(end_use)
+      end
+    end
+
     # Create a CSV to store the results
     csv_file = File.open("#{Dir.pwd}/build/comparison.csv", 'w')
     csv_file_simple = File.open("#{Dir.pwd}/build/comparison_simple.csv", 'w')
@@ -425,12 +435,13 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       value1.each_pair do |building_vintage, value2|
         value2.each_pair do |climate_zone, value3|
           csv_file.write("#{building_type},#{building_vintage},#{climate_zone},")
-          value3.each_pair do |fuel_type, value4|# fuel type
-            value4.each_pair do |end_use, value5| # end use
-              csv_file.write("#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']},")
-              if value5['Percent Error'].abs > 0.1
-                csv_file_simple.write("#{building_type},#{building_vintage},#{climate_zone},#{fuel_type},#{end_use},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']}\n")
-              end
+          for fuel_end_use_index in 0...fuel_type_names.count
+            fuel_type = fuel_type_names[fuel_end_use_index]
+            end_use = end_uses_names[fuel_end_use_index]
+            value5 = value3[fuel_type][end_use]
+            csv_file.write("#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']},")
+            if value5['Percent Error'].abs > 0.1
+              csv_file_simple.write("#{building_type},#{building_vintage},#{climate_zone},#{fuel_type},#{end_use},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']}\n")
             end
           end
           csv_file.write("\n")
