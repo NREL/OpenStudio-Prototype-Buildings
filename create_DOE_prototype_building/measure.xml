@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>create_doe_prototype_building</name>
   <uid>be90fd0b-a651-467a-bc8d-29d310b0f937</uid>
-  <version_id>c6bb2aff-99e3-47bb-9712-bded86c18be6</version_id>
+  <version_id>283b9d31-4cf5-4d7b-966b-4dd2fdb52cc0</version_id>
   <xml_checksum>057E8D9D</xml_checksum>
   <class_name>CreateDOEPrototypeBuilding</class_name>
   <display_name>Create DOE Prototype Building</display_name>
@@ -922,12 +922,6 @@
       <checksum>C107663C</checksum>
     </file>
     <file>
-      <filename>Prototype.HeatExchangerAirToAirSensibleAndLatent.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>31A29AC5</checksum>
-    </file>
-    <file>
       <filename>Prototype.FanOnOff.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
@@ -944,12 +938,6 @@
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>ABD224F9</checksum>
-    </file>
-    <file>
-      <filename>Prototype.utilities.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>1B47ACF7</checksum>
     </file>
     <file>
       <filename>ASHRAE90.1_HotelSmall_STD2010_Houston.osm</filename>
@@ -1144,18 +1132,6 @@
       <checksum>AE783B13</checksum>
     </file>
     <file>
-      <filename>OpenStudio_Standards_exterior.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>7817EECC</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_ground_temperatures.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>F294300C</checksum>
-    </file>
-    <file>
       <filename>OpenStudio_Standards_heat_pumps.json</filename>
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
@@ -1306,82 +1282,10 @@
       <checksum>1332E109</checksum>
     </file>
     <file>
-      <filename>OpenStudio_Standards_space_types.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>84860CDA</checksum>
-    </file>
-    <file>
-      <filename>Prototype.secondary_school.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>6FFAD570</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_constructions.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>7DDBE1CB</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_construction_properties.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>91E9EFA0</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_prototype_inputs.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>A666CB85</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_schedules.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>2E171FBA</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_construction_sets.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>EC4F3702</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_materials.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>ADB37E2F</checksum>
-    </file>
-    <file>
       <filename>HVACSizing.ThermalZone.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>F9BE686B</checksum>
-    </file>
-    <file>
-      <filename>Standards.ThermalZone.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>6AACBBAB</checksum>
-    </file>
-    <file>
-      <filename>Prototype.hvac_systems.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>5C9E7C3C</checksum>
-    </file>
-    <file>
-      <filename>Standards.AirLoopHVAC.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>321B63B1</checksum>
-    </file>
-    <file>
-      <filename>run.db</filename>
-      <filetype>db</filetype>
-      <usage_type>test</usage_type>
-      <checksum>9D581DF3</checksum>
     </file>
     <file>
       <filename>HVACSizing.Model.rb</filename>
@@ -1390,22 +1294,118 @@
       <checksum>812D582F</checksum>
     </file>
     <file>
+      <filename>Prototype.HeatExchangerAirToAirSensibleAndLatent.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>182ECA88</checksum>
+    </file>
+    <file>
+      <filename>Prototype.utilities.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>AB51670B</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_exterior.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>220EF5C6</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_ground_temperatures.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>AE091BA0</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_space_types.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>5B4D5D6C</checksum>
+    </file>
+    <file>
+      <filename>Prototype.secondary_school.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C3FBDF98</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_constructions.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>E278D932</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_construction_properties.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>677D1901</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_prototype_inputs.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>22863DFB</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_schedules.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>B4DE3B7A</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_construction_sets.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>86E2A980</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_materials.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>DC8BCFC7</checksum>
+    </file>
+    <file>
+      <filename>Standards.ThermalZone.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>9E1C2AB0</checksum>
+    </file>
+    <file>
+      <filename>Prototype.hvac_systems.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>9722FFD3</checksum>
+    </file>
+    <file>
+      <filename>Standards.AirLoopHVAC.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C3105555</checksum>
+    </file>
+    <file>
+      <filename>run.db</filename>
+      <filetype>db</filetype>
+      <usage_type>test</usage_type>
+      <checksum>2ADD431F</checksum>
+    </file>
+    <file>
       <filename>Prototype.Model.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>0E107241</checksum>
+      <checksum>46E99354</checksum>
     </file>
     <file>
       <filename>create_DOE_prototype_building_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>FA911E19</checksum>
+      <checksum>1A49830F</checksum>
     </file>
     <file>
       <filename>Standards.Space.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>77DB0F4F</checksum>
+      <checksum>520A217D</checksum>
     </file>
     <file>
       <version>
@@ -1416,25 +1416,25 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>759572BB</checksum>
+      <checksum>2B718C95</checksum>
     </file>
     <file>
       <filename>Standards.SubSurface.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>8AE68EEE</checksum>
+      <checksum>152EC4DF</checksum>
     </file>
     <file>
       <filename>Standards.Surface.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>E6C67D09</checksum>
+      <checksum>31D55ABF</checksum>
     </file>
     <file>
       <filename>Standards.Model.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>D3EDAE3A</checksum>
+      <checksum>AB00CEAB</checksum>
     </file>
   </files>
 </measure>
