@@ -453,7 +453,7 @@ class OpenStudio::Model::Model
 
   end
   
-  def add_vav(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type=nil)
+  def add_vav(prototype_input, standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type=nil, minimum_airflow_fraction_map = nil)
 
     hw_temp_f = 180 #HW setpoint 180F 
     hw_delta_t_r = 20 #20F delta-T    
@@ -576,12 +576,6 @@ class OpenStudio::Model::Model
 
     # The oa system need to be added before setting the night cycle control
     air_loop.setNightCycleControlType('CycleOnAny')
-
-
-    minimum_airflow_fraction_map = nil
-    if building_type == "LargeHotel"
-      minimum_airflow_fraction_map = self.define_minimum_airflow_fraction_map
-    end
 
     #hook the VAV system to each zone
     thermal_zones.each do |zone|
