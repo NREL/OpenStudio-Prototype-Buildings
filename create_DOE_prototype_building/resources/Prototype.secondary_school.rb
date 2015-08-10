@@ -161,6 +161,38 @@ class OpenStudio::Model::Model
           [
               'Cafeteria_ZN_1_FLR_1'
           ]
+      },
+      {
+          'type' => 'Exhaust Fan',
+          'name' => 'Kitchen Exhaust Fan',
+          'availability_sch_name' => 'SchoolSecondary Kitchen_Exhaust_SCH',
+          'flow_rate' => OpenStudio.convert(5400,'cfm','m^3/s').get,
+          'flow_fraction_schedule_name' => 'SchoolSecondary Kitchen_Exhaust_SCH_DCV',
+          'balanced_exhaust_fraction_schedule_name' => 'SchoolSecondary Kitchen Exhaust Fan Balanced Exhaust Fraction Schedule',
+          'space_names' =>
+          [
+              'Kitchen_ZN_1_FLR_1'
+          ]
+      },
+      {
+          'type' => 'Exhaust Fan',
+          'name' => 'Bathrooms_ZN_1_FLR_1',
+          'availability_sch_name' => 'SchoolSecondary Hours_of_operation',
+          'flow_rate' => OpenStudio.convert(600,'cfm','m^3/s').get,
+          'space_names' =>
+          [
+              'Bathrooms_ZN_1_FLR_1'
+          ]
+      },
+      {
+          'type' => 'Exhaust Fan',
+          'name' => 'Bathrooms_ZN_1_FLR_2',
+          'availability_sch_name' => 'SchoolSecondary Hours_of_operation',
+          'flow_rate' => OpenStudio.convert(600,'cfm','m^3/s').get,
+          'space_names' =>
+          [
+              'Bathrooms_ZN_1_FLR_2'
+          ]
       }
   ]
 
@@ -209,6 +241,14 @@ class OpenStudio::Model::Model
         end
       when 'PSZ-AC'
         self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
+      when 'Exhaust Fan'
+        self.add_exhaust_fan(prototype_input,
+                            standards,
+                            system['availability_sch_name'],
+                            system['flow_rate'],
+                            system['flow_fraction_schedule_name'],
+                            system['balanced_exhaust_fraction_schedule_name'],
+                            thermal_zones)
       end
 
     end

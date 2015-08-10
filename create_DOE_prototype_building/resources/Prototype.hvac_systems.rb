@@ -88,8 +88,8 @@ class OpenStudio::Model::Model
     chilled_water_loop.setMinimumLoopTemperature(1)
 
     # Chilled water loop controls
-    chw_temp_f = 45 #CHW setpoint 45F
-    chw_delta_t_r = 12 #12F delta-T    
+    chw_temp_f = 44 #CHW setpoint 44F
+    chw_delta_t_r = 10.1 #10.1F delta-T
     chw_temp_c = OpenStudio.convert(chw_temp_f,'F','C').get
     chw_delta_t_k = OpenStudio.convert(chw_delta_t_r,'R','K').get
     chw_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -122,20 +122,14 @@ class OpenStudio::Model::Model
       pri_chw_pump.addToNode(chilled_water_loop.supplyInletNode)   
     elsif prototype_input['chw_pumping_type'] == 'const_pri_var_sec'
       # Primary chilled water pump
-      pri_chw_pump = OpenStudio::Model::PumpVariableSpeed.new(self)
+      pri_chw_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
       pri_chw_pump.setName('Chilled Water Loop Primary Pump')
       pri_chw_pump_head_ft_h2o = 15
       pri_chw_pump_head_press_pa = OpenStudio.convert(pri_chw_pump_head_ft_h2o, 'ftH_{2}O','Pa').get
       pri_chw_pump.setRatedPumpHead(pri_chw_pump_head_press_pa)
       pri_chw_pump.setMotorEfficiency(0.9)
-      # Flat pump curve makes it behave as a constant speed pump
-      pri_chw_pump.setFractionofMotorInefficienciestoFluidStream(0)
-      pri_chw_pump.setCoefficient1ofthePartLoadPerformanceCurve(0)
-      pri_chw_pump.setCoefficient2ofthePartLoadPerformanceCurve(1)
-      pri_chw_pump.setCoefficient3ofthePartLoadPerformanceCurve(0)
-      pri_chw_pump.setCoefficient4ofthePartLoadPerformanceCurve(0)
       pri_chw_pump.setPumpControlType('Intermittent')
-      pri_chw_pump.addToNode(chilled_water_loop.supplyInletNode) 
+      pri_chw_pump.addToNode(chilled_water_loop.supplyInletNode)
       # Secondary chilled water pump
       sec_chw_pump = OpenStudio::Model::PumpVariableSpeed.new(self)
       sec_chw_pump.setName('Chilled Water Loop Secondary Pump')
@@ -528,8 +522,19 @@ class OpenStudio::Model::Model
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
       terminal.setZoneMinimumAirFlowMethod('Constant')
+      # Vary the initial minimum damper position based on OA
+      # rate of the space.  Spaces with low OA per area get lower
+      # initial guess.  Final position will be adjusted upward
+      # as necessary by Standards.AirLoopHVAC.set_minimum_vav_damper_positions
       if prototype_input['building_type'] == 'SecondarySchool'
-        terminal.setConstantMinimumAirFlowFraction(0.7)
+        zone_oa_per_area = zone.outdoor_airflow_rate_per_area
+        if zone_oa_per_area > 0.001 # 0.001 m^3/s*m^2 = .196 cfm/ft2
+          # High OA zones
+          terminal.setConstantMinimumAirFlowFraction(0.7)
+        else
+          # Low OA zones
+          terminal.setConstantMinimumAirFlowFraction(0.2)
+        end
       end
       terminal.setDamperHeatingAction('Reverse')
       if prototype_input['building_type'] == 'SecondarySchool'
@@ -2897,8 +2902,8 @@ class OpenStudio::Model::Model
     swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
     swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
     swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    swh_temp_sch.setName("Hot Water Loop Temp - #{swh_temp_f}F")
-    swh_temp_sch.defaultDaySchedule().setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
+    swh_temp_sch.setName("Service Water Loop Temp - #{swh_temp_f}F")
+    swh_temp_sch.defaultDaySchedule().setName("Service Water Loop Temp - #{swh_temp_f}F Default")
     swh_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
     swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
     swh_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,swh_temp_sch)    
@@ -2968,8 +2973,8 @@ class OpenStudio::Model::Model
       swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
       swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
       swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-      swh_temp_sch.setName("Hot Water Loop Temp - #{swh_temp_f}F")
-      swh_temp_sch.defaultDaySchedule.setName("Hot Water Loop Temp - #{swh_temp_f}F Default")
+      swh_temp_sch.setName("Service Water Loop Temp - #{swh_temp_f}F")
+      swh_temp_sch.defaultDaySchedule.setName("Service Water Loop Temp - #{swh_temp_f}F Default")
       swh_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
       swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
     end
@@ -3052,8 +3057,8 @@ class OpenStudio::Model::Model
     swh_temp_c = OpenStudio.convert(swh_temp_f,'F','C').get
     swh_delta_t_k = OpenStudio.convert(swh_delta_t_r,'R','K').get
     swh_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    swh_temp_sch.setName("Hot Water Booster Temp - #{swh_temp_f}F")
-    swh_temp_sch.defaultDaySchedule().setName("Hot Water Booster Temp - #{swh_temp_f}F Default")
+    swh_temp_sch.setName("Service Water Booster Temp - #{swh_temp_f}F")
+    swh_temp_sch.defaultDaySchedule().setName("Service Water Booster Temp - #{swh_temp_f}F Default")
     swh_temp_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),swh_temp_c)
     swh_temp_sch.setScheduleTypeLimits(temp_sch_type_limits)
     swh_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,swh_temp_sch)    
@@ -3109,8 +3114,10 @@ class OpenStudio::Model::Model
     if water_heater_fuel == 'Electricity'
       water_heater.setHeaterFuelType('Electricity')
       water_heater.setHeaterThermalEfficiency(1.0)
-      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
-      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      unless prototype_input["booster_service_water_parasitic_fuel_consumption_rate"].nil?
+        water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+        water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      end
       water_heater.setOffCycleParasiticFuelType('Electricity')
       water_heater.setOnCycleParasiticFuelType('Electricity')
       water_heater.setOffCycleLossCoefficienttoAmbientTemperature(1.053)
@@ -3118,8 +3125,10 @@ class OpenStudio::Model::Model
     elsif water_heater_fuel == 'Natural Gas'
       water_heater.setHeaterFuelType('NaturalGas')
       water_heater.setHeaterThermalEfficiency(0.8)
-      water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
-      water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      unless prototype_input["booster_service_water_parasitic_fuel_consumption_rate"].nil?
+        water_heater.setOffCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+        water_heater.setOnCycleParasiticFuelConsumptionRate(OpenStudio.convert(prototype_input["booster_service_water_parasitic_fuel_consumption_rate"],'Btu/hr','W').get)
+      end
       water_heater.setOffCycleParasiticFuelType('NaturalGas')
       water_heater.setOnCycleParasiticFuelType('NaturalGas')
       water_heater.setOffCycleLossCoefficienttoAmbientTemperature(6.0)
@@ -3440,6 +3449,28 @@ class OpenStudio::Model::Model
       # attach new terminal to the zone and to the airloop
       airloop_primary.addBranchForZone(zone, air_terminal.to_StraightComponent)
     end
-  end
+  end  
+  
+  def add_exhaust_fan(prototype_input, standards, availability_sch_name, flow_rate, flow_fraction_schedule_name, balanced_exhaust_fraction_schedule_name, thermal_zones)
+      
+    # Make an exhaust fan for each zone
+    thermal_zones.each do |zone|
+      fan = OpenStudio::Model::FanZoneExhaust.new(self)
+      fan.setName("#{zone.name} Exhaust Fan")
+      fan.setAvailabilitySchedule(self.add_schedule(availability_sch_name))
+      fan.setMaximumFlowRate(flow_rate)
+      unless flow_fraction_schedule_name.nil?
+        fan.setFlowFractionSchedule(self.add_schedule(flow_fraction_schedule_name)) 
+      end
+      fan.setSystemAvailabilityManagerCouplingMode('Decoupled')
+      unless balanced_exhaust_fraction_schedule_name.nil?
+        fan.setBalancedExhaustFractionSchedule(self.add_schedule(balanced_exhaust_fraction_schedule_name))
+      end
+      fan.addToThermalZone(zone)
+    end 
 
+    return true
+
+  end  
+  
 end

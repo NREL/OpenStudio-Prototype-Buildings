@@ -11,6 +11,7 @@ class OpenStudio::Model::Model
   require_relative 'Standards.FanConstantVolume'
   require_relative 'Standards.FanVariableVolume'
   require_relative 'Standards.FanOnOff'
+  require_relative 'Standards.FanZoneExhaust'
   require_relative 'Standards.ChillerElectricEIR'
   require_relative 'Standards.CoilCoolingDXTwoSpeed'
   require_relative 'Standards.CoilCoolingDXSingleSpeed'
@@ -54,6 +55,7 @@ class OpenStudio::Model::Model
     self.getFanVariableVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanConstantVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanOnOffs.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
+    self.getFanZoneExhausts.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
   
     # Unitary ACs
     self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
