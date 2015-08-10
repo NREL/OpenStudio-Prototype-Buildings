@@ -1,5 +1,9 @@
 regression test/regression runs/
 create_DOE_prototype_building/tests/build
+create_DOE_prototype_building/tests/Parellel.png
+create_DOE_prototype_building/tests/QtCore4.dll
+create_DOE_prototype_building/tests/QtGui4.dll
+create_DOE_prototype_building/tests/ThreadControl.exe
 /temporary junk/
 .idea/
 .project
