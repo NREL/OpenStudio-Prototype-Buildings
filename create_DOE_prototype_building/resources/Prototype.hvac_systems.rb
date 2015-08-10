@@ -106,13 +106,13 @@ class OpenStudio::Model::Model
     chilled_water_loop.setMinimumLoopTemperature(1)
 
     # Chilled water loop controls
-    # TODO: Yixing check the CHW Setpoint from standards
-    if building_type == 'LargeHotel'
-     chw_temp_f = 44 #CHW setpoint 44F
-     chilled_water_loop.setCommonPipeSimulation("TwoWayCommonPipe")
-    else
+    # # TODO: Yixing check the CHW Setpoint from standards
+    # if building_type == 'LargeHotel'
+    #  chw_temp_f = 44 #CHW setpoint 44F
+    #  chilled_water_loop.setCommonPipeSimulation("TwoWayCommonPipe")
+    # else
       chw_temp_f = 45 #CHW setpoint 45F
-    end
+    #end
 
     chw_delta_t_r = 12 #12F delta-T    
     chw_temp_c = OpenStudio.convert(chw_temp_f,'F','C').get

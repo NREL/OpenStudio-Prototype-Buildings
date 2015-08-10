@@ -1018,10 +1018,12 @@ class OpenStudio::Model::Model
         thermal_zones << zone.get
       end
 
-
-      minimum_airflow_fraction_map_all = self.define_minimum_airflow_fraction_map
-      minimum_airflow_fraction_map = minimum_airflow_fraction_map_all[building_vintage][climate_zone]
-
+      if building_vintage == "DOE Ref Pre-1980" or building_vintage == "DOE Ref 1980-2004"
+         minimum_airflow_fraction_map = nil
+      else
+         minimum_airflow_fraction_map_all = self.define_minimum_airflow_fraction_map
+         minimum_airflow_fraction_map = minimum_airflow_fraction_map_all[building_vintage][climate_zone]
+      end
 
       case system['type']
         when 'VAV'
@@ -1139,16 +1141,18 @@ class OpenStudio::Model::Model
 
     self.add_large_hotel_swh_end_uses(prototype_input, hvac_standards, swh_loop, 'main', water_end_uses)
 
-    # Add the laundry water heater
-    laundry_water_heater_space_name = "Basement"
-    laundry_water_heater_thermal_zone = self.getSpaceByName(laundry_water_heater_space_name).get.thermalZone.get
-    laundry_water_heater_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry', laundry_water_heater_thermal_zone)
-    self.add_swh_end_uses(prototype_input, hvac_standards, laundry_water_heater_loop,'laundry')
+    if building_vintage == "90.1-2004" or building_vintage == "90.1-2007" or building_vintage == "90.1-2010" or building_vintage == "90.1-2013"
+        # Add the laundry water heater
+        laundry_water_heater_space_name = "Basement"
+        laundry_water_heater_thermal_zone = self.getSpaceByName(laundry_water_heater_space_name).get.thermalZone.get
+        laundry_water_heater_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry', laundry_water_heater_thermal_zone)
+        self.add_swh_end_uses(prototype_input, hvac_standards, laundry_water_heater_loop,'laundry')
 
-    booster_water_heater_space_name = "KITCHEN_FLR_6"
-    booster_water_heater_thermal_zone = self.getSpaceByName(booster_water_heater_space_name).get.thermalZone.get
-    swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, swh_loop, booster_water_heater_thermal_zone)
-    self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+        booster_water_heater_space_name = "KITCHEN_FLR_6"
+        booster_water_heater_thermal_zone = self.getSpaceByName(booster_water_heater_space_name).get.thermalZone.get
+        swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, swh_loop, booster_water_heater_thermal_zone)
+        self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+    end
 
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding SWH")
     return true

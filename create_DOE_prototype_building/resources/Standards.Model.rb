@@ -959,8 +959,6 @@ class OpenStudio::Model::Model
   # Create a construction set from the openstudio standards dataset.
   # Returns an Optional DefaultConstructionSet
   def add_construction_set(template, clim, building_type, spc_type, is_residential)
-    puts "entering into add_construction_set"
-
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
 
     # Find the climate zone set that this climate zone falls into
