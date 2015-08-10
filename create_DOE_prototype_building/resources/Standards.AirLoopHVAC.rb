@@ -40,16 +40,19 @@ class OpenStudio::Model::AirLoopHVAC
     self.set_economizer_limits(template, climate_zone)
     self.set_economizer_integration(template, climate_zone)    
     
-    # Multizone VAV Optimization
+    # Multizone VAV Systems
     if self.is_multizone_vav_system
+      
+      # VAV Reheat Control
+      self.set_vav_damper_action(template, climate_zone)
+      
+      # Multizone VAV Optimization
       if self.is_multizone_vav_optimization_required(template, climate_zone)
         self.enable_multizone_vav_optimization
       else
         self.disable_multizone_vav_optimization
-        # Combine the design OA requirements
-        # into a single per-area value so that DCV doesn't run
-        
       end
+      
     end
     
     # DCV
@@ -67,9 +70,6 @@ class OpenStudio::Model::AirLoopHVAC
     if self.is_supply_air_temperature_reset_required(template, climate_zone)
       self.enable_supply_air_temperature_reset
     end
-    
-    # Modify ventilation rates if multizone optimization
-    # is required but DCV is not.
     
     # TODO Optimum Start
     # for systems exceeding 10,000 cfm
@@ -1799,5 +1799,43 @@ class OpenStudio::Model::AirLoopHVAC
     return has_erv
 
   end
+
+  # Set the VAV damper control to single maximum or
+  # dual maximum control depending on the standard.
+  #
+  # @return [Bool] Returns true if successful, false if not
+  # @todo see if this impacts the sizing run.
+  def set_vav_damper_action(template, climate_zone)
   
+    damper_action = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004'
+      damper_action = 'Single Maximum'
+    when '90.1-2007', '90.1-2010', '90.1-2013'
+      damper_action = 'Dual Maximum'
+    end
+    
+    # Interpret this as an EnergyPlus input
+    damper_action_eplus = nil
+    if damper_action == 'Single Maximum'
+      damper_action_eplus = 'Normal'
+    elsif damper_action == 'Dual Maximum'
+      damper_action_eplus = 'Reverse'
+    end
+    
+    # Set the control for any VAV reheat terminals
+    # on this airloop.
+    self.demandComponents.each do |equip|
+      if equip.to_AirTerminalSingleDuctVAVReheat.is_initialized
+        term = equip.to_AirTerminalSingleDuctVAVReheat.get
+        term.setDamperHeatingAction(damper_action_eplus)
+      end
+    end    
+    
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: VAV damper action was set to #{damper_action} control.")
+    
+    return true
+    
+  end
+
 end
