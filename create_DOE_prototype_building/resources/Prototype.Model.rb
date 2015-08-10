@@ -686,7 +686,9 @@ class OpenStudio::Model::Model
     require_relative 'Prototype.FanConstantVolume'
     require_relative 'Prototype.FanVariableVolume'
     require_relative 'Prototype.FanOnOff'
+    require_relative 'Prototype.FanZoneExhaust'
     require_relative 'Prototype.HeatExchangerAirToAirSensibleAndLatent'
+    require_relative 'Prototype.ControllerWaterCoil'
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying prototype HVAC assumptions.')
     
@@ -696,6 +698,7 @@ class OpenStudio::Model::Model
     self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanZoneExhausts.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
     ##### Add Economizers
     # Create an economizer maximum OA fraction of 70%
@@ -740,6 +743,10 @@ class OpenStudio::Model::Model
       end
     end
 
+    # TODO What is the logic behind hard-sizing
+    # hot water coil convergence tolerances?
+    self.getControllerWaterCoils.sort.each {|obj| obj.set_convergence_limits}
+    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
   end 
