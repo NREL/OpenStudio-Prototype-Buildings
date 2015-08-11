@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>create_doe_prototype_building</name>
   <uid>be90fd0b-a651-467a-bc8d-29d310b0f937</uid>
-  <version_id>283b9d31-4cf5-4d7b-966b-4dd2fdb52cc0</version_id>
+  <version_id>ed16e6f8-2af0-4c96-9aae-83f2636d967a</version_id>
   <xml_checksum>057E8D9D</xml_checksum>
   <class_name>CreateDOEPrototypeBuilding</class_name>
   <display_name>Create DOE Prototype Building</display_name>
@@ -130,8 +130,20 @@
           <display_name>ASHRAE 169-2006-4A</display_name>
         </choice>
         <choice>
+          <value>ASHRAE 169-2006-4C</value>
+          <display_name>ASHRAE 169-2006-4C</display_name>
+        </choice>
+        <choice>
           <value>ASHRAE 169-2006-5A</value>
           <display_name>ASHRAE 169-2006-5A</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-6A</value>
+          <display_name>ASHRAE 169-2006-6A</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-7A</value>
+          <display_name>ASHRAE 169-2006-7A</display_name>
         </choice>
       </choices>
     </argument>
@@ -910,18 +922,6 @@
       <checksum>960E10CC</checksum>
     </file>
     <file>
-      <filename>Prototype.FanConstantVolume.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>0A54627A</checksum>
-    </file>
-    <file>
-      <filename>Prototype.FanVariableVolume.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>C107663C</checksum>
-    </file>
-    <file>
       <filename>Prototype.FanOnOff.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
@@ -1094,12 +1094,6 @@
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
       <checksum>B66EB4B8</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_chillers.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>C5707105</checksum>
     </file>
     <file>
       <filename>OpenStudio_Standards_climate_zone_sets.json</filename>
@@ -1276,12 +1270,6 @@
       <checksum>B678BD17</checksum>
     </file>
     <file>
-      <filename>OpenStudio_Standards_motors.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>1332E109</checksum>
-    </file>
-    <file>
       <filename>HVACSizing.ThermalZone.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
@@ -1318,46 +1306,16 @@
       <checksum>AE091BA0</checksum>
     </file>
     <file>
-      <filename>OpenStudio_Standards_space_types.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>5B4D5D6C</checksum>
-    </file>
-    <file>
-      <filename>Prototype.secondary_school.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>C3FBDF98</checksum>
-    </file>
-    <file>
       <filename>OpenStudio_Standards_constructions.json</filename>
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
       <checksum>E278D932</checksum>
     </file>
     <file>
-      <filename>OpenStudio_Standards_construction_properties.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>677D1901</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_prototype_inputs.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>22863DFB</checksum>
-    </file>
-    <file>
       <filename>OpenStudio_Standards_schedules.json</filename>
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
       <checksum>B4DE3B7A</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_construction_sets.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>86E2A980</checksum>
     </file>
     <file>
       <filename>OpenStudio_Standards_materials.json</filename>
@@ -1372,51 +1330,10 @@
       <checksum>9E1C2AB0</checksum>
     </file>
     <file>
-      <filename>Prototype.hvac_systems.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>9722FFD3</checksum>
-    </file>
-    <file>
-      <filename>Standards.AirLoopHVAC.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>C3105555</checksum>
-    </file>
-    <file>
-      <filename>run.db</filename>
-      <filetype>db</filetype>
-      <usage_type>test</usage_type>
-      <checksum>2ADD431F</checksum>
-    </file>
-    <file>
-      <filename>Prototype.Model.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>46E99354</checksum>
-    </file>
-    <file>
-      <filename>create_DOE_prototype_building_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>1A49830F</checksum>
-    </file>
-    <file>
       <filename>Standards.Space.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>520A217D</checksum>
-    </file>
-    <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>1.6.0</identifier>
-        <min_compatible>1.6.0</min_compatible>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>2B718C95</checksum>
     </file>
     <file>
       <filename>Standards.SubSurface.rb</filename>
@@ -1431,10 +1348,129 @@
       <checksum>31D55ABF</checksum>
     </file>
     <file>
+      <filename>Prototype.FanConstantVolume.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>AF565A0F</checksum>
+    </file>
+    <file>
+      <filename>Prototype.FanVariableVolume.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>384BA1AE</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_chillers.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>AFD2E72B</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_motors.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>7F8D46B1</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_space_types.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>A9EEAB6A</checksum>
+    </file>
+    <file>
+      <filename>Prototype.secondary_school.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>905701BA</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_construction_properties.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>FFF9A2D9</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_prototype_inputs.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>5F5AA511</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_construction_sets.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C53575CD</checksum>
+    </file>
+    <file>
+      <filename>Prototype.hvac_systems.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>5CC39667</checksum>
+    </file>
+    <file>
+      <filename>Standards.AirLoopHVAC.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>E3AC5035</checksum>
+    </file>
+    <file>
+      <filename>Prototype.Model.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>52CE3868</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.6.0</identifier>
+        <min_compatible>1.6.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>7F5CF473</checksum>
+    </file>
+    <file>
       <filename>Standards.Model.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>AB00CEAB</checksum>
+      <checksum>02787D0E</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards.xlsx</filename>
+      <filetype>xlsx</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>385AD5B4</checksum>
+    </file>
+    <file>
+      <filename>Prototype.ControllerWaterCoil.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>DF5CA3D0</checksum>
+    </file>
+    <file>
+      <filename>Prototype.FanZoneExhaust.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>2C63A039</checksum>
+    </file>
+    <file>
+      <filename>Standards.FanZoneExhaust.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>0D05E1BC</checksum>
+    </file>
+    <file>
+      <filename>create_DOE_prototype_building_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>3F134042</checksum>
+    </file>
+    <file>
+      <filename>run.db</filename>
+      <filetype>db</filetype>
+      <usage_type>test</usage_type>
+      <checksum>C1883782</checksum>
     </file>
   </files>
 </measure>
