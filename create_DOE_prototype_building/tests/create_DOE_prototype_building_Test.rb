@@ -779,24 +779,35 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # For Yixing Chen in LBNL
   if hostname == "yxc_lbnl" or hostname == "cbes2"
       # Test the large hotel in the PTool vintages and climate zones
+    if hostname == "yxc_lbnl"
+      $test_single_case = true #
+    else
+      $test_single_case = false
+    end
+
     def test_large_hotel
       bldg_types = ['LargeHotel']
-      #vintages = ['90.1-2007']#,'DOE Ref Pre-1980', 'DOE Ref 1980-2004']
-      vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004','90.1-2004','90.1-2007','90.1-2010','90.1-2013']
-      #climate_zones = ['ASHRAE 169-2006-2A']
-      climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
-                      'ASHRAE 169-2006-3B','ASHRAE 169-2006-3C','ASHRAE 169-2006-4A','ASHRAE 169-2006-4B',
-                      'ASHRAE 169-2006-4C','ASHRAE 169-2006-5A','ASHRAE 169-2006-5B','ASHRAE 169-2006-6A',
-                      'ASHRAE 169-2006-6B','ASHRAE 169-2006-7A','ASHRAE 169-2006-8A']
 
-      # Specify the climate zones you want to run.
-      # for PTool: El Paso, Houston, Chicago, and Baltimore
-      # 1A Miami, 2A Houston, 2B Phoenix, 3A Memphis (Atlanta), 3B El Paso (Las Vegas), 3C San Francisco
-      # 4A Baltimore, 4B Albuquerque, 4C Salem (Seattle), 5A Chicago, 5B Boise (Boulder), 6A Burlington (Minneapolis)
-      # 6B Helena, 7A Duluth, 8A Fairbanks
-      # climate_zones = ["Miami", "Houston", "Phoenix", "Memphis","El Paso","San Francisco",
-      #                  "Baltimore", "Albuquerque", "Salem", "Chicago", "Boise", "Burlington",
-      #                  "Helena", "Duluth", "Fairbanks"]
+      if $test_single_case
+        vintages = ['DOE Ref Pre-1980']
+      else
+        vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004','90.1-2004','90.1-2007','90.1-2010','90.1-2013']
+      end
+
+      if $test_single_case
+       climate_zones = ['ASHRAE 169-2006-2A']
+      else
+        # Specify the climate zones you want to run.
+        # 1A Miami, 2A Houston, 2B Phoenix,
+        # 3A Memphis (Atlanta), 3B El Paso (Las Vegas), 3C San Francisco,
+        # 4A Baltimore, 4B Albuquerque, 4C Salem (Seattle),
+        # 5A Chicago, 5B Boise (Boulder), 6A Burlington (Minneapolis) 6B Helena,
+        # 7A Duluth, 8A Fairbanks
+        climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
+                        'ASHRAE 169-2006-3B','ASHRAE 169-2006-3C','ASHRAE 169-2006-4A','ASHRAE 169-2006-4B',
+                        'ASHRAE 169-2006-4C','ASHRAE 169-2006-5A','ASHRAE 169-2006-5B','ASHRAE 169-2006-6A',
+                        'ASHRAE 169-2006-6B','ASHRAE 169-2006-7A','ASHRAE 169-2006-8A']
+      end
 
       all_failures = []
 

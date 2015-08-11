@@ -10,8 +10,8 @@ class OpenStudio::Model::Model
         'Corridor'=> ['Corridor_Flr_6'],
         'Corridor2'=> ['Corridor_Flr_3'],
         'GuestRoom'=> ['Room_1_Flr_3','Room_2_Flr_3','Room_5_Flr_3','Room_6_Flr_3'],
-        'GuestRoom3'=> ['Room_1_Flr_6','Room_2_Flr_6'],
         'GuestRoom2'=> ['Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3'],
+        'GuestRoom3'=> ['Room_1_Flr_6','Room_2_Flr_6'],
         'GuestRoom4'=> ['Room_3_Mult9_Flr_6'],
         'Kitchen'=> ['Kitchen_Flr_6'],
         'Laundry'=> ['Laundry_Flr_1'],
@@ -1109,11 +1109,6 @@ class OpenStudio::Model::Model
     swh_thermal_zone = self.getSpaceByName(swh_space_name).get.thermalZone.get
     swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main',swh_thermal_zone)
 
-    # Add the water use equipment
-    guess_room_space_types =['GuestRoom','GuestRoom2','GuestRoom3','GuestRoom4']
-    kitchen_space_types = ['Kitchen']
-    guess_room_water_use_rate = 0.020833333 # gal/min, Reference: NREL Reference building report 5.1.6
-    kitchen_space_use_rate = 2.22 # gal/min, from PNNL prototype building
     guess_room_water_use_schedule = "HotelLarge GuestRoom_SWH_Sch"
     kitchen_water_use_schedule = "HotelLarge BLDG_SWH_SCH"
 
@@ -1121,13 +1116,61 @@ class OpenStudio::Model::Model
     space_type_map = define_space_type_map(building_type, building_vintage, climate_zone)
     space_multipliers = define_space_multiplier
 
+    # Add the water use equipment
+
+    kitchen_space_types = ['Kitchen']
+    kitchen_space_use_rate = 2.22 # gal/min, from PNNL prototype building
+
+    guess_room_water_use_rate = 0.020833333 # gal/min, Reference: NREL Reference building report 5.1.6
+
+    if building_vintage == "90.1-2004" or building_vintage == "90.1-2007" or building_vintage == "90.1-2010" or building_vintage == "90.1-2013"
+        guess_room_space_types =['GuestRoom','GuestRoom2','GuestRoom3','GuestRoom4']
+    else
+        guess_room_space_types =['GuestRoom','GuestRoom3']
+        guess_room_space_types1 = ['GuestRoom2']
+        guess_room_space_types2 = ['GuestRoom4']
+        guess_room_water_use_rate1 = 0.395761032 # gal/min, Reference building
+        guess_room_water_use_rate2 = 0.187465752 # gal/min, Reference building
+
+        laundry_water_use_schedule = "HotelLarge LaundryRoom_Eqp_Elec_Sch"
+        laundry_space_types = ['Laundry']
+        laundry_room_water_use_rate = 2.6108244 # gal/min, Reference building
+
+        guess_room_space_types1.each do |space_type|
+            space_names = space_type_map[space_type]
+            space_names.each do |space_name|
+                space_multiplier = 1
+                space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+                water_end_uses.push([space_name, guess_room_water_use_rate1 * space_multiplier,guess_room_water_use_schedule])
+            end
+        end
+
+        guess_room_space_types2.each do |space_type|
+            space_names = space_type_map[space_type]
+            space_names.each do |space_name|
+                space_multiplier = 1
+                space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+                water_end_uses.push([space_name, guess_room_water_use_rate2 * space_multiplier,guess_room_water_use_schedule])
+            end
+        end
+
+        laundry_space_types.each do |space_type|
+            space_names = space_type_map[space_type]
+            space_names.each do |space_name|
+                space_multiplier = 1
+                space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+                water_end_uses.push([space_name, laundry_room_water_use_rate * space_multiplier,laundry_water_use_schedule])
+            end
+        end
+    end
+
     guess_room_space_types.each do |space_type|
-      space_names = space_type_map[space_type]
-      space_names.each do |space_name|
-        space_multiplier = 1
-        space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
-        water_end_uses.push([space_name, guess_room_water_use_rate * space_multiplier,guess_room_water_use_schedule])
-      end
+        space_names = space_type_map[space_type]
+        space_names.each do |space_name|
+            space_multiplier = 1
+            space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+            water_end_uses.push([space_name, guess_room_water_use_rate * space_multiplier,guess_room_water_use_schedule])
+        end
     end
 
     kitchen_space_types.each do |space_type|
