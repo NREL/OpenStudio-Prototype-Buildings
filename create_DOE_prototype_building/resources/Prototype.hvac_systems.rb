@@ -3161,6 +3161,18 @@ class OpenStudio::Model::Model
     water_fixture_def = OpenStudio::Model::WaterUseEquipmentDefinition.new(self)
     rated_flow_rate_gal_per_min = prototype_input["#{type}_service_water_peak_flowrate"]
     rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+    # water_use_sensible_frac_sch = OpenStudio::Model::ScheduleConstant.new(self)
+    # water_use_sensible_frac_sch.setValue(0.2)
+    # water_use_latent_frac_sch = OpenStudio::Model::ScheduleConstant.new(self)
+    # water_use_latent_frac_sch.setValue(0.05)
+    water_use_sensible_frac_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    water_use_sensible_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.2)    
+    water_use_latent_frac_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    water_use_latent_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.05)    
+    puts "water_use_sensible_frac_sch = #{water_use_sensible_frac_sch}"
+    puts "water_use_latent_frac_sch = #{water_use_latent_frac_sch}"
+    water_fixture_def.setSensibleFractionSchedule(water_use_sensible_frac_sch)
+    water_fixture_def.setLatentFractionSchedule(water_use_latent_frac_sch)
     water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
     water_fixture_def.setName("#{type.capitalize} Service Water Use Def #{rated_flow_rate_gal_per_min.round(2)}gal/min")
     # Target mixed water temperature
@@ -3205,6 +3217,18 @@ class OpenStudio::Model::Model
     rated_flow_rate_gal_per_hour = rated_flow_rate_per_area * space_area   # gal/h
     rated_flow_rate_gal_per_min = rated_flow_rate_gal_per_hour/60  # gal/h to gal/min
     rated_flow_rate_m3_per_s = OpenStudio.convert(rated_flow_rate_gal_per_min,'gal/min','m^3/s').get
+    # water_use_sensible_frac_sch = OpenStudio::Model::ScheduleConstant.new(self)
+    # water_use_sensible_frac_sch.setValue(0.2)
+    # water_use_latent_frac_sch = OpenStudio::Model::ScheduleConstant.new(self)
+    # water_use_latent_frac_sch.setValue(0.05)
+    water_use_sensible_frac_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    water_use_sensible_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.2)    
+    water_use_latent_frac_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    water_use_latent_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.05)    
+    puts "water_use_sensible_frac_sch = #{water_use_sensible_frac_sch}"
+    puts "water_use_latent_frac_sch = #{water_use_latent_frac_sch}"
+    water_fixture_def.setSensibleFractionSchedule(water_use_sensible_frac_sch)
+    water_fixture_def.setLatentFractionSchedule(water_use_latent_frac_sch)
     water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
     water_fixture_def.setName("#{space_name.capitalize} Service Water Use Def #{rated_flow_rate_gal_per_min.round(2)}gal/min")
     # Target mixed water temperature

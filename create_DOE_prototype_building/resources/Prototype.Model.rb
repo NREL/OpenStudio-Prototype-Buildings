@@ -122,7 +122,7 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Space type called '#{stub_space_type.name}' has no standards space type.")
         return false
       end
-
+puts "************************************space_type = #{stds_spc_type}"
       new_space_type = self.add_space_type(building_vintage, 'ClimateZone 1-8', stds_building_type, stds_spc_type)
 
       # Apply the new space type to the building      
@@ -648,8 +648,8 @@ class OpenStudio::Model::Model
   # @todo Consistency - make prototype and reference vintages consistent
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
   
-    inside = model.getInsideSurfaceConvectionAlgorithm
-    outside = model.getOutsideSurfaceConvectionAlgorithm
+    inside = self.getInsideSurfaceConvectionAlgorithm
+    outside = self.getOutsideSurfaceConvectionAlgorithm
   
     case building_vintage
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
