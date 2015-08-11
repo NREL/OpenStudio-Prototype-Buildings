@@ -3514,7 +3514,20 @@ class OpenStudio::Model::Model
 
       # attach new terminal to the zone and to the airloop
       airloop_primary.addBranchForZone(zone, air_terminal.to_StraightComponent)
-    end
+    end	
+  end
+  
+  def add_elevator(prototype_input, standards, space)
+	
+	elevator_definition = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
+	elevator_definition.setDesignLevel(prototype_input['building_elevator_power'])
+	
+	elevator_equipment = OpenStudio::Model::ElectricEquipment.new(elevator_definition)
+	elevator_sch = self.add_schedule(prototype_input['building_elevator_schedule'])
+	elevator_equipment.setSchedule(elevator_sch)
+	elevator_equipment.setSpace(space)
+	
+	
   end
 
 end
