@@ -680,7 +680,7 @@ class OpenStudio::Model::Model
     # 0.0000;                  !- Velocity Squared Term Coefficient
     self.getSpaceInfiltrationDesignFlowRates.each do |infiltration|
       infiltration.setConstantTermCoefficient(0.0)
-      infiltration.setTemperatureTermCoefficient (0.0)
+      infiltration.setTemperatureTermCoefficient(0.0)
       infiltration.setVelocityTermCoefficient(0.224)
       infiltration.setVelocitySquaredTermCoefficient(0.0)
     end

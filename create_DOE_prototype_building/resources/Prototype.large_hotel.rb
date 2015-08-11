@@ -1066,12 +1066,12 @@ class OpenStudio::Model::Model
         zone_exhaust_fan.setName(space.name.to_s + " Exhaust Fan")
         zone_exhaust_fan.setAvailabilitySchedule(exhaust_schedule)
         zone_exhaust_fan.setFanEfficiency(space_type_data['exhaust_fan_efficiency'])
-        zone_exhaust_fan.setPressureRise (space_type_data['exhaust_fan_pressure_rise'])
+        zone_exhaust_fan.setPressureRise(space_type_data['exhaust_fan_pressure_rise'])
         maximum_flow_rate = OpenStudio.convert(space_type_data['exhaust_fan_maximum_flow_rate'], 'cfm', 'm^3/s').get
 
         zone_exhaust_fan.setMaximumFlowRate(maximum_flow_rate)
         if balanced_exhaust_schedule.class.to_s != "NilClass"
-          zone_exhaust_fan.setBalancedExhaustFractionSchedule (balanced_exhaust_schedule)
+          zone_exhaust_fan.setBalancedExhaustFractionSchedule(balanced_exhaust_schedule)
         end
         zone_exhaust_fan.setEndUseSubcategory("Zone Exhaust Fans")
         zone_exhaust_fan.addToThermalZone(thermal_zone)
