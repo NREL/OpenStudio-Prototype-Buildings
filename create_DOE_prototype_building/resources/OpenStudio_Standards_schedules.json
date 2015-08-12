@@ -2,42 +2,6 @@
   "schedules": [
     {
       "name": "Always Off",
-      "category": "Elevator",
-      "units": null,
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.05,
-        0.05,
-        0.05,
-        0.05,
-        0.1,
-        0.2,
-        0.4,
-        0.5,
-        0.5,
-        0.35,
-        0.15,
-        0.15,
-        0.15,
-        0.15,
-        0.15,
-        0.15,
-        0.35,
-        0.5,
-        0.5,
-        0.4,
-        0.4,
-        0.3,
-        0.2,
-        0.1
-      ]
-    },
-    {
-      "name": "Always Off",
       "category": "Thermostat Setpoint",
       "units": "C",
       "day_types": "Default",
@@ -90,13 +54,49 @@
     },
     {
       "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
+      "category": "Elevator",
+      "units": null,
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.1,
+        0.2,
+        0.4,
+        0.5,
+        0.5,
+        0.35,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.35,
+        0.5,
+        0.5,
+        0.4,
+        0.4,
+        0.3,
+        0.2,
+        0.1
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
+      "notes": "From DOE Reference Buildings ",
       "values": [
         0.0
       ]
@@ -158,20 +158,7 @@
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
+      "notes": "From DOE Prototype Buildings",
       "values": [
         1.0
       ]
@@ -197,7 +184,7 @@
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
+      "notes": "From DOE Reference Buildings ",
       "values": [
         1.0
       ]
@@ -206,6 +193,32 @@
       "name": "Always Off",
       "category": "Thermostat Setpoint",
       "units": "C",
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
@@ -239,19 +252,6 @@
       "notes": "From DOE Prototype Buildings",
       "values": [
         95.0
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.0
       ]
     },
     {
@@ -20203,44 +20203,21 @@
       ]
     },
     {
-      "name": "LargeHotel GuestRoom_SWH_Sch",
-      "category": "Equipment",
+      "name": "LargeHotel GuestRoom_Ltg_Sch_Base",
+      "category": "Lighting",
       "units": null,
-      "day_types": "Default",
+      "day_types": "Default|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Hourly",
+      "type": "Constant",
       "notes": "From DOE Reference Buildings ",
       "values": [
-        0.2,
-        0.15,
-        0.15,
-        0.15,
-        0.2,
-        0.25,
-        0.35,
-        0.6,
-        0.8,
-        0.55,
-        0.4,
-        0.3,
-        0.2,
-        0.2,
-        0.2,
-        0.2,
-        0.2,
-        0.25,
-        0.3,
-        0.4,
-        0.4,
-        0.4,
-        0.6,
-        0.35
+        1.0
       ]
     },
     {
-      "name": "LargeHotel GuestRoom_SWH_Sch",
-      "category": "Equipment",
+      "name": "LargeHotel GuestRoom_Ltg_Sch_Base",
+      "category": "Lighting",
       "units": null,
       "day_types": "Wkdy",
       "start_date": "2014-01-01T00:00:00+00:00",
@@ -20248,30 +20225,79 @@
       "type": "Hourly",
       "notes": "From DOE Reference Buildings ",
       "values": [
-        0.2,
-        0.15,
-        0.15,
-        0.15,
-        0.2,
-        0.35,
-        0.6,
-        0.8,
-        0.55,
-        0.4,
-        0.3,
-        0.2,
-        0.2,
-        0.2,
-        0.2,
-        0.2,
-        0.2,
-        0.3,
-        0.55,
-        0.4,
-        0.4,
-        0.6,
-        0.45,
-        0.25
+        0.22,
+        0.17,
+        0.11,
+        0.11,
+        0.11,
+        0.22,
+        0.44,
+        0.56,
+        0.44,
+        0.44,
+        0.28,
+        0.28,
+        0.28,
+        0.28,
+        0.28,
+        0.28,
+        0.28,
+        0.28,
+        0.67,
+        0.89,
+        1.0,
+        0.89,
+        0.67,
+        0.33
+      ]
+    },
+    {
+      "name": "LargeHotel GuestRoom_Ltg_Sch_Base",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Wknd",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        0.26,
+        0.26,
+        0.11,
+        0.11,
+        0.11,
+        0.11,
+        0.41,
+        0.41,
+        0.56,
+        0.56,
+        0.41,
+        0.33,
+        0.33,
+        0.33,
+        0.33,
+        0.33,
+        0.33,
+        0.33,
+        0.85,
+        1.0,
+        1.0,
+        1.0,
+        0.85,
+        0.41
+      ]
+    },
+    {
+      "name": "LargeHotel GuestRoom_Ltg_Sch_Base",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        0.0
       ]
     },
     {
@@ -20553,6 +20579,68 @@
         19.0,
         19.0,
         19.0
+      ]
+    },
+    {
+      "name": "LargeHotel Kitchen_Elec_Equip_SCH",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Default|Wkdy|Sat",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.25,
+        0.35,
+        0.35,
+        0.25,
+        0.35,
+        0.35,
+        0.35,
+        0.25,
+        0.25,
+        0.25,
+        0.35,
+        0.35,
+        0.35,
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ]
+    },
+    {
+      "name": "LargeHotel Kitchen_Elec_Equip_SCH",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        0.35
+      ]
+    },
+    {
+      "name": "LargeHotel Kitchen_Elec_Equip_SCH",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        0.0
       ]
     },
     {
