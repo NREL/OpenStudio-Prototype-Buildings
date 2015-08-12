@@ -84,11 +84,11 @@ class OpenStudio::Model::Construction
       
       case intended_surface_type
       when 'AtticFloor'
-        other_layer_r_value_si += film_int_surf_ht_flow_up_r_ip # Outside
-        other_layer_r_value_si += film_semi_ext_surf_r_ip # Inside
+        other_layer_r_value_si += film_int_surf_ht_flow_up_r_si # Outside
+        other_layer_r_value_si += film_semi_ext_surf_r_si # Inside
       when 'AtticWall', 'AtticRoof'
         other_layer_r_value_si += film_ext_surf_r_si # Outside
-        other_layer_r_value_si += film_semi_ext_surf_r_ip # Inside
+        other_layer_r_value_si += film_semi_ext_surf_r_si # Inside
       when 'DemisingFloor', 'InteriorFloor'
         other_layer_r_value_si += film_int_surf_ht_flow_up_r_si # Outside
         other_layer_r_value_si += film_int_surf_ht_flow_dwn_r_si # Inside
@@ -129,9 +129,9 @@ class OpenStudio::Model::Construction
     # Set the R-value of the insulation layer
     self.layers.each do |layer|
       next unless layer.name.get == insulation_layer_name
-      if layer.to_MasslessOpaqueMaterial.is_initialized
-        layer = layer.to_MasslessOpaqueMaterial.get
-        layer.setThermalResistance(ins_r_value_si)
+      if layer.to_StandardOpaqueMaterial.is_initialized
+        layer = layer.to_StandardOpaqueMaterial.get
+        layer.setThickness(ins_r_value_si * layer.getConductivity)
         layer.setName("#{layer.name} R-#{ins_r_value_ip.round(2)}")
         break # Stop looking for the insulation layer once found
       elsif layer.to_MasslessOpaqueMaterial.is_initialized
