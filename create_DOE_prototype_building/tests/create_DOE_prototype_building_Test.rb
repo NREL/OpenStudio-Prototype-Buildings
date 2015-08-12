@@ -793,9 +793,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       else
         # Run the simulations in 2 parts.
         if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")
-          vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004','90.1-2004']
+          vintages = ['DOE Ref Pre-1980', '90.1-2004','90.1-2013']
         else
-          vintages = ['90.1-2007','90.1-2010','90.1-2013']
+          vintages = ['DOE Ref 1980-2004', '90.1-2007','90.1-2010']
         end
       end
 
