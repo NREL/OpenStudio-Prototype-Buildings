@@ -30,18 +30,18 @@ class Hash
         elsif key == 'construction_sets'
           # Replace nil values with 'zzzz' temorarily for sorting
           seed[key].each do |item|
-            item.keys.each do |key|
-              if item[key].nil?
-                item[key] = 'zzzz'
+            item.keys.each do |key2|
+              if item[key2].nil?
+                item[key2] = 'zzzz'
               end
             end
           end
           seed[key] = seed[key].sort_by { |hsh| [ hsh['template'], hsh['building_type'], hsh['climate_zone_set'], hsh['space_type'], hsh['exterior_walls'], hsh['exterior_roofs'], hsh['exterior_floors'] ] }
           # Replace 'zzzz' back to nil        
           seed[key].each do |item|
-            item.keys.each do |key|
-              if item[key] == 'zzzz'
-                item[key] = nil
+            item.keys.each do |key2|
+              if item[key2] == 'zzzz'
+                item[key2] = nil
               end
             end
           end
@@ -194,12 +194,12 @@ begin
         new_obj = {}
         new_obj['name'] = obj['name']
         items = []
-        obj.each do |key, val|
+        obj.each do |key, val2|
           # Skip the key
           next if key == 'name'
           # Skip blank climate zone values
-          next if val.nil?
-          items << val
+          next if val2.nil?
+          items << val2
         end
         new_obj['climate_zones'] = items
         objs << new_obj
@@ -207,17 +207,17 @@ begin
         new_obj = {}
         new_obj['name'] = obj['name']
         items = []
-        obj.each do |key, val|
+        obj.each do |key, val2|
           # Skip the key
           next if key == 'name'
           # Put materials into an array,
           # record other fields normally
           if key.include?('material')
             # Skip blank material values
-            next if val.nil?
-            items << val
+            next if val2.nil?
+            items << val2
           else
-            new_obj[key] = val
+            new_obj[key] = val2
           end
         end
         new_obj['materials'] = items
@@ -226,17 +226,17 @@ begin
         new_obj = {}
         new_obj['name'] = obj['name']
         items = []
-        obj.each do |key, val|
+        obj.each do |key, val2|
           # Skip the key
           next if key == 'name'
           # Put materials into an array,
           # record other fields normally
           if key.include?('hr')
             # Skip blank hourly values
-            next if val.nil?
-            items << val
+            next if val2.nil?
+            items << val2
           else
-            new_obj[key] = val
+            new_obj[key] = val2
           end
         end
         new_obj['values'] = items

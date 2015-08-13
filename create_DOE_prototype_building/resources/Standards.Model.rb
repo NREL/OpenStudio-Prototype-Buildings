@@ -959,8 +959,6 @@ class OpenStudio::Model::Model
   # Create a construction set from the openstudio standards dataset.
   # Returns an Optional DefaultConstructionSet
   def add_construction_set(template, clim, building_type, spc_type, is_residential)
-    puts "entering into add_construction_set"
-
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
 
     # Find the climate zone set that this climate zone falls into
@@ -1202,10 +1200,10 @@ class OpenStudio::Model::Model
       curve.setCoefficient4y(curve_data["coeff_4"])
       curve.setCoefficient5yPOW2(curve_data["coeff_5"])
       curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
-      curve.setCoefficient7xPOW3 (curve_data["coeff_7"])
-      curve.setCoefficient8yPOW3 (curve_data["coeff_8"])
+      curve.setCoefficient7xPOW3(curve_data["coeff_7"])
+      curve.setCoefficient8yPOW3(curve_data["coeff_8"])
       curve.setCoefficient9xPOW2TIMESY(curve_data["coeff_9"])
-      curve.setCoefficient10xTIMESYPOW2 (curve_data["coeff_10"])
+      curve.setCoefficient10xTIMESYPOW2(curve_data["coeff_10"])
       curve.setMinimumValueofx(eirft_properties["min_x"])
       curve.setMaximumValueofx(eirft_properties["max_x"])
       curve.setMinimumValueofy(eirft_properties["min_y"])
