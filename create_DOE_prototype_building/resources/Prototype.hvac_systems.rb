@@ -1934,9 +1934,12 @@ class OpenStudio::Model::Model
 
     # hvac operation schedule
     hvac_op_sch = self.add_schedule(prototype_input['sac_operation_schedule'])
-    
+        
     # motorized oa damper schedule
     motorized_oa_damper_sch = self.add_schedule(prototype_input['sac_oa_damper_schedule'])
+    
+    # OA_controller Maximum OA Fraction schedule
+    econ_MaxOAFrac_Sch = self.add_schedule("HotelSmall SAC_Econ_MaxOAFrac_Sch")
       
     # Make a SAC for each group of thermal zones
     parts = Array.new
@@ -1960,10 +1963,11 @@ class OpenStudio::Model::Model
     end
     thermal_zone_name = parts.join(' - ')
     
+    # Meeting room cycling fan schedule
     if space_type_names.include? 'Meeting'
       hvac_op_sch = self.add_schedule(prototype_input['sac_operation_schedule_meeting'])
     end
-      
+          
     air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
     air_loop.setName("#{thermal_zone_name} SAC")
     air_loop.setAvailabilitySchedule(hvac_op_sch)
@@ -2001,6 +2005,7 @@ class OpenStudio::Model::Model
     setpoint_mgr_single_zone_reheat.setControlZone(controlzone) 
     
     fan = nil
+    
     if prototype_input["sac_fan_type"] == "ConstantVolume"
     
       fan = OpenStudio::Model::FanConstantVolume.new(self,self.alwaysOnDiscreteSchedule)
@@ -2010,6 +2015,7 @@ class OpenStudio::Model::Model
       fan.setPressureRise(fan_static_pressure_pa)  
       fan.setFanEfficiency(0.56)   # get the average of four fans
       fan.setMotorEfficiency(0.86)   # get the average of four fans
+
     elsif prototype_input["sac_fan_type"] == "Cycling" 
     
       fan = OpenStudio::Model::FanOnOff.new(self,self.alwaysOnDiscreteSchedule)
@@ -2021,6 +2027,8 @@ class OpenStudio::Model::Model
       fan.setMotorEfficiency(0.825)
     
     end
+    
+
    
     htg_coil = nil
     if prototype_input["sac_heating_type"] == "Gas"
@@ -2309,6 +2317,7 @@ class OpenStudio::Model::Model
     oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
     oa_controller.setName("#{thermal_zone_name} SAC OA Sys Controller")
     oa_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
+    oa_controller.setMaximumFractionofOutdoorAirSchedule(econ_MaxOAFrac_Sch)
     oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self,oa_controller)
     oa_system.setName("#{thermal_zone_name} SAC OA Sys")
 
@@ -2360,7 +2369,15 @@ class OpenStudio::Model::Model
     unless fan.nil?
       fan.addToNode(supply_inlet_node)
     end
-    
+
+        # humidifier.addToNode(supply_inlet_node)
+# 
+        # humidity_spm = OpenStudio::Model::SetpointManagerSingleZoneHumidityMinimum.new(self)
+        # humidity_spm.setControlZone(zone)
+# 
+        # humidity_spm.addToNode(humidifier.outletModelObject().get.to_Node.get)
+# 
+#     
     # Add the supplemental heating coil
     unless supplemental_htg_coil.nil?
       supplemental_htg_coil.addToNode(supply_inlet_node)
@@ -2759,6 +2776,13 @@ class OpenStudio::Model::Model
     # Make a PTAC for each zone
     thermal_zones.each do |zone|
 
+      # Zone sizing
+      sizing_zone = zone.sizingZone
+      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      sizing_zone.setZoneHeatingDesignSupplyAirTemperature(50.0)
+      sizing_zone.setZoneCoolingDesignSupplyAirHumidityRatio(0.008)
+      sizing_zone.setZoneHeatingDesignSupplyAirHumidityRatio(0.008)
+
       # add fan
       fan = nil
       if prototype_input["unitheater_fan_type"] == "ConstantVolume"
@@ -2939,7 +2963,6 @@ class OpenStudio::Model::Model
     # Service water heating loop
     service_water_loop = OpenStudio::Model::PlantLoop.new(self)
     service_water_loop.setName("#{type} Service Water Loop")
-    service_water_loop.setMaximumLoopTemperature(60)
     service_water_loop.setMinimumLoopTemperature(10)
 
     # Temperature schedule type limits
@@ -2966,7 +2989,8 @@ class OpenStudio::Model::Model
     sizing_plant = service_water_loop.sizingPlant
     sizing_plant.setLoopType('Heating')
     sizing_plant.setDesignLoopExitTemperature(swh_temp_c)
-    sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)         
+    sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)
+    service_water_loop.setMaximumLoopTemperature(swh_temp_c)
     
     # Service water heating pump
     swh_pump_head_press_pa = prototype_input["#{type}_service_water_pump_head"]

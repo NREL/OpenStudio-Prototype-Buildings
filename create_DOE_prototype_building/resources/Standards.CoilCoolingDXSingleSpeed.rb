@@ -161,6 +161,21 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     # Get the minimum efficiency standards
     cop = nil
     
+    if subcategory == 'PTAC'
+      ptac_eer_coeff_1 = ac_props['ptac_eer_coefficient_1']
+      ptac_eer_coeff_2 = ac_props['ptac_eer_coefficient_2']
+      puts "*************************************************ptac_eer_coeff_1 = #{ptac_eer_coeff_1}"
+      puts "*************************************************ptac_eer_coeff_2 = #{ptac_eer_coeff_2}"
+      capacity_btu_per_hr = 7000 if capacity_btu_per_hr < 7000
+      capacity_btu_per_hr = 15000 if capacity_btu_per_hr > 15000
+      puts "*************************************************capacity_btu_per_hr = #{capacity_btu_per_hr}"
+      ptac_eer = ptac_eer_coeff_1 + (ptac_eer_coeff_2 * capacity_btu_per_hr)
+      puts "*************************************************ptac_eer = #{ptac_eer}"
+      cop = seer_to_cop(ptac_eer)
+      self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{ptac_eer}SEER")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{ptac_eer}")      
+    end
+    
     # If specified as SEER
     unless ac_props['minimum_seasonal_energy_efficiency_ratio'].nil?
       min_seer = ac_props['minimum_seasonal_energy_efficiency_ratio']
