@@ -789,7 +789,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       bldg_types = ['LargeHotel']
 
       if $test_single_case
-        vintages = ['DOE Ref Pre-1980']
+        vintages = ['90.1-2013']
       else
         # Run the simulations in 2 parts.
         if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")
