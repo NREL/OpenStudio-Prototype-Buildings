@@ -55,6 +55,11 @@ class OpenStudio::Model::AirLoopHVAC
       
     end
     
+    # Single zone systems
+    if self.thermalZones.size == 1
+      self.apply_single_zone_controls(template, climate_zone)
+    end
+
     # DCV
     if self.is_demand_control_ventilation_required(template, climate_zone)
       self.enable_demand_control_ventilation
@@ -122,8 +127,8 @@ class OpenStudio::Model::AirLoopHVAC
     
     # Convert the pressure drop adjustment to brake horsepower (bhp)
     # assuming that all supply air passes through all devices
-    fan_pwr_adjustment_bhp = fan_pwr_adjustment_in_wc * dsn_air_flow_cfm / 4131
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name} - #{(fan_pwr_adjustment_bhp)} bhp = Fan Power Limitation Pressure Drop Adjustment")
+    fan_pwr_adjustment_bhp = fan_pwr_adjustment_in_wc*dsn_air_flow_cfm / 4131
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name}-#{(fan_pwr_adjustment_bhp)} bhp = Fan Power Limitation Pressure Drop Adjustment")
  
     return fan_pwr_adjustment_bhp
  
@@ -186,17 +191,17 @@ class OpenStudio::Model::AirLoopHVAC
     # constant volume limitation per 6.5.3.1.1
     if template == "ASHRAE 90.1-2010" && fan_pwr_limit_type = "variable volume" && num_zones_served == 1
       fan_pwr_limit_type = "constant volume"
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name} - Using the constant volume limitation because single-zone VAV system.")
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name}-Using the constant volume limitation because single-zone VAV system.")
     end
     
     # Calculate the Allowable Fan System brake horsepower per Table G3.1.2.9
     allowable_fan_bhp = 0
     if fan_pwr_limit_type == "constant volume"
-      allowable_fan_bhp = dsn_air_flow_cfm * 0.0013 + fan_pwr_adjustment_bhp
+      allowable_fan_bhp = dsn_air_flow_cfm*0.0013+fan_pwr_adjustment_bhp
     elsif fan_pwr_limit_type == "variable volume"
-      allowable_fan_bhp = dsn_air_flow_cfm * 0.00094 + fan_pwr_adjustment_bhp
+      allowable_fan_bhp = dsn_air_flow_cfm*0.00094+fan_pwr_adjustment_bhp
     end
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name} - #{(allowable_fan_bhp).round(2)} bhp = Allowable brake horsepower.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name}-#{(allowable_fan_bhp).round(2)} bhp = Allowable brake horsepower.")
     
     return allowable_fan_bhp
 
@@ -248,7 +253,7 @@ class OpenStudio::Model::AirLoopHVAC
 
     # TODO get the template from the parent model itself?
     # Or not because maybe you want to see the difference between two standards?
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name} - Determining #{template} allowable system fan power.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC","#{self.name}-Determining #{template} allowable system fan power.")
   
     # Get all fans
     fans = []
@@ -289,7 +294,7 @@ class OpenStudio::Model::AirLoopHVAC
   # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013' 
   def set_baseline_fan_pressure_rise(template = "ASHRAE 90.1-2007")
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "#{self.name} - Setting #{template} baseline fan power.")
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "#{self.name}-Setting #{template} baseline fan power.")
   
     # Get the total system bhp from the proposed system, including terminal fans
     proposed_sys_bhp = self.system_fan_brake_horsepower(true)
@@ -301,7 +306,7 @@ class OpenStudio::Model::AirLoopHVAC
     fan_pwr_adjustment_bhp = self.fan_power_limitation_pressure_drop_adjustment_brake_horsepower
     
     # Subtract the fan power adjustment
-    allowable_fan_bhp = allowable_fan_bhp - fan_pwr_adjustment_bhp
+    allowable_fan_bhp = allowable_fan_bhp-fan_pwr_adjustment_bhp
     
     # Get all fans
     fans = self.supply_return_exhaust_relief_fans    
@@ -321,14 +326,14 @@ class OpenStudio::Model::AirLoopHVAC
       proposed_fan_bhp_frac = proposed_fan_bhp / proposed_sys_bhp
       
       # Determine the target bhp of the fan on the baseline system
-      baseline_fan_bhp = proposed_fan_bhp_frac * allowable_fan_bhp
+      baseline_fan_bhp = proposed_fan_bhp_frac*allowable_fan_bhp
       OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "* #{(baseline_fan_bhp).round(1)} bhp = Baseline fan brake horsepower.")
       
       # Set the baseline impeller eff of the fan, 
       # preserving the proposed motor eff.
       baseline_impeller_eff = fan.baselineImpellerEfficiency(template)
       fan.changeImpellerEfficiency(baseline_impeller_eff)
-      OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "* #{(baseline_impeller_eff * 100).round(1)}% = Baseline fan impeller efficiency.")
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "* #{(baseline_impeller_eff*100).round(1)}% = Baseline fan impeller efficiency.")
       
       # Set the baseline motor efficiency for the specified bhp
       baseline_motor_eff = fan.standardMinimumMotorEfficiency(template, standards, allowable_fan_bhp)
@@ -347,14 +352,14 @@ class OpenStudio::Model::AirLoopHVAC
       end
       
       # Determine the fan pressure rise that will result in the target bhp
-      # pressure_rise_pa = fan_bhp * 746 / fan_motor_eff * fan_total_eff / dsn_air_flow_m3_per_s
-      baseline_pressure_rise_pa = baseline_fan_bhp * 746 / fan.motorEfficiency * fan.fanEfficiency / dsn_air_flow_m3_per_s
+      # pressure_rise_pa = fan_bhp*746 / fan_motor_eff*fan_total_eff / dsn_air_flow_m3_per_s
+      baseline_pressure_rise_pa = baseline_fan_bhp*746 / fan.motorEfficiency*fan.fanEfficiency / dsn_air_flow_m3_per_s
       baseline_pressure_rise_in_wc = OpenStudio.convert(fan_pressure_rise_pa, "Pa", "inH_{2}O",).get
       OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "* #{(fan_pressure_rise_in_wc).round(2)} in w.c. = Pressure drop to achieve allowable fan power.")
 
       # Calculate the bhp of the fan to make sure it matches
       calc_bhp = fan.brakeHorsepower
-      if ((calc_bhp - baseline_fan_bhp) / baseline_fan_bhp).abs > 0.02
+      if ((calc_bhp-baseline_fan_bhp) / baseline_fan_bhp).abs > 0.02
         OpenStudio::logFree(OpenStudio::Error, "openstudio.standards.AirLoopHVAC", "#{fan.name} baseline fan bhp supposed to be #{baseline_fan_bhp}, but is #{calc_bhp}.")
       end
 
@@ -362,7 +367,7 @@ class OpenStudio::Model::AirLoopHVAC
     
     # Calculate the total bhp of the system to make sure it matches the goal
     calc_sys_bhp = self.system_fan_brake_horsepower(false)
-    if ((calc_sys_bhp - allowable_fan_bhp) / allowable_fan_bhp).abs > 0.02
+    if ((calc_sys_bhp-allowable_fan_bhp) / allowable_fan_bhp).abs > 0.02
       OpenStudio::logFree(OpenStudio::Error, "openstudio.standards.AirLoopHVAC", "#{self.name} baseline system bhp supposed to be #{allowable_fan_bhp}, but is #{calc_sys_bhp}.")
     end
 
@@ -1365,13 +1370,13 @@ class OpenStudio::Model::AirLoopHVAC
       end
     
       # Zone minimum discharge airflow rate
-      v_dz = v_pz * mdp
+      v_dz = v_pz*mdp
     
       # Zone discharge air fraction
       z_d = v_oz / v_dz
       
       # Zone ventilation effectiveness
-      e_vz = 1 + x_s - z_d
+      e_vz = 1+x_s-z_d
     
       # Store the ventilation effectiveness
       e_vzs << e_vz
@@ -1382,7 +1387,7 @@ class OpenStudio::Model::AirLoopHVAC
       if e_vz < 0.6
       
         # Adjusted discharge air fraction
-        z_d_adj = 1 + x_s - 0.6
+        z_d_adj = 1+x_s-0.6
         
         # Adjusted min discharge airflow rate
         v_dz_adj = v_oz / z_d_adj
@@ -1396,7 +1401,7 @@ class OpenStudio::Model::AirLoopHVAC
         end
         
         # Zone ventilation effectiveness
-        e_vz_adj = 1 + x_s - z_d_adj
+        e_vz_adj = 1+x_s-z_d_adj
     
         # Store the ventilation effectiveness
         e_vzs_adj << e_vz_adj
@@ -1524,7 +1529,7 @@ class OpenStudio::Model::AirLoopHVAC
     
     # Check the minimum occupancy density
     occ_per_ft2 = num_people / area_served_ft2
-    occ_per_1000_ft2 = occ_per_ft2 * 1000
+    occ_per_1000_ft2 = occ_per_ft2*1000
     if occ_per_1000_ft2 < min_occ_per_1000_ft2
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{template} #{climate_zone}:  #{self.name}: DCV is not required since the system occupant density is #{occ_per_1000_ft2.round} people/1000 ft2, but the minimum occupant density is #{min_occ_per_1000_ft2.round} people/1000 ft2.")
       return dcv_required
@@ -1668,7 +1673,7 @@ class OpenStudio::Model::AirLoopHVAC
     # 5F increase when it's cold outside,
     # and therefore less cooling capacity is likely required.
     increase_f = 5.0
-    sat_at_lo_oat_f = sat_at_hi_oat_f + increase_f
+    sat_at_lo_oat_f = sat_at_hi_oat_f+increase_f
     sat_at_lo_oat_c = OpenStudio.convert(sat_at_lo_oat_f, 'F', 'C').get
     
     # Define the high and low outdoor air temperatures
@@ -1838,4 +1843,355 @@ class OpenStudio::Model::AirLoopHVAC
     
   end
 
+  # Generate the EMS used to implement the economizer
+  # and staging controls for packaged single zone units.
+  # @note The resulting EMS doesn't actually get added to
+  # the IDF yet.
+  #
+  def apply_single_zone_controls(template, climate_zone)
+  
+    # Number of stages is determined by the template
+    num_stages = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: No special economizer controls were modeled.")
+      return true
+    when '90.1-2004', '90.1-2007'
+      num_stages = 1
+    when  '90.1-2010', '90.1-2013'
+      num_stages = 2
+    end
+  
+    # Scrub special characters from the system name
+    sn = self.name.get.to_s
+    snc = sn.gsub(/\W/,'').gsub('_','')
+   
+    # Get the zone name
+    zone = self.thermalZones[0]
+    zone_name = zone.name.get.to_s
+    zn_name_clean = zone_name.gsub(/\W/,'_')
+    
+    # Zone air node
+    zone_air_node_name = zone.zoneAirNode.name.get    
+    
+    # Get the OA system and OA controller
+    oa_sys = self.airLoopHVACOutdoorAirSystem
+    if oa_sys.is_initialized
+      oa_sys = oa_sys.get
+    else
+      return false # No OA system
+    end
+    oa_control = oa_sys.getControllerOutdoorAir
+    oa_control_name = oa_control.name.get
+    oa_node_name = oa_sys.outboardOANode.get.name.get
+    
+    # Get the name of the min oa schedule
+    min_oa_sch_name = nil
+    if oa_control.minimumOutdoorAirSchedule.is_initialized
+      min_oa_sch_name = oa_control.minimumOutdoorAirSchedule.get.name.get
+    else
+      min_oa_sch_name = self.alwaysOnDiscreteSchedule.name.get
+    end
+    
+    # Get the supply fan
+    if self.supplyFan.empty?
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: No supply fan found, cannot apply DX fan/economizer control.")
+      return false
+    end
+    fan = self.supplyFan.get
+    fan_name = fan.name.get
+    
+    # Supply outlet node
+    sup_out_node = self.supplyOutletNode
+    sup_out_node_name = sup_out_node.name.get
+    
+    # DX Cooling Coil
+    dx_coil = nil
+    self.supplyComponents.each do |equip|
+      if equip.to_CoilCoolingDXSingleSpeed.is_initialized
+        dx_coil = equip.to_CoilCoolingDXSingleSpeed.get
+      elsif equip.to_CoilCoolingDXTwoSpeed.is_initialized
+        dx_coil = equip.to_CoilCoolingDXTwoSpeed.get
+      end
+    end
+    if dx_coil.nil?
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: No DX cooling coil found, cannot apply DX fan/economizer control.")
+      return false
+    end
+    dx_coil_name = dx_coil.name.get
+    dx_coilsys_name = "#{dx_coil_name} CoilSystem"
+    
+    # Heating Coil
+    htg_coil = nil
+    self.supplyComponents.each do |equip|
+      if equip.to_CoilHeatingGas.is_initialized
+        htg_coil = equip.to_CoilHeatingGas.get
+      elsif equip.to_CoilHeatingElectric.is_initialized
+        htg_coil = equip.to_CoilHeatingElectric.get
+      elsif equip.to_CoilHeatingWater.is_initialized
+        htg_coil = equip.to_CoilHeatingWater.get
+      end
+    end
+    if htg_coil.nil?
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: No heating coil found, cannot apply DX fan/economizer control.")
+      return false
+    end
+    htg_coil_name = htg_coil.name.get
+ 
+    # Create an economizer maximum OA fraction schedule with
+    # a maximum of 70% to reflect damper leakage per PNNL
+    max_oa_sch_name = "#{snc}maxOASch"
+    max_oa_sch = OpenStudio::Model::ScheduleRuleset.new(self.model)
+    max_oa_sch.setName(max_oa_sch_name)
+    max_oa_sch.defaultDaySchedule.setName("#{max_oa_sch_name}Default")
+    max_oa_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.7)
+    oa_control.setMaximumFractionofOutdoorAirSchedule(max_oa_sch)
+ 
+    ems = "
+    
+    ! Sensors
+    
+    EnergyManagementSystem:Sensor,
+      #{snc}OASch,           
+      #{min_oa_sch_name},         !- Output:Variable or Output:Meter Index Key Name,            
+      Schedule Value;          !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      #{zn_name_clean}Temp,
+      #{zone_air_node_name},  !- Output:Variable or Output:Meter Index Key Name
+      System Node Temperature; !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      #{snc}OAFlowMass,     
+      #{oa_node_name}, !- Output:Variable or Output:Meter Index Key Name
+      System Node Mass Flow Rate;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      #{snc}HeatingRTF,     
+      #{htg_coil_name},        !- Output:Variable or Output:Meter Index Key Name
+      Heating Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      #{snc}RTF,            
+      #{dx_coil_name}, !- Output:Variable or Output:Meter Index Key Name
+      Cooling Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      #{snc}SpeedRatio,     
+      #{dx_coilsys_name},        !- Output:Variable or Output:Meter Index Key Name
+      Coil System Compressor Speed Ratio;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      #{snc}DATRqd,        
+      #{sup_out_node_name},  !- Output:Variable or Output:Meter Index Key Name
+      System Node Setpoint Temperature;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      #{snc}EconoStatus,   
+      #{sn},              !- Output:Variable or Output:Meter Index Key Name
+      Air System Outdoor Air Economizer Status;  !- Output:Variable or Output:Meter Name
+
+    ! Internal Variables
+
+    EnergyManagementSystem:InternalVariable,
+      #{snc}FanDesignPressure,
+      #{fan_name},          !- Internal Data Index Key Name
+      Fan Nominal Pressure Rise;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      #{snc}DesignFlowMass, 
+      #{oa_control_name},!- Internal Data Index Key Name
+      Outdoor Air Controller Maximum Mass Flow Rate;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      #{snc}OADesignMass,   
+      #{oa_control_name},!- Internal Data Index Key Name
+      Outdoor Air Controller Minimum Mass Flow Rate;  !- Internal Data Type
+
+    ! Actuators
+
+    EnergyManagementSystem:Actuator,
+      #{snc}FanPressure,   
+      #{fan_name},          !- Actuated Component Unique Name
+      Fan,                     !- Actuated Component Type
+      Fan Pressure Rise;       !- Actuated Component Control Type
+
+    EnergyManagementSystem:Actuator,
+      #{snc}TimestepEconEff,!- Name
+      #{max_oa_sch_name},  !- Actuated Component Unique Name
+      Schedule:Year,       !- Actuated Component Type
+      Schedule Value;          !- Actuated Component Control Type
+
+    EnergyManagementSystem:GlobalVariable,
+      #{snc}FanPwrExp,   !- Erl Variable 1 Name
+      #{snc}Stg1Spd,      !- Erl Variable 2 Name
+      #{snc}Stg2Spd,      !- Erl Variable 3 Name
+      #{snc}HeatSpeed,      
+      #{snc}VenSpeed,       
+      #{snc}NumberofStages; 
+
+    EnergyManagementSystem:Program,
+      #{snc}EconomizerCTRLProg,
+      SET #{snc}TimestepEconEff = 0.7,  
+      SET #{snc}MaxE = 0.7,   
+      SET #{snc}DATRqd = (#{snc}DATRqd*1.8)+32,
+      SET OATF = (OATF*1.8)+32,
+      SET OAwbF = (OAwbF*1.8)+32,
+      IF #{snc}OAFlowMass > (#{snc}OADesignMass*#{snc}OASch),
+      SET #{snc}EconoActive = 1,
+      ELSE,                  
+      SET #{snc}EconoActive = 0,
+      ENDIF,                 
+      SET #{snc}dTNeeded = 75-#{snc}DATRqd,
+      SET #{snc}CoolDesdT = ((98*0.15)+(75*(1-0.15)))-55,
+      SET #{snc}CoolLoad = #{snc}dTNeeded/ #{snc}CoolDesdT,
+      IF #{snc}CoolLoad > 1, 
+      SET #{snc}CoolLoad = 1,
+      ELSEIF #{snc}CoolLoad < 0,
+      SET #{snc}CoolLoad = 0,
+      ENDIF,                 
+      IF #{snc}EconoActive == 1,
+      SET #{snc}Stage = #{snc}NumberofStages,
+      IF #{snc}Stage == 2,  
+      IF #{snc}CoolLoad < 0.6,
+      SET #{snc}TimestepEconEff = #{snc}MaxE,
+      ELSE,                  
+      SET #{snc}ECOEff = 0-2.18919863612305,
+      SET #{snc}ECOEff = #{snc}ECOEff+(0-0.674461284910428*#{snc}CoolLoad),
+      SET #{snc}ECOEff = #{snc}ECOEff+(0.000459106275872404*(OATF^2)),
+      SET #{snc}ECOEff = #{snc}ECOEff+(0-0.00000484778537945252*(OATF^3)),
+      SET #{snc}ECOEff = #{snc}ECOEff+(0.182915713033586*OAwbF),
+      SET #{snc}ECOEff = #{snc}ECOEff+(0-0.00382838660261133*(OAwbF^2)),
+      SET #{snc}ECOEff = #{snc}ECOEff+(0.0000255567460240583*(OAwbF^3)),
+      SET #{snc}TimestepEconEff = #{snc}ECOEff,
+      ENDIF,                 
+      ELSE,                  
+      SET #{snc}ECOEff = 2.36337942464462,
+      SET #{snc}ECOEff = #{snc}ECOEff+(0-0.409939515512619*#{snc}CoolLoad),
+      SET #{snc}ECOEff = #{snc}ECOEff+(0-0.0565205596792225*OAwbF),
+      SET #{snc}ECOEff = #{snc}ECOEff+(0-0.0000632612294169389*(OATF^2)),
+      SET #{snc}TimestepEconEff = #{snc}ECOEff+(0.000571724868775081*(OAwbF^2)),
+      ENDIF,                 
+      IF #{snc}TimestepEconEff > #{snc}MaxE,
+      SET #{snc}TimestepEconEff = #{snc}MaxE,
+      ELSEIF #{snc}TimestepEconEff < (#{snc}OADesignMass*#{snc}OASch),
+      SET #{snc}TimestepEconEff = (#{snc}OADesignMass*#{snc}OASch),
+      ENDIF,                 
+      ENDIF;                 
+
+    EnergyManagementSystem:Program,
+      #{snc}SetFanPar,    
+      IF #{snc}NumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      SET #{snc}FanPwrExp = 2.2,
+      SET #{snc}OAFrac = #{snc}OAFlowMass/#{snc}DesignFlowMass,
+      IF  #{snc}OAFrac < 0.66,
+      SET #{snc}VenSpeed = 0.66,
+      SET #{snc}Stg1Spd = 0.66,
+      ELSE,                  
+      SET #{snc}VenSpeed = #{snc}OAFrac,
+      SET #{snc}Stg1Spd = #{snc}OAFrac,
+      ENDIF,                 
+      SET #{snc}Stg2Spd = 1.0,
+      SET #{snc}HeatSpeed = 1.0;
+
+    EnergyManagementSystem:Program,
+      #{snc}FanControl,    
+      IF #{snc}NumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      IF #{snc}HeatingRTF > 0,
+      SET #{snc}Heating = #{snc}HeatingRTF,
+      SET #{snc}Ven = 1-#{snc}HeatingRTF,
+      SET #{snc}Eco = 0,    
+      SET #{snc}Stage1 = 0, 
+      SET #{snc}Stage2 = 0, 
+      ELSE,                  
+      SET #{snc}Heating = 0,
+      SET #{snc}EcoSpeed = #{snc}VenSpeed,
+      IF #{snc}SpeedRatio == 0,
+      IF #{snc}RTF > 0,     
+      SET #{snc}Stage1 = #{snc}RTF,
+      SET #{snc}Stage2 = 0, 
+      SET #{snc}Ven = 1-#{snc}RTF,
+      SET #{snc}Eco = 0,    
+      IF #{snc}OAFlowMass > (#{snc}OADesignMass*#{snc}OASch),
+      SET #{snc}Stg1Spd = 1.0,
+      ENDIF,                 
+      ELSE,                  
+      SET #{snc}Stage1 = 0, 
+      SET #{snc}Stage2 = 0, 
+      IF #{snc}OAFlowMass > (#{snc}OADesignMass*#{snc}OASch),
+      SET #{snc}Eco = 1.0,  
+      SET #{snc}Ven = 0,           
+      !Calculate the expected discharge air temperature if the system runs at its low speed      
+      SET #{snc}ExpDAT = #{snc}DATRqd-(1-#{snc}VenSpeed)*#{zn_name_clean}Temp,
+      SET #{snc}ExpDAT = #{snc}ExpDAT/#{snc}VenSpeed,
+      IF OATF > #{snc}ExpDAT,
+      SET #{snc}EcoSpeed = #{snc}Stg2Spd,
+      ENDIF,                 
+      ELSE,                  
+      SET #{snc}Eco = 0,    
+      SET #{snc}Ven = 1.0,  
+      ENDIF,                 
+      ENDIF,                 
+      ELSE,                  
+      SET #{snc}Stage1 = 1-#{snc}SpeedRatio,
+      SET #{snc}Stage2 = #{snc}SpeedRatio,
+      SET #{snc}Ven = 0,    
+      SET #{snc}Eco = 0,    
+      IF #{snc}OAFlowMass > (#{snc}OADesignMass*#{snc}OASch),
+      SET #{snc}Stg1Spd = 1.0,
+      ENDIF,                 
+      ENDIF,                 
+      ENDIF,                  
+      ! For each mode, (percent time in mode)*(fanSpeer^PwrExp) is the contribution to weighted fan power over time step
+      SET #{snc}FPR = #{snc}Ven*(#{snc}VenSpeed ^ #{snc}FanPwrExp),
+      SET #{snc}FPR = #{snc}FPR+#{snc}Eco*(#{snc}EcoSpeed^#{snc}FanPwrExp),
+      SET #{snc}FPR1 = #{snc}Stage1*(#{snc}Stg1Spd^#{snc}FanPwrExp),
+      SET #{snc}FPR = #{snc}FPR+#{snc}FPR1,
+      SET #{snc}FPR2 = #{snc}Stage2*(#{snc}Stg2Spd^#{snc}FanPwrExp),
+      SET #{snc}FPR = #{snc}FPR+#{snc}FPR2,
+      SET #{snc}FPR3 = #{snc}Heating*(#{snc}HeatSpeed^#{snc}FanPwrExp),
+      SET #{snc}FanPwrRatio = #{snc}FPR+ #{snc}FPR3,
+      ! system fan power is directly proportional to static pressure, so this change linearly adjusts fan energy for speed control
+      SET #{snc}FanPressure = #{snc}FanDesignPressure*#{snc}FanPwrRatio;
+
+    EnergyManagementSystem:Program,
+      #{snc}SetNumberofStages,
+      SET #{snc}NumberofStages =  #{num_stages};
+
+    EnergyManagementSystem:ProgramCallingManager,
+      #{snc}SetNumberofStagesCallingManager,
+      BeginNewEnvironment,
+      #{snc}SetNumberofStages;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      #{snc}ECOManager,    
+      InsideHVACSystemIterationLoop,  !- EnergyPlus Model Calling Point
+      #{snc}EconomizerCTRLProg;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      #{snc}FanParametermanager,
+      BeginNewEnvironment,
+      #{snc}SetFanPar;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      #{snc}FanMainManager,
+      BeginTimestepBeforePredictor,
+      #{snc}FanControl;
+
+    "
+    
+    # Write the ems out
+    File.open("#{Dir.pwd}/#{snc}_ems.idf", 'w') do |file|  
+      file.puts ems
+    end
+  
+    return ems
+  
+  end
+  
+  
 end
