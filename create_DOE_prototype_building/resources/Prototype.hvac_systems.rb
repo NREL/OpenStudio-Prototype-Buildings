@@ -1562,6 +1562,7 @@ class OpenStudio::Model::Model
       oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
       oa_controller.setName("#{air_loop.name} OA Sys Controller")
       oa_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
+      oa_controller.setHeatRecoveryBypassControlType('BypassWhenOAFlowGreaterThanMinimum')
       oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self,oa_controller)
       oa_system.setName("#{air_loop.name} OA Sys")
 
@@ -3450,7 +3451,21 @@ class OpenStudio::Model::Model
       airloop_primary.addBranchForZone(zone, air_terminal.to_StraightComponent)
     end
   end  
-  
+ 
+  def add_elevator(prototype_input, standards, space)
+
+    return true if prototype_input['building_elevator_power'].nil?
+    
+    elevator_definition = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
+    elevator_definition.setDesignLevel(prototype_input['building_elevator_power'])
+
+    elevator_equipment = OpenStudio::Model::ElectricEquipment.new(elevator_definition)
+    elevator_sch = self.add_schedule(prototype_input['building_elevator_schedule'])
+    elevator_equipment.setSchedule(elevator_sch)
+    elevator_equipment.setSpace(space)
+    
+  end
+ 
   def add_exhaust_fan(prototype_input, standards, availability_sch_name, flow_rate, flow_fraction_schedule_name, balanced_exhaust_fraction_schedule_name, thermal_zones)
       
     # Make an exhaust fan for each zone
@@ -3472,5 +3487,118 @@ class OpenStudio::Model::Model
     return true
 
   end  
+
+  # Adds a single refrigerated case connected to a rack composed
+  # of a single compressor and a single air-cooled condenser.
+  #
+  # @note The legacy prototype IDF files use the simplified
+  # Refreigeration:ComprssorRack object, but this object is
+  # not included in OpenStudio.  Instead, a detailed rack
+  # with similar performance is added.
+  # @todo Set compressor properties since prototypes use simple
+  # refrigeration rack instead of detailed  
+  def add_refrigeration(prototype_input, 
+                      standards,                    
+                      ambient_temp,
+                      relative_humidity,
+                      cooling_capacity_per_length,
+                      latent_heat_ratio,
+                      runtime_fraction,
+                      length,
+                      case_temp,
+                      latent_case_credit_curve_name,
+                      evaporator_fan_pwr_per_length,
+                      lighting_per_length,
+                      lighting_sch_name,
+                      defrost_pwr_per_length,
+                      defrost_type,
+                      restocking_sch_name,
+                      cop,
+                      cop_f_of_t_curve_name,
+                      condenser_fan_pwr,
+                      condenser_fan_pwr_curve_name,
+                      thermal_zone)
+  
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding Refrigeration System")
+
+    # Defrost schedule
+    defrost_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    defrost_sch.setName("Refrigeration Defrost Schedule")
+    defrost_sch.defaultDaySchedule.setName("Refrigeration Defrost Schedule Default")
+    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,0,0), 0)
+    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,20,0), 1)
+    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,0,0), 0)
+    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,20,0), 1)
+    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0)
+
+    # Dripdown schedule
+    defrost_dripdown_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    defrost_dripdown_sch.setName("Refrigeration Defrost DripDown Schedule")
+    defrost_dripdown_sch.defaultDaySchedule.setName("Refrigeration Defrost DripDown Schedule Default")
+    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,0,0), 0)
+    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,30,0), 1)
+    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,0,0), 0)
+    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,30,0), 1)
+    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0)
+
+    # Case Credit Schedule
+    case_credit_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+    case_credit_sch.setName("Refrigeration Case Credit Schedule")
+    case_credit_sch.defaultDaySchedule.setName("Refrigeration Case Credit Schedule Default")
+    case_credit_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,7,0,0), 0.2)
+    case_credit_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,21,0,0), 0.4)
+    case_credit_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.2)    
+    
+    # Case
+    ref_case = OpenStudio::Model::RefrigerationCase.new(self, defrost_sch)
+    ref_case.setAvailabilitySchedule(self.alwaysOnDiscreteSchedule)
+    ref_case.setThermalZone(thermal_zone)
+    ref_case.setRatedTotalCoolingCapacityperUnitLength(cooling_capacity_per_length)
+    ref_case.setCaseLength(length)
+    ref_case.setCaseOperatingTemperature(case_temp)
+    ref_case.setStandardCaseFanPowerperUnitLength(evaporator_fan_pwr_per_length)
+    ref_case.setOperatingCaseFanPowerperUnitLength(evaporator_fan_pwr_per_length)
+    ref_case.setStandardCaseLightingPowerperUnitLength(lighting_per_length)
+    ref_case.resetInstalledCaseLightingPowerperUnitLength
+    ref_case.setCaseLightingSchedule(self.add_schedule(lighting_sch_name))
+    ref_case.setHumidityatZeroAntiSweatHeaterEnergy(0)
+    unless defrost_type == 'None'
+      ref_case.setCaseDefrostType('Electric')
+      ref_case.setCaseDefrostPowerperUnitLength(defrost_pwr_per_length)
+      ref_case.setCaseDefrostDripDownSchedule(defrost_dripdown_sch)
+    end 
+    ref_case.resetDesignEvaporatorTemperatureorBrineInletTemperature
+    ref_case.setRatedAmbientTemperature(ambient_temp)
+    ref_case.setRatedLatentHeatRatio(latent_heat_ratio)
+    ref_case.setRatedRuntimeFraction(runtime_fraction)
+    ref_case.setLatentCaseCreditCurve(self.add_curve(latent_case_credit_curve_name,standards))
+    ref_case.setFractionofAntiSweatHeaterEnergytoCase(0)
+    ref_case.setCaseHeight(0)
+    ref_case.setUnderCaseHVACReturnAirFraction(0)
+    # TODO: setRefrigeratedCaseRestockingSchedule is not working
+    ref_case.setRefrigeratedCaseRestockingSchedule(self.add_schedule(restocking_sch_name))
+    ref_case.setCaseCreditFractionSchedule(case_credit_sch)
+
+    # Compressor
+    # TODO set compressor properties since prototypes use simple
+    # refrigeration rack instead of detailed
+    compressor = OpenStudio::Model::RefrigerationCompressor.new(self)
+
+    # Condenser
+    condenser = OpenStudio::Model::RefrigerationCondenserAirCooled.new(self)
+    condenser.setRatedFanPower(condenser_fan_pwr)
+    
+    # Refrigeration system
+    ref_sys = OpenStudio::Model::RefrigerationSystem.new(self)
+    ref_sys.addCompressor(compressor)
+    ref_sys.addCase(ref_case)
+    ref_sys.setRefrigerationCondenser(condenser)
+    ref_sys.setSuctionPipingZone(thermal_zone)
+
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding Refrigeration System")
+
+    return true
+    
+  end
   
 end
