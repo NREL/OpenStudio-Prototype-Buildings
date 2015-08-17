@@ -2009,11 +2009,17 @@ Warehouse.Office
         
     # Get the exterior wall area
     exterior_wall_and_window_area_m2 = self.exterior_wall_and_window_area 
+
+    # Don't create an object if there is no exterior wall area
+    if exterior_wall_and_window_area_m2 <= 0.0 
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, no exterior wall area was found, no infiltration will be added.")
+      return true
+    end
     
     # Calculate the total infiltration, assuming
     # that it only occurs through exterior walls
     tot_infil_m3_per_s = adj_infil_rate_m3_per_s_per_m2 * exterior_wall_and_window_area_m2
-    
+
     # Now spread the total infiltration rate over all
     # exterior surface area (for the E+ input field)
     all_ext_infil_m3_per_s_per_m2 = tot_infil_m3_per_s / self.exteriorArea
