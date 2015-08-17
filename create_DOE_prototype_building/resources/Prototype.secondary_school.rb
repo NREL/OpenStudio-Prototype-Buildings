@@ -193,7 +193,37 @@ class OpenStudio::Model::Model
           [
               'Bathrooms_ZN_1_FLR_2'
           ]
-      }
+      },
+      {
+          # Case properties
+          'type' => 'Refrigeration',
+          'name' => 'Walkin Freezer',
+          'ambient_temp' => 23.88,
+          'relative_humidity' => 55.0,
+          'cooling_capacity_per_length' => 734.0,
+          'latent_heat_ratio' => 0.1,
+          'runtime_fraction' => 0.4,
+          'length' => 7.32,
+          'case_temp' => -23.0,
+          'latent_case_credit_curve_name' => 'Single Shelf Horizontal Latent Energy Multiplier',
+          'evaporator_fan_pwr_per_length' => 68.3,
+          'lighting_per_length' => 33.0,
+          'lighting_sch_name' => 'SchoolSecondary BLDG_LIGHT_SCH',
+          'defrost_pwr_per_length' => 410.0,
+          'defrost_type' => 'Electric',
+          'restocking_sch_name' => 'SchoolSecondary Kitchen_ZN_1_FLR_1_Case:1_WALKINFREEZER_WalkInStockingSched',
+          # Refrigeration rack properties
+          'cop' => 1.5,
+          'cop_f_of_t_curve_name' => 'RACK1_RackCOPfTCurve',
+          'condenser_fan_pwr' => 750.0,
+          'condenser_fan_pwr_curve_name' => 'RACK1_RackCondFanCurve2',
+          'space_names' =>
+          [
+              'Kitchen_ZN_1_FLR_1'
+          ]
+      }      
+      
+      
   ]
 
     return system_to_space_map
@@ -228,6 +258,11 @@ class OpenStudio::Model::Model
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No thermal zone created for space called #{space_name} was found in the model")
           return false
         end
+        
+        if space_name == "Mech_ZN_1_FLR_1"
+          self.add_elevator(prototype_input, hvac_standards, space)
+        end
+        
         thermal_zones << zone.get
       end
 
@@ -249,6 +284,28 @@ class OpenStudio::Model::Model
                             system['flow_fraction_schedule_name'],
                             system['balanced_exhaust_fraction_schedule_name'],
                             thermal_zones)
+      when 'Refrigeration'
+        self.add_refrigeration(prototype_input,
+                              standards,
+                              system['ambient_temp'],
+                              system['relative_humidity'],
+                              system['cooling_capacity_per_length'],
+                              system['latent_heat_ratio'],
+                              system['runtime_fraction'],
+                              system['length'],
+                              system['case_temp'],
+                              system['latent_case_credit_curve_name'],
+                              system['evaporator_fan_pwr_per_length'],
+                              system['lighting_per_length'],
+                              system['lighting_sch_name'],
+                              system['defrost_pwr_per_length'],
+                              system['defrost_type'],
+                              system['restocking_sch_name'],
+                              system['cop'],
+                              system['cop_f_of_t_curve_name'],
+                              system['condenser_fan_pwr'],
+                              system['condenser_fan_pwr_curve_name'],
+                              thermal_zones[0])
       end
 
     end
@@ -278,12 +335,6 @@ class OpenStudio::Model::Model
     
     return true
     
-  end #add swh    
-  
-  def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-       
-    return false
-    
-  end #add refrigeration
+  end #add swh
   
 end
