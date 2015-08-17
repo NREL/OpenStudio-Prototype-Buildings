@@ -178,30 +178,78 @@ class OpenStudio::Model::Model
     nonres_floor_insulation = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
     nonres_floor_insulation.setName('Nonres_Floor_Insulation')
     nonres_floor_insulation.setRoughness("MediumSmooth")
-    nonres_floor_insulation.setThermalResistance(4.13066404430099)
+    nonres_floor_insulation.setThermalResistance(2.88291975297193)
     nonres_floor_insulation.setThermalAbsorptance(0.9)
     nonres_floor_insulation.setSolarAbsorptance(0.7)
     nonres_floor_insulation.setVisibleAbsorptance(0.7)
 
-    adiabatic_construction = OpenStudio::Model::Construction.new(self)
-    adiabatic_construction.setName('nonres_floor_ceiling')
-    layers = OpenStudio::Model::MaterialVector.new
-    layers << cp02_carpet_pad
-    layers << normalweight_concrete_floor
-    layers << nonres_floor_insulation
+    floor_adiabatic_construction = OpenStudio::Model::Construction.new(self)
+    floor_adiabatic_construction.setName('Floor Adiabatic construction')
+    floor_layers = OpenStudio::Model::MaterialVector.new
+    floor_layers << cp02_carpet_pad
+    floor_layers << normalweight_concrete_floor
+    floor_layers << nonres_floor_insulation
+    floor_adiabatic_construction.setLayers(floor_layers)
 
-    adiabatic_construction.setLayers(layers)
+    g01_13mm_gypsum_board = OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    g01_13mm_gypsum_board.setName('G01 13mm gypsum board')
+    g01_13mm_gypsum_board.setRoughness('Smooth')
+    g01_13mm_gypsum_board.setThickness(0.0127)
+    g01_13mm_gypsum_board.setConductivity(0.1600)
+    g01_13mm_gypsum_board.setDensity(800)
+    g01_13mm_gypsum_board.setSpecificHeat(1090)
+    g01_13mm_gypsum_board.setThermalAbsorptance(0.9)
+    g01_13mm_gypsum_board.setSolarAbsorptance(0.7)
+    g01_13mm_gypsum_board.setVisibleAbsorptance(0.5)
+
+    wall_adiabatic_construction = OpenStudio::Model::Construction.new(self)
+    wall_adiabatic_construction.setName('Wall Adiabatic construction')
+    wall_layers = OpenStudio::Model::MaterialVector.new
+    wall_layers << g01_13mm_gypsum_board
+    wall_layers << g01_13mm_gypsum_board
+    wall_adiabatic_construction.setLayers(wall_layers)
+
+    m10_200mm_concrete_block_basement_wall= OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    m10_200mm_concrete_block_basement_wall.setName('M10 200mm concrete block basement wall')
+    m10_200mm_concrete_block_basement_wall.setRoughness('MediumRough')
+    m10_200mm_concrete_block_basement_wall.setThickness(0.2032)
+    m10_200mm_concrete_block_basement_wall.setConductivity(1.326)
+    m10_200mm_concrete_block_basement_wall.setDensity(1842)
+    m10_200mm_concrete_block_basement_wall.setSpecificHeat(912)
+
+    basement_wall_construction = OpenStudio::Model::Construction.new(self)
+    basement_wall_construction.setName('Basement Wall construction')
+    basement_wall_layers = OpenStudio::Model::MaterialVector.new
+    basement_wall_layers << m10_200mm_concrete_block_basement_wall
+    basement_wall_construction.setLayers(basement_wall_layers)
+
+    basement_floor_construction = OpenStudio::Model::Construction.new(self)
+    basement_floor_construction.setName('Basement Floor construction')
+    basement_floor_layers = OpenStudio::Model::MaterialVector.new
+    basement_floor_layers << m10_200mm_concrete_block_basement_wall
+    basement_floor_layers << cp02_carpet_pad
+    basement_floor_construction.setLayers(basement_floor_layers)
+
     self.getSurfaces.each do |surface|
       if surface.outsideBoundaryCondition.to_s == "Adiabatic"
-        surface.setConstruction(adiabatic_construction)
+        if surface.surfaceType.to_s == "Wall"
+          surface.setConstruction(wall_adiabatic_construction)
+        else
+          surface.setConstruction(floor_adiabatic_construction)
+        end
       elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
-        surface.setOutsideBoundaryCondition("Adiabatic")
-        surface.setConstruction(adiabatic_construction)
+        # Ground
+        if surface.surfaceType.to_s == "Wall"
+          surface.setOutsideBoundaryCondition("Ground")
+          surface.setConstruction(basement_wall_construction)
+        else
+          surface.setOutsideBoundaryCondition("Ground")
+          surface.setConstruction(basement_floor_construction)
+        end
       end
     end
 
-
-    # Make the default contruction set for the building
+    # Make the default construction set for the building
     bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil, is_residential)
 
     if bldg_def_const_set.is_initialized
@@ -613,7 +661,7 @@ class OpenStudio::Model::Model
     # 0.0000;                  !- Velocity Squared Term Coefficient
     self.getSpaceInfiltrationDesignFlowRates.each do |infiltration|
       infiltration.setConstantTermCoefficient(0.0)
-      infiltration.setTemperatureTermCoefficient (0.0)
+      infiltration.setTemperatureTermCoefficient(0.0)
       infiltration.setVelocityTermCoefficient(0.224)
       infiltration.setVelocitySquaredTermCoefficient(0.0)
     end
@@ -728,6 +776,7 @@ class OpenStudio::Model::Model
             economizer_type = 'DifferentialDryBulb'
           end
         end
+
         # Set the economizer type
         # Get the OA system and OA controller
         oa_sys = air_loop.airLoopHVACOutdoorAirSystem

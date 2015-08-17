@@ -147,8 +147,8 @@ class OpenStudio::Model::Model
     # Combine the data from the JSON files into a single hash
     standards_hash = {}
     standards_files.sort.each do |standards_file|
-      temp = File.read("#{standards_data_dir}/#{standards_file}")
-      file_hash = JSON.parse(temp)
+      temp = File.open("#{standards_data_dir}/#{standards_file}", 'r:UTF-8')
+      file_hash = JSON.load(temp)
       standards_hash = standards_hash.merge(file_hash)
     end  
       
@@ -1244,10 +1244,10 @@ class OpenStudio::Model::Model
       curve.setCoefficient4y(curve_data["coeff_4"])
       curve.setCoefficient5yPOW2(curve_data["coeff_5"])
       curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
-      curve.setCoefficient7xPOW3 (curve_data["coeff_7"])
-      curve.setCoefficient8yPOW3 (curve_data["coeff_8"])
+      curve.setCoefficient7xPOW3(curve_data["coeff_7"])
+      curve.setCoefficient8yPOW3(curve_data["coeff_8"])
       curve.setCoefficient9xPOW2TIMESY(curve_data["coeff_9"])
-      curve.setCoefficient10xTIMESYPOW2 (curve_data["coeff_10"])
+      curve.setCoefficient10xTIMESYPOW2(curve_data["coeff_10"])
       curve.setMinimumValueofx(eirft_properties["min_x"])
       curve.setMaximumValueofx(eirft_properties["max_x"])
       curve.setMinimumValueofy(eirft_properties["min_y"])

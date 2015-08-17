@@ -60,24 +60,24 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Make an argument for the climate zone
     climate_zone_chs = OpenStudio::StringVector.new
-    #climate_zone_chs << 'ASHRAE 169-2006-1A'
+    climate_zone_chs << 'ASHRAE 169-2006-1A'
     #climate_zone_chs << 'ASHRAE 169-2006-1B'
     climate_zone_chs << 'ASHRAE 169-2006-2A'
-    #climate_zone_chs << 'ASHRAE 169-2006-2B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3A'
+    climate_zone_chs << 'ASHRAE 169-2006-2B'
+    climate_zone_chs << 'ASHRAE 169-2006-3A'
     climate_zone_chs << 'ASHRAE 169-2006-3B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3C'
+    climate_zone_chs << 'ASHRAE 169-2006-3C'
     climate_zone_chs << 'ASHRAE 169-2006-4A'
-    #climate_zone_chs << 'ASHRAE 169-2006-4B'
+    climate_zone_chs << 'ASHRAE 169-2006-4B'
     climate_zone_chs << 'ASHRAE 169-2006-4C'
     climate_zone_chs << 'ASHRAE 169-2006-5A'
-    #climate_zone_chs << 'ASHRAE 169-2006-5B'
+    climate_zone_chs << 'ASHRAE 169-2006-5B'
     #climate_zone_chs << 'ASHRAE 169-2006-5C'
     climate_zone_chs << 'ASHRAE 169-2006-6A'
-    #climate_zone_chs << 'ASHRAE 169-2006-6B'
+    climate_zone_chs << 'ASHRAE 169-2006-6B'
     climate_zone_chs << 'ASHRAE 169-2006-7A'
     #climate_zone_chs << 'ASHRAE 169-2006-7B'
-    #climate_zone_chs << 'ASHRAE 169-2006-8A'
+    climate_zone_chs << 'ASHRAE 169-2006-8A'
     #climate_zone_chs << 'ASHRAE 169-2006-8B'
     climate_zone = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('climate_zone', climate_zone_chs, true)
     climate_zone.setDisplayName('Select a Climate Zone.')
@@ -138,8 +138,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Retrieve the Prototype Inputs from JSON
     search_criteria = {
       'template' => building_vintage,
-      'climate_zone' => climate_zone,
-      'building_type' => building_type,
+      'building_type' => building_type
     }
     prototype_input = model.find_object(model.standards['prototype_inputs'], search_criteria)
     if prototype_input.nil?
@@ -287,7 +286,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
     # Set the building location, weather files, ddy files, etc.
-    model.add_design_days_and_weather_file(model.standards, alt_search_name, building_vintage, climate_zone)
+    model.add_design_days_and_weather_file(model.standards, building_type, building_vintage, climate_zone)
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)

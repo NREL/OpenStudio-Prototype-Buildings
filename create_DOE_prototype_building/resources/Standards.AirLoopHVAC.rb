@@ -316,7 +316,9 @@ class OpenStudio::Model::AirLoopHVAC
     # until the fan bhp is the same percentage of the baseline allowable bhp
     # as it was on the proposed system.
     fans.each do |fan|
-    
+      # TODO: Yixing Check the model of the Fan Coil Unit
+      next if fan.name.to_s.include?("Fan Coil fan")
+
       OpenStudio::logFree(OpenStudio::Info, "#{fan.name}")
     
       # Get the bhp of the fan on the proposed system

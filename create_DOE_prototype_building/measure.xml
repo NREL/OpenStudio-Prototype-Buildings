@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>create_doe_prototype_building</name>
   <uid>be90fd0b-a651-467a-bc8d-29d310b0f937</uid>
-  <version_id>ed16e6f8-2af0-4c96-9aae-83f2636d967a</version_id>
+  <version_id>f5d6f599-3538-40ab-8cff-1a7007dc47c9</version_id>
   <xml_checksum>057E8D9D</xml_checksum>
   <class_name>CreateDOEPrototypeBuilding</class_name>
   <display_name>Create DOE Prototype Building</display_name>
@@ -118,16 +118,36 @@
       <default_value>ASHRAE 169-2006-2A</default_value>
       <choices>
         <choice>
+          <value>ASHRAE 169-2006-1A</value>
+          <display_name>ASHRAE 169-2006-1A</display_name>
+        </choice>
+        <choice>
           <value>ASHRAE 169-2006-2A</value>
           <display_name>ASHRAE 169-2006-2A</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-2B</value>
+          <display_name>ASHRAE 169-2006-2B</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-3A</value>
+          <display_name>ASHRAE 169-2006-3A</display_name>
         </choice>
         <choice>
           <value>ASHRAE 169-2006-3B</value>
           <display_name>ASHRAE 169-2006-3B</display_name>
         </choice>
         <choice>
+          <value>ASHRAE 169-2006-3C</value>
+          <display_name>ASHRAE 169-2006-3C</display_name>
+        </choice>
+        <choice>
           <value>ASHRAE 169-2006-4A</value>
           <display_name>ASHRAE 169-2006-4A</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-4B</value>
+          <display_name>ASHRAE 169-2006-4B</display_name>
         </choice>
         <choice>
           <value>ASHRAE 169-2006-4C</value>
@@ -138,12 +158,24 @@
           <display_name>ASHRAE 169-2006-5A</display_name>
         </choice>
         <choice>
+          <value>ASHRAE 169-2006-5B</value>
+          <display_name>ASHRAE 169-2006-5B</display_name>
+        </choice>
+        <choice>
           <value>ASHRAE 169-2006-6A</value>
           <display_name>ASHRAE 169-2006-6A</display_name>
         </choice>
         <choice>
+          <value>ASHRAE 169-2006-6B</value>
+          <display_name>ASHRAE 169-2006-6B</display_name>
+        </choice>
+        <choice>
           <value>ASHRAE 169-2006-7A</value>
           <display_name>ASHRAE 169-2006-7A</display_name>
+        </choice>
+        <choice>
+          <value>ASHRAE 169-2006-8A</value>
+          <display_name>ASHRAE 169-2006-8A</display_name>
         </choice>
       </choices>
     </argument>
@@ -826,10 +858,22 @@
       <checksum>FC95F2A1</checksum>
     </file>
     <file>
+      <filename>Prototype.secondary_school.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>906C5CD3</checksum>
+    </file>
+    <file>
       <filename>Prototype.small_office.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>90644C71</checksum>
+    </file>
+    <file>
+      <filename>Standards.CoilCoolingDXTwoSpeed.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>15BF5219</checksum>
     </file>
     <file>
       <filename>Standards.ConstructionSetGenerator.rb</filename>
@@ -895,7 +939,13 @@
       <filename>Standards.FanOnOff.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>7370F1D8</checksum>
+      <checksum>83A74064</checksum>
+    </file>
+    <file>
+      <filename>HVACSizing.Model.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>D3A8C681</checksum>
     </file>
     <file>
       <filename>HVACSizing.BoilerHotWater.rb</filename>
@@ -922,10 +972,40 @@
       <checksum>960E10CC</checksum>
     </file>
     <file>
+      <filename>Prototype.FanConstantVolume.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>0A54627A</checksum>
+    </file>
+    <file>
+      <filename>Prototype.FanVariableVolume.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C107663C</checksum>
+    </file>
+    <file>
+      <filename>Prototype.HeatExchangerAirToAirSensibleAndLatent.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>31A29AC5</checksum>
+    </file>
+    <file>
       <filename>Prototype.FanOnOff.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>45FC55D2</checksum>
+    </file>
+    <file>
+      <filename>Prototype.Model.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>7C45A207</checksum>
+    </file>
+    <file>
+      <filename>Standards.CoilCoolingDXSingleSpeed.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>0766CD77</checksum>
     </file>
     <file>
       <filename>Standards.FanConstantVolume.rb</filename>
@@ -938,6 +1018,30 @@
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>ABD224F9</checksum>
+    </file>
+    <file>
+      <filename>create_DOE_prototype_building_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>47E7F9CD</checksum>
+    </file>
+    <file>
+      <filename>Prototype.utilities.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>1B47ACF7</checksum>
+    </file>
+    <file>
+      <filename>Prototype.hvac_systems.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>FD905A80</checksum>
+    </file>
+    <file>
+      <filename>run.db</filename>
+      <filetype>db</filetype>
+      <usage_type>test</usage_type>
+      <checksum>FC82E71D</checksum>
     </file>
     <file>
       <filename>ASHRAE90.1_HotelSmall_STD2010_Houston.osm</filename>
@@ -1090,10 +1194,22 @@
       <checksum>C42B15A9</checksum>
     </file>
     <file>
+      <filename>OpenStudio_Standards.xlsx</filename>
+      <filetype>xlsx</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>99717E73</checksum>
+    </file>
+    <file>
       <filename>OpenStudio_Standards_boilers.json</filename>
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
       <checksum>B66EB4B8</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_chillers.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C5707105</checksum>
     </file>
     <file>
       <filename>OpenStudio_Standards_climate_zone_sets.json</filename>
@@ -1108,6 +1224,24 @@
       <checksum>17DAAB3E</checksum>
     </file>
     <file>
+      <filename>OpenStudio_Standards_construction_properties.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>1284A0ED</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_construction_sets.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>848F6F33</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_constructions.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>CA341132</checksum>
+    </file>
+    <file>
       <filename>OpenStudio_Standards_curve_bicubics.json</filename>
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
@@ -1120,16 +1254,64 @@
       <checksum>932713D4</checksum>
     </file>
     <file>
+      <filename>OpenStudio_Standards_curve_cubics.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>B678BD17</checksum>
+    </file>
+    <file>
       <filename>OpenStudio_Standards_curve_quadratics.json</filename>
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
       <checksum>AE783B13</checksum>
     </file>
     <file>
+      <filename>OpenStudio_Standards_exterior.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>7817EECC</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_ground_temperatures.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C256C2A1</checksum>
+    </file>
+    <file>
       <filename>OpenStudio_Standards_heat_pumps.json</filename>
       <filetype>json</filetype>
       <usage_type>resource</usage_type>
       <checksum>4481375E</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_materials.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>DC8BCFC7</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_motors.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>1332E109</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_prototype_inputs.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>0E5239B8</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_schedules.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>43FF2D58</checksum>
+    </file>
+    <file>
+      <filename>OpenStudio_Standards_space_types.json</filename>
+      <filetype>json</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>781BD432</checksum>
     </file>
     <file>
       <filename>OpenStudio_Standards_standards.json</filename>
@@ -1165,7 +1347,7 @@
       <filename>Prototype.large_hotel.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>7272E4BD</checksum>
+      <checksum>465359EC</checksum>
     </file>
     <file>
       <filename>Prototype.large_office.rb</filename>
@@ -1228,6 +1410,12 @@
       <checksum>CD70992D</checksum>
     </file>
     <file>
+      <filename>Standards.AirLoopHVAC.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>08804AAC</checksum>
+    </file>
+    <file>
       <filename>Standards.BoilerHotWater.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
@@ -1237,187 +1425,19 @@
       <filename>Standards.Construction.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>1A7B01AE</checksum>
+      <checksum>D21D19A7</checksum>
     </file>
     <file>
-      <filename>Standards.export_OpenStudio_Standards.rb</filename>
+      <filename>Standards.Space.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>64AAB255</checksum>
+      <checksum>46EE7113</checksum>
     </file>
     <file>
       <filename>Standards.WaterHeaterMixed.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
       <checksum>AC7D8ABF</checksum>
-    </file>
-    <file>
-      <filename>Standards.CoilCoolingDXTwoSpeed.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>99A44B37</checksum>
-    </file>
-    <file>
-      <filename>Standards.CoilCoolingDXSingleSpeed.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>A57638F0</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_curve_cubics.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>B678BD17</checksum>
-    </file>
-    <file>
-      <filename>HVACSizing.ThermalZone.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>F9BE686B</checksum>
-    </file>
-    <file>
-      <filename>HVACSizing.Model.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>812D582F</checksum>
-    </file>
-    <file>
-      <filename>Prototype.HeatExchangerAirToAirSensibleAndLatent.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>182ECA88</checksum>
-    </file>
-    <file>
-      <filename>Prototype.utilities.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>AB51670B</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_exterior.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>220EF5C6</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_ground_temperatures.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>AE091BA0</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_constructions.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>E278D932</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_schedules.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>B4DE3B7A</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_materials.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>DC8BCFC7</checksum>
-    </file>
-    <file>
-      <filename>Standards.ThermalZone.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>9E1C2AB0</checksum>
-    </file>
-    <file>
-      <filename>Standards.Space.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>520A217D</checksum>
-    </file>
-    <file>
-      <filename>Standards.SubSurface.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>152EC4DF</checksum>
-    </file>
-    <file>
-      <filename>Standards.Surface.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>31D55ABF</checksum>
-    </file>
-    <file>
-      <filename>Prototype.FanConstantVolume.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>AF565A0F</checksum>
-    </file>
-    <file>
-      <filename>Prototype.FanVariableVolume.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>384BA1AE</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_chillers.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>AFD2E72B</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_motors.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>7F8D46B1</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_space_types.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>A9EEAB6A</checksum>
-    </file>
-    <file>
-      <filename>Prototype.secondary_school.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>905701BA</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_construction_properties.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>FFF9A2D9</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_prototype_inputs.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>5F5AA511</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards_construction_sets.json</filename>
-      <filetype>json</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>C53575CD</checksum>
-    </file>
-    <file>
-      <filename>Prototype.hvac_systems.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>5CC39667</checksum>
-    </file>
-    <file>
-      <filename>Standards.AirLoopHVAC.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>E3AC5035</checksum>
-    </file>
-    <file>
-      <filename>Prototype.Model.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>52CE3868</checksum>
     </file>
     <file>
       <version>
@@ -1428,49 +1448,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>7F5CF473</checksum>
+      <checksum>D53713C0</checksum>
+    </file>
+    <file>
+      <filename>Standards.export_OpenStudio_Standards.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>AB1A02F8</checksum>
     </file>
     <file>
       <filename>Standards.Model.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>02787D0E</checksum>
-    </file>
-    <file>
-      <filename>OpenStudio_Standards.xlsx</filename>
-      <filetype>xlsx</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>385AD5B4</checksum>
-    </file>
-    <file>
-      <filename>Prototype.ControllerWaterCoil.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>DF5CA3D0</checksum>
-    </file>
-    <file>
-      <filename>Prototype.FanZoneExhaust.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>2C63A039</checksum>
-    </file>
-    <file>
-      <filename>Standards.FanZoneExhaust.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>0D05E1BC</checksum>
-    </file>
-    <file>
-      <filename>create_DOE_prototype_building_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>3F134042</checksum>
-    </file>
-    <file>
-      <filename>run.db</filename>
-      <filetype>db</filetype>
-      <usage_type>test</usage_type>
-      <checksum>C1883782</checksum>
+      <checksum>9B07E01E</checksum>
     </file>
   </files>
 </measure>
