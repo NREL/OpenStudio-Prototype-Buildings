@@ -1588,12 +1588,11 @@ class OpenStudio::Model::AirLoopHVAC
     # Get the OA intake
     controller_oa = nil
     controller_mv = nil
-    if air_loop.airLoopHVACOutdoorAirSystem.is_initialized
-      oa_system = air_loop.airLoopHVACOutdoorAirSystem.get
+    if self.airLoopHVACOutdoorAirSystem.is_initialized
+      oa_system = self.airLoopHVACOutdoorAirSystem.get
       controller_oa = oa_system.getControllerOutdoorAir      
       controller_mv = controller_oa.controllerMechanicalVentilation
       if controller_mv.demandControlledVentilation == true
-        air_loops_already_dcv << air_loop
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: DCV was already enabled.")
         return true
       end
