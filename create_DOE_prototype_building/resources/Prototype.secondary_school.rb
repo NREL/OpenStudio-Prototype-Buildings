@@ -195,24 +195,15 @@ class OpenStudio::Model::Model
           ]
       },
       {
-          # Case properties
           'type' => 'Refrigeration',
-          'name' => 'Walkin Freezer',
-          'ambient_temp' => 23.88,
-          'relative_humidity' => 55.0,
+          'case_type' => 'Walkin Freezer',
           'cooling_capacity_per_length' => 734.0,
-          'latent_heat_ratio' => 0.1,
-          'runtime_fraction' => 0.4,
           'length' => 7.32,
-          'case_temp' => -23.0,
-          'latent_case_credit_curve_name' => 'Single Shelf Horizontal Latent Energy Multiplier',
           'evaporator_fan_pwr_per_length' => 68.3,
           'lighting_per_length' => 33.0,
           'lighting_sch_name' => 'SchoolSecondary BLDG_LIGHT_SCH',
           'defrost_pwr_per_length' => 410.0,
-          'defrost_type' => 'Electric',
           'restocking_sch_name' => 'SchoolSecondary Kitchen_ZN_1_FLR_1_Case:1_WALKINFREEZER_WalkInStockingSched',
-          # Refrigeration rack properties
           'cop' => 1.5,
           'cop_f_of_t_curve_name' => 'RACK1_RackCOPfTCurve',
           'condenser_fan_pwr' => 750.0,
@@ -221,10 +212,27 @@ class OpenStudio::Model::Model
           [
               'Kitchen_ZN_1_FLR_1'
           ]
-      }      
-      
-      
-  ]
+      },
+      {
+          'type' => 'Refrigeration',
+          'case_type' => 'Display Case',
+          'cooling_capacity_per_length' => 734.0,
+          'length' => 7.32,
+          'evaporator_fan_pwr_per_length' => 55.0,
+          'lighting_per_length' => 33.0,
+          'lighting_sch_name' => 'SchoolSecondary BLDG_LIGHT_SCH',
+          'defrost_pwr_per_length' => 0.0,
+          'restocking_sch_name' => 'SchoolSecondary Kitchen_ZN_1_FLR_1_Case:1_WALKINFREEZER_WalkInStockingSched',
+          'cop' => 3.0,
+          'cop_f_of_t_curve_name' => 'RACK2_RackCOPfTCurve',
+          'condenser_fan_pwr' => 750.0,
+          'condenser_fan_pwr_curve_name' => 'RACK1_RackCondFanCurve2',
+          'space_names' =>
+          [
+              'Kitchen_ZN_1_FLR_1'
+          ]
+      }
+    ]
 
     return system_to_space_map
 
@@ -287,19 +295,13 @@ class OpenStudio::Model::Model
       when 'Refrigeration'
         self.add_refrigeration(prototype_input,
                               standards,
-                              system['ambient_temp'],
-                              system['relative_humidity'],
+                              system['case_type'],
                               system['cooling_capacity_per_length'],
-                              system['latent_heat_ratio'],
-                              system['runtime_fraction'],
                               system['length'],
-                              system['case_temp'],
-                              system['latent_case_credit_curve_name'],
                               system['evaporator_fan_pwr_per_length'],
                               system['lighting_per_length'],
                               system['lighting_sch_name'],
                               system['defrost_pwr_per_length'],
-                              system['defrost_type'],
                               system['restocking_sch_name'],
                               system['cop'],
                               system['cop_f_of_t_curve_name'],

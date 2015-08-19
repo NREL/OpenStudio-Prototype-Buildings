@@ -473,10 +473,10 @@ class OpenStudio::Model::Model
     clg_sa_temp_f = 55.04 # Central deck clg temp 55F
     prehtg_sa_temp_f = 44.6 # Preheat to 44.6F
     preclg_sa_temp_f = 55.04 # Precool to 55F
-	htg_sa_temp_f = 55.04 # Central deck htg temp 55F
-	if building_type == "LargeHotel"
-      htg_sa_temp_f = 62 # Central deck htg temp 55F
-	end
+    htg_sa_temp_f = 55.04 # Central deck htg temp 55F
+    if building_type == "LargeHotel"
+        htg_sa_temp_f = 62 # Central deck htg temp 55F
+    end
     rht_sa_temp_f = 104 # VAV box reheat to 104F
     clg_sa_temp_c = OpenStudio.convert(clg_sa_temp_f,'F','C').get
     prehtg_sa_temp_c = OpenStudio.convert(prehtg_sa_temp_f,'F','C').get
@@ -524,7 +524,6 @@ class OpenStudio::Model::Model
     fan.setFanPowerMinimumFlowFraction(0.25)
     fan.addToNode(air_loop.supplyInletNode)
     fan.setEndUseSubcategory("VAV system Fans")
-
 
     #heating coil
     htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
@@ -602,20 +601,34 @@ class OpenStudio::Model::Model
       # rate of the space.  Spaces with low OA per area get lower
       # initial guess.  Final position will be adjusted upward
       # as necessary by Standards.AirLoopHVAC.set_minimum_vav_damper_positions
-      if prototype_input['building_type'] == 'SecondarySchool'
-        zone_oa_per_area = zone.outdoor_airflow_rate_per_area
-        if zone_oa_per_area > 0.001 # 0.001 m^3/s*m^2 = .196 cfm/ft2
-          # High OA zones
-          terminal.setConstantMinimumAirFlowFraction(0.7)
-        else
-          # Low OA zones
-          terminal.setConstantMinimumAirFlowFraction(0.2)
-        end
+      # Also, set the damper action based on the template.  This will
+      # be double-checked by the standards, but needs to be set correctly
+      # before the sizing run so that subsequent assumptions work right.
+      min_damper_position = nil
+      damper_action = nil
+      case prototype_input['template']       
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004'
+        min_damper_position = 0.3
+        damper_action = 'Normal'
+      when '90.1-2007'
+        min_damper_position = 0.3
+        damper_action = 'Reverse'
+      when '90.1-2010', '90.1-2013'
+        min_damper_position = 0.2
+        damper_action = 'Reverse'
       end
-      terminal.setDamperHeatingAction('Reverse')
-      if prototype_input['building_type'] == 'SecondarySchool'
-        terminal.setMaximumFlowPerZoneFloorAreaDuringReheat(0.0)
+      # Determine whether or not to use the high minimum guess
+      zone_oa_per_area = zone.outdoor_airflow_rate_per_area
+      if zone_oa_per_area > 0.001 # 0.001 m^3/s*m^2 = .196 cfm/ft2
+        # High OA zones
+        terminal.setConstantMinimumAirFlowFraction(0.7)
+      else
+        # Low OA zones
+        terminal.setConstantMinimumAirFlowFraction(min_damper_position)
       end
+
+      terminal.setMaximumFlowPerZoneFloorAreaDuringReheat(0.0)
+      terminal.setDamperHeatingAction(damper_action)
       terminal.setMaximumFlowFractionDuringReheat(0.5)
       terminal.setMaximumReheatAirTemperature(rht_sa_temp_c)
       air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
@@ -639,235 +652,24 @@ class OpenStudio::Model::Model
     return true
 
   end
-  
-  
-  # def add_pvav(prototype_input, standards, hot_water_loop, thermal_zones)
 
-  #   hw_temp_f = 180 #HW setpoint 180F 
-  #   hw_delta_t_r = 20 #20F delta-T    
-  #   hw_temp_c = OpenStudio.convert(hw_temp_f,'F','C').get
-  #   hw_delta_t_k = OpenStudio.convert(hw_delta_t_r,'R','K').get
+  def add_pvav(prototype_input, standards, sys_name, thermal_zones, hot_water_loop = nil)
 
-  #   # hvac operation schedule
-  #   hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
-    
-  #   # motorized oa damper schedule
-  #   motorized_oa_damper_sch = self.add_schedule(prototype_input['vav_oa_damper_schedule'])
-    
-  #   # control temps used across all air handlers
-  #   clg_sa_temp_f = 55 # Central deck clg temp 55F 
-  #   prehtg_sa_temp_f = 44.6 # Preheat to 44.6F
-  #   htg_sa_temp_f = 55 # Central deck htg temp 55F
-  #   rht_sa_temp_f = 104 # VAV box reheat to 104F
-    
-  #   clg_sa_temp_c = OpenStudio.convert(clg_sa_temp_f,'F','C').get
-  #   prehtg_sa_temp_c = OpenStudio.convert(prehtg_sa_temp_f,'F','C').get
-  #   htg_sa_temp_c = OpenStudio.convert(htg_sa_temp_f,'F','C').get
-  #   rht_sa_temp_c = OpenStudio.convert(rht_sa_temp_f,'F','C').get
-    
-  #   sa_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-  #   sa_temp_sch.setName("Supply Air Temp - #{clg_sa_temp_f}F")
-  #   sa_temp_sch.defaultDaySchedule.setName("Supply Air Temp - #{clg_sa_temp_f}F Default")
-  #   sa_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),clg_sa_temp_c)
-
-  #   #air handler
-  #   air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
-  #   air_loop.setName("#{thermal_zones.size} Zone VAV")
-  #   air_loop.setAvailabilitySchedule(hvac_op_sch)
-    
-  #   #air handler controls
-  #   hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
-  #   hw_stpt_manager.addToNode(air_loop.supplyOutletNode)
-  #   sizing_system = air_loop.sizingSystem
-  #   sizing_system.setSizingOption('NonCoincident')
-  #   sizing_system.setAllOutdoorAirinCooling(false)
-  #   sizing_system.setAllOutdoorAirinHeating(false)
-  #   sizing_system.setSystemOutdoorAirMethod('ZoneSum')
-  #   air_loop.setNightCycleControlType('CycleOnAny')
-    
-  #   #fan
-  #   fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
-  #   fan.setName("#{thermal_zones.size} Zone VAV Fan")
-  #   fan.setFanEfficiency(0.6045)
-  #   fan.setMotorEfficiency(0.93)
-  #   fan_static_pressure_in_h2o = 5.58
-  #   fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
-  #   fan.setPressureRise(fan_static_pressure_pa)
-  #   fan.addToNode(air_loop.supplyInletNode)
-    
-  #   #cooling coil
-  #   clg_cap_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(self)
-  #   clg_cap_f_of_temp.setCoefficient1Constant(0.42415)
-  #   clg_cap_f_of_temp.setCoefficient2x(0.04426)
-  #   clg_cap_f_of_temp.setCoefficient3xPOW2(-0.00042)
-  #   clg_cap_f_of_temp.setCoefficient4y(0.00333)
-  #   clg_cap_f_of_temp.setCoefficient5yPOW2(-0.00008)
-  #   clg_cap_f_of_temp.setCoefficient6xTIMESY(-0.00021)
-  #   clg_cap_f_of_temp.setMinimumValueofx(17.0)
-  #   clg_cap_f_of_temp.setMaximumValueofx(22.0)
-  #   clg_cap_f_of_temp.setMinimumValueofy(13.0)
-  #   clg_cap_f_of_temp.setMaximumValueofy(46.0)
-
-  #   clg_cap_f_of_flow = OpenStudio::Model::CurveQuadratic.new(self)
-  #   clg_cap_f_of_flow.setCoefficient1Constant(0.77136)
-  #   clg_cap_f_of_flow.setCoefficient2x(0.34053)
-  #   clg_cap_f_of_flow.setCoefficient3xPOW2(-0.11088)
-  #   clg_cap_f_of_flow.setMinimumValueofx(0.75918)
-  #   clg_cap_f_of_flow.setMaximumValueofx(1.13877)
-
-  #   clg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(self)
-  #   clg_energy_input_ratio_f_of_temp.setCoefficient1Constant(1.23649)
-  #   clg_energy_input_ratio_f_of_temp.setCoefficient2x(-0.02431)
-  #   clg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(0.00057)
-  #   clg_energy_input_ratio_f_of_temp.setCoefficient4y(-0.01434)
-  #   clg_energy_input_ratio_f_of_temp.setCoefficient5yPOW2(0.00063)
-  #   clg_energy_input_ratio_f_of_temp.setCoefficient6xTIMESY(-0.00038)
-  #   clg_energy_input_ratio_f_of_temp.setMinimumValueofx(17.0)
-  #   clg_energy_input_ratio_f_of_temp.setMaximumValueofx(22.0)
-  #   clg_energy_input_ratio_f_of_temp.setMinimumValueofy(13.0)
-  #   clg_energy_input_ratio_f_of_temp.setMaximumValueofy(46.0)
-
-  #   clg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(self)
-  #   clg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.20550)
-  #   clg_energy_input_ratio_f_of_flow.setCoefficient2x(-0.32953)
-  #   clg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.12308)
-  #   clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.75918)
-  #   clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.13877)
-
-  #   clg_part_load_ratio = OpenStudio::Model::CurveQuadratic.new(self)
-  #   clg_part_load_ratio.setCoefficient1Constant(0.77100)
-  #   clg_part_load_ratio.setCoefficient2x(0.22900)
-  #   clg_part_load_ratio.setCoefficient3xPOW2(0.0)
-  #   clg_part_load_ratio.setMinimumValueofx(0.0)
-  #   clg_part_load_ratio.setMaximumValueofx(1.0)
-
-  #   clg_cap_f_of_temp_low_spd = OpenStudio::Model::CurveBiquadratic.new(self)
-  #   clg_cap_f_of_temp_low_spd.setCoefficient1Constant(0.42415)
-  #   clg_cap_f_of_temp_low_spd.setCoefficient2x(0.04426)
-  #   clg_cap_f_of_temp_low_spd.setCoefficient3xPOW2(-0.00042)
-  #   clg_cap_f_of_temp_low_spd.setCoefficient4y(0.00333)
-  #   clg_cap_f_of_temp_low_spd.setCoefficient5yPOW2(-0.00008)
-  #   clg_cap_f_of_temp_low_spd.setCoefficient6xTIMESY(-0.00021)
-  #   clg_cap_f_of_temp_low_spd.setMinimumValueofx(17.0)
-  #   clg_cap_f_of_temp_low_spd.setMaximumValueofx(22.0)
-  #   clg_cap_f_of_temp_low_spd.setMinimumValueofy(13.0)
-  #   clg_cap_f_of_temp_low_spd.setMaximumValueofy(46.0)
-
-  #   clg_energy_input_ratio_f_of_temp_low_spd = OpenStudio::Model::CurveBiquadratic.new(self)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient1Constant(1.23649)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient2x(-0.02431)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient3xPOW2(0.00057)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient4y(-0.01434)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient5yPOW2(0.00063)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient6xTIMESY(-0.00038)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setMinimumValueofx(17.0)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setMaximumValueofx(22.0)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setMinimumValueofy(13.0)
-  #   clg_energy_input_ratio_f_of_temp_low_spd.setMaximumValueofy(46.0)
-
-  #   clg_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(self,
-  #                                                   self.alwaysOnDiscreteSchedule,
-  #                                                   clg_cap_f_of_temp,
-  #                                                   clg_cap_f_of_flow,
-  #                                                   clg_energy_input_ratio_f_of_temp,
-  #                                                   clg_energy_input_ratio_f_of_flow,
-  #                                                   clg_part_load_ratio, 
-  #                                                   clg_cap_f_of_temp_low_spd,
-  #                                                   clg_energy_input_ratio_f_of_temp_low_spd)
-
-  #   clg_coil.setName("#{thermal_zones.size} Zone PVAV 2spd DX AC Clg Coil")
-  #   clg_coil.setRatedLowSpeedSensibleHeatRatio(OpenStudio::OptionalDouble.new(0.69))
-  #   clg_coil.setBasinHeaterCapacity(10)
-  #   clg_coil.setBasinHeaterSetpointTemperature(2.0)
-  #   clg_coil.addToNode(air_loop.supplyInletNode)
-    
-  #   #heating coil
-  #   htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
-  #   htg_coil.setName("#{thermal_zones.size} Zone VAV Main Htg Coil")
-  #   htg_coil.setRatedInletWaterTemperature(hw_temp_c)
-  #   htg_coil.setRatedInletAirTemperature(prehtg_sa_temp_c)
-  #   htg_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
-  #   htg_coil.setRatedOutletAirTemperature(htg_sa_temp_c)
-  #   htg_coil.addToNode(air_loop.supplyInletNode)
-  #   hot_water_loop.addDemandBranchForComponent(htg_coil)
-    
-  #   #outdoor air intake system
-  #   oa_intake_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
-  #   oa_intake_controller.setName("#{thermal_zones.size} Zone VAV OA Sys Controller")
-  #   oa_intake = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, oa_intake_controller)    
-  #   oa_intake.setName("#{thermal_zones.size} Zone VAV OA Sys")
-  #   oa_intake_controller.setEconomizerControlType('NoEconomizer')
-  #   oa_intake_controller.setMinimumLimitType('FixedMinimum')
-  #   oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
-  #   oa_intake.addToNode(air_loop.supplyInletNode)
-
-  #   #heat exchanger on oa system' for some vintages
-  #   # if prototype_input['template'] == '90.1-2010'if prototype_input['template'] == '90.1-2010'
-  #     # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-  #     # heat_exchanger.setName("#{thermal_zones.size} Zone VAV HX")
-  #     # heat_exchanger.setHeatExchangerType('Rotary')
-  #      # heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-  #     # heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.6)
-  #     # heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-  #     # heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-  #     # heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-  #     # heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.6)
-  #     # heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-  #     # heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-  #     # heat_exchanger.setNominalElectricPower(6240.0734)
-  #     # heat_exchanger.setEconomizerLockout(true)
-  #     # heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-
-  #     # oa_node = oa_intake.outboardOANode
-  #     # if oa_node.is_initialized
-  #       # heat_exchanger.addToNode(oa_node.get)
-  #     # else
-  #       # OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
-  #       # return false
-  #     # end
-  #   # end
-    
-  #   #hook the VAV system to each zone
-  #   thermal_zones.each do |zone|
-    
-  #     #reheat coil
-  #     rht_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
-  #     rht_coil.setName("#{zone.name} Rht Coil")
-  #     rht_coil.setRatedInletWaterTemperature(hw_temp_c)
-  #     rht_coil.setRatedInletAirTemperature(htg_sa_temp_c)
-  #     rht_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
-  #     rht_coil.setRatedOutletAirTemperature(rht_sa_temp_c)
-  #     hot_water_loop.addDemandBranchForComponent(rht_coil)        
-      
-  #     #vav terminal
-  #     terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
-  #     terminal.setName("#{zone.name} VAV Term")
-  #     terminal.setZoneMinimumAirFlowMethod('Constant')
-  #     terminal.setConstantMinimumAirFlowFraction(0.3)
-  #     terminal.setDamperHeatingAction('Normal')
-  #     air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
-    
-  #   end
-
-  #   return true
-
-  # end
-  
-=begin # The goofy sizing vs. operation inconsistencies are making this system fail warmup
-  def add_pvav(prototype_input, standards, hot_water_loop, thermal_zones)
-
-    hw_temp_f = 180 #HW setpoint 180F 
-    hw_delta_t_r = 20 #20F delta-T    
-    hw_temp_c = OpenStudio.convert(hw_temp_f,'F','C').get
-    hw_delta_t_k = OpenStudio.convert(hw_delta_t_r,'R','K').get
-
-    # hvac operation schedule
+    # HVAC operation schedule
     hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
     
-    # motorized oa damper schedule
+    # Motorized oa damper schedule
     motorized_oa_damper_sch = self.add_schedule(prototype_input['vav_oa_damper_schedule'])
     
-    # control temps used across all air handlers
+    # Control temps for HW loop
+    # will only be used when hot_water_loop is provided.
+    hw_temp_f = 180 #HW setpoint 180F 
+    hw_delta_t_r = 20 #20F delta-T    
+    
+    hw_temp_c = OpenStudio.convert(hw_temp_f,'F','C').get
+    hw_delta_t_k = OpenStudio.convert(hw_delta_t_r,'R','K').get    
+    
+    # Control temps used across all air handlers
     # TODO why aren't design and operational temps coordinated?
     sys_dsn_prhtg_temp_f = 44.6 # Design central deck to preheat to 44.6F
     sys_dsn_clg_sa_temp_f = 57.2 # Design central deck to cool to 57.2F
@@ -877,7 +679,7 @@ class OpenStudio::Model::Model
     rht_rated_air_in_temp_f = 62 # Reheat coils designed to receive 62F
     rht_rated_air_out_temp_f = 90 # Reheat coils designed to supply 90F...but zone expects 122F...?
     clg_sa_temp_f = 55 # Central deck clg temp operates at 55F
-
+    
     sys_dsn_prhtg_temp_c = OpenStudio.convert(sys_dsn_prhtg_temp_f,'F','C').get
     sys_dsn_clg_sa_temp_c = OpenStudio.convert(sys_dsn_clg_sa_temp_f,'F','C').get
     sys_dsn_htg_sa_temp_c = OpenStudio.convert(sys_dsn_htg_sa_temp_f,'F','C').get
@@ -886,292 +688,125 @@ class OpenStudio::Model::Model
     rht_rated_air_in_temp_c = OpenStudio.convert(rht_rated_air_in_temp_f,'F','C').get
     rht_rated_air_out_temp_c = OpenStudio.convert(rht_rated_air_out_temp_f,'F','C').get
     clg_sa_temp_c = OpenStudio.convert(clg_sa_temp_f,'F','C').get
-
+    
     sa_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     sa_temp_sch.setName("Supply Air Temp - #{clg_sa_temp_f}F")
     sa_temp_sch.defaultDaySchedule.setName("Supply Air Temp - #{clg_sa_temp_f}F Default")
     sa_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),clg_sa_temp_c)
 
-    #air handler
+    # Air handler
     air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
-    air_loop.setName("#{thermal_zones.size} Zone PVAV")
+    if sys_name.nil?
+      air_loop.setName("#{thermal_zones.size} Zone PVAV")
+    else
+      air_loop.setName(sys_name)
+    end
     air_loop.setAvailabilitySchedule(hvac_op_sch)
     
-    #air handler controls
-    hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
-    hw_stpt_manager.addToNode(air_loop.supplyOutletNode)
+    # Air handler controls
+    stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
+    stpt_manager.addToNode(air_loop.supplyOutletNode)
     sizing_system = air_loop.sizingSystem
-    sizing_system.setPreheatDesignTemperature(sys_dsn_prhtg_temp_c)
-    sizing_system.setCentralCoolingDesignSupplyAirTemperature(sys_dsn_clg_sa_temp_c)
-    sizing_system.setCentralHeatingDesignSupplyAirTemperature(sys_dsn_htg_sa_temp_c)
-    sizing_system.setSizingOption('NonCoincident')
+    sizing_system.setSizingOption('Coincident')
     sizing_system.setAllOutdoorAirinCooling(false)
     sizing_system.setAllOutdoorAirinHeating(false)
-    sizing_system.setSystemOutdoorAirMethod('ZoneSum')
     air_loop.setNightCycleControlType('CycleOnAny')
-  
-    #fan
+    
+    # Fan
     fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
-    fan.setName("#{thermal_zones.size} Zone PVAV Fan")
-    fan.setFanEfficiency(0.6045)
-    fan.setMotorEfficiency(0.93)
-    fan_static_pressure_in_h2o = 5.58
-    fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
-    fan.setPressureRise(fan_static_pressure_pa)
+    fan.setName("#{air_loop.name} Fan")
     fan.addToNode(air_loop.supplyInletNode)
     
-    #cooling coil
-    clg_cap_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(self)
-    clg_cap_f_of_temp.setCoefficient1Constant(0.42415)
-    clg_cap_f_of_temp.setCoefficient2x(0.04426)
-    clg_cap_f_of_temp.setCoefficient3xPOW2(-0.00042)
-    clg_cap_f_of_temp.setCoefficient4y(0.00333)
-    clg_cap_f_of_temp.setCoefficient5yPOW2(-0.00008)
-    clg_cap_f_of_temp.setCoefficient6xTIMESY(-0.00021)
-    clg_cap_f_of_temp.setMinimumValueofx(17.0)
-    clg_cap_f_of_temp.setMaximumValueofx(22.0)
-    clg_cap_f_of_temp.setMinimumValueofy(13.0)
-    clg_cap_f_of_temp.setMaximumValueofy(46.0)
-
-    clg_cap_f_of_flow = OpenStudio::Model::CurveQuadratic.new(self)
-    clg_cap_f_of_flow.setCoefficient1Constant(0.77136)
-    clg_cap_f_of_flow.setCoefficient2x(0.34053)
-    clg_cap_f_of_flow.setCoefficient3xPOW2(-0.11088)
-    clg_cap_f_of_flow.setMinimumValueofx(0.75918)
-    clg_cap_f_of_flow.setMaximumValueofx(1.13877)
-
-    clg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(self)
-    clg_energy_input_ratio_f_of_temp.setCoefficient1Constant(1.23649)
-    clg_energy_input_ratio_f_of_temp.setCoefficient2x(-0.02431)
-    clg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(0.00057)
-    clg_energy_input_ratio_f_of_temp.setCoefficient4y(-0.01434)
-    clg_energy_input_ratio_f_of_temp.setCoefficient5yPOW2(0.00063)
-    clg_energy_input_ratio_f_of_temp.setCoefficient6xTIMESY(-0.00038)
-    clg_energy_input_ratio_f_of_temp.setMinimumValueofx(17.0)
-    clg_energy_input_ratio_f_of_temp.setMaximumValueofx(22.0)
-    clg_energy_input_ratio_f_of_temp.setMinimumValueofy(13.0)
-    clg_energy_input_ratio_f_of_temp.setMaximumValueofy(46.0)
-
-    clg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(self)
-    clg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.20550)
-    clg_energy_input_ratio_f_of_flow.setCoefficient2x(-0.32953)
-    clg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.12308)
-    clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.75918)
-    clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.13877)
-
-    clg_part_load_ratio = OpenStudio::Model::CurveQuadratic.new(self)
-    clg_part_load_ratio.setCoefficient1Constant(0.77100)
-    clg_part_load_ratio.setCoefficient2x(0.22900)
-    clg_part_load_ratio.setCoefficient3xPOW2(0.0)
-    clg_part_load_ratio.setMinimumValueofx(0.0)
-    clg_part_load_ratio.setMaximumValueofx(1.0)
-
-    clg_cap_f_of_temp_low_spd = OpenStudio::Model::CurveBiquadratic.new(self)
-    clg_cap_f_of_temp_low_spd.setCoefficient1Constant(0.42415)
-    clg_cap_f_of_temp_low_spd.setCoefficient2x(0.04426)
-    clg_cap_f_of_temp_low_spd.setCoefficient3xPOW2(-0.00042)
-    clg_cap_f_of_temp_low_spd.setCoefficient4y(0.00333)
-    clg_cap_f_of_temp_low_spd.setCoefficient5yPOW2(-0.00008)
-    clg_cap_f_of_temp_low_spd.setCoefficient6xTIMESY(-0.00021)
-    clg_cap_f_of_temp_low_spd.setMinimumValueofx(17.0)
-    clg_cap_f_of_temp_low_spd.setMaximumValueofx(22.0)
-    clg_cap_f_of_temp_low_spd.setMinimumValueofy(13.0)
-    clg_cap_f_of_temp_low_spd.setMaximumValueofy(46.0)
-
-    clg_energy_input_ratio_f_of_temp_low_spd = OpenStudio::Model::CurveBiquadratic.new(self)
-    clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient1Constant(1.23649)
-    clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient2x(-0.02431)
-    clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient3xPOW2(0.00057)
-    clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient4y(-0.01434)
-    clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient5yPOW2(0.00063)
-    clg_energy_input_ratio_f_of_temp_low_spd.setCoefficient6xTIMESY(-0.00038)
-    clg_energy_input_ratio_f_of_temp_low_spd.setMinimumValueofx(17.0)
-    clg_energy_input_ratio_f_of_temp_low_spd.setMaximumValueofx(22.0)
-    clg_energy_input_ratio_f_of_temp_low_spd.setMinimumValueofy(13.0)
-    clg_energy_input_ratio_f_of_temp_low_spd.setMaximumValueofy(46.0)
-
-    clg_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(self,
-                                                    self.alwaysOnDiscreteSchedule,
-                                                    clg_cap_f_of_temp,
-                                                    clg_cap_f_of_flow,
-                                                    clg_energy_input_ratio_f_of_temp,
-                                                    clg_energy_input_ratio_f_of_flow,
-                                                    clg_part_load_ratio, 
-                                                    clg_cap_f_of_temp_low_spd,
-                                                    clg_energy_input_ratio_f_of_temp_low_spd)
-
-    clg_coil.setName("#{thermal_zones.size} Zone PVAV 2spd DX AC Clg Coil")
-    clg_coil.setRatedLowSpeedSensibleHeatRatio(OpenStudio::OptionalDouble.new(0.69))
-    clg_coil.setBasinHeaterCapacity(10)
-    clg_coil.setBasinHeaterSetpointTemperature(2.0)
+    # Cooling coil
+    clg_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(self)
+    clg_coil.setName("#{air_loop.name} Clg Coil")
     clg_coil.addToNode(air_loop.supplyInletNode)
-
-    #heating coil
-    htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
-    htg_coil.setName("#{thermal_zones.size} Zone PVAV Main Htg Coil")
-    htg_coil.setRatedInletWaterTemperature(hw_temp_c)
-    htg_coil.setRatedInletAirTemperature(rht_rated_air_in_temp_c)
-    htg_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
-    htg_coil.setRatedOutletAirTemperature(rht_rated_air_out_temp_c)
-    htg_coil.addToNode(air_loop.supplyInletNode)
-    hot_water_loop.addDemandBranchForComponent(htg_coil)
-
-    #outdoor air intake system
+    
+    # Heating coil - depends on whether heating is hot water or electric,
+    # which is determined by whether or not a hot water loop is provided.
+    if hot_water_loop.nil?
+      htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
+      htg_coil.setName("#{air_loop.name} Main Htg Coil")
+      htg_coil.addToNode(air_loop.supplyInletNode)
+    else
+      htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
+      htg_coil.setName("#{air_loop.name} Main Htg Coil")
+      htg_coil.setRatedInletWaterTemperature(hw_temp_c)
+      htg_coil.setRatedInletAirTemperature(rht_rated_air_in_temp_c)
+      htg_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
+      htg_coil.setRatedOutletAirTemperature(rht_rated_air_out_temp_c)
+      htg_coil.addToNode(air_loop.supplyInletNode)
+      hot_water_loop.addDemandBranchForComponent(htg_coil)
+    end
+    
+    # Outdoor air intake system
     oa_intake_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
-    oa_intake_controller.setName("#{thermal_zones.size} Zone PVAV OA Sys Controller")
     oa_intake = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, oa_intake_controller)    
-    oa_intake.setName("#{thermal_zones.size} Zone PVAV OA Sys")
-    oa_intake_controller.setEconomizerControlType('NoEconomizer')
+    oa_intake.setName("#{air_loop.name} OA Sys")
     oa_intake_controller.setMinimumLimitType('FixedMinimum')
     oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
     oa_intake.addToNode(air_loop.supplyInletNode)
+    controller_mv = oa_intake_controller.controllerMechanicalVentilation
+    controller_mv.setName("#{air_loop.name} Ventilation Controller")
 
-    
-    
-    #heat exchanger on oa system' for some vintages
-    if prototype_input['template'] == '90.1-2010'
-      heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-      heat_exchanger.setName("#{thermal_zones.size} Zone PVAV HX")
-      heat_exchanger.setHeatExchangerType('Rotary')
-      heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-      heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.6)
-      heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-      heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-      heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-      heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.6)
-      heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-      heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-      heat_exchanger.setNominalElectricPower(6240.0734)
-      heat_exchanger.setEconomizerLockout(true)
-      
-      heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-
-      oa_node = oa_intake.outboardOANode
-      if oa_node.is_initialized
-        heat_exchanger.addToNode(oa_node.get)
-      else
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
-        return false
-      end
-    end
-    
-    #hook the VAV system to each zone
+    # Hook the VAV system to each zone
     thermal_zones.each do |zone|
     
-      #reheat coil
-      rht_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
-      rht_coil.setName("#{zone.name} Rht Coil")
-      rht_coil.setRatedInletWaterTemperature(hw_temp_c)
-      rht_coil.setRatedInletAirTemperature(rht_rated_air_in_temp_c)
-      rht_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
-      rht_coil.setRatedOutletAirTemperature(rht_rated_air_out_temp_c)
-      hot_water_loop.addDemandBranchForComponent(rht_coil)        
-
-      #vav terminal
+      # Reheat coil
+      rht_coil = nil
+      if hot_water_loop.nil?
+        rht_coil = OpenStudio::Model::CoilHeatingElectric.new(self,self.alwaysOnDiscreteSchedule)
+        rht_coil.setName("#{zone.name} Rht Coil") 
+      else
+        rht_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
+        rht_coil.setName("#{zone.name} Rht Coil")
+        rht_coil.setRatedInletWaterTemperature(hw_temp_c)
+        rht_coil.setRatedInletAirTemperature(rht_rated_air_in_temp_c)
+        rht_coil.setRatedOutletWaterTemperature(hw_temp_c - hw_delta_t_k)
+        rht_coil.setRatedOutletAirTemperature(rht_rated_air_out_temp_c)
+        hot_water_loop.addDemandBranchForComponent(rht_coil)        
+      end
+      
+      # VAV terminal
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
       terminal.setZoneMinimumAirFlowMethod('Constant')
-      terminal.setConstantMinimumAirFlowFraction(0.3)
-      terminal.setDamperHeatingAction('Normal')
+      # Vary the initial minimum damper position based on OA
+      # rate of the space.  Spaces with low OA per area get lower
+      # initial guess.  Final position will be adjusted upward
+      # as necessary by Standards.AirLoopHVAC.set_minimum_vav_damper_positions
+      # Also, set the damper action based on the template.  This will
+      # be double-checked by the standards, but needs to be set correctly
+      # before the sizing run so that subsequent assumptions work right.
+      min_damper_position = nil
+      damper_action = nil
+      case prototype_input['template']       
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004'
+        min_damper_position = 0.3
+        damper_action = 'Normal'
+      when '90.1-2007'
+        min_damper_position = 0.3
+        damper_action = 'Reverse'
+      when '90.1-2010', '90.1-2013'
+        min_damper_position = 0.2
+        damper_action = 'Reverse'
+      end
+      # Determine whether or not to use the high minimum guess
+      zone_oa_per_area = zone.outdoor_airflow_rate_per_area
+      if zone_oa_per_area > 0.001 # 0.001 m^3/s*m^2 = .196 cfm/ft2
+        # High OA zones
+        terminal.setConstantMinimumAirFlowFraction(0.7)
+      else
+        # Low OA zones
+        terminal.setConstantMinimumAirFlowFraction(min_damper_position)
+      end      
+      
       air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
     
       # Zone sizing
       sizing_zone = zone.sizingZone
       sizing_zone.setZoneCoolingDesignSupplyAirTemperature(zn_dsn_clg_sa_temp_c)
       sizing_zone.setZoneHeatingDesignSupplyAirTemperature(zn_dsn_htg_sa_temp_c)
- 
-    end
-
-    return true
-
-  end  
-=end  
-
-  def add_pvav(prototype_input, standards, thermal_zones)
-
-    # hvac operation schedule
-    hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
-    
-    # motorized oa damper schedule
-    motorized_oa_damper_sch = self.add_schedule(prototype_input['vav_oa_damper_schedule'])
-    
-    #control temps used across all air handlers
-    clg_sa_temp_f = 55 # Central deck clg temp 55F 
-    prehtg_sa_temp_f = 44.6 # Preheat to 44.6F
-    htg_sa_temp_f = 55 # Central deck htg temp 55F
-    rht_sa_temp_f = 104 # VAV box reheat to 104F
-    
-    clg_sa_temp_c = OpenStudio.convert(clg_sa_temp_f,'F','C').get
-    prehtg_sa_temp_c = OpenStudio.convert(prehtg_sa_temp_f,'F','C').get
-    htg_sa_temp_c = OpenStudio.convert(htg_sa_temp_f,'F','C').get
-    rht_sa_temp_c = OpenStudio.convert(rht_sa_temp_f,'F','C').get
-    
-    sa_temp_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    sa_temp_sch.setName("Supply Air Temp - #{clg_sa_temp_f}F")
-    sa_temp_sch.defaultDaySchedule.setName("Supply Air Temp - #{clg_sa_temp_f}F Default")
-    sa_temp_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),clg_sa_temp_c)
-
-    #air handler
-    air_loop = OpenStudio::Model::AirLoopHVAC.new(self)
-    air_loop.setName("#{thermal_zones.size} Zone PVAV")
-    air_loop.setAvailabilitySchedule(hvac_op_sch)
-    
-    #air handler controls
-    hw_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
-    hw_stpt_manager.addToNode(air_loop.supplyOutletNode)
-    sizing_system = air_loop.sizingSystem
-    sizing_system.setSizingOption('Coincident')
-    sizing_system.setAllOutdoorAirinCooling(false)
-    sizing_system.setAllOutdoorAirinHeating(false)
-    sizing_system.setSystemOutdoorAirMethod('ZoneSum')
-    air_loop.setNightCycleControlType('CycleOnAny')
-    
-    #fan
-    fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
-    fan.setName("#{thermal_zones.size} Zone PVAV Fan")
-    fan.setFanEfficiency(0.6045)
-    fan.setMotorEfficiency(0.93)
-    fan_static_pressure_in_h2o = 4.454827023111309
-    fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
-    fan.setPressureRise(fan_static_pressure_pa)
-    fan.addToNode(air_loop.supplyInletNode)
-    
-    #cooling coil
-    clg_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(self)
-    clg_coil.setName("#{thermal_zones.size} Zone PVAV Clg Coil")
-    clg_coil.addToNode(air_loop.supplyInletNode)
-    
-    #heating coil
-    htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
-    htg_coil.setName("#{thermal_zones.size} Zone PVAV Main Htg Coil")
-    htg_coil.addToNode(air_loop.supplyInletNode)
-    
-    #outdoor air intake system
-    oa_intake_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
-    oa_intake = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self, oa_intake_controller)    
-    oa_intake.setName("#{thermal_zones.size} Zone PVAV OA Sys")
-    oa_intake_controller.setEconomizerControlType('NoEconomizer')
-    oa_intake_controller.setMinimumLimitType('FixedMinimum')
-    oa_intake_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
-    oa_intake.addToNode(air_loop.supplyInletNode)
-    controller_mv = oa_intake_controller.controllerMechanicalVentilation
-    controller_mv.setName("#{thermal_zones.size} Zone VAV Ventilation Controller")
-    controller_mv.setSystemOutdoorAirMethod('VentilationRateProcedure')
-    
-    #hook the VAV system to each zone
-    thermal_zones.each do |zone|
-    
-      #reheat coil
-      rht_coil = OpenStudio::Model::CoilHeatingElectric.new(self,self.alwaysOnDiscreteSchedule)
-      rht_coil.setName("#{zone.name} Rht Coil")      
-      
-      #vav terminal
-      terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
-      terminal.setName("#{zone.name} VAV Term")
-      terminal.setZoneMinimumAirFlowMethod('Constant')
-      terminal.setConstantMinimumAirFlowFraction(0.3)
-      terminal.setDamperHeatingAction('Normal')
-      air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
     
     end
 
@@ -1642,31 +1277,6 @@ class OpenStudio::Model::Model
       oa_controller.setHeatRecoveryBypassControlType('BypassWhenOAFlowGreaterThanMinimum')
       oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self,oa_controller)
       oa_system.setName("#{air_loop.name} OA Sys")
-
-      #heat exchanger on oa system
-      # if prototype_input['hx']
-        # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-        # heat_exchanger.setName("#{air_loop.name} HX")
-        # heat_exchanger.setHeatExchangerType('Rotary')
-        # heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.7)
-        # heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.6)
-        # heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.7)
-        # heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-        # heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.75)
-        # heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.6)
-        # heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.75)
-        # heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-        # heat_exchanger.setNominalElectricPower(2210.5647)
-        # heat_exchanger.setEconomizerLockout(true)
-        # heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-        # oa_node = oa_system.outboardOANode
-        # if oa_node.is_initialized
-          # heat_exchanger.addToNode(oa_node.get)
-        # else
-          # OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'No outdoor air node found, can not add heat exchanger')
-          # return false
-        # end
-      # end
       
       # Add the components to the air loop
       # in order from closest to zone to furthest from zone
@@ -2335,31 +1945,6 @@ class OpenStudio::Model::Model
     oa_controller.setMinimumOutdoorAirSchedule(motorized_oa_damper_sch)
     oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(self,oa_controller)
     oa_system.setName("#{thermal_zone_name} SAC OA Sys")
-
-    #heat exchanger on oa system
-    # if prototype_input["hx"] == true
-      # heat_exchanger = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-      # heat_exchanger.setName("#{thermal_zone_name} SAC HX")
-      # heat_exchanger.setHeatExchangerType("Rotary")
-      # heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.7)
-      # heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.6)
-      # heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.7)
-      # heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.6)
-      # heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.75)
-      # heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.6)
-      # heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.75)
-      # heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.6)
-      # heat_exchanger.setNominalElectricPower(2210.5647)
-      # heat_exchanger.setEconomizerLockout(true)
-      # heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-      # oa_node = oa_system.outboardOANode
-      # if oa_node.is_initialized
-        # heat_exchanger.addToNode(oa_node.get)
-      # else
-        # OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "No outdoor air node found, can not add heat exchanger")
-        # return false
-      # end
-    # end
     
     # Add the components to the air loop
     # in order from closest to zone to furthest from zone
@@ -3334,7 +2919,6 @@ class OpenStudio::Model::Model
     
   end
 
-
   def add_booster_swh_end_uses(prototype_input, standards, swh_booster_loop)
     
     schedules = standards['schedules']
@@ -3555,19 +3139,13 @@ class OpenStudio::Model::Model
   # refrigeration rack instead of detailed  
   def add_refrigeration(prototype_input, 
                       standards,                    
-                      ambient_temp,
-                      relative_humidity,
+                      case_type,
                       cooling_capacity_per_length,
-                      latent_heat_ratio,
-                      runtime_fraction,
                       length,
-                      case_temp,
-                      latent_case_credit_curve_name,
                       evaporator_fan_pwr_per_length,
                       lighting_per_length,
                       lighting_sch_name,
                       defrost_pwr_per_length,
-                      defrost_type,
                       restocking_sch_name,
                       cop,
                       cop_f_of_t_curve_name,
@@ -3575,17 +3153,48 @@ class OpenStudio::Model::Model
                       condenser_fan_pwr_curve_name,
                       thermal_zone)
   
+    # Default properties based on the case type
+    # case_type = 'Walkin Freezer', 'Display Case'
+    case_temp = nil
+    latent_heat_ratio = nil
+    runtime_fraction = nil
+    fraction_antisweat_to_case = nil
+    under_case_return_air_fraction = nil
+    latent_case_credit_curve_name = nil
+    defrost_type = nil
+    if case_type == 'Walkin Freezer'
+      case_temp = OpenStudio.convert(-9.4,'F','C').get
+      latent_heat_ratio = 0.1
+      runtime_fraction = 0.4
+      fraction_antisweat_to_case = 0.0
+      under_case_return_air_fraction = 0.0
+      latent_case_credit_curve_name = 'Single Shelf Horizontal Latent Energy Multiplier'
+      defrost_type = 'Electric'
+    elsif case_type == 'Display Case'
+      case_temp = OpenStudio.convert(35.6,'F','C').get
+      latent_heat_ratio = 0.08
+      runtime_fraction = 0.85
+      fraction_antisweat_to_case = 0.2
+      under_case_return_air_fraction = 0.05
+      latent_case_credit_curve_name = 'Multi Shelf Vertical Latent Energy Multiplier'
+      defrost_type = 'None'
+    end    
+    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding Refrigeration System")
 
     # Defrost schedule
     defrost_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     defrost_sch.setName("Refrigeration Defrost Schedule")
     defrost_sch.defaultDaySchedule.setName("Refrigeration Defrost Schedule Default")
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,0,0), 0)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,20,0), 1)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,0,0), 0)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,20,0), 1)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0)
+    if case_type == 'Walkin Freezer'
+      defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,0,0), 0)
+      defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,20,0), 1)
+      defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,0,0), 0)
+      defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,20,0), 1)
+      defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0)
+    elsif case_type == 'Display Case'
+      defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,20,0), 1)
+    end
 
     # Dripdown schedule
     defrost_dripdown_sch = OpenStudio::Model::ScheduleRuleset.new(self)
@@ -3607,6 +3216,7 @@ class OpenStudio::Model::Model
     
     # Case
     ref_case = OpenStudio::Model::RefrigerationCase.new(self, defrost_sch)
+    ref_case.setName("#{thermal_zone.name} #{case_type}")
     ref_case.setAvailabilitySchedule(self.alwaysOnDiscreteSchedule)
     ref_case.setThermalZone(thermal_zone)
     ref_case.setRatedTotalCoolingCapacityperUnitLength(cooling_capacity_per_length)
@@ -3624,7 +3234,7 @@ class OpenStudio::Model::Model
       ref_case.setCaseDefrostDripDownSchedule(defrost_dripdown_sch)
     end 
     ref_case.resetDesignEvaporatorTemperatureorBrineInletTemperature
-    ref_case.setRatedAmbientTemperature(ambient_temp)
+    ref_case.setRatedAmbientTemperature(OpenStudio.convert(75,'F','C').get)
     ref_case.setRatedLatentHeatRatio(latent_heat_ratio)
     ref_case.setRatedRuntimeFraction(runtime_fraction)
     ref_case.setLatentCaseCreditCurve(self.add_curve(latent_case_credit_curve_name,standards))

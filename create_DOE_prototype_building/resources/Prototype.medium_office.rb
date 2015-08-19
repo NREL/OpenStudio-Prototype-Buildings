@@ -16,7 +16,7 @@ class OpenStudio::Model::Model
   def define_hvac_system_map(building_type, building_vintage, climate_zone)
     system_to_space_map = [
       {
-          'type' => 'VAV',
+          'type' => 'PVAV',
           'space_names' =>
           [
               'Perimeter_bot_ZN_1',
@@ -27,7 +27,7 @@ class OpenStudio::Model::Model
           ]
       },
       {
-          'type' => 'VAV',
+          'type' => 'PVAV',
           'space_names' =>
           [
               'Perimeter_mid_ZN_1',
@@ -38,7 +38,7 @@ class OpenStudio::Model::Model
           ]
       },
       {
-          'type' => 'VAV',
+          'type' => 'PVAV',
           'space_names' =>
           [
               'Perimeter_top_ZN_1',
@@ -80,8 +80,8 @@ class OpenStudio::Model::Model
       end
 
       case system['type']
-      when 'VAV'
-        self.add_pvav(prototype_input, hvac_standards, thermal_zones)
+      when 'PVAV'
+        self.add_pvav(prototype_input, hvac_standards, system['name'], thermal_zones)
       end
 
     end
@@ -124,12 +124,6 @@ class OpenStudio::Model::Model
     
     return true
     
-  end #add swh    
-  
-  def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-       
-    return false
-    
-  end #add refrigeration
+  end #add swh
 
 end

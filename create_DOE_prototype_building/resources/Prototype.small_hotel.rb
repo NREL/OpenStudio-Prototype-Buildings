@@ -65,7 +65,7 @@ class OpenStudio::Model::Model
         'Corridor4' => ['CorridorFlr4'],
         # 'ElevatorCore' => ['ElevatorCoreFlr1','ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],  #TODO put elevators into Mechanical type temperarily
         'Elec/MechRoom' => ['ElevatorCoreFlr1'],
-        'ElevatorCore234' => ['ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],
+        'ElevatorCore4' => ['ElevatorCoreFlr2','ElevatorCoreFlr3','ElevatorCoreFlr4'],
         'StaffLounge' => ['EmployeeLoungeFlr1'],
         'Exercise' => ['ExerciseCenterFlr1'],
         'GuestLounge' => ['FrontLoungeFlr1'],
@@ -75,7 +75,8 @@ class OpenStudio::Model::Model
         'Stair4' => ['FrontStairsFlr4','RearStairsFlr4'],
         'Storage' => ['FrontStorageFlr1','FrontStorageFlr2','FrontStorageFlr3',
                       'RearStorageFlr1','RearStorageFlr2','RearStorageFlr3'],
-        'Storage4' => ['FrontStorageFlr4','RearStorageFlr4'],
+        'Storage4Front' => ['FrontStorageFlr4'],
+        'Storage4Rear' => ['RearStorageFlr4'],
         'GuestRoom123Occ' => ['GuestRoom103','GuestRoom104','GuestRoom105','GuestRoom202_205','GuestRoom206_208',
                         'GuestRoom209_212','GuestRoom213','GuestRoom214','GuestRoom219','GuestRoom220_223',
                         'GuestRoom224','GuestRoom309_312','GuestRoom314','GuestRoom315_318','GuestRoom320_323'],
@@ -541,7 +542,7 @@ class OpenStudio::Model::Model
       when 'UnitHeater'
         self.add_unitheater(prototype_input, hvac_standards, thermal_zones)
       when 'PSZ-AC'
-        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
+        self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
       when 'SAC'
         self.add_split_AC(prototype_input, hvac_standards, thermal_zones)  
       end
@@ -623,11 +624,5 @@ class OpenStudio::Model::Model
     return true
     
   end #add swh  
-  
-  def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-       
-    return false
-    
-  end #add refrigeration
   
 end
