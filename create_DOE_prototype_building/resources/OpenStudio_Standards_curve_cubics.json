@@ -1,16 +1,6 @@
 {
   "curve_cubics": [
     {
-      "name": "Bakery_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
       "name": "Boiler Constant Efficiency Curve",
       "coeff_1": 1.0,
       "coeff_2": 0.0,
@@ -71,46 +61,6 @@
       "notes": "From DOE Pre-1980 Reference Building"
     },
     {
-      "name": "Deli_Case:1_ MULTIDECKDIARYANDDELICASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
-      "coeff_3": -6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Deli_Case:2_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "FullServiceRestaurant Kitchen_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "FullServiceRestaurant Kitchen_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
-      "coeff_3": -6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
       "name": "HPACHeatCapFFF",
       "coeff_1": 0.84,
       "coeff_2": 0.16,
@@ -161,16 +111,6 @@
       "notes": "From Prototype Buildings"
     },
     {
-      "name": "Hospital Kitchen_Flr_5_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
       "name": "Hospital Kitchen_Flr_5_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
       "coeff_1": 0.026526281,
       "coeff_2": 0.001078032,
@@ -179,16 +119,6 @@
       "min_x": -35.0,
       "max_x": 20.0,
       "notes": "From Prototype Buildings"
-    },
-    {
-      "name": "Hospital Kitchen_Flr_5_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
-      "coeff_3": -6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
     },
     {
       "name": "HotelLarge Kitchen_Flr_6_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
@@ -211,17 +141,7 @@
       "notes": "From Prototype Buildings"
     },
     {
-      "name": "LargeHotel Kitchen_Flr_6_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "LargeHotel Kitchen_Flr_6_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
+      "name": "Multi Shelf Vertical Latent Energy Multiplier",
       "coeff_1": 0.026526281,
       "coeff_2": 0.001078032,
       "coeff_3": -6.02558e-05,
@@ -249,36 +169,6 @@
       "min_x": 0.0,
       "max_x": 1.0,
       "notes": "From Prototype Buildings"
-    },
-    {
-      "name": "PrimarySchool Kitchen_ZN_1_FLR_1_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "PrimarySchool Kitchen_ZN_1_FLR_1_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
-      "coeff_3": -6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Produce_Case:1_ MULTIDECKDIARYANDDELICASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
-      "coeff_3": -6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
     },
     {
       "name": "RestaurantFastFood Kitchen_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
@@ -311,76 +201,6 @@
       "notes": "From Prototype Buildings"
     },
     {
-      "name": "Sales_Case:1_MEATDISPLAYCASE_SingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Sales_Case:2_ MULTIDECKDIARYANDDELICASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
-      "coeff_3": -6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Sales_Case:3_GLASSDOORFROZENFOODSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Sales_Case:4_OPENWELLICECREAMDISPLAYCASESingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Sales_Case:5_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Sales_Case:6_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "Sales_Case:7_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
       "name": "SchoolPrimary Kitchen_ZN_1_FLR_1_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
       "coeff_1": 0.0236,
       "coeff_2": 0.0006,
@@ -399,6 +219,16 @@
       "min_x": -35.0,
       "max_x": 20.0,
       "notes": "From Prototype Buildings"
+    },
+    {
+      "name": "Single Shelf Horizontal Latent Energy Multiplier",
+      "coeff_1": 0.020376,
+      "coeff_2": 0.00024378,
+      "coeff_3": 1.14e-05,
+      "coeff_4": 1.811e-07,
+      "min_x": -35.0,
+      "max_x": 20.0,
+      "notes": "From Reference Buildings"
     },
     {
       "name": "Tower_Fan_Curve",

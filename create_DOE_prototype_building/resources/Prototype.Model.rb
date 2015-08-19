@@ -153,6 +153,7 @@ class OpenStudio::Model::Model
   # @param climate_zone [String] the name of the climate zone the building is in
   # @return [Bool] returns true if successful, false if not   
   def add_constructions(building_type, building_vintage, climate_zone)
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
     is_residential = "No"  #default is nonresidential for building level
 
@@ -364,14 +365,17 @@ class OpenStudio::Model::Model
     # add internal mass
     unless (building_type == 'SmallHotel') &&
       (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
+      internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
+      internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
+      internal_mass_def.setConstruction(construction)
       conditioned_space_names.each do |conditioned_space_name|
-        internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
-        internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
-        internal_mass_def.setConstruction(construction)
-        internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
         space = self.getSpaceByName(conditioned_space_name)
-        space = space.get
-        internal_mass.setSpace(space)
+        if space.is_initialized
+          space = space.get
+          internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
+          internal_mass.setName("#{space.name} Mass")  
+          internal_mass.setSpace(space)
+        end
       end
     end
 
@@ -606,19 +610,12 @@ class OpenStudio::Model::Model
       # which reduce to 70% power when no one is around.
       unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
         occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
+        occ_sens_ext_lts_sch_name = prototype_input['occ_sensing_exterior_lighting_schedule']
         occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
         occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
         occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
         occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
-        occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-        occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
-        occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
-        if building_type == "SmallHotel"
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-        else
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0.7)
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-        end
+        occ_sens_ext_lts_sch = self.add_schedule(occ_sens_ext_lts_sch_name)
         occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
         occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
         occ_sens_ext_lts.setControlOption('AstronomicalClock')
@@ -628,25 +625,12 @@ class OpenStudio::Model::Model
       # that don't dim at all at night.
       unless prototype_input['nondimming_exterior_lighting_power'].nil?
         nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
+        nondimming_ext_lts_sch_name = prototype_input['nondimming_exterior_lighting_schedule']
         nondimming_ext_lts_name = 'NonDimming Exterior Lights'
         nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
         nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
         nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
-        #
-        nondimming_ext_lts_sch = nil
-        if building_vintage == '90.1-2010'
-          nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-          nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
-          nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
-          if building_type == "SmallHotel"
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-          else
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-          end
-        elsif building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
-          nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
-        end
+        nondimming_ext_lts_sch = self.add_schedule(nondimming_ext_lts_sch_name)
         nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
         nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
         nondimming_ext_lts.setControlOption('AstronomicalClock')
@@ -753,7 +737,9 @@ class OpenStudio::Model::Model
     require_relative 'Prototype.FanConstantVolume'
     require_relative 'Prototype.FanVariableVolume'
     require_relative 'Prototype.FanOnOff'
+    require_relative 'Prototype.FanZoneExhaust'
     require_relative 'Prototype.HeatExchangerAirToAirSensibleAndLatent'
+    require_relative 'Prototype.ControllerWaterCoil'
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying prototype HVAC assumptions.')
     
@@ -763,6 +749,7 @@ class OpenStudio::Model::Model
     self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanZoneExhausts.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
     ##### Add Economizers
     # Create an economizer maximum OA fraction of 70%
@@ -774,32 +761,22 @@ class OpenStudio::Model::Model
     
     # Check each airloop
     self.getAirLoopHVACs.each do |air_loop|
-      if air_loop.isEconomizerRequired(self.template, self.climate_zone) == true
-        # YXC: The DOAS system requires 100% OA, so don't need to set the maximum OA Percent
-        # TODO: Check the economizer control type for the DOAS system
-        # DO Nothing for DOAS system right now
-        next if air_loop.name.to_s.include?("DOAS Air Loop")
-
+      if air_loop.is_economizer_required(self.template, self.climate_zone) == true
         # If an economizer is required, determine the economizer type
         # in the prototype buildings, which depends on climate zone.
         economizer_type = nil
-        if building_type == "LargeHotel"
-            # TODO: Yixing figure out the other economizer types when testing other climate zone
-            economizer_type = "DifferentialEnthalpy"
-        else
-          case building_vintage
-            when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007'
-              economizer_type = 'FixedDryBulb'
-            when '90.1-2010', '90.1-2013'
-              case climate_zone
-                when 'ASHRAE 169-2006-1A',
-                    'ASHRAE 169-2006-2A',
-                    'ASHRAE 169-2006-3A',
-                    'ASHRAE 169-2006-4A'
-                  economizer_type = 'DifferentialDryBulb'
-                else
-                  economizer_type = 'FixedDryBulb'
-              end
+        case building_vintage
+        when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007'
+          economizer_type = 'FixedDryBulb'
+        when '90.1-2010', '90.1-2013'
+          case climate_zone
+          when 'ASHRAE 169-2006-1A',
+            'ASHRAE 169-2006-2A',
+            'ASHRAE 169-2006-3A',
+            'ASHRAE 169-2006-4A'
+            economizer_type = 'DifferentialEnthalpy'
+          else
+            economizer_type = 'DifferentialDryBulb'
           end
         end
 
@@ -814,71 +791,14 @@ class OpenStudio::Model::Model
         end
         oa_control = oa_sys.getControllerOutdoorAir
         oa_control.setEconomizerControlType(economizer_type)
-        oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
+        #oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
       end
     end
 
-    #### Add ERVs
-    # Check each airloop and add an ERV if required
-    self.getAirLoopHVACs.each do |air_loop|
-      if air_loop.isEnergyRecoveryVentilatorRequired(self.template, self.climate_zone) == true
+    # TODO What is the logic behind hard-sizing
+    # hot water coil convergence tolerances?
+    self.getControllerWaterCoils.sort.each {|obj| obj.set_convergence_limits}
     
-        # Get the AHU design supply air flow rate
-        dsn_flow_m3_per_s = nil
-        if air_loop.designSupplyAirFlowRate.is_initialized
-          dsn_flow_m3_per_s = air_loop.designSupplyAirFlowRate.get
-        elsif air_loop.autosizedDesignSupplyAirFlowRate.is_initialized
-          dsn_flow_m3_per_s = air_loop.autosizedDesignSupplyAirFlowRate.get
-        else
-          OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.AirLoopHVAC", "For #{air_loop.name} design supply air flow rate is not available, cannot apply ERV.")
-          return false
-        end
-        dsn_flow_cfm = OpenStudio.convert(dsn_flow_m3_per_s, 'm^3/s', 'cfm').get    
-    
-        # Get the oa system
-        oa_system = nil
-        if air_loop.airLoopHVACOutdoorAirSystem.is_initialized
-          oa_system = air_loop.airLoopHVACOutdoorAirSystem.get
-        else
-          runner.registerError("ERV not applicable to '#{air_loop.name}' because it has no OA intake.")
-          next
-        end
-      
-        # Create an ERV
-        erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-        erv.setName("#{air_loop.name} ERV")
-        erv.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-        erv.setLatentEffectivenessat100HeatingAirFlow(0.6)
-        erv.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-        erv.setLatentEffectivenessat75HeatingAirFlow(0.6)
-        erv.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-        erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
-        erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-        erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
-        erv.setSupplyAirOutletTemperatureControl(true) 
-        erv.setHeatExchangerType('Rotary')
-        erv.setFrostControlType('ExhaustOnly')
-        erv.setEconomizerLockout(true)
-        erv.setThresholdTemperature(-23.3) # -10F
-        erv.setInitialDefrostTimeFraction(0.167)
-        erv.setRateofDefrostTimeFractionIncrease(1.44)
-        
-        # Add the ERV to the OA system
-        erv.addToNode(oa_system.outboardOANode.get)
-
-        setpoint_manager_pretreat = OpenStudio::Model::SetpointManagerOutdoorAirPretreat.new(self)
-        setpoint_manager_pretreat.setName("VAV oa pretreat")
-        setpoint_manager_pretreat.setControlVariable('Temperature')
-        setpoint_manager_pretreat.addToNode(erv.primaryAirOutletModelObject.get.to_Node.get)
-        setpoint_manager_pretreat.setOutdoorAirStreamNode(erv.primaryAirInletModelObject.get.to_Node.get)
-
-      end
-    
-    end
-
-    # Heat Exchanger power
-    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
-
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
   end 
@@ -990,11 +910,10 @@ class OpenStudio::Model::Model
       OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Running sizing run with RunManager.")
 
       # Find EnergyPlus
-      require 'openstudio/energyplus/find_energyplus'
-      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
-      ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+      ep_dir = OpenStudio.getEnergyPlusDirectory
+      ep_path = OpenStudio.getEnergyPlusExecutable
       ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-      idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+      idd_path = OpenStudio::Path.new(ep_dir.to_s + "/Energy+.idd")
       output_path = OpenStudio::Path.new("#{run_dir}/")
       
       # Make a run manager and queue up the sizing run
@@ -1083,34 +1002,47 @@ class OpenStudio::Model::Model
     # "monthly"
    
     vars = []
-    vars << ['Heating Coil Gas Rate', 'detailed']
+    # vars << ['Heating Coil Gas Rate', 'detailed']
     vars << ['Zone Thermostat Air Temperature', 'detailed']
     vars << ['Zone Thermostat Heating Setpoint Temperature', 'detailed']
     vars << ['Zone Thermostat Cooling Setpoint Temperature', 'detailed']
-    vars << ['Zone Air System Sensible Heating Rate', 'detailed']
-    vars << ['Zone Air System Sensible Cooling Rate', 'detailed']
-    vars << ['Fan Electric Power', 'detailed']
-    vars << ['Zone Mechanical Ventilation Standard Density Volume Flow Rate', 'detailed']
-    vars << ['Air System Outdoor Air Mass Flow Rate', 'detailed']
-    vars << ['Air System Outdoor Air Flow Fraction', 'detailed']
-    vars << ['Air System Outdoor Air Minimum Flow Fraction', 'detailed']
+    # vars << ['Zone Air System Sensible Heating Rate', 'detailed']
+    # vars << ['Zone Air System Sensible Cooling Rate', 'detailed']
+    # vars << ['Fan Electric Power', 'detailed']
+    # vars << ['Zone Mechanical Ventilation Standard Density Volume Flow Rate', 'detailed']
+    # vars << ['Air System Outdoor Air Mass Flow Rate', 'detailed']
+    # vars << ['Air System Outdoor Air Flow Fraction', 'detailed']
+    # vars << ['Air System Outdoor Air Minimum Flow Fraction', 'detailed']
     
-    vars << ['Water Use Equipment Hot Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Cold Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Total Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Hot Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Cold Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Target Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Mixed Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Hot Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Cold Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Total Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Hot Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Cold Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Target Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Mixed Water Temperature', 'hourly']
     
-    vars << ['Water Use Connections Hot Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Cold Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Total Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Hot Water Temperature', 'hourly']
-    vars << ['Water Use Connections Cold Water Temperature', 'hourly']
-    vars << ['Water Use Connections Plant Hot Water Energy', 'hourly']
-    vars << ['Water Use Connections Return Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Hot Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Cold Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Total Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Hot Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Cold Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Plant Hot Water Energy', 'hourly']
+    # vars << ['Water Use Connections Return Water Temperature', 'hourly']
   
+    vars << ['Air System Outdoor Air Economizer Status','timestep']
+    vars << ['Air System Outdoor Air Heat Recovery Bypass Status','timestep']
+    vars << ['Air System Outdoor Air High Humidity Control Status','timestep']
+    vars << ['Air System Outdoor Air Flow Fraction','timestep']
+    vars << ['Air System Outdoor Air Minimum Flow Fraction','timestep']
+    vars << ['Air System Outdoor Air Mass Flow Rate','timestep']
+    vars << ['Air System Mixed Air Mass Flow Rate','timestep']
+  
+    vars << ['Heating Coil Gas Rate','timestep']
+    vars << ['Boiler Part Load Ratio','timestep']
+    vars << ['Boiler Gas Rate','timestep']
+    vars << ['Fan Electric Power','timestep']
+    
     vars.each do |var, freq|  
       outputVariable = OpenStudio::Model::OutputVariable.new(var, self)
       outputVariable.setReportingFrequency(freq)

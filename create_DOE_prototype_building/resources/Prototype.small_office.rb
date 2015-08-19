@@ -18,6 +18,7 @@ class OpenStudio::Model::Model
     system_to_space_map = [
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC-2',
           'space_names' =>
           [
               'Perimeter_ZN_1'
@@ -25,6 +26,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC-3',
           'space_names' =>
           [
               'Perimeter_ZN_2'
@@ -32,6 +34,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC-4',
           'space_names' =>
           [
               'Perimeter_ZN_3'
@@ -39,6 +42,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC-5',
           'space_names' =>
           [
               'Perimeter_ZN_4'
@@ -46,6 +50,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'PSZ-AC',
+          'name' => 'PSZ-AC-1',
           'space_names' =>
           [
               'Core_ZN'
@@ -84,7 +89,7 @@ class OpenStudio::Model::Model
 
       case system['type']
       when 'PSZ-AC'
-        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
+        self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
       end
 
     end

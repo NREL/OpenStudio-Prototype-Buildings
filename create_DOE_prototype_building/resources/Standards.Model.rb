@@ -11,6 +11,7 @@ class OpenStudio::Model::Model
   require_relative 'Standards.FanConstantVolume'
   require_relative 'Standards.FanVariableVolume'
   require_relative 'Standards.FanOnOff'
+  require_relative 'Standards.FanZoneExhaust'
   require_relative 'Standards.ChillerElectricEIR'
   require_relative 'Standards.CoilCoolingDXTwoSpeed'
   require_relative 'Standards.CoilCoolingDXSingleSpeed'
@@ -19,23 +20,42 @@ class OpenStudio::Model::Model
   require_relative 'Standards.WaterHeaterMixed'
   require_relative 'Standards.Space'
   require_relative 'Standards.Construction'
+  require_relative 'Standards.ThermalZone'
+  require_relative 'Standards.Surface'
+  require_relative 'Standards.SubSurface'
+  
+  # Applies the multi-zone VAV outdoor air sizing requirements
+  # to all applicable air loops in the model.
+  #
+  # @note This must be performed before the sizing run because
+  # it impacts component sizes, which in turn impact efficiencies.
+  def apply_multizone_vav_outdoor_air_sizing()
+    
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
+     
+    # Multi-zone VAV outdoor air sizing
+    self.getAirLoopHVACs.sort.each {|obj| obj.apply_multizone_vav_outdoor_air_sizing}  
+
+  end
   
   # Applies the HVAC parts of the standard to all objects in the model
   # using the the template/standard specified in the model.
-  def applyHVACEfficiencyStandard
+  def applyHVACEfficiencyStandard()
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
     
-    #### Economizers
-    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerLimits(self.template, self.climate_zone)}
-    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerIntegration(self.template, self.climate_zone)}    
+    #### Controls
     
+    # Air Loop Controls
+    self.getAirLoopHVACs.sort.each {|obj| obj.apply_standard_controls(self.template, self.climate_zone)}  
+
     ##### Apply equipment efficiencies
     
     # Fans
     self.getFanVariableVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanConstantVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanOnOffs.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
+    self.getFanZoneExhausts.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
   
     # Unitary ACs
     self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
@@ -58,7 +78,7 @@ class OpenStudio::Model::Model
  
   # Applies daylighting controls to each space in the model
   # per the standard.
-  def addDaylightingControls
+  def addDaylightingControls()
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding daylighting controls.')
     
@@ -71,6 +91,29 @@ class OpenStudio::Model::Model
   
   end
 
+  # Apply the air leakage requirements to the model,
+  # as described in PNNL section 5.2.1.6.
+  #
+  # base infiltration rates off of.
+  # @return [Bool] true if successful, false if not
+  # @todo This infiltration method is not used by the Reference
+  # buildings, fix this inconsistency.
+  def apply_infiltration_standard()
+  
+    # Set the infiltration rate at each space
+    self.getSpaces.sort.each do |space|
+      space.set_infiltration_rate(self.template)
+    end
+    
+    # Remove infiltration rates set at the space type
+    self.getSpaceTypes.each do |space_type|
+      space_type.spaceInfiltrationDesignFlowRates.each do |infil|
+        infil.remove
+      end
+    end
+
+  end
+  
   # Loads the openstudio standards dataset and attach it to the model
   # via the :standards instance variable.
   #
@@ -959,6 +1002,7 @@ class OpenStudio::Model::Model
   # Create a construction set from the openstudio standards dataset.
   # Returns an Optional DefaultConstructionSet
   def add_construction_set(template, clim, building_type, spc_type, is_residential)
+
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
 
     # Find the climate zone set that this climate zone falls into
@@ -1218,7 +1262,7 @@ class OpenStudio::Model::Model
       return nil
     end
     
-  end  
+  end
   
   private
 
@@ -1325,5 +1369,5 @@ class OpenStudio::Model::Model
     return result
   
   end
-  
+
 end

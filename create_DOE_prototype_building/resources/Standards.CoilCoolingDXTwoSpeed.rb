@@ -8,11 +8,10 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
   # @param standards [Hash] the OpenStudio_Standards spreadsheet in hash format
   # @return [Bool] true if successful, false if not
   def setStandardEfficiencyAndCurves(template, standards)
+
+    successfully_set_all_properties = true  
   
     unitary_acs = standards['unitary_acs']
-    #curve_biquadratics = standards['curve_biquadratics']
-    #curve_quadratics = standards['curve_quadratics']
-    #curve_bicubics = standards['curve_bicubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -77,16 +76,31 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
     subcategory = 'Single Package'
     search_criteria['subcategory'] = subcategory
 
-    # Get the coil capacity and convert to Btu/hr
-    return false if self.ratedHighSpeedTotalCoolingCapacity.empty?
-    capacity_w = self.ratedHighSpeedTotalCoolingCapacity.get
-    capacity_btu_per_hr = OpenStudio.convert(capacity_w, 'W', 'Btu/hr').get
-    capacity_kbtu_per_hr = OpenStudio.convert(capacity_w, 'W', 'kBtu/hr').get
+    # Get the coil capacity
+    capacity_w = nil
+    if self.ratedHighSpeedTotalCoolingCapacity.is_initialized
+      capacity_w = self.ratedHighSpeedTotalCoolingCapacity.get
+    elsif self.autosizedRatedHighSpeedTotalCoolingCapacity.is_initialized
+      capacity_w = self.autosizedRatedHighSpeedTotalCoolingCapacity.get
+    else
+      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
+      successfully_set_all_properties = false
+      return successfully_set_all_properties
+    end    
     
+    # Convert capacity to Btu/hr
+    capacity_btu_per_hr = OpenStudio.convert(capacity_w, "W", "Btu/hr").get
+    capacity_kbtu_per_hr = OpenStudio.convert(capacity_w, "W", "kBtu/hr").get
     
     ac_props = self.model.find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
-    return false if ac_props.nil?
-    
+
+    # Check to make sure properties were found
+    if ac_props.nil?
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXTwoSpeed', "For #{self.name}, cannot find efficiency info, cannot apply efficiency standard.")
+      successfully_set_all_properties = false
+      return successfully_set_all_properties
+    end
+ 
     # Make the total COOL-CAP-FT curve
     tot_cool_cap_ft = self.model.add_curve(ac_props["cool_cap_ft"], standards)
     if tot_cool_cap_ft
@@ -172,13 +186,6 @@ class OpenStudio::Model::CoilCoolingDXTwoSpeed
     # Set the efficiency values
     self.setRatedHighSpeedCOP(cop)
     self.setRatedLowSpeedCOP(cop)
-  
-    # Set the performance curves
-    #self.setCoolingCapacityFunctionOfTemperature(ccFofT)
-    #self.setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT)
-    #self.setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr)
-    
-    
     
     return true
 
