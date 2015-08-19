@@ -448,7 +448,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_vav(prototype_input, standards, sys_name, hot_water_loop, chilled_water_loop, thermal_zones, building_type=nil, minimum_airflow_fraction_map = nil)
+  def add_vav(prototype_input, standards, sys_name, hot_water_loop, chilled_water_loop, thermal_zones, building_type=nil)
 
     hw_temp_f = 180 #HW setpoint 180F 
     hw_delta_t_r = 20 #20F delta-T    
@@ -593,9 +593,6 @@ class OpenStudio::Model::Model
       #vav terminal
       terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(self,self.alwaysOnDiscreteSchedule,rht_coil)
       terminal.setName("#{zone.name} VAV Term")
-      if minimum_airflow_fraction_map != nil
-        terminal.setConstantMinimumAirFlowFraction(minimum_airflow_fraction_map[zone.name.to_s])
-      end
       terminal.setZoneMinimumAirFlowMethod('Constant')
       # Vary the initial minimum damper position based on OA
       # rate of the space.  Spaces with low OA per area get lower
