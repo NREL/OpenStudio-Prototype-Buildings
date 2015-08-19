@@ -150,10 +150,13 @@ def strip_model(model)
 
 end
 
-# A helper method to convert from SEER to COP
+# Convert from SEER to COP
 # per the method specified in "Achieving the 30% Goal: Energy 
 # and cost savings analysis of ASHRAE Standard 90.1-2010
 # Thornton, et al 2011
+#
+# @param seer [Double] seasonal energy efficiency ratio (SEER)
+# @return [Double] Coefficient of Performance (COP)
 def seer_to_cop(seer)
   
   cop = nil
@@ -168,10 +171,13 @@ def seer_to_cop(seer)
  
 end
 
-# A helper method to convert from EER to COP
+# Convert from EER to COP
 # per the method specified in "Achieving the 30% Goal: Energy 
 # and cost savings analysis of ASHRAE Standard 90.1-2010
 # Thornton, et al 2011
+#
+# @param eer [Double] Energy Efficiency Ratio (EER)
+# @return [Double] Coefficient of Performance (COP)
 def eer_to_cop(eer)
   
   cop = nil
@@ -186,7 +192,10 @@ def eer_to_cop(eer)
  
 end
 
-# A helper method to convert from COP to kW/ton
+# Convert from COP to kW/ton
+#
+# @param cop [Double] Coefficient of Performance (COP)
+# @return [Double] kW of input power per ton of cooling
 def cop_to_kw_per_ton(cop)
   
   return 3.517/cop
@@ -194,6 +203,9 @@ def cop_to_kw_per_ton(cop)
 end
 
 # A helper method to convert from kW/ton to COP
+#
+# @param kw_per_ton [Double] kW of input power per ton of cooling
+# @return [Double] Coefficient of Performance (COP)
 def kw_per_ton_to_cop(kw_per_ton)
   
   return 3.517/kw_per_ton
@@ -201,6 +213,9 @@ def kw_per_ton_to_cop(kw_per_ton)
 end
 
 # A helper method to convert from AFUE to thermal efficiency
+#
+# @param afue [Double] Annual Fuel Utilization Efficiency
+# @return [Double] Thermal efficiency (%)
 def afue_to_thermal_eff(afue)
   
   return afue # Per PNNL doc, Boiler Addendum 90.1-04an
@@ -208,9 +223,55 @@ def afue_to_thermal_eff(afue)
 end
 
 # A helper method to convert from combustion efficiency to thermal efficiency
+#
+# @param combustion_eff [Double] Combustion efficiency (%)
+# @return [Double] Thermal efficiency (%)
 def combustion_eff_to_thermal_eff(combustion_eff)
   
   return combustion_eff - 0.007 # Per PNNL doc, Boiler Addendum 90.1-04an
  
 end
 
+# Convert one infiltration rate at a given pressure
+# to an infiltration rate at another pressure
+# per method described here:  http://www.taskair.net/knowledge/Infiltration%20Modeling%20Guidelines%20for%20Commercial%20Building%20Energy%20Analysis.pdf
+# where the infiltration coefficient is 0.65
+#
+# @param initial_infiltration_rate_m3_per_s [Double] initial infiltration rate in m^3/s
+# @param intial_pressure_pa [Double] pressure rise at which initial infiltration rate was determined in Pa
+# @param final_pressure_pa [Double] desired pressure rise to adjust infiltration rate to in Pa
+# @param infiltration_coefficient [Double] infiltration coeffiecient
+def adjust_infiltration_to_lower_pressure(initial_infiltration_rate_m3_per_s, intial_pressure_pa, final_pressure_pa, infiltration_coefficient = 0.65)
+
+  adjusted_infiltration_rate_m3_per_s = initial_infiltration_rate_m3_per_s * (final_pressure_pa/intial_pressure_pa)**infiltration_coefficient
+
+  return adjusted_infiltration_rate_m3_per_s
+
+end 
+
+# Convert the infiltration rate at a 75 Pa
+# to an infiltration rate at the typical value for the prototype buildings
+# per method described here:  http://www.taskair.net/knowledge/Infiltration%20Modeling%20Guidelines%20for%20Commercial%20Building%20Energy%20Analysis.pdf
+#
+# @param initial_infiltration_rate_m3_per_s [Double] initial infiltration rate in m^3/s
+# @return [Double] 
+def adjust_infiltration_to_prototype_building_conditions(initial_infiltration_rate_m3_per_s)
+
+  # Details of these coefficients can be found in paper
+  alpha = 0.22 # unitless - terrain adjustment factor
+  intial_pressure_pa = 75.0 # 75 Pa
+  uh = 4.47 # m/s - wind speed
+  rho = 1.18 # kg/m^3 - air density
+  cs = 0.1617 # unitless - positive surface pressure coefficient
+  n = 0.65 # unitless - infiltration coefficient
+  
+  # Calculate the typical pressure - same for all building types
+  final_pressure_pa = 0.5 * cs * rho * uh**2
+  
+  #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "Final pressure PA = #{final_pressure_pa.round(3)} Pa.")
+
+  adjusted_infiltration_rate_m3_per_s = (1.0 + alpha) * initial_infiltration_rate_m3_per_s * (final_pressure_pa/intial_pressure_pa)**n
+
+  return adjusted_infiltration_rate_m3_per_s
+
+end 

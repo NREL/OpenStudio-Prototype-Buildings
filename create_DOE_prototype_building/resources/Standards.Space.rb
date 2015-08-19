@@ -1018,14 +1018,14 @@ class OpenStudio::Model::Space
           if sql.is_initialized
             sql = sql.get
           
-            row_query = "SELECT RowID
+            row_query = "SELECT RowName
                         FROM tabulardatawithstrings
                         WHERE ReportName='EnvelopeSummary'
                         AND ReportForString='Entire Facility'
                         AND TableName='Exterior Fenestration'
                         AND Value='#{construction_name.upcase}'"
           
-            row_id = sql.execAndReturnFirstDouble(row_query)
+            row_id = sql.execAndReturnFirstString(row_query)
             
             if row_id.is_initialized
               row_id = row_id.get
@@ -1040,8 +1040,7 @@ class OpenStudio::Model::Space
                         AND ReportForString='Entire Facility'
                         AND TableName='Exterior Fenestration'
                         AND ColumnName='Glass Visible Transmittance'
-                        AND RowID=#{row_id}"          
-          
+                        AND RowName='#{row_id}'"          
           
             vt = sql.execAndReturnFirstDouble(vt_query)
             
@@ -1135,14 +1134,14 @@ class OpenStudio::Model::Space
           if sql.is_initialized
             sql = sql.get
           
-            row_query = "SELECT RowID
+            row_query = "SELECT RowName
                         FROM tabulardatawithstrings
                         WHERE ReportName='EnvelopeSummary'
                         AND ReportForString='Entire Facility'
                         AND TableName='Exterior Fenestration'
                         AND Value='#{construction_name}'"
           
-            row_id = sql.execAndReturnFirstDouble(row_query)
+            row_id = sql.execAndReturnFirstString(row_query)
             
             if row_id.is_initialized
               row_id = row_id.get
@@ -1157,7 +1156,7 @@ class OpenStudio::Model::Space
                         AND ReportForString='Entire Facility'
                         AND TableName='Exterior Fenestration'
                         AND ColumnName='Glass Visible Transmittance'
-                        AND RowID=#{row_id}"          
+                        AND RowName='#{row_id}'"          
           
           
             vt = sql.execAndReturnFirstDouble(vt_query)
@@ -1533,40 +1532,255 @@ class OpenStudio::Model::Space
       end #next sub-surface
     end #next surface
   
-    # TODO Determine the illuminance setpoint for the controls based on space type
+    # Determine the illuminance setpoint for the controls based on space type
+    # From IESNA Handbook 10th Edition - Applications
     daylight_stpt_lux = 300
-    space_name = self.name.get
-    daylight_stpt_lux = nil
-    if space_name.match(/post-office/i)# Post Office 500 Lux
-      daylight_stpt_lux = 500
-    elsif space_name.match(/medical-office/i)# Medical Office 3000 Lux
-      daylight_stpt_lux = 3000
-    elsif space_name.match(/office/i)# Office 500 Lux
-      daylight_stpt_lux = 500
-    elsif space_name.match(/education/i)# School 500 Lux
-      daylight_stpt_lux = 500
-    elsif space_name.match(/retail/i)# Retail 1000 Lux
-      daylight_stpt_lux = 1000
-    elsif space_name.match(/warehouse/i)# Warehouse 200 Lux
-      daylight_stpt_lux = 200
-    elsif space_name.match(/hotel/i)# Hotel 300 Lux
-      daylight_stpt_lux = 300
-    elsif space_name.match(/multifamily/i)# Apartment 200 Lux
-      daylight_stpt_lux = 200
-    elsif space_name.match(/courthouse/i)# Courthouse 300 Lux
-      daylight_stpt_lux = 300
-    elsif space_name.match(/library/i)# Library 500 Lux
-      daylight_stpt_lux = 500
-    elsif space_name.match(/community-center/i)# Community Center 300 Lux
-      daylight_stpt_lux = 300
-    elsif space_name.match(/senior-center/i)# Senior Center 1000 Lux
-      daylight_stpt_lux = 1000
-    elsif space_name.match(/city-hall/i)# City Hall 500 Lux
-      daylight_stpt_lux = 500
+=begin    
+    
+    space_type = self.space_type
+    if space_type.empty?
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Space", "Space #{space.name} is an unknown space type, assuming Office and 300 Lux daylight setpoint")
     else
-      OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Space", "Space #{space_name} is an unknown space type, assuming office and 300 Lux daylight setpoint")
-      daylight_stpt_lux = 300
-    end    
+      space_type = space_type.get
+      std_spc_type = space_type.standardsSpaceType
+      if std_spc_type.empty?
+        OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Space", "Space #{space.name} does not have a defined standards space type, assuming Office and 300 Lux daylight setpoint")
+      else
+        std_spc_type = std_spc_type.get    
+        case std_spc_type
+        when 
+        Storage = 50
+        Corridor = 50
+        Corridor2 = 50
+        when
+PatCorridor = 100
+        'Banquet = 100
+        Basement = 100
+Cafe = 100
+Lobby = 100
+when
+Dining = 150
+GuestRoom = 150
+GuestRoom2 = 150
+GuestRoom3 = 150
+GuestRoom4 = 150
+when
+Mechanical = 200
+Retail = 200
+Retail2 = 200
+when
+Laundry = 300
+Office = 300
+when
+ER_NurseStn = 500
+ICU_Open = 500
+ICU_PatRm = 500
+Kitchen = 500
+Lab = 500
+NurseStn = 500
+ICU_NurseStn = 500
+PatRoom = 500
+PhysTherapy = 500
+Radiology = 500
+when
+ER_Exam = 1000
+ER_Trauma = 1000
+ER_Triage = 1000
+when
+OR = 2000
+
+FullServiceRestaurant.Dining
+FullServiceRestaurant
+
+Hospital.Corridor
+Hospital.Dining
+Hospital.ER_Exam
+Hospital.ER_NurseStn
+Hospital.ER_Trauma
+Hospital.ER_Triage
+Hospital.ICU_NurseStn
+Hospital.ICU_Open
+Hospital.ICU_PatRm
+Hospital.Kitchen
+Hospital.Lab
+Hospital.Lobby
+Hospital.NurseStn
+Hospital.Office
+Hospital.OR
+Hospital.PatCorridor
+Hospital.PatRoom
+Hospital.PhysTherapy
+Hospital.Radiology
+
+LargeHotel.Banquet
+LargeHotel.Basement
+LargeHotel.Cafe
+LargeHotel.Corridor
+LargeHotel.Corridor2
+LargeHotel.GuestRoom
+LargeHotel.GuestRoom2
+LargeHotel.GuestRoom3
+LargeHotel.GuestRoom4
+LargeHotel.Kitchen
+LargeHotel.Laundry
+LargeHotel.Lobby
+LargeHotel.Mechanical
+LargeHotel.Retail
+LargeHotel.Retail2
+LargeHotel.Storage
+
+MidriseApartment.Apartment
+MidriseApartment.Corridor
+MidriseApartment.Office
+
+Office
+Office.Attic
+Office.BreakRoom
+Office.ClosedOffice
+Office.Conference
+Office.Corridor
+Office.Elec/MechRoom
+Office.IT_Room
+Office.Lobby
+Office.OpenOffice
+Office.PrintRoom
+Office.Restroom
+Office.Stair
+Office.Storage
+Office.Vending
+Office.WholeBuilding - Lg Office
+Office.WholeBuilding - Md Office
+Office.WholeBuilding - Sm Office
+
+Outpatient.Anesthesia
+Outpatient.BioHazard
+Outpatient.Cafe
+Outpatient.CleanWork
+Outpatient.Conference
+Outpatient.DressingRoom
+Outpatient.Elec/MechRoom
+Outpatient.Exam
+Outpatient.Hall
+Outpatient.IT_Room
+Outpatient.Janitor
+Outpatient.Lobby
+Outpatient.LockerRoom
+Outpatient.Lounge
+Outpatient.MedGas
+Outpatient.MRI
+Outpatient.MRI_Control
+Outpatient.NurseStation
+Outpatient.Office
+Outpatient.OR
+Outpatient.PACU
+Outpatient.PhysicalTherapy
+Outpatient.PreOp
+Outpatient.ProcedureRoom
+Outpatient.Soil Work
+Outpatient.Stair
+Outpatient.Toilet
+Outpatient.Xray
+
+PrimarySchool.Cafeteria
+PrimarySchool.Classroom
+PrimarySchool.Corridor
+PrimarySchool.Gym
+PrimarySchool.Kitchen
+PrimarySchool.Library
+PrimarySchool.Lobby
+PrimarySchool.Mechanical
+PrimarySchool.Office
+PrimarySchool.Restroom
+
+QuickServiceRestaurant.Dining
+QuickServiceRestaurant.Kitchen
+
+Retail.Back_Space
+Retail.Entry
+Retail.Point_of_Sale
+Retail.Retail
+
+SecondarySchool.Auditorium
+SecondarySchool.Cafeteria
+SecondarySchool.Classroom
+SecondarySchool.Corridor
+SecondarySchool.Gym
+SecondarySchool.Kitchen
+SecondarySchool.Library
+SecondarySchool.Lobby
+SecondarySchool.Mechanical
+SecondarySchool.Office
+SecondarySchool.Restroom
+
+SmallHotel.Attic
+SmallHotel.Corridor
+SmallHotel.Corridor4
+SmallHotel.Elec/MechRoom
+SmallHotel.ElevatorCore
+SmallHotel.ElevatorCore4
+SmallHotel.Exercise
+SmallHotel.GuestLounge
+SmallHotel.GuestRoom
+SmallHotel.GuestRoom123Occ
+SmallHotel.GuestRoom123Vac
+SmallHotel.GuestRoom4Occ
+SmallHotel.GuestRoom4Vac
+SmallHotel.Laundry
+SmallHotel.Mechanical
+SmallHotel.Meeting
+SmallHotel.Office
+SmallHotel.PublicRestroom
+SmallHotel.StaffLounge
+SmallHotel.Stair
+SmallHotel.Stair4
+SmallHotel.Storage
+SmallHotel.Storage4
+
+StripMall.WholeBuilding
+
+SuperMarket.Deli/Bakery
+SuperMarket.DryStorage
+SuperMarket.Office
+SuperMarket.Sales/Produce    
+
+Warehouse.Bulk
+Warehouse.Fine
+Warehouse.Office
+
+        
+        if std_spc_type.match(/post-office/i)# Post Office 500 Lux
+          daylight_stpt_lux = 500
+        elsif std_spc_type.match(/medical-office/i)# Medical Office 3000 Lux
+          daylight_stpt_lux = 3000
+        elsif std_spc_type.match(/office/i)# Office 500 Lux
+          daylight_stpt_lux = 500
+        elsif std_spc_type.match(/education/i)# School 500 Lux
+          daylight_stpt_lux = 500
+        elsif std_spc_type.match(/retail/i)# Retail 1000 Lux
+          daylight_stpt_lux = 1000
+        elsif std_spc_type.match(/warehouse/i)# Warehouse 200 Lux
+          daylight_stpt_lux = 200
+        elsif std_spc_type.match(/hotel/i)# Hotel 300 Lux
+          daylight_stpt_lux = 300
+        elsif std_spc_type.match(/multifamily/i)# Apartment 200 Lux
+          daylight_stpt_lux = 200
+        elsif std_spc_type.match(/courthouse/i)# Courthouse 300 Lux
+          daylight_stpt_lux = 300
+        elsif std_spc_type.match(/library/i)# Library 500 Lux
+          daylight_stpt_lux = 500
+        elsif std_spc_type.match(/community-center/i)# Community Center 300 Lux
+          daylight_stpt_lux = 300
+        elsif std_spc_type.match(/senior-center/i)# Senior Center 1000 Lux
+          daylight_stpt_lux = 1000
+        elsif std_spc_type.match(/city-hall/i)# City Hall 500 Lux
+          daylight_stpt_lux = 500
+        else
+          OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Space", "Space #{std_spc_type} is an unknown space type, assuming office and 300 Lux daylight setpoint")
+          daylight_stpt_lux = 300
+        end    
+      end
+    end
+=end    
     
     # Get the zone that the space is in
     zone = self.thermalZone
@@ -1758,6 +1972,187 @@ class OpenStudio::Model::Space
     
     return true
     
+  end
+
+  # Set the infiltration rate for this space to include
+  # the impact of air leakage requirements in the standard.
+  #
+  # @param template [String] choices are 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @return [Double] true if successful, false if not
+  # @todo handle doors and vestibules
+  def set_infiltration_rate(template)
+    
+    # Define the total building baseline infiltration rate
+    basic_infil_rate_cfm_per_ft2 = nil
+    infil_type = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, infiltration rates are not defined using this method, no changes have been made to the model.")
+      return true
+    when '90.1-2004', '90.1-2007'
+      basic_infil_rate_cfm_per_ft2 = 1.8
+    when '90.1-2010', '90.1-2013'
+      basic_infil_rate_cfm_per_ft2 = 1.0
+    end    
+    
+    # Conversion factor
+    # 1 m^3/s*m^2 = 196.85 cfm/ft2
+    conv_fact = 196.85
+    
+    # Adjust the infiltration rate to the average pressure
+    # for the prototype buildings.
+    adj_infil_rate_cfm_per_ft2 = adjust_infiltration_to_prototype_building_conditions(basic_infil_rate_cfm_per_ft2)
+    adj_infil_rate_m3_per_s_per_m2 = adj_infil_rate_cfm_per_ft2 / conv_fact
+    
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_cfm_per_ft2.round(8)} cfm/ft2.")
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_rate_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+        
+    # Get the exterior wall area
+    exterior_wall_and_window_area_m2 = self.exterior_wall_and_window_area 
+
+    # Don't create an object if there is no exterior wall area
+    if exterior_wall_and_window_area_m2 <= 0.0 
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, no exterior wall area was found, no infiltration will be added.")
+      return true
+    end
+    
+    # Calculate the total infiltration, assuming
+    # that it only occurs through exterior walls
+    tot_infil_m3_per_s = adj_infil_rate_m3_per_s_per_m2 * exterior_wall_and_window_area_m2
+
+    # Now spread the total infiltration rate over all
+    # exterior surface area (for the E+ input field)
+    all_ext_infil_m3_per_s_per_m2 = tot_infil_m3_per_s / self.exteriorArea
+    
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, adj infil = #{all_ext_infil_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+
+    # Get any infiltration schedule already
+    # assigned to this space
+    infil_sch = self.model.alwaysOnDiscreteSchedule
+    if self.spaceInfiltrationDesignFlowRates.size > 0
+      old_infil = self.spaceInfiltrationDesignFlowRates[0]
+      if old_infil.schedule.is_initialized
+        infil_sch = old_infil.schedule.get
+      end
+    end
+    
+    # Create an infiltration rate object for this space
+    infiltration = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self.model)
+    infiltration.setName("#{self.name} Infiltration")
+    #infiltration.setFlowperExteriorWallArea(adj_infil_rate_m3_per_s_per_m2)
+    infiltration.setFlowperExteriorSurfaceArea(all_ext_infil_m3_per_s_per_m2)
+    infiltration.setSchedule(infil_sch)
+    infiltration.setConstantTermCoefficient(0.0)
+    infiltration.setTemperatureTermCoefficient (0.0)
+    infiltration.setVelocityTermCoefficient(0.224)
+    infiltration.setVelocitySquaredTermCoefficient(0.0)   
+    
+    infiltration.setSpace(self)
+    
+    return true
+    
+  end
+   
+  # Determine the component infiltration rate for this space
+  #
+  # @param template [String] choices are 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @return [Double] infiltration rate
+  #   @units cubic meters per second (m^3/s)
+  # @todo handle floors over unconditioned spaces
+  # @todo make subsurface infil rates part of Surface.component_infiltration_rate?
+  def component_infiltration_rate(template)
+    
+    # Define the total building baseline infiltration rate
+    basic_infil_rate_cfm_per_ft2 = nil
+    infil_type = nil
+    case template       
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{template}, infiltration rates are not defined using this method, no changes have been made to the model.")
+      return true
+    when '90.1-2004', '90.1-2007'
+      basic_infil_rate_cfm_per_ft2 = 1.8
+    when '90.1-2010', '90.1-2013'
+      basic_infil_rate_cfm_per_ft2 = 1.0
+    end    
+    
+    # Calculate the basic infiltration rate
+    ext_area_m2 = self.exteriorArea
+    ext_area_ft2 = OpenStudio.convert(ext_area_m2,'m^2','ft^2').get
+    basic_infil_cfm = basic_infil_rate_cfm_per_ft2 * ext_area_ft2
+    basic_infil_m3_per_s = OpenStudio.convert(basic_infil_cfm,'cfm','m^3/s').get
+     
+    # Calculate the baseline component infiltration rate
+    infil_type = 'baseline'
+    base_comp_infil_m3_per_s = 0.0
+    self.surfaces.each do |surface|
+      # This surface
+      base_comp_infil_m3_per_s += surface.component_infiltration_rate(infil_type)
+      # Subsurfaces in this surface
+      # TODO make this part of Surface.component_infiltration_rate?
+      surface.subSurfaces.each do |subsurface|
+        base_comp_infil_m3_per_s += subsurface.component_infiltration_rate(infil_type)
+      end
+    end
+    base_comp_infil_cfm = OpenStudio.convert(base_comp_infil_m3_per_s,'m^3/s','cfm').get
+  
+    # Calculate the advanced component infiltration rate
+    infil_type = 'advanced'
+    adv_comp_infil_m3_per_s = 0.0
+    self.surfaces.each do |surface|
+      # This surface
+      adv_comp_infil_m3_per_s += surface.component_infiltration_rate(infil_type)
+      # Subsurfaces in this surface
+      # TODO make this part of Surface.component_infiltration_rate?
+      surface.subSurfaces.each do |subsurface|
+        adv_comp_infil_m3_per_s += subsurface.component_infiltration_rate(infil_type)
+      end
+    end
+    adv_comp_infil_cfm = OpenStudio.convert(adv_comp_infil_m3_per_s,'m^3/s','cfm').get
+
+    # Calculate the adjusted infiltration rate
+    infil_m3_per_s = basic_infil_m3_per_s - base_comp_infil_m3_per_s + adv_comp_infil_m3_per_s
+    
+    # Adjust the infiltration from 75Pa to 4Pa
+    intial_pressure_pa = 75.0
+    final_pressure_pa = 4.0
+    adj_infil_m3_per_s = adjust_infiltration_to_lower_pressure(infil_m3_per_s, intial_pressure_pa, final_pressure_pa, )
+    
+    # Calculate the rate per exterior area
+    adj_infil_m3_per_s_per_m2 = adj_infil_m3_per_s / ext_area_m2
+    
+    OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, infil = #{adj_infil_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
+    #=> infil = #{comp_infil_rate_m3_per_s.round(2)} m^3/s, ext area = #{tot_ext_area_m2.round} m^2")
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, comp infil = #{comp_infil_rate_cfm_per_ft2.round(4)} cfm/ft2 => infil = #{comp_infil_rate_cfm.round(2)} cfm, ext area = #{tot_ext_area_ft2.round} ft2")
+    #OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}")
+
+    return adj_infil_m3_per_s
+    
+  end
+  
+  # Calculate the area of the exterior walls,
+  # including the area of the windows on these walls.
+  #
+  # @return [Double] area in m^2
+  def exterior_wall_and_window_area()
+    
+    area_m2 = 0.0
+    
+    # Loop through all surfaces in this space
+    self.surfaces.each do |surface|
+      # Skip non-outdoor surfaces
+      next unless surface.outsideBoundaryCondition == 'Outdoors'
+      # Skip non-walls
+      next unless surface.surfaceType == 'Wall'
+      # This surface
+      area_m2 += surface.netArea
+      # Subsurfaces in this surface
+      surface.subSurfaces.each do |subsurface|
+        area_m2 += subsurface.netArea
+      end
+    end
+
+    return area_m2
+  
   end
   
 end

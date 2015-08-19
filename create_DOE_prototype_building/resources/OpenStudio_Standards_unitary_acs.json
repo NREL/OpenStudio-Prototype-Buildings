@@ -85,13 +85,22 @@
       "cooling_type": "AirCooled",
       "heating_type": "Electric Resistance or None",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
       "minimum_integrated_energy_efficiency_ratio": null,
+<<<<<<< HEAD
       "ptac_eer_coefficient_1": 10,
+=======
+      "ptac_eer_coefficient_1": 10.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_2": -0.00016,
       "cool_cap_ft": "DOE Ref DX Clg Coil Cool-Cap-fT",
       "cool_cap_fflow": "DOE Ref DX Clg Coil Cool-CAP-fFlow",
@@ -105,13 +114,22 @@
       "cooling_type": "AirCooled",
       "heating_type": "All Other",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
       "minimum_integrated_energy_efficiency_ratio": null,
+<<<<<<< HEAD
       "ptac_eer_coefficient_1": 10,
+=======
+      "ptac_eer_coefficient_1": 10.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_2": -0.00016,
       "cool_cap_ft": "DOE Ref DX Clg Coil Cool-Cap-fT",
       "cool_cap_fflow": "DOE Ref DX Clg Coil Cool-CAP-fFlow",
@@ -525,13 +543,22 @@
       "cooling_type": "AirCooled",
       "heating_type": "All Other",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
       "minimum_integrated_energy_efficiency_ratio": null,
+<<<<<<< HEAD
       "ptac_eer_coefficient_1": 10,
+=======
+      "ptac_eer_coefficient_1": 10.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_2": -0.00016,
       "cool_cap_ft": "DOE Ref DX Clg Coil Cool-Cap-fT",
       "cool_cap_fflow": "DOE Ref DX Clg Coil Cool-CAP-fFlow",
@@ -545,13 +572,22 @@
       "cooling_type": "AirCooled",
       "heating_type": "Electric Resistance or None",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
       "minimum_integrated_energy_efficiency_ratio": null,
+<<<<<<< HEAD
       "ptac_eer_coefficient_1": 10,
+=======
+      "ptac_eer_coefficient_1": 10.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_2": -0.00016,
       "cool_cap_ft": "DOE Ref DX Clg Coil Cool-Cap-fT",
       "cool_cap_fflow": "DOE Ref DX Clg Coil Cool-CAP-fFlow",
@@ -885,8 +921,13 @@
       "cooling_type": "AirCooled",
       "heating_type": "Electric Resistance or None",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
@@ -905,8 +946,13 @@
       "cooling_type": "AirCooled",
       "heating_type": "All Other",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
@@ -1325,8 +1371,13 @@
       "cooling_type": "AirCooled",
       "heating_type": "Electric Resistance or None",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
@@ -1345,8 +1396,13 @@
       "cooling_type": "AirCooled",
       "heating_type": "All Other",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
@@ -1765,8 +1821,13 @@
       "cooling_type": "AirCooled",
       "heating_type": "Electric Resistance or None",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
@@ -1785,8 +1846,13 @@
       "cooling_type": "AirCooled",
       "heating_type": "All Other",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
@@ -1825,8 +1891,13 @@
       "cooling_type": "AirCooled",
       "heating_type": "Electric Resistance or None",
       "subcategory": "Single Package",
+<<<<<<< HEAD
       "minimum_capacity": 65000,
       "maximum_capacity": 134999,
+=======
+      "minimum_capacity": 65000.0,
+      "maximum_capacity": 134999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": 11.2,
       "minimum_integrated_part_load_value": null,
@@ -1865,10 +1936,17 @@
       "cooling_type": "AirCooled",
       "heating_type": "All Other",
       "subcategory": "Single Package",
+<<<<<<< HEAD
       "minimum_capacity": 65000,
       "maximum_capacity": 134999,
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": 11,
+=======
+      "minimum_capacity": 65000.0,
+      "maximum_capacity": 134999.0,
+      "minimum_seasonal_energy_efficiency_ratio": null,
+      "minimum_energy_efficiency_ratio": 11.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_integrated_part_load_value": null,
       "minimum_integrated_energy_efficiency_ratio": null,
       "ptac_eer_coefficient_1": null,
@@ -2205,13 +2283,22 @@
       "cooling_type": "AirCooled",
       "heating_type": "Electric Resistance or None",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
       "minimum_integrated_energy_efficiency_ratio": null,
+<<<<<<< HEAD
       "ptac_eer_coefficient_1": 14,
+=======
+      "ptac_eer_coefficient_1": 14.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_2": -0.0003,
       "cool_cap_ft": "PSZ-Fine Storage DX Coil Cap-FT",
       "cool_cap_fflow": "DX Coil Cap-FF",
@@ -2225,13 +2312,22 @@
       "cooling_type": "AirCooled",
       "heating_type": "All Other",
       "subcategory": "PTAC",
+<<<<<<< HEAD
       "minimum_capacity": 0,
       "maximum_capacity": 9999999,
+=======
+      "minimum_capacity": 0.0,
+      "maximum_capacity": 9999999.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": null,
       "minimum_integrated_part_load_value": null,
       "minimum_integrated_energy_efficiency_ratio": null,
+<<<<<<< HEAD
       "ptac_eer_coefficient_1": 14,
+=======
+      "ptac_eer_coefficient_1": 14.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_2": -0.0003,
       "cool_cap_ft": "PSZ-Fine Storage DX Coil Cap-FT",
       "cool_cap_fflow": "DX Coil Cap-FF",
@@ -2370,7 +2466,11 @@
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": 10.8,
       "minimum_integrated_part_load_value": null,
+<<<<<<< HEAD
       "minimum_integrated_energy_efficiency_ratio": 11,
+=======
+      "minimum_integrated_energy_efficiency_ratio": 11.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_1": null,
       "ptac_eer_coefficient_2": null,
       "cool_cap_ft": null,
@@ -2390,7 +2490,11 @@
       "minimum_seasonal_energy_efficiency_ratio": null,
       "minimum_energy_efficiency_ratio": 10.8,
       "minimum_integrated_part_load_value": null,
+<<<<<<< HEAD
       "minimum_integrated_energy_efficiency_ratio": 11,
+=======
+      "minimum_integrated_energy_efficiency_ratio": 11.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "ptac_eer_coefficient_1": null,
       "ptac_eer_coefficient_2": null,
       "cool_cap_ft": null,

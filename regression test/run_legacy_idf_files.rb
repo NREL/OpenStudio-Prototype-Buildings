@@ -7,27 +7,27 @@
 # Both sets of buildings contain 2004.  The Prototype Buildings will be used.
 
 # Specify the building types to run.
-bldg_types = ['OfficeMedium', 'OfficeLarge']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
+bldg_types = ['SchoolSecondary']# 'OfficeLarge']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
 # valid options are: Pre1980, Post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013",]
+#vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013",]
+vintages = ["STD2010"]
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
 # 1A Miami, 2A Houston, 2B Phoenix, 3A Memphis (Atlanta), 3B El Paso (Las Vegas), 3C San Francisco
 # 4A Baltimore, 4B Albuquerque, 4C Salem (Seattle), 5A Chicago, 5B Boise (Boulder), 6A Burlington (Minneapolis)
 # 6B Helena, 7A Duluth, 8A Fairbanks
-climate_zones = ["Miami", "Houston", "Phoenix", "Memphis","El Paso","San Francisco",
-"Baltimore", "Albuquerque", "Salem", "Chicago", "Boise", "Burlington",
-"Helena", "Duluth", "Fairbanks"]
+# climate_zones = ["Miami", "Houston", "Phoenix", "Memphis","El Paso","San Francisco",
+# "Baltimore", "Albuquerque", "Salem", "Chicago", "Boise", "Burlington",
+# "Helena", "Duluth", "Fairbanks"]
+climate_zones = ["Chicago", "Houston"]
 
 ################################################################################
 
 require 'find'
 require 'fileutils'
 require 'openstudio'
-# require 'C:/Program Files (x86)/OpenStudio 1.5.0/Ruby/openstudio'
-require '/Users/m5z/github/nrel/openstudio/branches/develop/openstudiocore/ruby/openstudio/energyplus/find_energyplus'
 
 # Make the folder to store results, if it doesn't exist yet
 regression_dir = "#{Dir.pwd}/regression runs"
@@ -40,16 +40,21 @@ run_manager_db_path = OpenStudio::Path.new("#{regression_dir}/regression_test.db
 run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true)
 
 # Find EnergyPlus 
+config_opts = OpenStudio::Runmanager::ConfigOptions.new
+config_opts.findTools(false, false, false, false)
 # 7.2 for the Reference Buildings
-ep_72_hash = OpenStudio::EnergyPlus::find_energyplus(7,2)
-ep_72_path = OpenStudio::Path.new(ep_72_hash[:energyplus_exe].to_s)
-idd_72_path = OpenStudio::Path.new(ep_72_hash[:energyplus_idd].to_s)
+ep_72_version = OpenStudio::Runmanager::ToolVersion.new(7,2)
+ep_72_tool = config_opts.getTools.getTool("energyplus", ep_72_version)
+ep_72_path = ep_72_tool.localBinPath
 ep_72_tool = OpenStudio::Runmanager::ToolInfo.new(ep_72_path)
+idd_72_path = OpenStudio::Path.new(ep_72_path.remove_filename.to_s + "/Energy+.idd")
+
 # 8.0 for the Prototype Buildings
-ep_80_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
-ep_80_path = OpenStudio::Path.new(ep_80_hash[:energyplus_exe].to_s)
-idd_80_path = OpenStudio::Path.new(ep_80_hash[:energyplus_idd].to_s)
+ep_80_version = OpenStudio::Runmanager::ToolVersion.new(8,0)
+ep_80_tool = config_opts.getTools.getTool("energyplus", ep_80_version)
+ep_80_path = ep_80_tool.localBinPath
 ep_80_tool = OpenStudio::Runmanager::ToolInfo.new(ep_80_path)
+idd_80_path = OpenStudio::Path.new(ep_80_path.remove_filename.to_s + "/Energy+.idd")
 
 # Find the IDF files for each of the given combinations
 # and add a job for this file to the run manager

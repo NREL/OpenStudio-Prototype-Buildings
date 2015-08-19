@@ -27657,7 +27657,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.3096,
+<<<<<<< HEAD
       "resistance": 20.99483204134367,
+=======
+      "resistance": 20.99483204,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -27688,7 +27692,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 733
+=======
+      "sort": 733.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R22 - Single 2x Spline - 6 1/2 in.",
@@ -27696,7 +27704,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.35208,
+<<<<<<< HEAD
       "resistance": 18.46171324698932,
+=======
+      "resistance": 18.46171325,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -27727,7 +27739,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 765
+=======
+      "sort": 765.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R28 - Double 2x Spline - 8 1/2 in.",
@@ -28086,7 +28102,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.29928,
+<<<<<<< HEAD
       "resistance": 21.718791766907245,
+=======
+      "resistance": 21.71879177,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -28117,7 +28137,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 774
+=======
+      "sort": 774.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R33 - Double 2x Spline - 6 1/2 in.",
@@ -28125,7 +28149,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.23484,
+<<<<<<< HEAD
       "resistance": 27.678419349344235,
+=======
+      "resistance": 27.67841935,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -28156,7 +28184,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 740
+=======
+      "sort": 740.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R33 - I joist Spline - 6 1/2 in.",
@@ -28164,7 +28196,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.247679999999999,
+<<<<<<< HEAD
       "resistance": 26.24354005167969,
+=======
+      "resistance": 26.24354005,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -28195,7 +28231,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 758
+=======
+      "sort": 758.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R33 - I joist Spline - 6 1/2 in.",
@@ -28203,7 +28243,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.212999999999999,
+<<<<<<< HEAD
       "resistance": 30.516431924882774,
+=======
+      "resistance": 30.51643192,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -28234,7 +28278,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 728
+=======
+      "sort": 728.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R33 - OSB Spline - 6 1/2 in.",
@@ -28242,7 +28290,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.205799999999999,
+<<<<<<< HEAD
       "resistance": 31.584062196307247,
+=======
+      "resistance": 31.5840622,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -28273,7 +28325,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 746
+=======
+      "sort": 746.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R33 - OSB Spline - 6 1/2 in.",
@@ -28281,7 +28337,11 @@
       "roughness": "Smooth",
       "thickness": 6.5,
       "conductivity": 0.21876,
+<<<<<<< HEAD
       "resistance": 29.71292740903273,
+=======
+      "resistance": 29.71292741,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 7.15,
       "specific_heat": 0.3,
       "thermal_absorptance": null,
@@ -28312,7 +28372,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 782
+=======
+      "sort": 782.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R33 - Single 2x Spline - 6 1/2 in.",
@@ -28476,7 +28540,11 @@
       "roughness": "Smooth",
       "thickness": 10.25,
       "conductivity": 0.2904,
+<<<<<<< HEAD
       "resistance": 35.29614325068871,
+=======
+      "resistance": 35.29614325,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.9,
       "specific_heat": 0.29,
       "thermal_absorptance": null,
@@ -28507,7 +28575,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 730
+=======
+      "sort": 730.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R36 - I joist Spline - 10 1/4 in.",
@@ -28515,7 +28587,11 @@
       "roughness": "Smooth",
       "thickness": 10.25,
       "conductivity": 0.32244,
+<<<<<<< HEAD
       "resistance": 31.78885994293512,
+=======
+      "resistance": 31.78885994,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.9,
       "specific_heat": 0.29,
       "thermal_absorptance": null,
@@ -28546,7 +28622,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 760
+=======
+      "sort": 760.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R36 - Metal Spline - 48 in.",
@@ -28827,7 +28907,11 @@
       "roughness": "Smooth",
       "thickness": 12.25,
       "conductivity": 0.2802,
+<<<<<<< HEAD
       "resistance": 43.718772305496074,
+=======
+      "resistance": 43.71877231,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.27,
       "specific_heat": 0.28,
       "thermal_absorptance": null,
@@ -28858,7 +28942,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 732
+=======
+      "sort": 732.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R44 - I joist Spline - 12 1/4 in.",
@@ -28866,7 +28954,11 @@
       "roughness": "Smooth",
       "thickness": 12.25,
       "conductivity": 0.31848,
+<<<<<<< HEAD
       "resistance": 38.463953780457175,
+=======
+      "resistance": 38.46395378,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.27,
       "specific_heat": 0.28,
       "thermal_absorptance": null,
@@ -28897,7 +28989,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 762
+=======
+      "sort": 762.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R44 - OSB Spline - 12 1/4 in.",
@@ -28905,7 +29001,11 @@
       "roughness": "Smooth",
       "thickness": 12.25,
       "conductivity": 0.279,
+<<<<<<< HEAD
       "resistance": 43.90681003584229,
+=======
+      "resistance": 43.90681004,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.27,
       "specific_heat": 0.28,
       "thermal_absorptance": null,
@@ -28936,7 +29036,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 786
+=======
+      "sort": 786.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R44 - OSB Spline - 12 1/4 in.",
@@ -28944,7 +29048,11 @@
       "roughness": "Smooth",
       "thickness": 12.25,
       "conductivity": 0.267,
+<<<<<<< HEAD
       "resistance": 45.88014981273408,
+=======
+      "resistance": 45.88014981,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.27,
       "specific_heat": 0.28,
       "thermal_absorptance": null,
@@ -28975,7 +29083,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 750
+=======
+      "sort": 750.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R44 - Single 2x Spline - 12 1/4 in.",
@@ -28983,7 +29095,11 @@
       "roughness": "Smooth",
       "thickness": 12.25,
       "conductivity": 0.29352,
+<<<<<<< HEAD
       "resistance": 41.73480512401199,
+=======
+      "resistance": 41.73480512,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.27,
       "specific_heat": 0.28,
       "thermal_absorptance": null,
@@ -29014,7 +29130,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 738
+=======
+      "sort": 738.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R44 - Single 2x Spline - 12 1/4 in.",
@@ -29022,7 +29142,11 @@
       "roughness": "Smooth",
       "thickness": 12.25,
       "conductivity": 0.34512,
+<<<<<<< HEAD
       "resistance": 35.49490032452481,
+=======
+      "resistance": 35.49490032,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.27,
       "specific_heat": 0.28,
       "thermal_absorptance": null,
@@ -29053,7 +29177,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 770
+=======
+      "sort": 770.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R55 - Double 2x Spline - 10 1/4 in.",
@@ -29295,7 +29423,11 @@
       "roughness": "Smooth",
       "thickness": 10.25,
       "conductivity": 0.201359999999999,
+<<<<<<< HEAD
       "resistance": 50.90385379419969,
+=======
+      "resistance": 50.90385379,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.9,
       "specific_heat": 0.29,
       "thermal_absorptance": null,
@@ -29326,7 +29458,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 737
+=======
+      "sort": 737.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "SIPS - R55 - Single 2x Spline - 10 1/4 in.",
@@ -29334,7 +29470,11 @@
       "roughness": "Smooth",
       "thickness": 10.25,
       "conductivity": 0.25548,
+<<<<<<< HEAD
       "resistance": 40.12055738218256,
+=======
+      "resistance": 40.12055738,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "density": 4.9,
       "specific_heat": 0.29,
       "thermal_absorptance": null,
@@ -29365,7 +29505,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 769
+=======
+      "sort": 769.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "Sand aggregate - 1/2 in.",
@@ -32290,7 +32434,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 607
+=======
+      "sort": 607.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "Synthetic Stucco - EIFS finish - 1 in.",
@@ -32329,7 +32477,11 @@
       "framing_depth": null,
       "framing_size": null,
       "cavity_insulation": null,
+<<<<<<< HEAD
       "sort": 682
+=======
+      "sort": 682.0
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
     },
     {
       "name": "Terrazzo - 1 in.",

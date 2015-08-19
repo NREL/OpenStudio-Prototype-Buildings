@@ -226,8 +226,13 @@
       "coeff_2": 0.00024378,
       "coeff_3": 1.14e-05,
       "coeff_4": 1.811e-07,
+<<<<<<< HEAD
       "min_x": -35,
       "max_x": 20,
+=======
+      "min_x": -35.0,
+      "max_x": 20.0,
+>>>>>>> 39c6398ee0c2ae9532329dd78eff86d62479c610
       "notes": "From Reference Buildings"
     },
     {

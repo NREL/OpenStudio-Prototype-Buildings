@@ -544,7 +544,7 @@ class OpenStudio::Model::Model
       when 'UnitHeater'
         self.add_unitheater(prototype_input, hvac_standards, thermal_zones)
       when 'PSZ-AC'
-        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
+        self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
       when 'SAC'
         self.add_split_AC(prototype_input, hvac_standards, thermal_zones)  
       end
@@ -628,11 +628,5 @@ class OpenStudio::Model::Model
     return true
     
   end #add swh  
-  
-  def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
-       
-    return false
-    
-  end #add refrigeration
   
 end

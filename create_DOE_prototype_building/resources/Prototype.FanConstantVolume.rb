@@ -44,7 +44,11 @@ class OpenStudio::Model::FanConstantVolume
       if maximum_flow_rate_cfm < 7487
         pressure_rise_in_h2o = 2.5
       elsif maximum_flow_rate_cfm >= 7487 && maximum_flow_rate_cfm < 20000
-        pressure_rise_in_h2o = 4.46
+        #pressure_rise_in_h2o = 4.46
+        # TODO PTACs in prototypes have pressure rise
+        # of 4.09 in w.c. even when well less than 20,000 cfm.
+        # See secondary school model.  This contradicts documentation.
+        pressure_rise_in_h2o = 4.09
       else # Over 20,000 cfm
         pressure_rise_in_h2o = 4.09
       end
