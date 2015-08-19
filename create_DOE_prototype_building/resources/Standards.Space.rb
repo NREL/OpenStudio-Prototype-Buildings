@@ -2028,7 +2028,7 @@ Warehouse.Office
 
     # Get any infiltration schedule already
     # assigned to this space
-    infil_sch = nil
+    infil_sch = self.model.alwaysOnDiscreteSchedule
     if self.spaceInfiltrationDesignFlowRates.size > 0
       old_infil = self.spaceInfiltrationDesignFlowRates[0]
       if old_infil.schedule.is_initialized
@@ -2041,9 +2041,7 @@ Warehouse.Office
     infiltration.setName("#{self.name} Infiltration")
     #infiltration.setFlowperExteriorWallArea(adj_infil_rate_m3_per_s_per_m2)
     infiltration.setFlowperExteriorSurfaceArea(all_ext_infil_m3_per_s_per_m2)
-    if infil_sch
-      infiltration.setSchedule(infil_sch)
-    end
+    infiltration.setSchedule(infil_sch)
     infiltration.setConstantTermCoefficient(0.0)
     infiltration.setTemperatureTermCoefficient (0.0)
     infiltration.setVelocityTermCoefficient(0.224)
