@@ -1800,6 +1800,26 @@
       ]
     },
     {
+      "name": "U 1.36 SHGC 0.39 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.36 SHGC 0.39 Simple Glazing"
+      ]
+    },
+    {
+      "name": "U 1.36 SHGC 0.61 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.36 SHGC 0.61 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 1.70 SHGC 0.36 Simple Glazing Skylight",
       "intended_surface_type": null,
       "standards_construction_type": null,
@@ -1850,6 +1870,16 @@
       ]
     },
     {
+      "name": "U 1.90 SHGC 0.65 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.90 SHGC 0.65 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 1.98 SHGC 0.16 Simple Glazing Skylight",
       "intended_surface_type": null,
       "standards_construction_type": null,
@@ -1890,6 +1920,16 @@
       ]
     },
     {
+      "name": "U 1.98 SHGC 0.39 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.98 SHGC 0.39 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 1.98 SHGC 0.61 Sgl Green 6mm",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",
@@ -1897,6 +1937,16 @@
       "sort": 95.0,
       "materials": [
         "GREEN 6MM"
+      ]
+    },
+    {
+      "name": "U 1.98 SHGC 0.61 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.98 SHGC 0.61 Simple Glazing"
       ]
     },
     {
