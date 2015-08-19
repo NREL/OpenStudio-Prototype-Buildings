@@ -2958,6 +2958,7 @@ class OpenStudio::Model::Model
     service_water_loop = OpenStudio::Model::PlantLoop.new(self)
     service_water_loop.setName("#{type} Service Water Loop")
     service_water_loop.setMinimumLoopTemperature(10)
+    service_water_loop.setMaximumLoopTemperature(60)
 
     # Temperature schedule type limits
     temp_sch_type_limits = OpenStudio::Model::ScheduleTypeLimits.new(self)
@@ -2984,7 +2985,6 @@ class OpenStudio::Model::Model
     sizing_plant.setLoopType('Heating')
     sizing_plant.setDesignLoopExitTemperature(swh_temp_c)
     sizing_plant.setLoopDesignTemperatureDifference(swh_delta_t_k)
-    service_water_loop.setMaximumLoopTemperature(swh_temp_c)
     
     # Service water heating pump
     swh_pump_head_press_pa = prototype_input["#{type}_service_water_pump_head"]
@@ -3272,8 +3272,6 @@ class OpenStudio::Model::Model
     water_use_sensible_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.2)    
     water_use_latent_frac_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     water_use_latent_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.05)    
-    puts "water_use_sensible_frac_sch = #{water_use_sensible_frac_sch}"
-    puts "water_use_latent_frac_sch = #{water_use_latent_frac_sch}"
     water_fixture_def.setSensibleFractionSchedule(water_use_sensible_frac_sch)
     water_fixture_def.setLatentFractionSchedule(water_use_latent_frac_sch)
     water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)
@@ -3328,8 +3326,6 @@ class OpenStudio::Model::Model
     water_use_sensible_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.2)    
     water_use_latent_frac_sch = OpenStudio::Model::ScheduleRuleset.new(self)
     water_use_latent_frac_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),0.05)    
-    puts "water_use_sensible_frac_sch = #{water_use_sensible_frac_sch}"
-    puts "water_use_latent_frac_sch = #{water_use_latent_frac_sch}"
     water_fixture_def.setSensibleFractionSchedule(water_use_sensible_frac_sch)
     water_fixture_def.setLatentFractionSchedule(water_use_latent_frac_sch)
     water_fixture_def.setPeakFlowRate(rated_flow_rate_m3_per_s)

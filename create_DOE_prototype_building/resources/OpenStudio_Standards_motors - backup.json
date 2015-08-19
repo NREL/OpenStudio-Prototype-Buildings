@@ -7,7 +7,7 @@
       "synchronous_speed": 1800.0,
       "minimum_capacity": 0.0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.8,
+      "nominal_full_load_efficiency": 0.29,
       "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
@@ -207,7 +207,7 @@
       "synchronous_speed": 1800.0,
       "minimum_capacity": 0.0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.8,
+      "nominal_full_load_efficiency": 0.29,
       "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
@@ -407,7 +407,7 @@
       "synchronous_speed": 1800.0,
       "minimum_capacity": 0.0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.8,
+      "nominal_full_load_efficiency": 0.29,
       "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
@@ -607,7 +607,7 @@
       "synchronous_speed": 1800.0,
       "minimum_capacity": 0.0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.8,
+      "nominal_full_load_efficiency": 0.29,
       "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
@@ -807,7 +807,7 @@
       "synchronous_speed": 1800.0,
       "minimum_capacity": 0.0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.8,
+      "nominal_full_load_efficiency": 0.29,
       "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
@@ -1067,7 +1067,7 @@
       "synchronous_speed": 1800.0,
       "minimum_capacity": 0.0,
       "maximum_capacity": 0.08333,
-      "nominal_full_load_efficiency": 0.8,
+      "nominal_full_load_efficiency": 0.29,
       "notes": "Motors below 1/12 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {

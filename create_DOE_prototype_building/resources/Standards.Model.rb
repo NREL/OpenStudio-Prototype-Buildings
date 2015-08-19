@@ -1313,9 +1313,17 @@ class OpenStudio::Model::Model
     case building_vintage
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'    
       result = possible_climate_zones.sort.last
-    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+    when '90.1-2007', '90.1-2010', '90.1-2013'
       result = possible_climate_zones.sort.first
+    when '90.1-2004'
+      if possible_climate_zones.include? "ClimateZone 3"
+        result = possible_climate_zones.sort.last
+      else
+        result = possible_climate_zones.sort.first
+      end
     end
+    
+    puts "******************************************************************climate_zone_set = #{result}"
     
     # Check that a climate zone set was found
     if result.nil?

@@ -665,8 +665,8 @@ puts "************************************space_type = #{stds_spc_type}"
   # @todo Add 90.1-2013?
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
   
-    # Only modify the infiltration coefficients for 90.1-2010
-    return true unless building_vintage == '90.1-2010'
+    # modify the infiltration coefficients for 90.1-2004, 90.1-2007, 90.1-2010, 90.1-2013
+    return true unless building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013' 
   
     # The pre-1980 and 1980-2004 buildings have this:
     # 1.0000,                  !- Constant Term Coefficient
