@@ -369,10 +369,13 @@ class OpenStudio::Model::Model
       internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
       internal_mass_def.setConstruction(construction)
       conditioned_space_names.each do |conditioned_space_name|
-        internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
         space = self.getSpaceByName(conditioned_space_name)
-        space = space.get
-        internal_mass.setSpace(space)
+        if space.is_initialized
+          space = space.get
+          internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
+          internal_mass.setName("#{space.name} Mass")  
+          internal_mass.setSpace(space)
+        end
       end
     end
 
