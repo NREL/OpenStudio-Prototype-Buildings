@@ -122,7 +122,7 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Space type called '#{stub_space_type.name}' has no standards space type.")
         return false
       end
-
+puts "************************************space_type = #{stds_spc_type}"
       new_space_type = self.add_space_type(building_vintage, 'ClimateZone 1-8', stds_building_type, stds_spc_type)
 
       # Apply the new space type to the building      
@@ -649,8 +649,8 @@ class OpenStudio::Model::Model
   # @todo Add 90.1-2013?
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
   
-    # Only modify the infiltration coefficients for 90.1-2010
-    return true unless building_vintage == '90.1-2010'
+    # modify the infiltration coefficients for 90.1-2004, 90.1-2007, 90.1-2010, 90.1-2013
+    return true unless building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013' 
   
     # The pre-1980 and 1980-2004 buildings have this:
     # 1.0000,                  !- Constant Term Coefficient

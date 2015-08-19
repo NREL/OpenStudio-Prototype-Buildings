@@ -440,7 +440,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             end_use = end_uses_names[fuel_end_use_index]
             value5 = value3[fuel_type][end_use]
             csv_file.write("#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']},")
-            if value5['Percent Error'].abs > 0.1
+            # if value5['Percent Error'].abs > 0.1
+            unless value5['Legacy Val'].nil?
               csv_file_simple.write("#{building_type},#{building_vintage},#{climate_zone},#{fuel_type},#{end_use},#{value5['Legacy Val']},#{value5['OpenStudio Val']},#{value5['Percent Error']},#{value5['Absolute Error']}\n")
             end
           end
@@ -857,8 +858,18 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   if hostname == "SRG-SKY" 
     def test_small_hotel_ptool
       bldg_types = ['SmallHotel']
-      vintages = ['DOE Ref 1980-2004'] #, 'DOE Ref Pre-1980', '90.1-2010']
-      climate_zones = ['ASHRAE 169-2006-3B']#, 'ASHRAE 169-2006-2A', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+      vintages = ['90.1-2004'] 
+      # vintages = ['DOE Ref 1980-2004', 'DOE Ref Pre-1980', '90.1-2007', '90.1-2010', '90.1-2013', '90.1-2004'] 
+       # climate_zones = ['ASHRAE 169-2006-1A', 'ASHRAE 169-2006-1B', 'ASHRAE 169-2006-2A','ASHRAE 169-2006-2B',
+                        # 'ASHRAE 169-2006-3A', 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-3C', 'ASHRAE 169-2006-4A',
+                        # 'ASHRAE 169-2006-4B', 'ASHRAE 169-2006-4C', 'ASHRAE 169-2006-5A', 'ASHRAE 169-2006-5B',
+                        # 'ASHRAE 169-2006-5C', 'ASHRAE 169-2006-6A', 'ASHRAE 169-2006-6B', 'ASHRAE 169-2006-7A',
+                        # 'ASHRAE 169-2006-8A', 'ASHRAE 169-2006-8B']
+       climate_zones = ['ASHRAE 169-2006-1A', 'ASHRAE 169-2006-2A','ASHRAE 169-2006-2B',
+                        'ASHRAE 169-2006-3A', 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-3C', 'ASHRAE 169-2006-4A',
+                        'ASHRAE 169-2006-4B', 'ASHRAE 169-2006-4C', 'ASHRAE 169-2006-5A', 'ASHRAE 169-2006-5B',
+                        'ASHRAE 169-2006-6A', 'ASHRAE 169-2006-6B', 'ASHRAE 169-2006-7A', 'ASHRAE 169-2006-8A'] 
+      # climate_zones = ['ASHRAE 169-2006-3C']  # for test
 
       all_failures = []
 
@@ -876,6 +887,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
   end
+
 
   # For Yixing Chen in LBNL
   if hostname == "yxc_lbnl" or hostname == "cbes2"
