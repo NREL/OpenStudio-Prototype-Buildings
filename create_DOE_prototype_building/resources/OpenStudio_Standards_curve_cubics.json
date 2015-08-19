@@ -141,26 +141,6 @@
       "notes": "From Prototype Buildings"
     },
     {
-      "name": "LargeHotel Kitchen_Flr_6_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
-      "coeff_1": 0.020376,
-      "coeff_2": 0.00024378,
-      "coeff_3": 1.14e-05,
-      "coeff_4": 1.811e-07,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
-      "name": "LargeHotel Kitchen_Flr_6_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
-      "coeff_3": -6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35.0,
-      "max_x": 20.0,
-      "notes": "From Reference Buildings"
-    },
-    {
       "name": "Multi Shelf Vertical Latent Energy Multiplier",
       "coeff_1": 0.026526281,
       "coeff_2": 0.001078032,
