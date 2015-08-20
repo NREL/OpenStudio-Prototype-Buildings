@@ -890,42 +890,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
 
   # For Yixing Chen in LBNL
-  if hostname == "yxc_lbnl" or hostname == "cbes2"
-      # Test the large hotel in the PTool vintages and climate zones
-    if hostname == "yxc_lbnl"
-      $test_single_case = true #
-    else
-      $test_single_case = false
-    end
-
+  if hostname == "yxc_lbnl"
     def test_large_hotel
       bldg_types = ['LargeHotel']
-
-      if $test_single_case
-        vintages = ['90.1-2013']
-      else
-        # Run the simulations in 2 parts.
-        if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")
-          vintages = ['DOE Ref Pre-1980', '90.1-2004','90.1-2013']
-        else
-          vintages = ['DOE Ref 1980-2004', '90.1-2007','90.1-2010']
-        end
-      end
-
-      if $test_single_case
-       climate_zones = ['ASHRAE 169-2006-2A']
-      else
-        # Specify the climate zones you want to run.
-        # 1A Miami, 2A Houston, 2B Phoenix,
-        # 3A Memphis (Atlanta), 3B El Paso (Las Vegas), 3C San Francisco,
-        # 4A Baltimore, 4B Albuquerque, 4C Salem (Seattle),
-        # 5A Chicago, 5B Boise (Boulder), 6A Burlington (Minneapolis) 6B Helena,
-        # 7A Duluth, 8A Fairbanks
-        climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
-                        'ASHRAE 169-2006-3B','ASHRAE 169-2006-3C','ASHRAE 169-2006-4A','ASHRAE 169-2006-4B',
-                        'ASHRAE 169-2006-4C','ASHRAE 169-2006-5A','ASHRAE 169-2006-5B','ASHRAE 169-2006-6A',
-                        'ASHRAE 169-2006-6B','ASHRAE 169-2006-7A','ASHRAE 169-2006-8A']
-      end
+      vintages = ['90.1-2013']
+      climate_zones = ['ASHRAE 169-2006-2A']
 
       all_failures = []
 
@@ -943,6 +912,47 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
   end
+
+  # For Yixing Chen in LBNL to run heavy testing
+  if hostname == "cbes2"
+    def test_large_hotel
+      bldg_types = ['LargeHotel']
+
+      # Run the simulations in 2 parts.
+      if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")
+        vintages = ['DOE Ref Pre-1980', '90.1-2004','90.1-2013']
+      else
+        vintages = ['DOE Ref 1980-2004', '90.1-2007','90.1-2010']
+      end
+
+      # Specify the climate zones you want to run.
+      # 1A Miami, 2A Houston, 2B Phoenix,
+      # 3A Memphis (Atlanta), 3B El Paso (Las Vegas), 3C San Francisco,
+      # 4A Baltimore, 4B Albuquerque, 4C Salem (Seattle),
+      # 5A Chicago, 5B Boise (Boulder), 6A Burlington (Minneapolis) 6B Helena,
+      # 7A Duluth, 8A Fairbanks
+      climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
+                      'ASHRAE 169-2006-3B','ASHRAE 169-2006-3C','ASHRAE 169-2006-4A','ASHRAE 169-2006-4B',
+                      'ASHRAE 169-2006-4C','ASHRAE 169-2006-5A','ASHRAE 169-2006-5B','ASHRAE 169-2006-6A',
+                      'ASHRAE 169-2006-6B','ASHRAE 169-2006-7A','ASHRAE 169-2006-8A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+  end
+
 
   def dont_test_all
     bldg_types = ['SecondarySchool', 'PrimarySchool', 'SmallOffice', 'SmallHotel']
