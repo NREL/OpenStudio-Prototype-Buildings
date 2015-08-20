@@ -214,10 +214,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
       # Reference and Prototype vintages
-      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+      case building_vintage
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
         geometry_file = 'Geometry.small_hotel_doe.osm'
-      else
-        geometry_file = 'Geometry.small_hotel_pnnl.osm'
+      when '90.1-2004'
+        geometry_file = 'Geometry.small_hotel_pnnl2004.osm'
+      when '90.1-2007'
+        geometry_file = 'Geometry.small_hotel_pnnl2007.osm'
+      when '90.1-2010'
+        geometry_file = 'Geometry.small_hotel_pnnl2010.osm'
+      when '90.1-2013'
+        geometry_file = 'Geometry.small_hotel_pnnl2013.osm'
       end
     when 'LargeHotel'
       require_relative 'resources/Prototype.large_hotel'
