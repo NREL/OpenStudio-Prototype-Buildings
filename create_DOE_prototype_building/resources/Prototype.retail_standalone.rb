@@ -57,10 +57,13 @@ class OpenStudio::Model::Model
       end
 
       case system['type']
-      when 'CAV'
-        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones, 'BlowThrough')
-      when 'Unit_Heater'
-        self.add_unitheater(prototype_input, hvac_standards, thermal_zones)
+        when 'CAV'
+          self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones, 'BlowThrough')
+        when 'Unit_Heater'
+          self.add_unitheater(prototype_input, hvac_standards, thermal_zones)
+        else
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No HVAC system for #{system['type']}")
+          return false
       end
 
     end
@@ -71,7 +74,7 @@ class OpenStudio::Model::Model
     
   end #add hvac
 
-  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
 

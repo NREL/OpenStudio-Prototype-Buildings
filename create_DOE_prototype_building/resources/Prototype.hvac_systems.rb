@@ -2073,7 +2073,7 @@ class OpenStudio::Model::Model
         fan.setMotorEfficiency(0.8)
       else
         puts "No fan type is found"
-      
+
       end
     
     
