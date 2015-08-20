@@ -1366,9 +1366,7 @@ class OpenStudio::Model::Model
         result = possible_climate_zones.sort.first
       end
     end
-    
-    puts "******************************************************************climate_zone_set = #{result}"
-    
+        
     # Check that a climate zone set was found
     if result.nil?
       
