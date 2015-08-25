@@ -2,7 +2,7 @@
   <schema_version>3.0</schema_version>
   <name>btap_equest_converter</name>
   <uid>ca793d90-fbc6-4f3d-9021-24a204e1b380</uid>
-  <version_id>e0b5d915-f6e1-4fca-aadb-fc240ef13d1c</version_id>
+  <version_id>99ea878f-ee72-4060-af5d-3eb4a88ed937</version_id>
   <xml_checksum>68F3FD42</xml_checksum>
   <class_name>BtapEquestConverter</class_name>
   <display_name>btap equest converter</display_name>
@@ -12,7 +12,7 @@
     <argument>
       <name>inp_file</name>
       <display_name>inp_file</display_name>
-      <description>Full path of DOE 2.2 inp file.</description>
+      <description>Full path of DOE 2.2 inp file. USE FORWARD SLASH ONLY IN PATH</description>
       <type>String</type>
       <required>true</required>
       <model_dependent>false</model_dependent>
@@ -46,12 +46,6 @@
   </attributes>
   <files>
     <file>
-      <filename>btap_equest_converter_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>524ADDAC</checksum>
-    </file>
-    <file>
       <filename>4StoreyBuilding.inp</filename>
       <filetype>inp</filetype>
       <usage_type>test</usage_type>
@@ -64,58 +58,10 @@
       <checksum>DBB97B88</checksum>
     </file>
     <file>
-      <filename>basic_2storey_with_basement_wizard_geometry.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>12F5135E</checksum>
-    </file>
-    <file>
-      <filename>Custom - Concave Polygon.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>09D0B4C8</checksum>
-    </file>
-    <file>
-      <filename>Custom - Convex Polygon.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>DBDE6FCA</checksum>
-    </file>
-    <file>
-      <filename>H-Shape.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>176092D5</checksum>
-    </file>
-    <file>
-      <filename>L-Shape.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>EB98A9B9</checksum>
-    </file>
-    <file>
-      <filename>Nealon-Calibrated.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>23710AF5</checksum>
-    </file>
-    <file>
       <filename>PerimeterCoreFloorAzimuthRotationTest.inp</filename>
       <filetype>inp</filetype>
       <usage_type>test</usage_type>
       <checksum>DBB97B88</checksum>
-    </file>
-    <file>
-      <filename>Plus-Shape.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>E4298A57</checksum>
-    </file>
-    <file>
-      <filename>Rectangle minus corner.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>3139D59E</checksum>
     </file>
     <file>
       <filename>Rectangle.inp</filename>
@@ -124,22 +70,10 @@
       <checksum>E684A66F</checksum>
     </file>
     <file>
-      <filename>Rectangular Atrium.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>7FDC75B2</checksum>
-    </file>
-    <file>
       <filename>SingleZonePerFloorRotation.inp</filename>
       <filetype>inp</filetype>
       <usage_type>test</usage_type>
       <checksum>15040529</checksum>
-    </file>
-    <file>
-      <filename>T-Shape.inp</filename>
-      <filetype>inp</filetype>
-      <usage_type>test</usage_type>
-      <checksum>46858840</checksum>
     </file>
     <file>
       <filename>Trapezoid.inp</filename>
@@ -154,10 +88,16 @@
       <checksum>D2C897FE</checksum>
     </file>
     <file>
-      <filename>U-Shape.inp</filename>
+      <filename>btap_equest_converter_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>32A123FF</checksum>
+    </file>
+    <file>
+      <filename>basic_2storey_with_basement_wizard_geometry.inp</filename>
       <filetype>inp</filetype>
       <usage_type>test</usage_type>
-      <checksum>38EFFD21</checksum>
+      <checksum>841A1342</checksum>
     </file>
     <file>
       <version>
@@ -168,7 +108,73 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>DDD49932</checksum>
+      <checksum>FAECA54B</checksum>
+    </file>
+    <file>
+      <filename>Custom_Concave_Polygon.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>55DF2C55</checksum>
+    </file>
+    <file>
+      <filename>Custom_Convex_Polygon.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>0ECBD37E</checksum>
+    </file>
+    <file>
+      <filename>H_Shape.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>176092D5</checksum>
+    </file>
+    <file>
+      <filename>L_Shape.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>EB98A9B9</checksum>
+    </file>
+    <file>
+      <filename>Nealon_Calibrated.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>9B05F455</checksum>
+    </file>
+    <file>
+      <filename>Plus_Shape.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>7C0523BD</checksum>
+    </file>
+    <file>
+      <filename>ReaganBuilding_Calibrated.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>78E0A5CE</checksum>
+    </file>
+    <file>
+      <filename>Rectangle_minus_corner.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>3139D59E</checksum>
+    </file>
+    <file>
+      <filename>Rectangular_Atrium.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>7FDC75B2</checksum>
+    </file>
+    <file>
+      <filename>T_Shape.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>7EE6E77C</checksum>
+    </file>
+    <file>
+      <filename>U_Shape.inp</filename>
+      <filetype>inp</filetype>
+      <usage_type>test</usage_type>
+      <checksum>38EFFD21</checksum>
     </file>
   </files>
 </measure>
