@@ -559,6 +559,107 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
        
   end
 
+  # For David Goldwasser in NREL
+  if hostname == "MLEACH-19193S" || hostname == "Anns-iMac.local"
+    # Test the Medium Office in the QTR vintages and climate zones
+    def test_medium_office
+      bldg_types = ['MediumOffice']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
+
+    # "ASHRAE 169-2006-2A" => "USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3",
+    # "ASHRAE 169-2006-3B" => "USA_TX_El.Paso.Intl.AP.722700_TMY3",
+    # "ASHRAE 169-2006-4A" => "USA_MD_Baltimore-Washington.Intl.AP.724060_TMY3",
+    # "ASHRAE 169-2006-5A" => "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",
+
+    # Test the Small Office in the PTool vintages and climate zones
+    def dont_test_small_office
+      bldg_types = ['SmallOffice']
+      vintages = ['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      #all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      #all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_primary_school
+
+      bldg_types = ['PrimarySchool']
+      vintages = ['90.1-2004', '90.1-2007', '90.1-2010'] # '90.1-2013'] 'DOE Ref Pre-1980', 'DOE Ref 1980-2004',
+      climate_zones = ['ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
+
+    def dont_test_large_office
+
+      bldg_types = ['LargeOffice']
+      vintages = ['90.1-2010'] #['DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2010']
+      climate_zones = ['ASHRAE 169-2006-5A', 'ASHRAE 169-2006-2A']#, 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+
+    end
+
+  end
+  
+  # For Mini at ORNL
   if hostname == "PC0082344"
     # Test the Medium Office in the QTR vintages and climate zones
     def test_medium_office
@@ -656,9 +757,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     end
 
->>>>>>> origin/master
   end
 
+  # For Mark at ORNL
   if hostname == "m5zmac"
     # Test the Medium Office in the QTR vintages and climate zones
     def test_medium_office
@@ -887,7 +988,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     end
   end
 
-
   # For Yixing Chen in LBNL
   if hostname == "yxc_lbnl"
     def test_large_hotel
@@ -951,7 +1051,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
   end
-
 
   def dont_test_all
     bldg_types = ['SecondarySchool', 'PrimarySchool', 'SmallOffice', 'SmallHotel']
