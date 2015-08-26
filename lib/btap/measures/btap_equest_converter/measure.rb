@@ -6668,11 +6668,11 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
       puts "no orphaned sizing:zone objects were found"
     end
 
-    puts ""
+
     puts ">>diagnostic test complete"
 
     if savediagnostic
-      newfilename = inp_file.gsub(".osm","_diagnostic.osm")
+       newfilename = inp_file.gsub(".inp","_diagnostic.osm")
       if File.exists? newfilename
         # I would like to add a prompt to ask the user if they want to overwrite their file
       end
