@@ -799,6 +799,22 @@ class OpenStudio::Model::Model
     # hot water coil convergence tolerances?
     self.getControllerWaterCoils.sort.each {|obj| obj.set_convergence_limits}
     
+    # Set the nightcycle setpoint managers up with 
+    # runtime to 1800s (30min) and 1.8F delta-T
+    nightcycle_delta_t_r = 1.8 # 1.8F delta-T    
+    nightcycle_delta_t_k = OpenStudio.convert(nightcycle_delta_t_r,'R','K').get
+    nightcycle_time_s = 1800 # 30min
+    self.getAirLoopHVACs.each do |air_loop|
+      if air_loop.availabilityManager.is_initialized
+        avm = air_loop.availabilityManager.get
+        if avm.to_AvailabilityManagerNightCycle.is_initialized
+          avm_nc = avm.to_AvailabilityManagerNightCycle.get
+          avm_nc.setThermostatTolerance(nightcycle_delta_t_k)
+          avm_nc.setCyclingRunTime(nightcycle_time_s)
+        end
+      end
+    end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
   end 
