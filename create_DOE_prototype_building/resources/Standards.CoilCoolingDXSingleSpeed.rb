@@ -13,10 +13,6 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
   
     unitary_acs = standards['unitary_acs']
     heat_pumps = standards['heat_pumps']
-    curve_biquadratics = standards['curve_biquadratics']
-    curve_quadratics = standards['curve_quadratics']
-    curve_bicubics = standards['curve_bicubics']
-    curve_cubics = standards['curve_cubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -160,6 +156,17 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
  
     # Get the minimum efficiency standards
     cop = nil
+    
+    if subcategory == 'PTAC'
+      ptac_eer_coeff_1 = ac_props['ptac_eer_coefficient_1']
+      ptac_eer_coeff_2 = ac_props['ptac_eer_coefficient_2']
+      capacity_btu_per_hr = 7000 if capacity_btu_per_hr < 7000
+      capacity_btu_per_hr = 15000 if capacity_btu_per_hr > 15000
+      ptac_eer = ptac_eer_coeff_1 + (ptac_eer_coeff_2 * capacity_btu_per_hr)
+      cop = eer_to_cop(ptac_eer)
+      self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{ptac_eer}EER")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{ptac_eer}")      
+    end
     
     # If specified as SEER
     unless ac_props['minimum_seasonal_energy_efficiency_ratio'].nil?

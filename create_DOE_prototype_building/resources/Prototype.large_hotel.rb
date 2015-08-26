@@ -10,8 +10,8 @@ class OpenStudio::Model::Model
         'Corridor'=> ['Corridor_Flr_6'],
         'Corridor2'=> ['Corridor_Flr_3'],
         'GuestRoom'=> ['Room_1_Flr_3','Room_2_Flr_3','Room_5_Flr_3','Room_6_Flr_3'],
-        'GuestRoom3'=> ['Room_1_Flr_6','Room_2_Flr_6'],
         'GuestRoom2'=> ['Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3'],
+        'GuestRoom3'=> ['Room_1_Flr_6','Room_2_Flr_6'],
         'GuestRoom4'=> ['Room_3_Mult9_Flr_6'],
         'Kitchen'=> ['Kitchen_Flr_6'],
         'Laundry'=> ['Laundry_Flr_1'],
@@ -29,6 +29,7 @@ class OpenStudio::Model::Model
     system_to_space_map = [
         {
             'type' => 'VAV',
+            'name' => 'VAV WITH REHEAT',
             'space_names' =>
                 [
                     'Basement',
@@ -52,6 +53,44 @@ class OpenStudio::Model::Model
                 [
                     'Room_1_Flr_3','Room_2_Flr_3','Room_3_Mult19_Flr_3','Room_4_Mult19_Flr_3','Room_5_Flr_3','Room_6_Flr_3','Room_1_Flr_6','Room_2_Flr_6','Room_3_Mult9_Flr_6'
                 ]
+        },
+        {
+            'type' => 'Refrigeration',
+            'case_type' => 'Walkin Freezer',
+            'cooling_capacity_per_length' => 367.0,
+            'length' => 7.32,
+            'evaporator_fan_pwr_per_length' => 34.0,
+            'lighting_per_length' => 16.4,
+            'lighting_sch_name' => 'HotelLarge BLDG_LIGHT_SCH',
+            'defrost_pwr_per_length' => 273.0,
+            'restocking_sch_name' => 'HotelLarge Kitchen_Flr_6_Case:1_WALKINFREEZER_WalkInStockingSched',
+            'cop' => 1.5,
+            'cop_f_of_t_curve_name' => 'RACK1_RackCOPfTCurve',
+            'condenser_fan_pwr' => 350.0,
+            'condenser_fan_pwr_curve_name' => 'RACK1_RackCondFanCurve2',
+            'space_names' =>
+            [
+                'Kitchen_ZN_1_FLR_1'
+            ]
+        },
+        {
+            'type' => 'Refrigeration',
+            'case_type' => 'Display Case',
+            'cooling_capacity_per_length' => 734.0,
+            'length' => 3.66,
+            'evaporator_fan_pwr_per_length' => 55.0,
+            'lighting_per_length' => 33.0,
+            'lighting_sch_name' => 'HotelLarge BLDG_LIGHT_SCH',
+            'defrost_pwr_per_length' => 0.0,
+            'restocking_sch_name' => 'HotelLarge Kitchen_Flr_6_Case:2_SELFCONTAINEDDISPLAYCASE_CaseStockingSched',
+            'cop' => 3.0,
+            'cop_f_of_t_curve_name' => 'RACK2_RackCOPfTCurve',
+            'condenser_fan_pwr' => 750.0,
+            'condenser_fan_pwr_curve_name' => 'RACK1_RackCondFanCurve2',
+            'space_names' =>
+            [
+                'Kitchen_ZN_1_FLR_1'
+            ]
         }
     ]
     return system_to_space_map
@@ -103,19 +142,36 @@ class OpenStudio::Model::Model
       end
 
       case system['type']
-        when 'VAV'
-          if hot_water_loop && chilled_water_loop
-            self.add_vav(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type)
-          else
-            OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
-            return false
-          end
-        when 'DOAS'
-          self.add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type)
+      when 'VAV'
+        if hot_water_loop && chilled_water_loop
+          self.add_vav(prototype_input, hvac_standards, system['name'], hot_water_loop, chilled_water_loop, thermal_zones, building_type)
         else
-          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Undefined HVAC system type called #{system['type']}")
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false
+        end
+      when 'DOAS'
+        self.add_doas(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones, building_type, building_vintage, climate_zone)
+      when 'Refrigeration'
+        self.add_refrigeration(prototype_input,
+                              standards,
+                              system['case_type'],
+                              system['cooling_capacity_per_length'],
+                              system['length'],
+                              system['evaporator_fan_pwr_per_length'],
+                              system['lighting_per_length'],
+                              system['lighting_sch_name'],
+                              system['defrost_pwr_per_length'],
+                              system['restocking_sch_name'],
+                              system['cop'],
+                              system['cop_f_of_t_curve_name'],
+                              system['condenser_fan_pwr'],
+                              system['condenser_fan_pwr_curve_name'],
+                              thermal_zones[0])
+      else
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Undefined HVAC system type called #{system['type']}")
+        return false  
       end
+      
     end
 
     # Add Exhaust Fan
@@ -143,12 +199,12 @@ class OpenStudio::Model::Model
         zone_exhaust_fan.setName(space.name.to_s + " Exhaust Fan")
         zone_exhaust_fan.setAvailabilitySchedule(exhaust_schedule)
         zone_exhaust_fan.setFanEfficiency(space_type_data['exhaust_fan_efficiency'])
-        zone_exhaust_fan.setPressureRise (space_type_data['exhaust_fan_pressure_rise'])
+        zone_exhaust_fan.setPressureRise(space_type_data['exhaust_fan_pressure_rise'])
         maximum_flow_rate = OpenStudio.convert(space_type_data['exhaust_fan_maximum_flow_rate'], 'cfm', 'm^3/s').get
 
         zone_exhaust_fan.setMaximumFlowRate(maximum_flow_rate)
         if balanced_exhaust_schedule.class.to_s != "NilClass"
-          zone_exhaust_fan.setBalancedExhaustFractionSchedule (balanced_exhaust_schedule)
+          zone_exhaust_fan.setBalancedExhaustFractionSchedule(balanced_exhaust_schedule)
         end
         zone_exhaust_fan.setEndUseSubcategory("Zone Exhaust Fans")
         zone_exhaust_fan.addToThermalZone(thermal_zone)
@@ -186,11 +242,6 @@ class OpenStudio::Model::Model
     swh_thermal_zone = self.getSpaceByName(swh_space_name).get.thermalZone.get
     swh_loop = self.add_swh_loop(prototype_input, hvac_standards, 'main',swh_thermal_zone)
 
-    # Add the water use equipment
-    guess_room_space_types =['GuestRoom','GuestRoom2','GuestRoom3','GuestRoom4']
-    kitchen_space_types = ['Kitchen']
-    guess_room_water_use_rate = 0.020833333 # gal/min, Reference: NREL Reference building report 5.1.6
-    kitchen_space_use_rate = 2.22 # gal/min, from PNNL prototype building
     guess_room_water_use_schedule = "HotelLarge GuestRoom_SWH_Sch"
     kitchen_water_use_schedule = "HotelLarge BLDG_SWH_SCH"
 
@@ -198,13 +249,61 @@ class OpenStudio::Model::Model
     space_type_map = define_space_type_map(building_type, building_vintage, climate_zone)
     space_multipliers = define_space_multiplier
 
+    # Add the water use equipment
+
+    kitchen_space_types = ['Kitchen']
+    kitchen_space_use_rate = 2.22 # gal/min, from PNNL prototype building
+
+    guess_room_water_use_rate = 0.020833333 # gal/min, Reference: NREL Reference building report 5.1.6
+
+    if building_vintage == "90.1-2004" or building_vintage == "90.1-2007" or building_vintage == "90.1-2010" or building_vintage == "90.1-2013"
+        guess_room_space_types =['GuestRoom','GuestRoom2','GuestRoom3','GuestRoom4']
+    else
+        guess_room_space_types =['GuestRoom','GuestRoom3']
+        guess_room_space_types1 = ['GuestRoom2']
+        guess_room_space_types2 = ['GuestRoom4']
+        guess_room_water_use_rate1 = 0.395761032 # gal/min, Reference building
+        guess_room_water_use_rate2 = 0.187465752 # gal/min, Reference building
+
+        laundry_water_use_schedule = "HotelLarge LaundryRoom_Eqp_Elec_Sch"
+        laundry_space_types = ['Laundry']
+        laundry_room_water_use_rate = 2.6108244 # gal/min, Reference building
+
+        guess_room_space_types1.each do |space_type|
+            space_names = space_type_map[space_type]
+            space_names.each do |space_name|
+                space_multiplier = 1
+                space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+                water_end_uses.push([space_name, guess_room_water_use_rate1 * space_multiplier,guess_room_water_use_schedule])
+            end
+        end
+
+        guess_room_space_types2.each do |space_type|
+            space_names = space_type_map[space_type]
+            space_names.each do |space_name|
+                space_multiplier = 1
+                space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+                water_end_uses.push([space_name, guess_room_water_use_rate2 * space_multiplier,guess_room_water_use_schedule])
+            end
+        end
+
+        laundry_space_types.each do |space_type|
+            space_names = space_type_map[space_type]
+            space_names.each do |space_name|
+                space_multiplier = 1
+                space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+                water_end_uses.push([space_name, laundry_room_water_use_rate * space_multiplier,laundry_water_use_schedule])
+            end
+        end
+    end
+
     guess_room_space_types.each do |space_type|
-      space_names = space_type_map[space_type]
-      space_names.each do |space_name|
-        space_multiplier = 1
-        space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
-        water_end_uses.push([space_name, guess_room_water_use_rate * space_multiplier,guess_room_water_use_schedule])
-      end
+        space_names = space_type_map[space_type]
+        space_names.each do |space_name|
+            space_multiplier = 1
+            space_multiplier= space_multipliers[space_name].to_i if space_multipliers[space_name] != nil
+            water_end_uses.push([space_name, guess_room_water_use_rate * space_multiplier,guess_room_water_use_schedule])
+        end
     end
 
     kitchen_space_types.each do |space_type|
@@ -218,16 +317,18 @@ class OpenStudio::Model::Model
 
     self.add_large_hotel_swh_end_uses(prototype_input, hvac_standards, swh_loop, 'main', water_end_uses)
 
-    # Add the laundry water heater
-    laundry_water_heater_space_name = "Basement"
-    laundry_water_heater_thermal_zone = self.getSpaceByName(laundry_water_heater_space_name).get.thermalZone.get
-    laundry_water_heater_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry', laundry_water_heater_thermal_zone)
-    self.add_swh_end_uses(prototype_input, hvac_standards, laundry_water_heater_loop,'laundry')
+    if building_vintage == "90.1-2004" or building_vintage == "90.1-2007" or building_vintage == "90.1-2010" or building_vintage == "90.1-2013"
+        # Add the laundry water heater
+        laundry_water_heater_space_name = "Basement"
+        laundry_water_heater_thermal_zone = self.getSpaceByName(laundry_water_heater_space_name).get.thermalZone.get
+        laundry_water_heater_loop = self.add_swh_loop(prototype_input, hvac_standards, 'laundry', laundry_water_heater_thermal_zone)
+        self.add_swh_end_uses(prototype_input, hvac_standards, laundry_water_heater_loop,'laundry')
 
-    booster_water_heater_space_name = "KITCHEN_FLR_6"
-    booster_water_heater_thermal_zone = self.getSpaceByName(booster_water_heater_space_name).get.thermalZone.get
-    swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, swh_loop, booster_water_heater_thermal_zone)
-    self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+        booster_water_heater_space_name = "KITCHEN_FLR_6"
+        booster_water_heater_thermal_zone = self.getSpaceByName(booster_water_heater_space_name).get.thermalZone.get
+        swh_booster_loop = self.add_swh_booster(prototype_input, hvac_standards, swh_loop, booster_water_heater_thermal_zone)
+        self.add_booster_swh_end_uses(prototype_input, hvac_standards, swh_booster_loop)
+    end
 
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding SWH")
     return true
@@ -277,157 +378,5 @@ class OpenStudio::Model::Model
     end
   end
 
-  def add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, standards)
-    # TODO: Check different vintage to see what parameters are required.
-    # refrigeration_standards = standards['refrigeration']
-    # climate_zone_sets = self.find_all_climate_zone_sets(climate_zone)
-    # refrigeration_objs = []
-    # climate_zone_sets.each do |climate_zone_set|
-    #   # Find the initial Chiller properties based on initial inputs
-    #   search_criteria = {
-    #       'template' => building_vintage,
-    #       'climate_zone_set' => climate_zone_set,
-    #       'building_type' => building_type
-    #   }
-    #   refrigeration_objs = self.find_objects(refrigeration_standards, search_criteria)
-    #   break if refrigeration_objs.size > 0
-    # end
-    #
-    # refrigeration_objs.each do |obj|
-    #   self.add_refrigeration_case(obj)
-    # end
 
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding Refrigeration System")
-
-    #Schedule Ruleset
-    defrost_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    defrost_sch.setName("Refrigeration Defrost Schedule")
-    #All other days
-    defrost_sch.defaultDaySchedule.setName("Refrigeration Defrost Schedule Default")
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,0,0), 0)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,20,0), 1)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,0,0), 0)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,20,0), 1)
-    defrost_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0)
-
-    #Schedule Ruleset
-    defrost_dripdown_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    defrost_dripdown_sch.setName("Refrigeration Defrost DripDown Schedule")
-    #All other days
-    defrost_dripdown_sch.defaultDaySchedule.setName("Refrigeration Defrost DripDown Schedule Default")
-    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,0,0), 0)
-    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,11,30,0), 1)
-    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,0,0), 0)
-    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,23,30,0), 1)
-    defrost_dripdown_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0)
-
-    #Schedule Ruleset
-    case_credit_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    case_credit_sch.setName("Refrigeration Case Credit Schedule")
-    #All other days
-    case_credit_sch.defaultDaySchedule.setName("Refrigeration Case Credit Schedule Default")
-    case_credit_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,7,0,0), 0.2)
-    case_credit_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,21,0,0), 0.4)
-    case_credit_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.2)
-
-    space = self.getSpaceByName('Kitchen_Flr_6')
-    if space.empty?
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No space called Kitchen was found in the model")
-      return false
-    end
-    space = space.get
-    thermal_zone = space.thermalZone
-    if thermal_zone.empty?
-      OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No thermal zone was created for the space called #{space_name}")
-      return false
-    end
-    thermal_zone = thermal_zone.get
-
-    ref_sys1 = OpenStudio::Model::RefrigerationSystem.new(self)
-    ref_sys1.addCompressor(OpenStudio::Model::RefrigerationCompressor.new(self))
-    condenser1 = OpenStudio::Model::RefrigerationCondenserAirCooled.new(self)
-    condenser1.setRatedFanPower(350)
-
-    ref_case1 = OpenStudio::Model::RefrigerationCase.new(self, defrost_sch)
-    ref_case1.setAvailabilitySchedule(self.alwaysOnDiscreteSchedule)
-    ref_case1.setThermalZone(thermal_zone)
-    ref_case1.setRatedTotalCoolingCapacityperUnitLength(367.0)
-    ref_case1.setCaseLength(7.32)
-    ref_case1.setCaseOperatingTemperature(-23.0)
-    ref_case1.setStandardCaseFanPowerperUnitLength(34)
-    ref_case1.setOperatingCaseFanPowerperUnitLength(34)
-    ref_case1.setStandardCaseLightingPowerperUnitLength(16.4)
-    ref_case1.resetInstalledCaseLightingPowerperUnitLength
-
-    ref_case1.setCaseLightingSchedule(self.add_schedule('HotelLarge BLDG_LIGHT_SCH'))
-    ref_case1.setHumidityatZeroAntiSweatHeaterEnergy(0)
-    ref_case1.setCaseDefrostPowerperUnitLength(273.0)
-    ref_case1.setCaseDefrostType('Electric')
-    ref_case1.resetDesignEvaporatorTemperatureorBrineInletTemperature
-
-    ref_case1.setRatedAmbientTemperature(23.88)
-    ref_case1.setRatedLatentHeatRatio(0.1)
-    ref_case1.setRatedRuntimeFraction(0.4)
-    ref_case1.setLatentCaseCreditCurve(self.add_curve('HotelLarge Kitchen_Flr_6_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult',standards))
-    ref_case1.setCaseLightingSchedule(self.add_schedule('HotelLarge BLDG_LIGHT_SCH'))
-    ref_case1.setFractionofAntiSweatHeaterEnergytoCase(0)
-
-    ref_case1.setCaseHeight(0)
-    ref_case1.setCaseDefrostDripDownSchedule(defrost_dripdown_sch)
-    ref_case1.setUnderCaseHVACReturnAirFraction(0)
-    # TODO: setRefrigeratedCaseRestockingSchedule is not working
-    ref_case1.setRefrigeratedCaseRestockingSchedule(self.add_schedule('HotelLarge Kitchen_Flr_6_Case:1_WALKINFREEZER_WalkInStockingSched'))
-    ref_case1.setCaseCreditFractionSchedule(case_credit_sch)
-
-    ref_sys1.addCase(ref_case1)
-    ref_sys1.setRefrigerationCondenser(condenser1)
-    ref_sys1.setSuctionPipingZone(thermal_zone)
-
-    #Schedule Ruleset
-    defrost_sch2 = OpenStudio::Model::ScheduleRuleset.new(self)
-    defrost_sch2.setName('Refrigeration Defrost Schedule 2')
-    #All other days
-    defrost_sch2.defaultDaySchedule.setName('Refrigeration Defrost Schedule Default 2')
-    defrost_sch2.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0)
-
-    ref_sys2 = OpenStudio::Model::RefrigerationSystem.new(self)
-    ref_sys2.addCompressor(OpenStudio::Model::RefrigerationCompressor.new(self))
-    condenser2 = OpenStudio::Model::RefrigerationCondenserAirCooled.new(self)
-    condenser2.setRatedFanPower(350)
-
-    ref_case2 = OpenStudio::Model::RefrigerationCase.new(self, defrost_sch2)
-    ref_case2.setThermalZone(thermal_zone)
-    ref_case2.setAvailabilitySchedule(self.alwaysOnDiscreteSchedule)
-    ref_case2.setRatedTotalCoolingCapacityperUnitLength(734.0)
-    ref_case2.setCaseLength(3.66)
-    ref_case2.setCaseOperatingTemperature(2.0)
-    ref_case2.setStandardCaseFanPowerperUnitLength(55)
-    ref_case2.setOperatingCaseFanPowerperUnitLength(55)
-    ref_case2.setStandardCaseLightingPowerperUnitLength(33)
-    ref_case2.resetInstalledCaseLightingPowerperUnitLength
-
-    ref_case2.setCaseLightingSchedule(self.add_schedule('HotelLarge BLDG_LIGHT_SCH'))
-    ref_case2.setHumidityatZeroAntiSweatHeaterEnergy(0)
-    ref_case2.setCaseDefrostType('None')
-    ref_case2.resetDesignEvaporatorTemperatureorBrineInletTemperature
-
-    ref_case2.setRatedAmbientTemperature(23.88)
-    ref_case2.setRatedLatentHeatRatio(0.08)
-    ref_case2.setRatedRuntimeFraction(0.85)
-    ref_case2.setLatentCaseCreditCurve(self.add_curve('HotelLarge Kitchen_Flr_6_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult',standards))
-    ref_case2.setFractionofAntiSweatHeaterEnergytoCase(0.2)
-
-    ref_case2.setCaseHeight(0)
-    ref_case2.setCaseDefrostPowerperUnitLength(0)
-    ref_case2.setUnderCaseHVACReturnAirFraction(0.05)
-    ref_case2.setRefrigeratedCaseRestockingSchedule(self.add_schedule('HotelLarge Kitchen_Flr_6_Case:2_SELFCONTAINEDDISPLAYCASE_CaseStockingSched'))
-
-    ref_sys2.addCase(ref_case2)
-    ref_sys2.setRefrigerationCondenser(condenser2)
-    ref_sys2.setSuctionPipingZone(thermal_zone)
-
-    OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Finished adding Refrigeration System")
-
-    return true
-  end #add refrigeration
 end

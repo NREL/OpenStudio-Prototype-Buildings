@@ -1,68 +1,58 @@
 
 # Reopen the OpenStudio class to add methods to apply standards to this object
-class OpenStudio::Model::FanConstantVolume
+class OpenStudio::Model::FanZoneExhaust
 
   # Sets the fan motor efficiency based on the standard.
-  # Assumes 65% fan efficiency and 4-pole, enclosed motor.
+  # Assumes 55% fan efficiency and 4-pole, enclosed motor.
   #
   # @return [Bool] true if successful, false if not
   def setStandardEfficiency(template, standards)
     
-    motors = standards['motors']
+    motors = standards["motors"]
     
     # Get the max flow rate from the fan.
     maximum_flow_rate_m3_per_s = nil
     if self.maximumFlowRate.is_initialized
       maximum_flow_rate_m3_per_s = self.maximumFlowRate.get
-    elsif self.autosizedMaximumFlowRate.is_initialized
-      maximum_flow_rate_m3_per_s = self.autosizedMaximumFlowRate.get
     else
-      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.FanConstantVolume', "For #{self.name} max flow rate is not hard sized, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.FanZoneExhaust", "For #{self.name} max flow rate is not available, cannot apply efficiency standard.")
       return false
     end
     
     # Convert max flow rate to cfm
-    maximum_flow_rate_cfm = OpenStudio.convert(maximum_flow_rate_m3_per_s, 'm^3/s', 'cfm').get
+    maximum_flow_rate_cfm = OpenStudio.convert(maximum_flow_rate_m3_per_s, "m^3/s", "cfm").get
     
     # Get the pressure rise from the fan
     pressure_rise_pa = self.pressureRise
-    pressure_rise_in_h2o = OpenStudio.convert(pressure_rise_pa, 'Pa','inH_{2}O').get
+    pressure_rise_in_h2o = OpenStudio.convert(pressure_rise_pa, "Pa","inH_{2}O").get
     
-    # Assume that the fan efficiency is 65% based on
-    #TODO need reference
-    fan_eff = 0.65
+    # Assume that the fan efficiency is 55% based on
+    # PNNL Enhancements # TODO reference
+    fan_eff = 0.55
     
     # Calculate the Brake Horsepower
     brake_hp = (pressure_rise_in_h2o * maximum_flow_rate_cfm)/(fan_eff * 6356) 
     allowed_hp = brake_hp * 1.1 # Per PNNL document #TODO add reference
-    if allowed_hp > 0.1
-      allowed_hp = allowed_hp.round(2)+0.0001
-    elsif allowed_hp < 0.01
-      allowed_hp = 0.01
-    end
-    puts "brake_hp = #{self.name}  #{brake_hp}"
-    puts "allowed_hp = #{self.name} #{allowed_hp}"
-    
+
     # Find the motor that meets these size criteria
     search_criteria = {
-    'template' => template,
-    'number_of_poles' => 4.0,
-    'type' => 'Enclosed',
+    "template" => template,
+    "number_of_poles" => 4.0,
+    "type" => "Enclosed",
     }
     
     motor_properties = self.model.find_object(motors, search_criteria, allowed_hp)
- 
+  
     # Get the nominal motor efficiency
-    motor_eff = motor_properties['nominal_full_load_efficiency']
+    motor_eff = motor_properties["nominal_full_load_efficiency"]
   
     # Calculate the total fan efficiency
     total_fan_eff = fan_eff * motor_eff
     
-    # Set the total fan efficiency and the motor efficiency
+    # Set the total fan efficiency
     self.setFanEfficiency(total_fan_eff)
-    self.setMotorEfficiency(motor_eff)
-    
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.FanConstantVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(2)}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
+
+    OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.FanZoneExhaust", "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(2)}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
     
     return true
     
@@ -74,15 +64,16 @@ class OpenStudio::Model::FanConstantVolume
   # @return [Double] fan power
   #   @units Watts (W)
   def fanPower()
-    
-    # Get design supply air flow rate (whether autosized or hard-sized)
-    dsn_air_flow_m3_per_s = 0
-    if self.autosizedDesignSupplyAirFlowRate.is_initialized
-      dsn_air_flow_m3_per_s = self.autosizedDesignSupplyAirFlowRate.get
-    else
-      dsn_air_flow_m3_per_s = self.designSupplyAirFlowRate.get
-    end
   
+    # Get the max flow rate from the fan
+    dsn_air_flow_m3_per_s = 0
+    if self.maximumFlowRate.is_initialized
+      dsn_air_flow_m3_per_s = self.maximumFlowRate.get
+    else
+      OpenStudio::logFree(OpenStudio::Warn, "openstudio.standards.FanZoneExhaust", "For #{self.name} max flow rate is not available, cannot apply efficiency standard.")
+      return false
+    end  
+
     # Get the total fan efficiency
     fan_total_eff = fan.fanEfficiency
     
@@ -100,7 +91,9 @@ class OpenStudio::Model::FanConstantVolume
   # based on fan power and fan motor efficiency.
   # 
   # @return [Double] brake horsepower
-  #   @units horsepower (hp)  
+  #   @units horsepower (hp)
+  # @todo This method isn't setup for zone exhaust fans because
+  #  motor efficiency isn't broken out explicitly.
   def brakeHorsepower()
   
     # Get the fan motor efficiency
@@ -139,7 +132,7 @@ class OpenStudio::Model::FanConstantVolume
   # Changes the fan impeller efficiency and also the fan total efficiency
   # at the same time, preserving the motor efficiency.
   #
-  # @param impeller_eff [Double] impeller efficiency (0.0 to 1.0)  
+  # @param impeller_eff [Double] impeller efficiency (0.0 to 1.0) 
   def changeImpellerEfficiency(impeller_eff)
     
     # Get the existing motor efficiency
@@ -184,7 +177,7 @@ class OpenStudio::Model::FanConstantVolume
     # Lookup the minimum motor efficiency
     motors = standards["motors"]
     
-    # Assuming all fan motors are 4-pole ODP
+    # Assuming all fan motors are 4-pole Enclosed
     search_criteria = {
       "template" => template,
       "number_of_poles" => 4.0,
