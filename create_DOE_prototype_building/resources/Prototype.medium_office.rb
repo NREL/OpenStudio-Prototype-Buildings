@@ -76,6 +76,9 @@ class OpenStudio::Model::Model
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No thermal zone was created for the space called #{space_name}")
           return false
         end
+		if space_name == "Core_bottom"
+			self.add_elevator(prototype_input, hvac_standards, space)
+		end
         thermal_zones << zone.get
       end
 
