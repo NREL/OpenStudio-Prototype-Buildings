@@ -6193,7 +6193,7 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
   # define what happens when the measure is run
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-
+    puts "starting measure."
     # use the built-in error checking
     if !runner.validateUserArguments(arguments(model), user_arguments)
       return false
@@ -6204,7 +6204,9 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
 
     # check the space_name for reasonableness
     if inp_file.empty?
-      runner.registerError("Empty inp file path was entered was entered.")
+      message = "Empty inp file path was entered was entered."
+      runner.registerError(message)
+      puts message
       return false
     end
 
@@ -6214,7 +6216,9 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     #validate inp file path. 
 
     unless File.exist?(inp_file) 
-      runner.registerError("File does not exist: #{inp_file}") 
+      message = "File does not exist: #{inp_file}"
+      runner.registerError(message)
+      puts message
       return false
     end
 
@@ -6682,6 +6686,7 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     
     
     runner.registerFinalCondition("Model replaced with INP model at #{inp_file}. Weather file and design days retained from original. Please check warnings if any.")
+    puts "Model replaced with INP model at #{inp_file}. Weather file and design days retained from original. Please check warnings if any."
     return true
 
   end
