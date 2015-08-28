@@ -6195,12 +6195,12 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
 
   # human readable description
   def description
-    return "This measure will take an eQuest *.inp file and attempt to convert the geomtry into openstudio.  This will save the file directly to a new file. It will NOT modify your existing file in the model editory.  Once the file is saved, you may open the new osm file.  INP file argument is the location of the INP file. It will create an OSM file with the same name in the same folder."
+    return "This measure will take an eQuest *.inp file and attempt to convert the geometry into openstudio and bring it into a osm format. This will remove your current openstudio model.  Once the measure is complete, you may save the file as a osm file.   INP file argument is the location of the INP file. It will create an OSM file with the same name in the same folder. Please ensure that your path includes ONLY forward slashes '/'."
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return "This measure will read a DOE 2.2 *.inp file and attempt to convert the geometry to OS geometry (Surfaces, Zones, Floors). It does just geometry at the moment.  If there is interest, perhaps schedules and other items could be added to the converter.."
+    return "This measure will read a DOE 2.2 *.inp file and attempt to convert the geometry to OS geometry (Surfaces, Zones, Floors). It does just geometry at the moment.  Open the OpenStudio application, go to the measures tab, click on the 'My' folder icon to open your 'My Measures' directory.  Unzip the attached measure and drag it into your 'My Measures' directory.  Click on the 'Components & Measures->Apply Measure Now' file menu.  Select the 'btap_equest_converter' measure under 'Envelope.Form', type in the path to a .INP file on your computer.  Make sure to replace any backslashes '\' in your path with forward slashes '/'.  Hit 'Apply Measure', if all goes well you will see a report about the measure's operation and can accept the changes to your model.  Then save your OSM and open it in the SketchUp plug-in to verify that the model imported correctly."
   end
 
   # define the arguments that the user will input
