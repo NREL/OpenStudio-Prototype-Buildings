@@ -1,6 +1,14 @@
 
- # for testing 
-require "#{File.dirname(__FILE__)}/../../lib/btap"
+#Copy BTAP files to measure from lib folder. 
+require "date"
+folder = "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/"
+ext = "rb"
+btap_ruby_files = Dir.glob("#{folder}/**/*#{ext}")
+btap_ruby_files.each do |file|
+  FileUtils.cp(file, File.dirname(__FILE__))
+end
+require "#{File.dirname(__FILE__)}btap.rb"
+
 
 
 #Load OSM file change path as necessary.

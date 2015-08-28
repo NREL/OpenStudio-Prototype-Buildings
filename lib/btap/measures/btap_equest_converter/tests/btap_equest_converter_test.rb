@@ -35,8 +35,7 @@ class BtapEquestConverterTest < MiniTest::Unit::TestCase
     result = runner.result
     #save file
 
-    filename = "#{inp_file}.osm"
-    FileUtils.mkdir_p(File.dirname(filename))
+    filename = "#{File.dirname(__FILE__)}/#{inp_file}.osm"
     File.delete(filename) if File.exist?(filename)
     model.save(OpenStudio::Path.new(filename))
     puts "File #{filename} saved."
@@ -46,58 +45,58 @@ class BtapEquestConverterTest < MiniTest::Unit::TestCase
 
 
   def test_4StoreyBuilding()
-    self.import_inp_test("#{File.dirname(__FILE__)}./4StoreyBuilding.inp" )
+    self.import_inp_test("#{File.dirname(__FILE__)}/./4StoreyBuilding.inp" )
   end
   def test_ReaganBuilding_Calibrated()
-    self.import_inp_test("#{File.dirname(__FILE__)}./ReaganBuilding_Calibrated.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./ReaganBuilding_Calibrated.inp")
   end
   def test_5ZoneFloorRotationTest()
-    self.import_inp_test("#{File.dirname(__FILE__)}./5ZoneFloorRotationTest.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./5ZoneFloorRotationTest.inp")
   end
   def test_basic_2storey_with_basement_wizard_geometry
-    self.import_inp_test("#{File.dirname(__FILE__)}./basic_2storey_with_basement_wizard_geometry.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./basic_2storey_with_basement_wizard_geometry.inp")
   end
   def test_Custom_Concave_Polygon()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Custom_Concave_Polygon.inp" )
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Custom_Concave_Polygon.inp" )
   end
   def test_Custom_Convex_Polygon()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Custom_Convex_Polygon.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Custom_Convex_Polygon.inp")
   end
   def test_H_Shape()
-    self.import_inp_test("#{File.dirname(__FILE__)}./H_Shape.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./H_Shape.inp")
   end
   def test_Nealon_Calibrated()
     self.import_inp_test("#{File.dirname(__FILE__)}/./Nealon_Calibrated.inp")
   end
   def test_Plus_Shape()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Plus_Shape.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Plus_Shape.inp")
   end
   def test_Rectangle_minus_corner()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Rectangle_minus_corner.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Rectangle_minus_corner.inp")
   end
   def test_Rectangle()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Rectangle.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Rectangle.inp")
   end
   def test_Rectangular_Atrium()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Rectangular_Atrium.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Rectangular_Atrium.inp")
   end
   def test_SingleZonePerFloorRotation()
-    self.import_inp_test("#{File.dirname(__FILE__)}./SingleZonePerFloorRotation.inp" )
+    self.import_inp_test("#{File.dirname(__FILE__)}/./SingleZonePerFloorRotation.inp" )
   end
   def test_T_Shape()
-    self.import_inp_test("#{File.dirname(__FILE__)}./T_Shape.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./T_Shape.inp")
   end
   def test_Trapezoid()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Trapezoid.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Trapezoid.inp")
   end
   def test_Triangle()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Triangle.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Triangle.inp")
   end
   def test_U_Shape()
-    self.import_inp_test("#{File.dirname(__FILE__)}./U_Shape.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./U_Shape.inp")
   end
   def test_Overhang()
-    self.import_inp_test("#{File.dirname(__FILE__)}./Overhang.inp")
+    self.import_inp_test("#{File.dirname(__FILE__)}/./Overhang.inp")
   end
   
 end
