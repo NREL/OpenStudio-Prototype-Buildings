@@ -63,6 +63,8 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
 
     # Hard-code the building vintage
     building_vintage = 'NECB 2011'
+    building_type = 'NECB'
+    climate_zone = 'NECB'
      #building_vintage = '90.1-2013'   
 
     # Turn debugging output on/off
@@ -126,6 +128,8 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
 
     BTAP::FileIO::save_osm(model, "#{File.dirname(__FILE__)}/before.osm")
     
+    # need to set prototype assumptions so that HRV added
+    model.applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     # Apply the HVAC efficiency standard
     model.applyHVACEfficiencyStandard
      #self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}

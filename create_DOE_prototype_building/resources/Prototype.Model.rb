@@ -551,7 +551,7 @@ class OpenStudio::Model::Model
     ##### Apply equipment efficiencies
     
     # Fans
-    self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_vintage)}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
@@ -629,15 +629,34 @@ class OpenStudio::Model::Model
         # Create an ERV
         erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
         erv.setName("#{air_loop.name} ERV")
-        erv.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-        erv.setLatentEffectivenessat100HeatingAirFlow(0.6)
-        erv.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-        erv.setLatentEffectivenessat75HeatingAirFlow(0.6)
-        erv.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-        erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
-        erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-        erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
-        erv.setSupplyAirOutletTemperatureControl(true) 
+
+        if building_vintage == 'NECB 2011' then
+        
+          erv.setSensibleEffectivenessat100HeatingAirFlow(0.5)
+          erv.setLatentEffectivenessat100HeatingAirFlow(0.0)
+          erv.setSensibleEffectivenessat75HeatingAirFlow(0.5)
+          erv.setLatentEffectivenessat75HeatingAirFlow(0.0)
+          erv.setSensibleEffectivenessat100CoolingAirFlow(0.5)
+          erv.setLatentEffectivenessat100CoolingAirFlow(0.0)
+          erv.setSensibleEffectivenessat75CoolingAirFlow(0.5)
+          erv.setLatentEffectivenessat75CoolingAirFlow(0.0)
+          erv.setSupplyAirOutletTemperatureControl(false)
+
+          
+        else
+
+          erv.setSensibleEffectivenessat100HeatingAirFlow(0.7)
+          erv.setLatentEffectivenessat100HeatingAirFlow(0.6)
+          erv.setSensibleEffectivenessat75HeatingAirFlow(0.7)
+          erv.setLatentEffectivenessat75HeatingAirFlow(0.6)
+          erv.setSensibleEffectivenessat100CoolingAirFlow(0.75)
+          erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
+          erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
+          erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
+          erv.setSupplyAirOutletTemperatureControl(true)
+        
+        end
+        
         erv.setHeatExchangerType('Rotary')
         erv.setFrostControlType('ExhaustOnly')
         erv.setThresholdTemperature(-23.3)
@@ -648,7 +667,8 @@ class OpenStudio::Model::Model
         erv.setThresholdTemperature(-23.3) # -10F
         erv.setInitialDefrostTimeFraction(0.167)
         erv.setRateofDefrostTimeFractionIncrease(1.44)
-        
+
+              
         # Add the ERV to the OA system
         erv.addToNode(oa_system.outboardOANode.get)    
     
