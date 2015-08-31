@@ -77,10 +77,10 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     fan_types = ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_speed_drive"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
-    BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys4(model, model.getThermalZones, boiler_fueltypes[0], heating_coil_types_sys4and6[0], baseboard_types[1])
-    run_the_measure(model)
-    BTAP::Compliance::NECB2011::create_necb_libraries()
-    BTAP::FileIO::save_osm(model, "#{File.dirname(__FILE__)}/system_4.osm")
+#    BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys4(model, model.getThermalZones, boiler_fueltypes[0], heating_coil_types_sys4and6[0], baseboard_types[1])
+#    run_the_measure(model)
+#    BTAP::Compliance::NECB2011::create_necb_libraries()
+#    BTAP::FileIO::save_osm(model, "#{File.dirname(__FILE__)}/system_4.osm")
     
     
     

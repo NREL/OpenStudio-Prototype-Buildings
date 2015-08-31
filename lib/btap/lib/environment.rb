@@ -145,6 +145,9 @@ module BTAP
       attr_accessor :cdd18
       attr_accessor :hdd10
       attr_accessor :cdd10
+      attr_accessor :heating_design_info
+      attr_accessor :cooling_design_info
+      attr_accessor :extremes_design_info
 
       #This method initializes.
       #@author phylroy.lopez@nrcan.gc.ca
@@ -162,6 +165,9 @@ module BTAP
         @cdd10 = []
         @monthly_dry_bulb = []
         @delta_dry_bulb = []
+        @heating_design_info = []
+        @cooling_design_info  = []
+        @extremes_design_info = []
         init
       end
 
@@ -294,6 +300,76 @@ module BTAP
         else
           @hdd18 = match_data[1].to_f
         end
+        
+        
+        #      Design Stat	ColdestMonth	DB996	DB990	DP996	HR_DP996	DB_DP996	DP990	HR_DP990	DB_DP990	WS004c	DB_WS004c	WS010c	DB_WS010c	WS_DB996	WD_DB996	
+        #    	Units	{}	{�C}	{�C}	{�C}	{}	{�C}	{�C}	{}	{�C}	{m/s}	{�C}	{m/s}	{�C}	{m/s}	{deg}	
+        #    	Heating	12	-7	-4	-13.9	1.1	-5	-9.6	1.7	-2.9	14.2	5.9	11.9	6.8	2.9	100
+        #use regex to get the temperatures
+        regex = /\s*Heating(\s*\d+.*)\n/
+        match_data = text.match(regex)
+        if match_data.nil?
+          puts "Can't find heating design information"
+        else
+          # first match is outdoor air temps
+          
+          heating_design_info_raw = match_data[1].strip.split(/\s+/)
+
+          # have to be 14 data points
+          if heating_design_info_raw.size != 15
+            puts "Can't find cooling design info, found #{heating_design_info_raw.size}"
+          end
+
+          # insert as numbers
+          heating_design_info_raw.each do |value| 
+            @heating_design_info << value.to_f 
+          end
+          #puts @heating_design_info
+        end
+        
+        regex = /\s*Cooling(\s*\d+.*)\n/ 
+        match_data = text.match(regex)
+        if match_data.nil?
+          puts "Can't find cooling design information"
+        else
+          # first match is outdoor air temps
+          
+          design_info_raw = match_data[1].strip.split(/\s+/)
+
+          # have to be 14 data points
+          if design_info_raw.size != 32
+            puts "Can't find cooling design info, found #{design_info_raw.size} "
+          end
+
+          # insert as numbers
+          design_info_raw.each do |value| 
+            @cooling_design_info << value 
+          end
+          #puts @cooling_design_info
+        end
+        
+        regex = /\s*Extremes\s*(.*)\n/
+        match_data = text.match(regex)
+        if match_data.nil?
+          puts "Can't find extremes design information"
+        else
+          # first match is outdoor air temps
+          
+          design_info_raw = match_data[1].strip.split(/\s+/)
+
+          # have to be 14 data points
+          if design_info_raw.size != 16
+            #puts "Can't find extremes design info"
+          end
+
+          # insert as numbers
+          design_info_raw.each do |value| 
+            @extremes_design_info << value 
+          end
+          #puts @extremes_design_info
+        end
+        
+        
 
 
         #use regex to get the temperatures
@@ -312,7 +388,7 @@ module BTAP
 
           # insert as numbers
           monthly_temps.each { |temp| @monthly_dry_bulb << temp.to_f }
-          puts "#{@monthly_dry_bulb}"
+          #puts "#{@monthly_dry_bulb}"
         end
 
         # now we are valid
@@ -335,6 +411,10 @@ module BTAP
         :cdd10,
         :monthly_dry_bulb,
         :delta_dry_bulb
+      
+      attr_accessor :heating_design_info
+      attr_accessor :cooling_design_info
+      attr_accessor :extremes_design_info
 
       Year = 0
       Month = 1
@@ -410,6 +490,10 @@ module BTAP
         @mean_dry_bulb = @stat_file.mean_dry_bulb
         @delta_dry_bulb = @stat_file.delta_dry_bulb
         @location_name = "#{@country}-#{@state_province_region}-#{@city}"
+        @heating_design_info = @stat_file.heating_design_info 
+        @cooling_design_info  = @stat_file.cooling_design_info
+        @extremes_design_info = @stat_file.extremes_design_info
+        
 
         return self
       end
