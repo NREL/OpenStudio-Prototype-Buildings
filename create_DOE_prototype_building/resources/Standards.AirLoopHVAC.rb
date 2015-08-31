@@ -1004,9 +1004,13 @@ class OpenStudio::Model::AirLoopHVAC
        
       # Get January winter design temperature
       # get model weather file name
-      # weather_file_name = 
-      # get january design temp stored in array
-      outdoor_temp = -18.8
+      weather_file = BTAP::Environment::WeatherFile.new(self.model.weatherFile.get.path.get)
+      
+      # get winter(heating) design temp stored in array
+      # Note that the NECB 2011 specifies using the 2.5% january design temperature
+      # The outdoor temperature used here is the 0.4% heating design temperature of the coldest month, available in stat file
+      outdoor_temp = weather_file.heating_design_info[1]
+      puts "outdoor design temp = #{outdoor_temp}"            #for debugging/testing
            
       # Calculate exhaust heat content
       exhaust_heat_content = 0.00123 * sum_zone_oa * 1000.0 * (avg_exhaust_temp - outdoor_temp)
