@@ -2414,8 +2414,7 @@ module BTAP
               air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
               mau_fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
-              mau_fan.setPressureRise(640)
-              
+                            
 
               if ( mau_heating_coil_type == "Electric") then           # electric coil
                 mau_htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
@@ -2456,24 +2455,7 @@ module BTAP
               # TO DO: Which zone is the control zone? 
               #setpoint_mgr_single_zone_reheat.setControlZone(zone)             
 
-
-              #TO DO: Does MAU have a heat exchanger
-              #Create sensible heat exchanger
-              #heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-              #heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-              #heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-              #heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-              #heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-              #heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-              #heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-              #heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-              #heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-              #heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-
-              #Connect heat exchanger
-              #oa_node = oa_system.outboardOANode
-              #heat_exchanger.addToNode(oa_node.get)
-            
+             
             end # Create MAU
             
 
@@ -2828,8 +2810,7 @@ module BTAP
               air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
-              fan.setPressureRise(640)
-             
+                           
 
               case heating_coil_type
               when "Electric"           # electric coil
@@ -2997,8 +2978,7 @@ module BTAP
               air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
-              fan.setPressureRise(640)
-              
+                            
 
               if ( heating_coil_type == "Electric") then           # electric coil
                 htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
