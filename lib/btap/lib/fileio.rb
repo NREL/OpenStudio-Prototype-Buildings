@@ -21,6 +21,8 @@
 require "#{File.dirname(__FILE__)}/btap"
 require 'fileutils'
 require 'csv'
+require 'rubygems'
+require 'zip'
 
 module BTAP
   module FileIO
@@ -92,7 +94,7 @@ module BTAP
         return $1
       else
         return url_string
-    end
+      end
     end
 
 
@@ -532,106 +534,167 @@ module BTAP
 
 
 
-      #gets a time series data vector from the sql file and puts the values into a standard array of numbers
-      def get_timeseries_array(openstudio_sql_file, timestep, variable_name, key_value)
-        zone_time_step = "Zone Timestep"
-        hourly_time_step = "Hourly"
-        hvac_time_step = "HVAC System Timestep"
-        timestep = hourly_time_step
-        env_period = openstudio_sql_file.availableEnvPeriods[0]
-        #puts openstudio_sql_file.class
-        #puts env_period.class
-        #puts timestep.class
-        #puts variable_name.class
-        #puts key_value.class
-        key_value = key_value.upcase  #upper cases the key_value b/c it is always uppercased in the sql file.
-        #timestep = timestep.capitalize  #capitalize the timestep b/c it is always capitalized in the sql file
-        #timestep = timestep.split(" ").each{|word| word.capitalize!}.join(" ")
-        #returns an array of all keyValues matching the variable name, envPeriod, and reportingFrequency
-        #we'll use this to check if the query will work before we send it.
-        puts "*#{env_period}*#{timestep}*#{variable_name}"
-        time_series_array = []
-        puts env_period.class
-        if env_period.nil?
-          puts "here"
-          time_series_array = [nil]
-          return time_series_array
-        end
-        possible_env_periods = openstudio_sql_file.availableEnvPeriods()
-        if possible_env_periods.nil?
-          time_series_array = [nil]
-          return time_series_array
-        end
-        possible_timesteps = openstudio_sql_file.availableReportingFrequencies(env_period)
-        if possible_timesteps.nil?
-          time_series_array = [nil]
-          return time_series_array
-        end
-        possible_variable_names = openstudio_sql_file.availableVariableNames(env_period,timestep)
-        if possible_variable_names.nil?
-          time_series_array = [nil]
-          return time_series_array
-        end
-        possible_key_values = openstudio_sql_file.availableKeyValues(env_period,timestep,variable_name)
-        if possible_key_values.nil?
-          time_series_array = [nil]
-          return time_series_array
-        end
-
-        if possible_key_values.include? key_value and
-            possible_variable_names.include? variable_name and
-            possible_env_periods.include? env_period and
-            possible_timesteps.include? timestep
-          #the query is valid
-          time_series = openstudio_sql_file.timeSeries(env_period, timestep, variable_name, key_value)
-          if time_series #checks to see if time_series exists
-            time_series = time_series.get.values
-            debug_puts "  #{key_value} time series length = #{time_series.size}"
-            for i in 0..(time_series.size - 1)
-              #puts "#{i.to_s} -- #{time_series[i]}"
-              time_series_array << time_series[i]
-            end
-          end
-        else
-          #do this if the query is not valid.  The comments might help troubleshoot.
-          time_series_array = [nil]
-          debug_puts "***The pieces below do NOT make a valid query***"
-          debug_puts "  *#{key_value}* - this key value might not exist for the variable you are looking for"
-          debug_puts "  *#{timestep}* - this value should be Hourly, Monthly, Zone Timestep, HVAC System Timestep, etc"
-          debug_puts "  *#{variable_name}* - every word should be capitalized EG:  Refrigeration System Total Compressor Electric Energy "
-          debug_puts "  *#{env_period}* - you can get an array of all the valid env periods by using the sql_file.availableEnvPeriods() method "
-          debug_puts "  Possible key values: #{possible_key_values}"
-          debug_puts "  Possible Variable Names: #{possible_variable_names}"
-          debug_puts "  Possible run periods:  #{possible_env_periods}"
-          debug_puts "  Possible timesteps:  #{possible_timesteps}"
-        end
+    #gets a time series data vector from the sql file and puts the values into a standard array of numbers
+    def get_timeseries_array(openstudio_sql_file, timestep, variable_name, key_value)
+      zone_time_step = "Zone Timestep"
+      hourly_time_step = "Hourly"
+      hvac_time_step = "HVAC System Timestep"
+      timestep = hourly_time_step
+      env_period = openstudio_sql_file.availableEnvPeriods[0]
+      #puts openstudio_sql_file.class
+      #puts env_period.class
+      #puts timestep.class
+      #puts variable_name.class
+      #puts key_value.class
+      key_value = key_value.upcase  #upper cases the key_value b/c it is always uppercased in the sql file.
+      #timestep = timestep.capitalize  #capitalize the timestep b/c it is always capitalized in the sql file
+      #timestep = timestep.split(" ").each{|word| word.capitalize!}.join(" ")
+      #returns an array of all keyValues matching the variable name, envPeriod, and reportingFrequency
+      #we'll use this to check if the query will work before we send it.
+      puts "*#{env_period}*#{timestep}*#{variable_name}"
+      time_series_array = []
+      puts env_period.class
+      if env_period.nil?
+        puts "here"
+        time_series_array = [nil]
+        return time_series_array
+      end
+      possible_env_periods = openstudio_sql_file.availableEnvPeriods()
+      if possible_env_periods.nil?
+        time_series_array = [nil]
+        return time_series_array
+      end
+      possible_timesteps = openstudio_sql_file.availableReportingFrequencies(env_period)
+      if possible_timesteps.nil?
+        time_series_array = [nil]
+        return time_series_array
+      end
+      possible_variable_names = openstudio_sql_file.availableVariableNames(env_period,timestep)
+      if possible_variable_names.nil?
+        time_series_array = [nil]
+        return time_series_array
+      end
+      possible_key_values = openstudio_sql_file.availableKeyValues(env_period,timestep,variable_name)
+      if possible_key_values.nil?
+        time_series_array = [nil]
         return time_series_array
       end
 
-      #gets the average of the numbers in an array
-      def non_zero_array_average(arr)
-        debug_puts "average of the entire array = #{arr.inject{ |sum, el| sum + el }.to_f / arr.size}"
-        arr.delete(0)
-        debug_puts "average of the non-zero numbers in the array = #{arr.inject{ |sum, el| sum + el }.to_f / arr.size}"
-        return arr.inject{ |sum, el| sum + el }.to_f / arr.size
+      if possible_key_values.include? key_value and
+          possible_variable_names.include? variable_name and
+          possible_env_periods.include? env_period and
+          possible_timesteps.include? timestep
+        #the query is valid
+        time_series = openstudio_sql_file.timeSeries(env_period, timestep, variable_name, key_value)
+        if time_series #checks to see if time_series exists
+          time_series = time_series.get.values
+          debug_puts "  #{key_value} time series length = #{time_series.size}"
+          for i in 0..(time_series.size - 1)
+            #puts "#{i.to_s} -- #{time_series[i]}"
+            time_series_array << time_series[i]
+          end
+        end
+      else
+        #do this if the query is not valid.  The comments might help troubleshoot.
+        time_series_array = [nil]
+        debug_puts "***The pieces below do NOT make a valid query***"
+        debug_puts "  *#{key_value}* - this key value might not exist for the variable you are looking for"
+        debug_puts "  *#{timestep}* - this value should be Hourly, Monthly, Zone Timestep, HVAC System Timestep, etc"
+        debug_puts "  *#{variable_name}* - every word should be capitalized EG:  Refrigeration System Total Compressor Electric Energy "
+        debug_puts "  *#{env_period}* - you can get an array of all the valid env periods by using the sql_file.availableEnvPeriods() method "
+        debug_puts "  Possible key values: #{possible_key_values}"
+        debug_puts "  Possible Variable Names: #{possible_variable_names}"
+        debug_puts "  Possible run periods:  #{possible_env_periods}"
+        debug_puts "  Possible timesteps:  #{possible_timesteps}"
+      end
+      return time_series_array
+    end
+
+    #gets the average of the numbers in an array
+    def non_zero_array_average(arr)
+      debug_puts "average of the entire array = #{arr.inject{ |sum, el| sum + el }.to_f / arr.size}"
+      arr.delete(0)
+      debug_puts "average of the non-zero numbers in the array = #{arr.inject{ |sum, el| sum + el }.to_f / arr.size}"
+      return arr.inject{ |sum, el| sum + el }.to_f / arr.size
+    end
+
+    #method for converting from IP to SI if you know the strings of the input and the output
+    def ip_to_si(number, ip_unit_string, si_unit_string)
+      ip_unit = OpenStudio::createUnit(ip_unit_string, "IP".to_UnitSystem).get
+      si_unit = OpenStudio::createUnit(si_unit_string, "SI".to_UnitSystem).get
+      #puts "#{ip_unit} --> #{si_unit}"
+      ip_quantity = OpenStudio::Quantity.new(number, ip_unit)
+      si_quantity = OpenStudio::convert(ip_quantity, si_unit).get
+      #puts "#{ip_quantity} = #{si_quantity}"
+      return si_quantity.value
+    end
+
+      
+
+    # This is a simple example which uses rubyzip to
+    # recursively generate a zip file from the contents of
+    # a specified directory. The directory itself is not
+    # included in the archive, rather just its contents.
+    #
+    # Usage:
+    # require /path/to/the/ZipFileGenerator/Class
+    # directoryToZip = "/tmp/input"
+    # outputFile = "/tmp/out.zip"
+    # zf = BTAP::FileIO::ZipFileGenerator.new(directoryToZip, outputFile)
+    # zf.write()
+
+    class ZipFileGenerator
+      # Initialize with the directory to zip and the location of the output archive.
+      def initialize(input_dir, output_file)
+        @input_dir = input_dir
+        @output_file = output_file
+        self.write()
       end
 
-      #method for converting from IP to SI if you know the strings of the input and the output
-      def ip_to_si(number, ip_unit_string, si_unit_string)
-        ip_unit = OpenStudio::createUnit(ip_unit_string, "IP".to_UnitSystem).get
-        si_unit = OpenStudio::createUnit(si_unit_string, "SI".to_UnitSystem).get
-        #puts "#{ip_unit} --> #{si_unit}"
-        ip_quantity = OpenStudio::Quantity.new(number, ip_unit)
-        si_quantity = OpenStudio::convert(ip_quantity, si_unit).get
-        #puts "#{ip_quantity} = #{si_quantity}"
-        return si_quantity.value
+      # Zip the input directory.
+      def write
+        entries = Dir.entries(@input_dir) - %w(. ..)
+
+        ::Zip::File.open(@output_file, ::Zip::File::CREATE) do |io|
+          write_entries entries, '', io
+        end
       end
 
+      private
 
-    end #FileIO
+      # A helper method to make the recursion work.
+      def write_entries(entries, path, io)
+        entries.each do |e|
+          zip_file_path = path == '' ? e : File.join(path, e)
+          disk_file_path = File.join(@input_dir, zip_file_path)
+          puts "Deflating #{disk_file_path}"
+
+          if File.directory? disk_file_path
+            recursively_deflate_directory(disk_file_path, io, zip_file_path)
+          else
+            put_into_archive(disk_file_path, io, zip_file_path)
+          end
+        end
+      end
+
+      def recursively_deflate_directory(disk_file_path, io, zip_file_path)
+        io.mkdir zip_file_path
+        subdir = Dir.entries(disk_file_path) - %w(. ..)
+        write_entries subdir, zip_file_path, io
+      end
+
+      def put_into_archive(disk_file_path, io, zip_file_path)
+        io.get_output_stream(zip_file_path) do |f|
+          f.puts(File.open(disk_file_path, 'rb').read)
+        end
+      end
+    end
+      
+
+  end #FileIO
 
 
 
 
 
-  end #BTAP
+end #BTAP

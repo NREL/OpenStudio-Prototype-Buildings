@@ -4347,12 +4347,27 @@ module BTAP
           total_transform =  get_parent("FLOOR").get_transformation_matrix() * get_parent("SPACE").get_transformation_matrix()
         end
         surface_points = total_transform * self.get_3d_polygon()
-        #Add the surface to the new openstudio model. 
+        #Add the surface to the new openstudio model.
+        
         os_surface = OpenStudio::Model::Surface.new(surface_points, model)
         #set the name of the surface. 
         os_surface.setAttribute("name", self.name)
-        #Set the surface boundary condition if it is a ground surface. 
-        BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Ground") if self.commandName == "UNDERGROUND-WALL"
+        case self.commandName
+          #Set the surface boundary condition if it is a ground surface.
+        
+        when "UNDERGROUND-WALL"
+          BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Ground") 
+        when "EXTERIOR-WALL","ROOF"
+          #this is needed since the surface constructor defaults to a Ground boundary and Floor Surface type 
+          #when a horizontal surface is initialized. 
+          if os_surface.outsideBoundaryCondition == "Ground" and os_surface.surfaceType == "Floor" 
+            os_surface.setSurfaceType("RoofCeiling") 
+          end
+          BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Outdoors")
+        when "INTERIOR-WALL"
+          BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Surface")
+        end
+        
         #Add to parent space that was already created. 
         os_surface.setSpace(OpenStudio::Model::getSpaceByName( model,get_parent("SPACE").name).get )
         #output to console for debugging. 
@@ -4384,6 +4399,7 @@ module BTAP
             #Get height and width of subsurface
             height = child.get_keyword_value("HEIGHT").to_f
             width = child.get_keyword_value("WIDTH").to_f
+            
           
             #Sum the origin of the surface and the translation of the window
             x = os_surface.vertices.first().x + ( child.check_keyword?("X")?  child.get_keyword_value("X").to_f : 0.0 )
@@ -4427,6 +4443,16 @@ module BTAP
               when "DOOR"
                 os_sub_surface.setSubSurfaceType( "Door" )
               end #end case.
+              
+              # Add overhang for subsurface if required. Note this only supports overhangs of width the same as the window.  
+              if child.check_keyword?("OVERHANG-D") == true
+                offset = 0.0
+                offset = child.get_keyword_value("OVERHANG-O").to_f if child.check_keyword?("OVERHANG-O")
+                depth = 0.0
+                depth = child.get_keyword_value("OVERHANG-D").to_f 
+                os_sub_surface.addOverhang(	depth , offset )
+              end
+              	
             end
           end
         end
@@ -5641,13 +5667,14 @@ module BTAP
           #line.forced_encoding("US-ASCII")
           #Ignore comments (To do!...strip from file as well as in-line comments.
           if (!line.match(/\$.*/) )
-            
+
             if (myarray = line.match(/(.*?)\.\./) )
               #Add the last part of the command to the newline...may be blank."
               command_string = command_string + myarray[1]
               #Determine correct command class to create, then populates it."
               command = DOECommandFactory.command_factory(command_string, self)
               #Push the command into the command array."
+              puts command.output
               @commands.push(command)
               command_string = ""
             else
@@ -6168,12 +6195,12 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
 
   # human readable description
   def description
-    return "This measure will take an eQuest *.inp file and attempt to convert the geomtry into openstudio.  This will save the file directly to a new file. It will NOT modify your existing file in the model editory.  Once the file is saved, you may open the new osm file.  INP file argument is the location of the INP file. It will create an OSM file with the same name in the same folder."
+    return "This measure will take an eQuest *.inp file and attempt to convert the geometry into openstudio and bring it into a osm format. This will remove your current openstudio model.  Once the measure is complete, you may save the file as a osm file.   INP file argument is the location of the INP file. It will create an OSM file with the same name in the same folder. Please ensure that your path includes ONLY forward slashes '/'."
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return "This measure will read a DOE 2.2 *.inp file and attempt to convert the geometry to OS geometry (Surfaces, Zones, Floors). It does just geometry at the moment.  If there is interest, perhaps schedules and other items could be added to the converter.."
+    return "This measure will read a DOE 2.2 *.inp file and attempt to convert the geometry to OS geometry (Surfaces, Zones, Floors). It does just geometry at the moment.  Open the OpenStudio application, go to the measures tab, click on the 'My' folder icon to open your 'My Measures' directory.  Unzip the attached measure and drag it into your 'My Measures' directory.  Click on the 'Components & Measures->Apply Measure Now' file menu.  Select the 'btap_equest_converter' measure under 'Envelope.Form', type in the path to a .INP file on your computer.  Make sure to replace any backslashes '\' in your path with forward slashes '/'.  Hit 'Apply Measure', if all goes well you will see a report about the measure's operation and can accept the changes to your model.  Then save your OSM and open it in the SketchUp plug-in to verify that the model imported correctly."
   end
 
   # define the arguments that the user will input
@@ -6193,7 +6220,7 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
   # define what happens when the measure is run
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
-
+    puts "starting measure."
     # use the built-in error checking
     if !runner.validateUserArguments(arguments(model), user_arguments)
       return false
@@ -6204,7 +6231,9 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
 
     # check the space_name for reasonableness
     if inp_file.empty?
-      runner.registerError("Empty inp file path was entered was entered.")
+      message = "Empty inp file path was entered was entered."
+      runner.registerError(message)
+      puts message
       return false
     end
 
@@ -6214,7 +6243,9 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     #validate inp file path. 
 
     unless File.exist?(inp_file) 
-      runner.registerError("File does not exist: #{inp_file}") 
+      message = "File does not exist: #{inp_file}"
+      runner.registerError(message)
+      puts message
       return false
     end
 
@@ -6224,6 +6255,14 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     doe_model = BTAP::EQuest::DOEBuilding.new()
     #Load the inp data into the DOE model.
     doe_model.load_inp(inp_file)
+    #report number of things read in. 
+    ["SPACE","ZONE","EXTERIOR-WALL","ROOF","INTERIOR-WALL","UNDERGROUND-WALL"].each do |item|
+      items = doe_model.find_all_commands(item)
+      message = "#{item} = #{items.size}"
+      runner.registerInfo(message)
+      puts message
+    end
+    
 
     #Convert the model to a OSM format.
     newModel = doe_model.create_openstudio_model_new()
@@ -6307,16 +6346,22 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
       end
     end
     osm_surfaces = model.getSurfaces
-    runner.registerInfo ("#{doe_surfaces.size} EXTERIOR-WALL,INTERIOR-WALL, UNDERGROUND_WALL, and ROOF surfaces detected in inp file and #{osm_surfaces.size} Surfaces created in osm and #{osm_number_of_mirror_surfaces} are mirror surfaces.")
+    message = "#{doe_surfaces.size} EXTERIOR-WALL,INTERIOR-WALL, UNDERGROUND_WALL, and ROOF surfaces detected in inp file and #{osm_surfaces.size} Surfaces created in osm and #{osm_number_of_mirror_surfaces} are mirror surfaces."
+    runner.registerInfo (message)
+    puts message
     #test if all surfaces were translated
     if doe_surfaces.size != ( osm_surfaces.size - osm_number_of_mirror_surfaces)
-      runner.registerWarning ("INP and OSM surface numbers do not match. There may be errors in the import. Generating Report..") 
+      message = "INP and OSM surface numbers do not match. There may be errors in the import. Generating Report.."
+      runner.registerWarning (message) 
+      puts message
       #find items that were not imported and report them to user. 
       doe_surfaces.each do |surface|
         #Check to see if we already made one like this. If not throw a warning. 
         osm_surface = OpenStudio::Model::getSurfaceByName(model,surface.name)
         if osm_surface.empty?
-          runner.registerWarning("Surface #{surface.name} was not created.")
+          message = "Surface #{surface.name} was not created."
+          runner.registerWarning(message)
+          puts message
         end
       end
     end
@@ -6329,16 +6374,22 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     #get OS subsurfaces
     osm_subsurfaces = model.getSubSurfaces
     #inform user. 
-    runner.registerInfo("#{doe_subsurfaces.size} WINDOW, and DOOR subsurfaces detected in inp file and #{osm_subsurfaces.size} SubSurfaces created in osm.")
+    message = "#{doe_subsurfaces.size} WINDOW, and DOOR subsurfaces detected in inp file and #{osm_subsurfaces.size} SubSurfaces created in osm."
+    runner.registerInfo(message)
+    puts message
     #Check to see if all items were imported. 
     if doe_subsurfaces.size != osm_subsurfaces.size
-      runner.registerWarning("INP and OSM sub surface numbers do not match. There may be errors in the import. Generating Report")
+      message = "INP and OSM sub surface numbers do not match. There may be errors in the import. Generating Report"
+      runner.registerWarning(message)
+      puts message
       #find items that were not imported and report them to user. 
       doe_subsurfaces.each do |subsurface|
         #Check to see if we already made one like this. If not throw a warning. 
         osm_subsurface = OpenStudio::Model::getSubSurfaceByName(model,subsurface.name)
         if osm_subsurface.empty?
-          runner.registerWarning("SubSurface #{subsurface.name} was not created.")
+          message = "SubSurface #{subsurface.name} was not created."
+          runner.registerWarning(message)
+          puts message
         end
       end
     end
@@ -6664,11 +6715,11 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
       puts "no orphaned sizing:zone objects were found"
     end
 
-    puts ""
+
     puts ">>diagnostic test complete"
 
     if savediagnostic
-      newfilename = inp_file.gsub(".osm","_diagnostic.osm")
+      newfilename = inp_file.gsub(".inp","_diagnostic.osm")
       if File.exists? newfilename
         # I would like to add a prompt to ask the user if they want to overwrite their file
       end
@@ -6682,6 +6733,7 @@ class BtapEquestConverter < OpenStudio::Ruleset::ModelUserScript
     
     
     runner.registerFinalCondition("Model replaced with INP model at #{inp_file}. Weather file and design days retained from original. Please check warnings if any.")
+    puts "Model replaced with INP model at #{inp_file}. Weather file and design days retained from original. Please check warnings if any."
     return true
 
   end

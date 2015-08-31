@@ -7,6 +7,8 @@ require_relative '../measure.rb'
 require 'fileutils'
 
 require 'json'
+require 'rubygems'
+require 'zip'
 
 class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
 
