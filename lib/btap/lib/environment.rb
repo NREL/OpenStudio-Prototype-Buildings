@@ -458,12 +458,12 @@ module BTAP
       #@return self [String]
       def initialize(weather_file)
         #Check to see if all files exist.
-        @epw_filepath = weather_file.sub(/[^.]+\z/,"epw")
-        @ddy_filepath = weather_file.sub(/[^.]+\z/,"ddy")
-        @stat_filepath = weather_file.sub(/[^.]+\z/,"stat")
-        raise("Weather file #{weather_file} not found.") unless File.exists?(@epw_filepath) and @epw_filepath.downcase.include? ".epw"
-        raise("Weather file ddy #{weather_file} not found.") unless File.exists?(@ddy_filepath) and @ddy_filepath.downcase.include? ".ddy"
-        raise("Weather file stat #{weather_file} not found.") unless File.exists?(@stat_filepath) and @stat_filepath.downcase.include? ".stat"
+        @epw_filepath = weather_file.to_s.sub(/[^.]+\z/,"epw")
+        @ddy_filepath = weather_file.to_s.sub(/[^.]+\z/,"ddy")
+        @stat_filepath = weather_file.to_s.sub(/[^.]+\z/,"stat")
+        raise("Weather file #{@epw_filepath} not found.") unless File.exists?(@epw_filepath) and @epw_filepath.downcase.include? ".epw"
+        raise("Weather file ddy #{@ddy_filepath} not found.") unless File.exists?(@ddy_filepath) and @ddy_filepath.downcase.include? ".ddy"
+        raise("Weather file stat #{@stat_filepath} not found.") unless File.exists?(@stat_filepath) and @stat_filepath.downcase.include? ".stat"
 
         #load file objects.
         @epw_file = OpenStudio::EpwFile.new(OpenStudio::Path.new(weather_file))
