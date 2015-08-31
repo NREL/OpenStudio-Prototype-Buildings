@@ -1,3 +1,7 @@
+# see the URL below for information on how to write OpenStudio measures
+# http://openstudio.nrel.gov/openstudio-measure-writing-guide
+
+
 require "#{File.dirname(__FILE__)}/../../lib/btap"
 require "csv_hasher"
 
