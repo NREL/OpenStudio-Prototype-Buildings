@@ -90,9 +90,9 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
       if(tariff[:"utility"] == gas_tariff)
         monthly_charges = tariff[:"monthly_charge_($)"]
         for i in 0..3 do
-          energy_charges_blk_limit[i] = tariff[:"energy_charges_block_#{i+1}_limit_(kwh)"]
+          energy_charges_blk_limit[i] = tariff[:"energy_charges_block_#{i+1}_limit_(mj)"]
           energy_charges_blk_rate[i] = tariff[:"energy_charges_block_#{i+1}_rate_($)"]
-          demand_charges_blk_limit[i] = tariff[:"demand_charges_block_#{i+1}_limit_(kw)"]
+          demand_charges_blk_limit[i] = tariff[:"demand_charges_block_#{i+1}_limit_(mw)"]
           demand_charges_blk_rate[i] = tariff[:"demand_charges_block_#{i+1}_rate_($)"]
         end
         energy_charges_blk_rate[4] = tariff[:"energy_charges_block_5_rate_($)"]
