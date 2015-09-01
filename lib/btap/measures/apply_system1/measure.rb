@@ -1,20 +1,18 @@
 require 'fileutils'
+require "date"
+release_mode = false
+folder = "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/"
 
-#Copy BTAP files to measure from lib folder. Use this to create independant measure. 
-#require "date"
-#folder = "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/"
-#ext = "rb"
-#btap_ruby_files = Dir.glob("#{folder}/**/*#{ext}")
-#btap_ruby_files.each do |file|
-#  FileUtils.cp(file, File.dirname(__FILE__))
-#end
-#require "#{File.dirname(__FILE__)}/btap.rb"
-
-#For development only..
-require "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/btap.rb"
-
-
-
+if release_mode == true
+  #Copy BTAP files to measure from lib folder. Use this to create independant measure. 
+  Dir.glob("#{folder}/**/*rb").each do |file|
+    FileUtils.cp(file, File.dirname(__FILE__))
+  end
+  require "#{File.dirname(__FILE__)}/btap.rb"
+else
+  #For only when using git hub development environment.
+  require "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/btap.rb"
+end
 
 
 #Load OSM file change path as necessary.
@@ -65,7 +63,7 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
     building_vintage = 'NECB 2011'
     building_type = 'NECB'
     climate_zone = 'NECB'
-     #building_vintage = '90.1-2013'   
+    #building_vintage = '90.1-2013'   
 
     # Turn debugging output on/off
     @debug = false    
@@ -132,7 +130,7 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
     model.applyPrototypeHVACAssumptions(building_type, building_vintage, climate_zone)
     # Apply the HVAC efficiency standard
     model.applyHVACEfficiencyStandard
-     #self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
+    #self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
     
     BTAP::FileIO::save_osm(model, "#{File.dirname(__FILE__)}/after.osm")
     
@@ -149,10 +147,10 @@ class CanadianAddUnitaryAndApplyStandard < OpenStudio::Ruleset::ModelUserScript
       if /openstudio.*/.match(msg.logChannel) #/openstudio\.model\..*/
         # Skip certain messages that are irrelevant/misleading
         next if msg.logMessage.include?("Skipping layer") || # Annoying/bogus "Skipping layer" warnings
-            msg.logChannel.include?("runmanager") || # RunManager messages
-            msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
-            msg.logChannel.include?("Translator") || # Forward translator and geometry translator
-            msg.logMessage.include?("UseWeatherFile") # 'UseWeatherFile' is not yet a supported option for YearDescription
+        msg.logChannel.include?("runmanager") || # RunManager messages
+        msg.logChannel.include?("setFileExtension") || # .ddy extension unexpected
+        msg.logChannel.include?("Translator") || # Forward translator and geometry translator
+        msg.logMessage.include?("UseWeatherFile") # 'UseWeatherFile' is not yet a supported option for YearDescription
             
         # Report the message in the correct way
         if msg.logLevel == OpenStudio::Info
