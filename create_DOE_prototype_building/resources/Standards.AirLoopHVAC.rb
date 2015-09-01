@@ -997,10 +997,9 @@ class OpenStudio::Model::AirLoopHVAC
       # Calculate average exhaust temperature (oa flow weighted average)
       avg_exhaust_temp = sum_zoneoaTimesheatDesignT / sum_zone_oa              
       
-      # for debugging/testing
-      puts "maria's debug output"
-      puts "average exhaust temp = #{avg_exhaust_temp}"
-      puts "sum_zone_oa = #{sum_zone_oa}"
+      # for debugging/testing     
+#      puts "average exhaust temp = #{avg_exhaust_temp}"
+#      puts "sum_zone_oa = #{sum_zone_oa}"
        
       # Get January winter design temperature
       # get model weather file name
@@ -1010,13 +1009,15 @@ class OpenStudio::Model::AirLoopHVAC
       # Note that the NECB 2011 specifies using the 2.5% january design temperature
       # The outdoor temperature used here is the 0.4% heating design temperature of the coldest month, available in stat file
       outdoor_temp = weather_file.heating_design_info[1]
-      puts "outdoor design temp = #{outdoor_temp}"            #for debugging/testing
+      
+#      for debugging/testing
+#      puts "outdoor design temp = #{outdoor_temp}"            
            
       # Calculate exhaust heat content
       exhaust_heat_content = 0.00123 * sum_zone_oa * 1000.0 * (avg_exhaust_temp - outdoor_temp)
       
       # for debugging/testing
-      puts "exhaust heat content = #{exhaust_heat_content}"
+#      puts "exhaust heat content = #{exhaust_heat_content}"
       
       
       # Modify erv_required based on exhaust heat content
@@ -1032,7 +1033,8 @@ class OpenStudio::Model::AirLoopHVAC
       
     end   # of NECB 2011 condition
     
-    puts "erv_required = #{erv_required}"   # for debugging/testing
+    # for debugging/testing
+#    puts "erv_required = #{erv_required}"   
     
     return erv_required
   
