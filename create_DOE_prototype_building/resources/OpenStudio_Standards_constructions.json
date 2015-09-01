@@ -1720,16 +1720,6 @@
       ]
     },
     {
-      "name": "U 1.22 SHGC 0.54 Simple Glazing Window",
-      "intended_surface_type": "ExteriorWindow",
-      "standards_construction_type": "Metal framing (all other)",
-      "insulation_layer": null,
-      "sort": null,
-      "materials": [
-        "U 1.22 SHGC 0.54 Simple Glazing"
-      ]
-    },
-    {
       "name": "U 1.22 SHGC 0.61 Sgl Green 6mm",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",

@@ -4,7 +4,7 @@ class OpenStudio::Model::Model
  
   # TODO: The ElectricEquipment schedules are wrong in OpenStudio Standards... It needs to be 'RetailStandalone BLDG_EQUIP_SCH' for 90.1-2010 at least but probably all
   # TODO: There is an OpenStudio bug where two heat exchangers are on the equipment list and it references the same single heat exchanger for both. This doubles the heat recovery energy.
-  # TODO: The HeatExchangerAirToAir is not calcuating correctly. It does not equal the legacy IDF and has higher energy usage due to that.
+  # TODO: The HeatExchangerAirToAir is not calculating correctly. It does not equal the legacy IDF and has higher energy usage due to that.
   # TODO: Need to determine if WaterHeater can be alone or if we need to 'fake' it.
 
   def define_space_type_map(building_type, building_vintage, climate_zone)
