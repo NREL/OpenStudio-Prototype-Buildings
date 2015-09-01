@@ -420,7 +420,6 @@ puts "************************************space_type = #{stds_spc_type}"
         space_multiplier_map ={}
     end
 
-
     # Create a thermal zone for each space in the self
     self.getSpaces.each do |space|
       zone = OpenStudio::Model::ThermalZone.new(self)

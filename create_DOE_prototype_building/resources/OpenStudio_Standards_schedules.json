@@ -2,58 +2,6 @@
   "schedules": [
     {
       "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        23.9
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.4
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.4
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        29.4
-      ]
-    },
-    {
-      "name": "Always Off",
       "category": "Elevator",
       "units": null,
       "day_types": "Default",
@@ -90,15 +38,67 @@
     },
     {
       "name": "Always Off",
-      "category": "Unknown",
-      "units": null,
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        29.4
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        29.4
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        23.9
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
+      "day_types": "Default",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        29.4
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Thermostat Setpoint",
+      "units": "C",
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        1.0
+        0.0
       ]
     },
     {
@@ -158,22 +158,9 @@
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
+      "notes": "From DOE Reference Buildings ",
       "values": [
-        1.0
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Unknown",
-      "units": null,
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        1.0
+        0.0
       ]
     },
     {
@@ -187,6 +174,32 @@
       "notes": "From DOE Prototype Buildings",
       "values": [
         0.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "Always Off",
+      "category": "Unknown",
+      "units": null,
+      "day_types": "Default|WntrDsn|SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
       ]
     },
     {
@@ -212,7 +225,7 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
+        1.0
       ]
     },
     {
@@ -236,9 +249,9 @@
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
+      "notes": "From DOE Prototype Buildings",
       "values": [
-        1.0
+        0.0
       ]
     },
     {
@@ -249,22 +262,9 @@
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "Always Off",
-      "category": "Thermostat Setpoint",
-      "units": "C",
-      "day_types": "Default|WntrDsn|SmrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
+        1.0
       ]
     },
     {
@@ -20908,7 +20908,20 @@
       "name": "Medium Office BLDG ELEVATORS",
       "category": "Elevator",
       "units": null,
-      "day_types": "Default|SmrDsn",
+      "day_types": "Sun",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Reference Buildings ",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "Medium Office BLDG ELEVATORS",
+      "category": "Elevator",
+      "units": null,
+      "day_types": "Wkdy|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Hourly",
@@ -20937,19 +20950,6 @@
         0.04,
         0.0,
         0.0,
-        0.0
-      ]
-    },
-    {
-      "name": "Medium Office BLDG ELEVATORS",
-      "category": "Elevator",
-      "units": null,
-      "day_types": "Sun",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Reference Buildings ",
-      "values": [
         0.0
       ]
     },
@@ -33902,19 +33902,6 @@
       "name": "OfficeMedium BLDG_ELEVATORS",
       "category": "Elevator",
       "units": null,
-      "day_types": "Default|WntrDsn",
-      "start_date": "2014-01-01T00:00:00+00:00",
-      "end_date": "2014-12-31T00:00:00+00:00",
-      "type": "Constant",
-      "notes": "From DOE Prototype Buildings",
-      "values": [
-        0.0
-      ]
-    },
-    {
-      "name": "OfficeMedium BLDG_ELEVATORS",
-      "category": "Elevator",
-      "units": null,
       "day_types": "Sat",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
@@ -33958,6 +33945,19 @@
       "notes": "From DOE Prototype Buildings",
       "values": [
         0.69
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_ELEVATORS",
+      "category": "Elevator",
+      "units": null,
+      "day_types": "Sun|WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
       ]
     },
     {
@@ -34033,7 +34033,118 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH",
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Sat",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.4,
+        0.4,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.35,
+        0.35,
+        0.35,
+        0.35,
+        0.35,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Sun",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.3
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Wkdy",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.8,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.5,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
       "category": "Equipment",
       "units": null,
       "day_types": "Sat",
@@ -34069,7 +34180,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH",
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
       "category": "Equipment",
       "units": null,
       "day_types": "SmrDsn",
@@ -34082,7 +34193,43 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH",
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Sun",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
       "category": "Equipment",
       "units": null,
       "day_types": "Wkdy",
@@ -34118,7 +34265,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH",
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
       "category": "Equipment",
       "units": null,
       "day_types": "WntrDsn",
@@ -34131,10 +34278,144 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH",
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Sat",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.381234796,
+        0.381234796,
+        0.476543495,
+        0.476543495,
+        0.476543495,
+        0.476543495,
+        0.3335804465,
+        0.3335804465,
+        0.3335804465,
+        0.3335804465,
+        0.3335804465,
+        0.285926097,
+        0.285926097,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Sun",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.2307553806,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.288107175,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625,
+        0.23813625
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "Wkdy",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.3076738408,
+        0.3076738408,
+        0.3076738408,
+        0.3076738408,
+        0.3076738408,
+        0.3076738408,
+        0.381234796,
+        0.381234796,
+        0.857778291,
+        0.857778291,
+        0.857778291,
+        0.857778291,
+        0.762469592,
+        0.857778291,
+        0.857778291,
+        0.857778291,
+        0.857778291,
+        0.476543495,
+        0.381234796,
+        0.381234796,
+        0.381234796,
+        0.381234796,
+        0.381234796,
+        0.381234796
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "category": "Equipment",
+      "units": null,
+      "day_types": "WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
       "category": "Lighting",
       "units": null,
-      "day_types": "Default",
+      "day_types": "Sat",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Hourly",
@@ -34146,18 +34427,18 @@
         0.05,
         0.05,
         0.05,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
-        0.0452,
+        0.1,
+        0.1,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.15,
+        0.05,
         0.05,
         0.05,
         0.05,
@@ -34167,7 +34448,82 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH",
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Sun",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Wkdy",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.1,
+        0.3,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        0.5,
+        0.3,
+        0.3,
+        0.2,
+        0.2,
+        0.1,
+        0.05
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
       "category": "Lighting",
       "units": null,
       "day_types": "Sat",
@@ -34203,7 +34559,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH",
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
       "category": "Lighting",
       "units": null,
       "day_types": "SmrDsn",
@@ -34216,7 +34572,43 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH",
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Sun",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.0452,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
       "category": "Lighting",
       "units": null,
       "day_types": "Wkdy",
@@ -34252,7 +34644,141 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH",
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "WntrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Sat",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.08623256,
+        0.08623256,
+        0.25869768,
+        0.25869768,
+        0.25869768,
+        0.25869768,
+        0.12934884,
+        0.12934884,
+        0.12934884,
+        0.12934884,
+        0.12934884,
+        0.04311628,
+        0.04311628,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "SmrDsn",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Constant",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        1.0
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Sun",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.0452,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.04311628,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "category": "Lighting",
+      "units": null,
+      "day_types": "Wkdy",
+      "start_date": "2014-01-01T00:00:00+00:00",
+      "end_date": "2014-12-31T00:00:00+00:00",
+      "type": "Hourly",
+      "notes": "From DOE Prototype Buildings",
+      "values": [
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.05,
+        0.1,
+        0.08623256,
+        0.25869768,
+        0.77609304,
+        0.77609304,
+        0.77609304,
+        0.77609304,
+        0.77609304,
+        0.77609304,
+        0.77609304,
+        0.77609304,
+        0.77609304,
+        0.4311628,
+        0.25869768,
+        0.25869768,
+        0.17246512,
+        0.17246512,
+        0.08623256,
+        0.04311628
+      ]
+    },
+    {
+      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
       "category": "Lighting",
       "units": null,
       "day_types": "WntrDsn",
@@ -35677,7 +36203,7 @@
     },
     {
       "name": "OfficeMedium Exterior_Lgt_189_1",
-      "category": "Unknown",
+      "category": "Lighting",
       "units": null,
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
@@ -35713,7 +36239,7 @@
     },
     {
       "name": "OfficeMedium Exterior_Lgt_ALWAYS_ON",
-      "category": "Unknown",
+      "category": "Lighting",
       "units": null,
       "day_types": "Default|WntrDsn|SmrDsn",
       "start_date": "2014-01-01T00:00:00+00:00",
@@ -35770,30 +36296,30 @@
       "type": "Hourly",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
         0.7,
         0.7,
         0.7,
         0.7,
         0.7,
         0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7,
-        0.7
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
       ]
     },
     {
@@ -53772,7 +54298,7 @@
       "name": "RetailStandalone BLDG_OCC_SCH_2010",
       "category": "Occupancy",
       "units": null,
-      "day_types": "Default|Sun",
+      "day_types": "Default",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Hourly",

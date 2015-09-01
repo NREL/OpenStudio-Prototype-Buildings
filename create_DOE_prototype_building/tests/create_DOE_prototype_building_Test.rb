@@ -895,7 +895,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       # RetailStandalone, LargeHotel
       bldg_types = ['RetailStandalone']
       vintages = ['90.1-2010']
-      climate_zones = ['ASHRAE 169-2006-2A']
+      climate_zones =['ASHRAE 169-2006-1A','ASHRAE 169-2006-2A','ASHRAE 169-2006-2B','ASHRAE 169-2006-3A',
+                      'ASHRAE 169-2006-3B','ASHRAE 169-2006-3C','ASHRAE 169-2006-4A','ASHRAE 169-2006-4B',
+                      'ASHRAE 169-2006-4C','ASHRAE 169-2006-5A','ASHRAE 169-2006-5B','ASHRAE 169-2006-6A',
+                      'ASHRAE 169-2006-6B','ASHRAE 169-2006-7A','ASHRAE 169-2006-8A']
 
       all_failures = []
 
@@ -916,8 +919,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
   # For Yixing Chen in LBNL to run heavy testing
   if hostname == "cbes2"
-    def test_large_hotel
-      bldg_types = ['LargeHotel']
+    def test_case
+      bldg_types = ['RetailStandalone']#'LargeHotel']
 
       # Run the simulations in 2 parts.
       if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")

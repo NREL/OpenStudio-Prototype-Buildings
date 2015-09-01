@@ -297,6 +297,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
+
+    # Set the Day of Week for Start Day
+    model.yearDescription.get.setDayofWeekforStartDay('Sunday')
+
     
     # # raise the upper limit of surface temperature
     # heat_balance_algorithm = Openstudio::Model::getUniqueObject<HeatBalanceAlgorithm>(model)
