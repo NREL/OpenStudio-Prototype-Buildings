@@ -2432,7 +2432,7 @@ module BTAP
 
               #oa_controller 
               oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
-              oa_controller.setEconomizerControlType("DifferentialEnthalpy")
+              #oa_controller.setEconomizerControlType("DifferentialEnthalpy")
 
 
               #oa_system 
@@ -2837,8 +2837,7 @@ module BTAP
 
               #oa_controller 
               oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
-              oa_controller.setEconomizerControlType("DifferentialEnthalpy")
-
+             
 
               #oa_system 
               oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
@@ -2997,7 +2996,7 @@ module BTAP
 
               #oa_controller 
               oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
-              oa_controller.setEconomizerControlType("DifferentialEnthalpy")
+              
 
 
               #oa_system 
