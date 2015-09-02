@@ -604,10 +604,9 @@ class OpenStudio::Model::AirLoopHVAC
     when '90.1-2010', '90.1-2013'
       integrated_economizer_required = true
     when 'NECB 2011'
-      # this means that compressor not allowed to turn on when economizer is open
-      # LockoutwithCompressor; economizer must meet all of the load; equivalent to 
-      # ECONO-LOCKOUT = NO in DOE-2, what is set in CAN-QUEST
-      integrated_economizer_required = false
+      # this means that compressor allowed to turn on when economizer is open
+      # (NoLockout); as per 5.2.2.8(3) 
+      integrated_economizer_required = true
     end
   
     # Get the OA system and OA controller
