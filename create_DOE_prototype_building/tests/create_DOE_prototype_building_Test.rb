@@ -894,8 +894,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     def test_case
       # RetailStandalone, LargeHotel
       bldg_types = ['RetailStandalone']
-      vintages = ['DOE Ref Pre-1980']
-      climate_zones =['ASHRAE 169-2006-6A']
+      vintages = ['DOE Ref 1980-2004']
+      climate_zones =['ASHRAE 169-2006-4B']
 
       all_failures = []
 

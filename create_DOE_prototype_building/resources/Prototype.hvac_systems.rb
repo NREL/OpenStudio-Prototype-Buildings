@@ -890,9 +890,11 @@ class OpenStudio::Model::Model
       setpoint_mgr_single_zone_reheat.setControlZone(zone)        
       
       fan = nil
+      # ConstantVolume: Packaged Rooftop Single Zone Air conditioner;
+      # Cycling: Unitary System;
+      # CyclingHeatPump: Unitary Heat Pump system
       if prototype_input['pszac_fan_type'] == 'ConstantVolume'
-      
-        fan = OpenStudio::Model::FanConstantVolume.new(self,self.alwaysOnDiscreteSchedule)
+        fan = OpenStudio::Model::FanConstantVolume.new(self,hvac_op_sch)
         fan.setName("#{air_loop.name} Fan")
         fan_static_pressure_in_h2o = 2.5    
         fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
@@ -900,7 +902,7 @@ class OpenStudio::Model::Model
         fan.setFanEfficiency(0.54)
         fan.setMotorEfficiency(0.90)
       elsif prototype_input['pszac_fan_type'] == 'Cycling'
-      
+
         fan = OpenStudio::Model::FanOnOff.new(self,hvac_op_sch) # Set fan op sch manually since fwd translator doesn't
         fan.setName("#{air_loop.name} Fan")
         fan_static_pressure_in_h2o = 2.5    
@@ -916,7 +918,7 @@ class OpenStudio::Model::Model
         htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
         htg_coil.setName("#{air_loop.name} Gas Htg Coil")
 
-        if prototype_input['building_type']=='RetailStandalone' and prototype_input['template']=='DOE Ref Pre-1980'
+        if prototype_input['template']=='DOE Ref Pre-1980'
           htg_coil.setGasBurnerEfficiency(0.78)
         end
 
@@ -1308,7 +1310,6 @@ class OpenStudio::Model::Model
         
         setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(OpenStudio.convert(55,'F','C').get)
         setpoint_mgr_single_zone_reheat.setMaximumSupplyAirTemperature(OpenStudio.convert(104,'F','C').get)
- 
       else
         if fan_location == 'DrawThrough'
           # Add the fan

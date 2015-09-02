@@ -20993,7 +20993,7 @@
       "name": "Medium Office Bldg Equip",
       "category": "Equipment",
       "units": null,
-      "day_types": "Default",
+      "day_types": "Default|Wkdy",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Hourly",
@@ -21104,7 +21104,7 @@
       "name": "Medium Office Bldg Light",
       "category": "Lighting",
       "units": null,
-      "day_types": "Default",
+      "day_types": "Default|Wkdy",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Hourly",
@@ -21215,7 +21215,7 @@
       "name": "Medium Office Bldg Occ",
       "category": "Occupancy",
       "units": null,
-      "day_types": "Default",
+      "day_types": "Default|Wkdy",
       "start_date": "2014-01-01T00:00:00+00:00",
       "end_date": "2014-12-31T00:00:00+00:00",
       "type": "Hourly",
@@ -34033,7 +34033,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2004",
       "category": "Equipment",
       "units": null,
       "day_types": "Sat",
@@ -34069,7 +34069,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2004",
       "category": "Equipment",
       "units": null,
       "day_types": "SmrDsn",
@@ -34082,7 +34082,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2004",
       "category": "Equipment",
       "units": null,
       "day_types": "Sun",
@@ -34095,7 +34095,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2004",
       "category": "Equipment",
       "units": null,
       "day_types": "Wkdy",
@@ -34131,7 +34131,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2004",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2004",
       "category": "Equipment",
       "units": null,
       "day_types": "WntrDsn",
@@ -34144,7 +34144,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2010",
       "category": "Equipment",
       "units": null,
       "day_types": "Sat",
@@ -34180,7 +34180,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2010",
       "category": "Equipment",
       "units": null,
       "day_types": "SmrDsn",
@@ -34193,7 +34193,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2010",
       "category": "Equipment",
       "units": null,
       "day_types": "Sun",
@@ -34229,7 +34229,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2010",
       "category": "Equipment",
       "units": null,
       "day_types": "Wkdy",
@@ -34265,7 +34265,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2010",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2010",
       "category": "Equipment",
       "units": null,
       "day_types": "WntrDsn",
@@ -34278,7 +34278,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2013",
       "category": "Equipment",
       "units": null,
       "day_types": "Sat",
@@ -34314,7 +34314,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2013",
       "category": "Equipment",
       "units": null,
       "day_types": "SmrDsn",
@@ -34327,7 +34327,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2013",
       "category": "Equipment",
       "units": null,
       "day_types": "Sun",
@@ -34363,7 +34363,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2013",
       "category": "Equipment",
       "units": null,
       "day_types": "Wkdy",
@@ -34399,7 +34399,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_EQUIP_SCH 2013",
+      "name": "OfficeMedium BLDG_EQUIP_SCH_2013",
       "category": "Equipment",
       "units": null,
       "day_types": "WntrDsn",
@@ -34412,7 +34412,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2004",
       "category": "Lighting",
       "units": null,
       "day_types": "Sat",
@@ -34448,7 +34448,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2004",
       "category": "Lighting",
       "units": null,
       "day_types": "SmrDsn",
@@ -34461,7 +34461,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2004",
       "category": "Lighting",
       "units": null,
       "day_types": "Sun",
@@ -34474,7 +34474,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2004",
       "category": "Lighting",
       "units": null,
       "day_types": "Wkdy",
@@ -34510,7 +34510,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2004",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2004",
       "category": "Lighting",
       "units": null,
       "day_types": "WntrDsn",
@@ -34523,7 +34523,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2010",
       "category": "Lighting",
       "units": null,
       "day_types": "Sat",
@@ -34559,7 +34559,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2010",
       "category": "Lighting",
       "units": null,
       "day_types": "SmrDsn",
@@ -34572,7 +34572,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2010",
       "category": "Lighting",
       "units": null,
       "day_types": "Sun",
@@ -34608,7 +34608,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2010",
       "category": "Lighting",
       "units": null,
       "day_types": "Wkdy",
@@ -34644,7 +34644,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2010",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2010",
       "category": "Lighting",
       "units": null,
       "day_types": "WntrDsn",
@@ -34657,7 +34657,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "Sat",
@@ -34693,7 +34693,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "SmrDsn",
@@ -34706,7 +34706,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "Sun",
@@ -34742,7 +34742,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "Wkdy",
@@ -34778,7 +34778,7 @@
       ]
     },
     {
-      "name": "OfficeMedium BLDG_LIGHT_SCH 2013",
+      "name": "OfficeMedium BLDG_LIGHT_SCH_2013",
       "category": "Lighting",
       "units": null,
       "day_types": "WntrDsn",

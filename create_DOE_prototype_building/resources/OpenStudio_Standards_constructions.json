@@ -1943,6 +1943,16 @@
       ]
     },
     {
+      "name": "ext-slab",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "Mass",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "HW CONCRETE"
+      ]
+    },
+    {
       "name": "int_slab_ceiling_smallhotel",
       "intended_surface_type": "InteriorCeiling",
       "standards_construction_type": null,
