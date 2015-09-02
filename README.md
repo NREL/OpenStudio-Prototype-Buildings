@@ -29,6 +29,15 @@ This Measure covers 6 vintages:
 
 *90.1-2004 is covered by both vintages.  This Measure used the DOE Prototype Buildings as the starting point for 90.1-2004.
 
+## Using this Measure Right Now
+#### Important Note:  
+This Measure is under very active development.  If you download it and try to run it, it may not work or may give you some unreasonable results.  We are working on this (see the Testing section below).  If this doesn't bother you, here's how to use it:
+
+1.	Get the Measure by either downloading the zip and unzipping it somewhere or clone the code using Git.  There are buttons on the right side of this page for both options.  If you download the zip, you will have a copy at that particular moment in time.  If you use Git, you can easily pull changes as we make improvements/fixes.  There are free programs (GitHub for Windows, GitHub for Mac) that make it really easy to use Git.
+2.	Launch OpenStudio, and in `file>preferences>set my measures directory`, pick the OpenStudio-Prototype-Buildings folder you just downloaded and unzipped or cloned with Git.
+3.	In OpenStudio, under `components & measures>apply measure now>Whole Building>Space Types` you should see `create DOE Prototype Buildings`
+4.	Click the measure, pick the building type/vintage/climate zone combo and run.
+
 ## Online Documentation
 Documentation for the latest code is available online #TODO put code on rubydoc.info
 
