@@ -206,9 +206,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
     # Create a hash of hashes to store all the results from each file
     all_results_hash = Hash.new{|h,k| h[k]=Hash.new(&h.default_proc) }
-          
-    # Create a hash of hashes to store the results from each file
-    results_total_hash = Hash.new{|h,k| h[k]=Hash.new(&h.default_proc) }
 
     # Loop through all of the given combinations
     bldg_types.sort.each do |building_type|
@@ -231,7 +228,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
           # Create a hash of hashes to store the results from each file
           results_hash = Hash.new{|h,k| h[k]=Hash.new(&h.default_proc) }
-
 
           # Get the osm values for all fuel type/end use pairs
           # and compare to the legacy idf results
@@ -365,8 +361,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
             total_percent_error = 0
             failures << "#{building_type}-#{building_vintage}-#{climate_zone} *** Total Energy Error = both idf and osm don't use any energy."
           end
-          
-          results_total_hash[building_type][building_vintage][climate_zone] = total_percent_error
 
           # Save the results to JSON
           File.open("#{Dir.pwd}/build/#{model_name}/comparison.json", 'w') do |file|
@@ -417,31 +411,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
         end_uses_names.push(end_use)
       end
     end
-    
-    #######
-    # results_total_hash[building_type][building_vintage][climate_zone]
-    csv_file_total = File.open("#{Dir.pwd}/build/comparison_total.csv", 'w')
-    # Write the header
-    csv_file_total.write("building_type,building_vintage,climate_zone,")
-    line2_str =",,,"
-    #results_hash=Hash[building_type][building_vintage][climate_zone][fuel_type][end_use]['Legacy Val']
-    results_total_hash.values[0].values[0].each_pair do |climate_zone, total_error|
-      csv_file_total.write("#{total_error},")
-    end
-    csv_file_total.write("\n")
-    # Save the results to CSV
-    results_total_hash.each_pair do |building_type, value1|
-      value1.each_pair do |building_vintage, value2|
-        value2.each_pair do |climate_zone, value3|
-          csv_file_total.write("#{building_type},#{building_vintage},#{climate_zone},#{value3}")
-          csv_file_total.write("\n")
-        end
-      end
-    end
-
-    csv_file_total.close 
-    
-    
 
     # Create a CSV to store the results
     csv_file = File.open("#{Dir.pwd}/build/comparison.csv", 'w')
