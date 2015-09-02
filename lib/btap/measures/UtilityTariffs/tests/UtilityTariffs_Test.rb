@@ -1,6 +1,7 @@
 require 'openstudio'
 require 'minitest/autorun'
 require_relative '../measure.rb'
+require "#{File.dirname(__FILE__)}/../../../lib/btap"
 
 class UtilityTariffsTest < MiniTest::Unit::TestCase
   model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/system_2.osm")
