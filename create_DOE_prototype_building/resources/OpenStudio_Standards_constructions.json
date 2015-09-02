@@ -1244,16 +1244,6 @@
       ]
     },
     {
-      "name": "U 0.62 SHGC 0.41 Simple Glazing Window",
-      "intended_surface_type": "ExteriorWindow",
-      "standards_construction_type": "Metal framing (all other)",
-      "insulation_layer": null,
-      "sort": null,
-      "materials": [
-        "U 0.62 SHGC 0.41 Simple Glazing"
-      ]
-    },
-    {
       "name": "U 0.62 SHGC 0.49 Dbl Blue 6mm/6mm Air",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",

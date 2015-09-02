@@ -876,7 +876,12 @@ class OpenStudio::Model::Model
       
       # Zone sizing
       sizing_zone = zone.sizingZone
-      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      if prototype_input['building_type']=='RetailStandalone' and (prototype_input['template']=='DOE Ref 1980-2004' or prototype_input['template']=='DOE Ref Pre-1980')
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      else
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      end
+
       sizing_zone.setZoneHeatingDesignSupplyAirTemperature(40.0)
             
       # Add a setpoint manager single zone reheat to control the
@@ -910,11 +915,16 @@ class OpenStudio::Model::Model
       if prototype_input['pszac_heating_type'] == 'Gas'
         htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
         htg_coil.setName("#{air_loop.name} Gas Htg Coil")
+
+        if prototype_input['building_type']=='RetailStandalone' and prototype_input['template']=='DOE Ref Pre-1980'
+          htg_coil.setGasBurnerEfficiency(0.78)
+        end
+
       elsif prototype_input['pszac_heating_type'] == 'Water'
-          if hot_water_loop.nil?
-            OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water plant loop supplied')
-            return false
-          end
+        if hot_water_loop.nil?
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water plant loop supplied')
+          return false
+        end
         htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
         htg_coil.setName("#{air_loop.name} Water Htg Coil")
         htg_coil.setRatedInletWaterTemperature(hw_temp_c)
@@ -2384,7 +2394,12 @@ class OpenStudio::Model::Model
 
       # Zone sizing
       sizing_zone = zone.sizingZone
-      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      if prototype_input['building_type']=='RetailStandalone' and prototype_input['template']!='DOE Ref 1980-2004' and prototype_input['template']!='DOE Ref Pre-1980'
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      else
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      end
+
       sizing_zone.setZoneHeatingDesignSupplyAirTemperature(50.0)
       sizing_zone.setZoneCoolingDesignSupplyAirHumidityRatio(0.008)
       sizing_zone.setZoneHeatingDesignSupplyAirHumidityRatio(0.008)
@@ -2411,7 +2426,6 @@ class OpenStudio::Model::Model
         fan.setMotorEfficiency(0.8)
       else
         puts "No fan type is found"
-      
       end
     
     

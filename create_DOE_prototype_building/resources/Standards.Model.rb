@@ -104,14 +104,18 @@ class OpenStudio::Model::Model
     self.getSpaces.sort.each do |space|
       space.set_infiltration_rate(self.template)
     end
-    
-    # Remove infiltration rates set at the space type
-    self.getSpaceTypes.each do |space_type|
-      space_type.spaceInfiltrationDesignFlowRates.each do |infil|
-        infil.remove
-      end
-    end
 
+    case self.template
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+        #"For 'DOE Ref Pre-1980' and 'DOE Ref 1980-2004', infiltration rates are not defined using this method, no changes have been made to the model.
+      else
+        # Remove infiltration rates set at the space type
+        self.getSpaceTypes.each do |space_type|
+          space_type.spaceInfiltrationDesignFlowRates.each do |infil|
+            infil.remove
+          end
+        end
+      end
   end
   
   # Loads the openstudio standards dataset and attach it to the model
