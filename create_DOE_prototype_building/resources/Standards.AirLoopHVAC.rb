@@ -389,7 +389,7 @@ class OpenStudio::Model::AirLoopHVAC
         minimum_capacity_btu_per_hr = 54000
       end
     when 'NECB 2011'
-      minimum_capacity_btu_per_hr = 68243       # NECB requires economizer for cooling cap > 20 kW
+      minimum_capacity_btu_per_hr =  68243      # NECB requires economizer for cooling cap > 20 kW
     end
   
     # Check whether the system requires an economizer by comparing
@@ -497,11 +497,6 @@ class OpenStudio::Model::AirLoopHVAC
         drybulb_limit_f = 75
         dewpoint_limit_f = 55
       end
-      #when 'NECB 2011'
-      #  case economizer_type
-      # when 'DifferentialEnthalpy'
-      # TO DO: put in economizer characteristics
-      # end
     end 
  
     # Set the limits
@@ -609,7 +604,9 @@ class OpenStudio::Model::AirLoopHVAC
     when '90.1-2010', '90.1-2013'
       integrated_economizer_required = true
     when 'NECB 2011'
-      integrated_economizer_required = false
+      # this means that compressor allowed to turn on when economizer is open
+      # (NoLockout); as per 5.2.2.8(3) 
+      integrated_economizer_required = true
     end
   
     # Get the OA system and OA controller
