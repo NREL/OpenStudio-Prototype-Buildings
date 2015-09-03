@@ -1,8 +1,7 @@
 # see the URL below for information on how to write OpenStudio measures
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
 
-require "#{File.dirname(__FILE__)}/../../lib/btap"
-require "csv_hasher"
+require "csv"
 
 #start the measure
 class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
@@ -15,7 +14,6 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
   #define the arguments that the user will input
   def arguments(workspace)
     args = OpenStudio::Ruleset::OSArgumentVector.new
-
     return args
   end #end the arguments method
 
@@ -27,18 +25,18 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     if not runner.validateUserArguments(arguments(workspace), user_arguments)
       return false
     end
-
-    # utility tariff name (this choice will have to be automated)
-    elec_tariff = "HydroQuebec"
-    gas_tariff = "GasMetro"
-
+   
+    # get city name from weather file station
+    site_location_obj = workspace.getObjectsByType("Site:Location".to_IddObjectType)
+    weather_station = site_location_obj[0].to_s.split(/\n/)[1]
+    city = weather_station.split[0]
+    
     # read tariffs template idf file 
     tariff_template_file = File.open("#{File.dirname(__FILE__)}/resources/Tariff_Template.idf")
     tariff_template_file_content = tariff_template_file.read
 
-    # read database of electricity utility data
+    # database of electricity utility data
     electricity_tariffs_file_csv = "#{File.dirname(__FILE__)}/resources/utility_electricity_tariffs.csv"
-    elec_tariffs_array_of_hashes = CSVHasher.hashify(electricity_tariffs_file_csv)
     
     # update content of electricity tariff idf file with tariff data for location
     energy_charges_blk_limit = []
@@ -47,37 +45,39 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     demand_charges_blk_rate = []
     elec_tariff_template_file_content = ""
     monthly_charges = ""
-    elec_tariffs_array_of_hashes.each do |tariff|
-      if(tariff[:"utility"] == elec_tariff)
-        monthly_charges = tariff[:"monthly_charge_($)"]
+    elec_tariff = ""
+    CSV.foreach(electricity_tariffs_file_csv, headers:true) do |tariff|
+      if(tariff["City"] == city)
+        elec_tariff = tariff["Utility"]
+        monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
-          energy_charges_blk_limit[i] = tariff[:"energy_charges_block_#{i+1}_limit_(kwh)"]
-          energy_charges_blk_rate[i] = tariff[:"energy_charges_block_#{i+1}_rate_($)"]
-          demand_charges_blk_limit[i] = tariff[:"demand_charges_block_#{i+1}_limit_(kw)"]
-          demand_charges_blk_rate[i] = tariff[:"demand_charges_block_#{i+1}_rate_($)"]
+          energy_charges_blk_limit[i] = tariff["Energy_Charges_Block_#{i+1}_Limit_(kWh)"]
+          energy_charges_blk_rate[i] = tariff["Energy_Charges_Block_#{i+1}_Rate_($)"]
+          demand_charges_blk_limit[i] = tariff["Demand_Charges_Block_#{i+1}_Limit_(kW)"]
+          demand_charges_blk_rate[i] = tariff["Demand_Charges_Block_#{i+1}_Rate_($)"]
         end
-        energy_charges_blk_rate[4] = tariff[:"energy_charges_block_5_rate_($)"]
-        demand_charges_blk_rate[4] = tariff[:"demand_charges_block_5_rate_($)"]
+        energy_charges_blk_rate[4] = tariff["Energy_Charges_Block_5_Rate_($)"]
+        demand_charges_blk_rate[4] = tariff["Demand_Charges_Block_5_Rate_($)"]
+        elec_tariff_template_file_content = tariff_template_file_content.gsub("%utility_tariff_name%",tariff["Utility"])
+        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%tariff_output_meter_name%","ElectricityPurchased:Facility")
+        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%conv_factor%","kWh")
+        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%monthly_charges%",monthly_charges)
+        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%blocks_energy_charges_name%","ElectricityBlocksEnergyCharges")
+        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%blocks_demand_charges_name%","ElectricityBlocksDemandCharges")
+        for i in 0..3 do
+          elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_limit%",energy_charges_blk_limit[i])
+          elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_rate%",energy_charges_blk_rate[i])
+          elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_limit%",demand_charges_blk_limit[i])
+          elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_rate%",demand_charges_blk_rate[i])
+        end
+        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%energy_charges_blk5_rate%",energy_charges_blk_rate[4])
+        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%demand_charges_blk5_rate%",demand_charges_blk_rate[4])
+        break
       end
-      elec_tariff_template_file_content = tariff_template_file_content.gsub("%utility_tariff_name%",elec_tariff)
-      elec_tariff_template_file_content = elec_tariff_template_file_content.gsub("%tariff_output_meter_name%","ElectricityPurchased:Facility")
-      elec_tariff_template_file_content = elec_tariff_template_file_content.gsub("%conv_factor%","kWh")
-      elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%monthly_charges%",monthly_charges)
-      elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%blocks_energy_charges_name%","ElectricityBlocksEnergyCharges")
-      elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%blocks_demand_charges_name%","ElectricityBlocksDemandCharges")
-      for i in 0..3 do
-        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_limit%",energy_charges_blk_limit[i])
-        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_rate%",energy_charges_blk_rate[i])
-        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_limit%",demand_charges_blk_limit[i])
-        elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_rate%",demand_charges_blk_rate[i])
-      end
-      elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%energy_charges_blk5_rate%",energy_charges_blk_rate[4])
-      elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%demand_charges_blk5_rate%",demand_charges_blk_rate[4])
     end
 
     # read database of gas utility data
     gas_tariffs_file_csv = "#{File.dirname(__FILE__)}/resources/utility_gas_tariffs.csv"
-    gas_tariffs_array_of_hashes = CSVHasher.hashify(gas_tariffs_file_csv)
 
     # update content of gas tariff idf file with tariff data for location
     energy_charges_blk_limit = []
@@ -86,32 +86,45 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     demand_charges_blk_rate = []
     gas_tariff_template_file_content = ""
     monthly_charges = ""
-    gas_tariffs_array_of_hashes.each do |tariff|
-      if(tariff[:"utility"] == gas_tariff)
-        monthly_charges = tariff[:"monthly_charge_($)"]
+    gas_tariff = ""
+    CSV.foreach(gas_tariffs_file_csv, headers:true) do |tariff|
+      if(tariff["City"] == city)
+        gas_tariff = tariff["Utility"]
+        monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
-          energy_charges_blk_limit[i] = tariff[:"energy_charges_block_#{i+1}_limit_(mj)"]
-          energy_charges_blk_rate[i] = tariff[:"energy_charges_block_#{i+1}_rate_($)"]
-          demand_charges_blk_limit[i] = tariff[:"demand_charges_block_#{i+1}_limit_(mw)"]
-          demand_charges_blk_rate[i] = tariff[:"demand_charges_block_#{i+1}_rate_($)"]
+          energy_charges_blk_limit[i] = tariff["Energy_Charges_Block_#{i+1}_Limit_(MJ)"]
+          energy_charges_blk_rate[i] = tariff["Energy_Charges_Block_#{i+1}_Rate_($)"]
+          demand_charges_blk_limit[i] = tariff["Demand_Charges_Block_#{i+1}_Limit_(MJ_per_hr)"]
+          demand_charges_blk_rate[i] = tariff["Demand_Charges_Block_#{i+1}_Rate_($)"]
         end
-        energy_charges_blk_rate[4] = tariff[:"energy_charges_block_5_rate_($)"]
-        demand_charges_blk_rate[4] = tariff[:"demand_charges_block_5_rate_($)"]
+        energy_charges_blk_rate[4] = tariff["Energy_Charges_Block_5_Rate_($)"]
+        demand_charges_blk_rate[4] = tariff["Demand_Charges_Block_5_Rate_($)"]
+        gas_tariff_template_file_content = tariff_template_file_content.gsub("%utility_tariff_name%",tariff["Utility"])
+        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%tariff_output_meter_name%","Gas:Facility")
+        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%conv_factor%","MJ")
+        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%monthly_charges%",monthly_charges)
+        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%blocks_energy_charges_name%","GasBlocksEnergyCharges")
+        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%blocks_demand_charges_name%","GasBlocksDemandCharges")
+        for i in 0..3 do
+          gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_limit%",energy_charges_blk_limit[i])
+          gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_rate%",energy_charges_blk_rate[i])
+          gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_limit%",demand_charges_blk_limit[i])
+          gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_rate%",demand_charges_blk_rate[i])
+        end
+        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%energy_charges_blk5_rate%",energy_charges_blk_rate[4])
+        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%demand_charges_blk5_rate%",demand_charges_blk_rate[4])
+        break
       end
-      gas_tariff_template_file_content = tariff_template_file_content.gsub("%utility_tariff_name%",gas_tariff)
-      gas_tariff_template_file_content = gas_tariff_template_file_content.gsub("%tariff_output_meter_name%","Gas:Facility")
-      gas_tariff_template_file_content = gas_tariff_template_file_content.gsub("%conv_factor%","MJ")
-      gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%monthly_charges%",monthly_charges)
-      gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%blocks_energy_charges_name%","GasBlocksEnergyCharges")
-      gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%blocks_demand_charges_name%","GasBlocksDemandCharges")
-      for i in 0..3 do
-        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_limit%",energy_charges_blk_limit[i])
-        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_rate%",energy_charges_blk_rate[i])
-        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_limit%",demand_charges_blk_limit[i])
-        gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_rate%",demand_charges_blk_rate[i])
-      end
-      gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%energy_charges_blk5_rate%",energy_charges_blk_rate[4])
-      gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%demand_charges_blk5_rate%",demand_charges_blk_rate[4])
+    end
+
+    # if there was no matching electricity tariff for the city, then register the information
+    if(elec_tariff == "")
+      runner.registerInfo("no electricity tariff in database for #{city}")
+    end
+
+    # if there was no matching gas tariff for the city, then register the information
+    if(gas_tariff == "")
+      runner.registerInfo("no gas tariff in database for #{city}")
     end
 
     # save new tariff idf file
@@ -148,7 +161,7 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     workspace.addObjects(tar_file.getObjectsByType("UtilityCost:Charge:Block".to_IddObjectType))
     
     # let the user know what happened
-    runner.registerInfo("added a tariff named #{elec_tariff}")
+    runner.registerInfo("added a tariffs named #{elec_tariff} and #{gas_tariff}")
     
     # set the simulation timestep to 15min (4 per hour) to match the demand window of the tariffs
     if not workspace.getObjectsByType("Timestep".to_IddObjectType).empty?
