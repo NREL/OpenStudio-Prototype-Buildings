@@ -3218,32 +3218,8 @@ module BTAP
 #            pump.setPumpFlowRateSchedule(pump_flow_sch)
 
             #boiler 
-            boiler = BTAP::Resources::HVAC::Plant::add_hw_boiler(model)
-
-            #boiler_eff_f_of_plr
-            #coefficients from NECB Table 8.4.22.A (these were processed for the proper E+ format)
-            #boiler_eff_f_of_plr = OpenStudio::Model::CurveCubic.new(model)
-            boiler_eff_f_of_plr = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
-            boiler_eff_f_of_plr.setName("Boiler Efficiency")
-            boiler_eff_f_of_plr.setCoefficient1Constant(0.2901)
-            boiler_eff_f_of_plr.setCoefficient2x(2.6664)
-            boiler_eff_f_of_plr.setCoefficient3xPOW2(-3.764)
-            boiler_eff_f_of_plr.setCoefficient4xPOW3(1.8241)
-            boiler_eff_f_of_plr.setMinimumValueofx(0.0)
-            boiler_eff_f_of_plr.setMaximumValueofx(1.0)
-            boiler_eff_f_of_plr.setInputUnitTypeforX("Dimensionless")
-            boiler_eff_f_of_plr.setOutputUnitType("Dimensionless")
-
-            boiler.setNormalizedBoilerEfficiencyCurve(boiler_eff_f_of_plr)
-            boiler.setEfficiencyCurveTemperatureEvaluationVariable("LeavingBoiler")
-
+            boiler = BTAP::Resources::HVAC::Plant::add_hw_boiler(model)                     
             boiler.setFuelType(boiler_fueltype)
-
-            if boiler_fueltype == "Electricity" then
-              boiler.setNominalThermalEfficiency(1.0)
-            else
-              boiler.setNominalThermalEfficiency(0.8)
-            end
 
             #boiler_bypass_pipe 
             boiler_bypass_pipe = BTAP::Resources::HVAC::Plant::add_adiabatic_pipe(model)

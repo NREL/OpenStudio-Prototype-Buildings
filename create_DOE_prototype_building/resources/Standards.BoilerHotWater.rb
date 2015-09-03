@@ -15,12 +15,26 @@ class OpenStudio::Model::BoilerHotWater
     
     # Get fuel type
     fuel_type = nil
-    if self.fuelType == 'NaturalGas'
+    case self.fuelType
+    when  'NaturalGas'
       fuel_type = 'Gas'
+    when 'Electricity'
+      fuel_type = 'Electric'
+    when 'FuelOil#1', 'FuelOil#2'
+      fuel_type = 'Oil'
     else
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.BoilerHotWater', "For #{self.name}, a fuel type of #{self.fuelType} is not yet supported.  Assuming 'Gas.'")
       fuel_type = 'Gas'
     end
+#    if self.fuelType == 'NaturalGas'
+#      fuel_type = 'Gas'
+#    else
+#      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.BoilerHotWater', "For #{self.name}, a fuel type of #{self.fuelType} is not yet supported.  Assuming 'Gas.'")
+#      fuel_type = 'Gas'
+#    end
+    
+    
+    
     search_criteria['fuel_type'] = fuel_type
     
     # Get the fluid type
