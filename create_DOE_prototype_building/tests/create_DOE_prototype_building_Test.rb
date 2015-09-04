@@ -990,10 +990,11 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
   # For Yixing Chen in LBNL
   if hostname == "yxc_lbnl"
-    def test_large_hotel
-      bldg_types = ['LargeHotel']
-      vintages = ['90.1-2013']
-      climate_zones = ['ASHRAE 169-2006-2A']
+    def test_case
+      # RetailStandalone, LargeHotel
+      bldg_types = ['RetailStandalone']
+      vintages = ['DOE Ref 1980-2004']
+      climate_zones =['ASHRAE 169-2006-8A']
 
       all_failures = []
 
@@ -1014,8 +1015,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
   # For Yixing Chen in LBNL to run heavy testing
   if hostname == "cbes2"
-    def test_large_hotel
-      bldg_types = ['LargeHotel']
+    def test_case
+      bldg_types = ['RetailStandalone']#'LargeHotel']
 
       # Run the simulations in 2 parts.
       if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")

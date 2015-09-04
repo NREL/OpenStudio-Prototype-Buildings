@@ -232,7 +232,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       case building_vintage
         when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
           geometry_file = 'Geometry.large_hotel.doe.osm'
-        when '90.1-2007'
+        when '90.1-2007','90.1-2004'
           geometry_file = 'Geometry.large_hotel.2004_2007.osm'
         when '90.1-2010'
           geometry_file = 'Geometry.large_hotel.2010.osm'
@@ -244,7 +244,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       geometry_file = 'Geometry.warehouse.osm'
     when 'RetailStandalone'
       require_relative 'resources/Prototype.retail_standalone'
-      geometry_file = 'Geometry.retail_standalone.osm'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.retail_standalone.pre1980_post1980.osm'
+        when '90.1-2004','90.1-2007'
+          geometry_file = 'Geometry.retail_standalone.2004_2007.osm'
+        else #'90.1-2010', '90.1-2013'
+          geometry_file = 'Geometry.retail_standalone.2010_2013.osm'
+      end
       alt_search_name = 'Retail'
     when 'RetailStripmall'
       require_relative 'resources/Prototype.retail_stripmall'
@@ -297,6 +304,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
+
+    # Set the Day of Week for Start Day
+    model.yearDescription.get.setDayofWeekforStartDay('Sunday')
+
     
     # # raise the upper limit of surface temperature
     # heat_balance_algorithm = Openstudio::Model::getUniqueObject<HeatBalanceAlgorithm>(model)
