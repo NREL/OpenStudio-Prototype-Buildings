@@ -34,13 +34,25 @@ construction_set_name = "DND-Concrete"
 #this is the output folder where the models will be generated. 
 output_folder = 'C:/archetypes/'
 
+#system assignment. 
+boiler_fueltypes = ["NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"]
+mau_types = [true, false]
+mau_heating_coil_types = ["Hot Water", "Electric"]
+baseboard_types = ["Hot Water" , "Electric"]
+chiller_types = ["Scroll","Centrifugal","Screw","Reciprocating"]
+mua_cooling_types = ["DX","Hydronic"]
+heating_coil_types_sys3 = ["Electric", "Gas", "DX"]
+heating_coil_types_sys4and6 = ["Electric", "Gas"]
+fan_types = ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_speed_drive"]
+
+
 puts "Delete all .osm files in output to ensure all files are fresh."
 
 BTAP::FileIO::delete_files_in_folder_by_extention(output_folder,'.osm')
 
 weather_files.each do |weather_file|
-#This method should create the DOE archetypes and change the insulation values of the model to what is required by the HDD in the weather file. 
-puts BTAP::Compliance::NECB2011::convert_all_doe_to_necb_reference_building( idf_folder, output_folder, construction_library_file , construction_set_name , weather_file )
+  #This method should create the DOE archetypes and change the insulation values of the model to what is required by the HDD in the weather file. 
+  puts BTAP::Compliance::NECB2011::convert_all_doe_to_necb_reference_building( idf_folder, output_folder, construction_library_file , construction_set_name , weather_file )
 end
 
 BTAP::SimManager::simulate_all_files_in_folder( output_folder ) 

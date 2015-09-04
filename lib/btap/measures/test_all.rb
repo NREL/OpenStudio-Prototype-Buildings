@@ -2,6 +2,9 @@
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
 
-require "#{File.dirname(__FILE__)}/apply_system1/test/CanadianAddUnitaryAndApplyStandard_test.rb"
-require "#{File.dirname(__FILE__)}/btap_equest_converter/tests/btap_equest_converter_test.rb"
+#require "#{File.dirname(__FILE__)}/apply_system1/test/CanadianAddUnitaryAndApplyStandard_test.rb"
+#require "#{File.dirname(__FILE__)}/btap_equest_converter/tests/btap_equest_converter_test.rb"
+require "#{File.dirname(__FILE__)}/UtilityTariffs/tests/UtilityTariffs_Test.rb"
+
+
 

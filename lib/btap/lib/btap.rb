@@ -103,6 +103,68 @@ module BTAP
   #Path constants
   OS_RUBY_PATH = File.expand_path("..\\..\\..", __FILE__)
   TESTING_FOLDER = "C:\\test"
+  
+  
+  def self.runner_register(type,text,runner = nil)
+    #dump to console. 
+    puts "#{type.upcase}: #{text}"
+    #dump to runner. 
+    if runner.is_a?(OpenStudio::Ruleset::OSRunner)
+      case type.downcase
+      when "info"
+        runner.registerInfo(text)
+      when "warning"
+        runner.registerWarning(text)
+      when "error"
+        runner.registerError(text)
+      when "notapplicable"
+        runner.registerAsNotApplicable(text)
+      when "finalcondition"
+        runner.registerFinalCondition(text)
+      when "intialcondition"
+        runner.registerInitialCondition(text)
+      else
+        raise("Runner Register type #{type.downcase} not info,warning,error,notapplicable,finalcondition,initialcondition.")
+      end
+    end
+  end
+  
+  def self.runner_register_value(name,value,runner = nil)
+    puts "#{name} = #{value}"
+    if runner.is_a?(OpenStudio::Ruleset::OSRunner)
+      runner.registerValue( name,value.to_s)
+    end
+  end
+  
+  
+  #      runner.registerInitialCondition("Model initial condition (for example number of floors.")
+  #      runner.registerInfo("Use this for information to user.")
+  #      runner.registerWarning("Use this for warnings to user.")
+  #      runner.registerError("Use this for fatal error message to user. Will not continue. Return a false.") ; return false
+  #      runner.registerAsNotApplicable("Measure not applicable because XYZ. Return a true and will continue with other chained measures."); return true
+  #      runner.registerFinalCondition("Model ended with # of floors for example")
+  #      runner.registerFinalCondition("Indicate what was changed.")
+  
+  
+  
+  def self.gut_building(model)
+    #clean up any remaining items that we don't need for NECB.
+    puts "Removing casual loads."
+    BTAP::Resources::SpaceLoads::remove_all_casual_loads(model)
+    puts "Removing space loads."
+    BTAP::Resources::SpaceLoads::remove_all_SpaceLoads(model)
+    puts "Removing OA loads."
+    BTAP::Resources::SpaceLoads::remove_all_DesignSpecificationOutdoorAir(model)
+    puts "Removing Envelope"
+    BTAP::Resources::Envelope::remove_all_envelope_information(model)
+    puts "Removing Infiltration"
+    BTAP::Resources::SpaceLoads::remove_all_SpaceInfiltrationDesignFlowRate(model)
+    puts "Removing all Schedules"
+    BTAP::Resources::Schedules::remove_all_schedules( model )
+    puts "Removing HVAC"
+    BTAP::Resources::HVAC.clear_all_hvac_from_model( model )
+  end
+  
 
   class OpenStudioLibrary
     include Singleton

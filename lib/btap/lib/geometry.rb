@@ -2720,6 +2720,7 @@ module BTAP
         surfaces.each do |surface|
           surface.setConstruction(construction)
         end
+        return true
       end
 
       #  This method sets the boundary condition for a surface and it's matching surface.

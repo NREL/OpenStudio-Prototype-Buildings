@@ -63,25 +63,27 @@ module BTAP
         model.building.get.resetDefaultConstructionSet()
       end
 
-      #This method removes all surfaces to default construction from model.
-      #@author phylroy.lopez@nrcan.gc.ca
-      #@params model [OpenStudio::model::Model] A model object
-      def self.set_all_surfaces_to_default_construction( model )
-        model.getPlanarSurfaces.each { |item| item.resetConstruction }
-      end
+
       #This method assignes interior surface construction to adiabatic surfaces from model.
       #@author phylroy.lopez@nrcan.gc.ca
       #@params model [OpenStudio::model::Model] A model object
-      def self.assign_interior_surface_construction_to_adiabatic_surfaces(model)
+      def self.assign_interior_surface_construction_to_adiabatic_surfaces(model, runner = nil)
+        BTAP::runner_register("Info","assign_interior_surface_construction_to_adiabatic_surfaces(#{model},#{runner}", runner) 
         unless model.building.get.defaultConstructionSet.empty? or model.building.get.defaultConstructionSet.get.defaultInteriorSurfaceConstructions.empty? or model.building.get.defaultConstructionSet.get.defaultInteriorSurfaceConstructions.get.wallConstruction.empty?
           #Give adiabatic surfaces a construction. Does not matter what. This is a bug in Openstudio that leave these surfaces unassigned by the default construction set.
           all_adiabatic_surfaces = BTAP::Geometry::Surfaces::filter_by_boundary_condition(model.getSurfaces, "Adiabatic")
           unless all_adiabatic_surfaces.empty?
-            BTAP::Geometry::Surfaces::set_surfaces_construction( all_adiabatic_surfaces, model.building.get.defaultConstructionSet.get.defaultInteriorSurfaceConstructions.get.wallConstruction.get)
+            wall_construction = model.building.get.defaultConstructionSet.get.defaultInteriorSurfaceConstructions.get.wallConstruction.get
+            BTAP::Geometry::Surfaces::set_surfaces_construction( all_adiabatic_surfaces, wall_construction)
+            names = ""
+            all_adiabatic_surfaces.each {|surface| name = "#{names} , #{surface.name.to_s} " }
+            BTAP::runner_register("Warning", "The following adiabatic surfaces have been assigned the construction #{wall_construction.name} : #{name}" , runner)
           end
         else
-          raise ("deafault constructruction not defined")
+          BTAP::runner_register("Error", "default constructruction not defined",runner)
+          return false
         end
+        return true
       end
         
       #This method removes all thermal mass definitions from model.
@@ -112,11 +114,11 @@ module BTAP
 
       # This module contains Materials, Constructions and ConstructionSets
       module Materials #Resources::Envelope::Materials
-       #This method gets conductance.
-       #@author phylroy.lopez@nrcan.gc.ca
-       #@params material [OpenStudio::Model::StandardOpaqueMaterial]
-       #@params temperature_c [Float]
-       #@return conductance [Float]
+        #This method gets conductance.
+        #@author phylroy.lopez@nrcan.gc.ca
+        #@params material [OpenStudio::Model::StandardOpaqueMaterial]
+        #@params temperature_c [Float]
+        #@return conductance [Float]
         def self.get_conductance(material,temperature_c = 0.0)
           conductance = nil
           #this method is a wrapper around OS functions. No testing is required.
@@ -957,6 +959,32 @@ module BTAP
           end
         end
 
+        
+        #This method set the default construction set from an OSM library file and the construction set name. 
+        #params construction_library_file [String] Path to osm file that contains the contruction set to be used. 
+        #params construction_set_name [String] Name of the construction set to be used. 
+        def self.set_construction_set_by_file(model, construction_library_file, construction_set_name,runner = nil)
+          BTAP::runner_register("Info","set_construction_set_by_file(#{construction_library_file}, #{construction_set_name})")
+          #check if file exists
+          unless File.exist?(construction_library_file) == true
+            BTAP::runner_register("Error", "Could not find #{construction_library_file}", runner) 
+            return false
+          end
+          construction_set = BTAP::Resources::Envelope::ConstructionSets::get_construction_set_from_library( construction_library_file, construction_set_name )
+          #check if construction set name exists and can apply to the model. 
+          unless model.building.get.setDefaultConstructionSet( construction_set.clone( model ).to_DefaultConstructionSet.get ) 
+            BTAP::runner_register("Error", "Could not use default construction set #{construction_set_name} from #{construction_library_file} ", runner) 
+            return false
+          end
+          #sets all surfaces to use default constructions except adiabatic, where it does a hard assignment of the interior wall construction type. 
+          model.getPlanarSurfaces.each { |item| item.resetConstruction }
+          #if the default construction set is defined..try to assign the interior wall to the adiabatic surfaces
+          BTAP::Resources::Envelope::assign_interior_surface_construction_to_adiabatic_surfaces( model, runner)
+          BTAP::runner_register("Info","set_construction_set_by_file(#{construction_library_file}, #{construction_set_name}) Completed Sucessfully.")
+          return true
+        end
+        
+        
 
         
         #This method customizes default surface construction and sets RSI

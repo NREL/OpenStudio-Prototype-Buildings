@@ -502,11 +502,10 @@ module BTAP
       #@author phylroy.lopez@nrcan.gc.ca
       #@params model [OpenStudio::model::Model] A model object
       #@return log [String]
-      def set_weather_file(model)
-        log = ""
-        # set weather file
+      def set_weather_file(model, runner = nil)
+        BTAP::runner_register("Info", "BTAP::Environment::WeatherFile::set_weather",runner)
         OpenStudio::Model::WeatherFile::setWeatherFile(model, @epw_file)
-        log << "Set weather file to #{model.weatherFile.get.path.get}.\n"
+        BTAP::runner_register("Info", "Set model \"#{model.building.get.name}\" to weather file #{model.weatherFile.get.path.get}.\n",runner)
 
         # Add or update site data
         site = model.getSite
@@ -516,13 +515,12 @@ module BTAP
         site.setTimeZone(@epw_file.timeZone)
         site.setElevation(@epw_file.elevation)
 
-        # Add SiteWaterMainsTemperature -- via parsing of STAT file.
+        BTAP::runner_register("Info","Setting water main temperatures via parsing of STAT file.", runner ) 
         water_temp = model.getSiteWaterMainsTemperature
         water_temp.setAnnualAverageOutdoorAirTemperature(@stat_file.mean_dry_bulb)
         water_temp.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(@stat_file.delta_dry_bulb)
-        log << "Setting water main temperatures.\n"
-        log << "mean dry bulb is #{@stat_file.mean_dry_bulb}\n"
-        log << "delta dry bulb is #{@stat_file.delta_dry_bulb}\n"
+        BTAP::runner_register("Info","SiteWaterMainsTemperature.AnnualAverageOutdoorAirTemperature = #{@stat_file.mean_dry_bulb}.", runner ) 
+        BTAP::runner_register("Info","SiteWaterMainsTemperature.MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures = #{@stat_file.delta_dry_bulb}.", runner ) 
 
         # Remove all the Design Day objects that are in the file
         model.getObjectsByType("OS:SizingPeriod:DesignDay".to_IddObjectType).each { |d| d.remove }
@@ -532,13 +530,12 @@ module BTAP
           # grab only the ones that matter
           ddy_list = /(Htg 99.6. Condns DB)|(Clg .4. Condns WB=>MDB)|(Clg .4% Condns DB=>MWB)/
           if d.name.get =~ ddy_list
-            puts "Adding object #{d.name}"
-            log << "Adding design day '#{d.name}'."
+            BTAP::runner_register("Info","Adding design day '#{d.name}'.",runner)
             # add the object to the existing model
             model.addObject(d.clone)
           end
         end
-        return log
+        return true
       end
 
       #This method scans.
