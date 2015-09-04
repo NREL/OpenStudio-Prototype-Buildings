@@ -1052,6 +1052,16 @@
       ]
     },
     {
+      "name": "U 0.52 SHGC 0.615 Simple Glazing Window",
+      "intended_surface_type": "ExteriorWindow",
+      "standards_construction_type": "Metal framing (all other)",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 0.52 SHGC 0.615 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 0.54 SHGC 0.13 Dbl Ref-A-L Clr 6mm/13mm Air",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",
@@ -1387,6 +1397,16 @@
       "sort": null,
       "materials": [
         "U 0.72 SHGC 0.36 Simple Glazing"
+      ]
+    },
+    {
+      "name": "U 0.72 SHGC 0.39 Simple Glazing Window",
+      "intended_surface_type": "ExteriorWindow",
+      "standards_construction_type": "Metal framing (all other)",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 0.72 SHGC 0.39 Simple Glazing"
       ]
     },
     {
@@ -1945,11 +1965,43 @@
     {
       "name": "ext-slab",
       "intended_surface_type": "GroundContactFloor",
-      "standards_construction_type": "Mass",
+      "standards_construction_type": "Unheated",
       "insulation_layer": null,
       "sort": null,
       "materials": [
         "HW CONCRETE"
+      ]
+    },
+    {
+      "name": "ext-slab-mass",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "Mass",
+      "insulation_layer": "CP02 CARPET PAD",
+      "sort": null,
+      "materials": [
+        "HW CONCRETE",
+        "CP02 CARPET PAD"
+      ]
+    },
+    {
+      "name": "ext-slab-metal-building",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "Metal Building",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "HW CONCRETE 8 in"
+      ]
+    },
+    {
+      "name": "ext-slab-steel-frame",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "SteelFramed",
+      "insulation_layer": "CP02 CARPET PAD",
+      "sort": null,
+      "materials": [
+        "HW CONCRETE 8 in",
+        "CP02 CARPET PAD"
       ]
     },
     {
