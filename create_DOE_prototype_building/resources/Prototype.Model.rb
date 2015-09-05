@@ -666,7 +666,6 @@ class OpenStudio::Model::Model
       infiltration.setVelocityTermCoefficient(0.224)
       infiltration.setVelocitySquaredTermCoefficient(0.0)
     end
-    
   end
 
   # Sets the inside and outside convection algorithms for different vintages
