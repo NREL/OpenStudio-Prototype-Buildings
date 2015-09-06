@@ -201,7 +201,7 @@ Schedule:Day:Interval,
   15.6;                                   !- Value Until Time 3
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {b3d0d2a5-705d-4cb9-a837-644aabde7bd0}, !- Name
+  Schedule:Week:Daily {b966dc0c-4716-40a6-9b4b-691ac84e7dbd}, !- Name
   Small Office HtgSetp Rule 1 Day Schedule, !- Sunday Schedule:Day Name
   Small Office HtgSetp Default Schedule,  !- Monday Schedule:Day Name
   Small Office HtgSetp Default Schedule,  !- Tuesday Schedule:Day Name
@@ -218,7 +218,7 @@ Schedule:Week:Daily,
 Schedule:Year,
   Small Office HtgSetp,                   !- Name
   Temperature 1,                          !- Schedule Type Limits Name
-  Schedule:Week:Daily {b3d0d2a5-705d-4cb9-a837-644aabde7bd0}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {b966dc0c-4716-40a6-9b4b-691ac84e7dbd}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
@@ -275,7 +275,7 @@ Schedule:Day:Interval,
   26.7;                                   !- Value Until Time 3
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {85fcfc17-4a52-410f-885d-9052dc3dfd04}, !- Name
+  Schedule:Week:Daily {cb837ee3-6d87-4277-b48e-14f1a3a0abfa}, !- Name
   Small Office ClgSetp Rule 1 Day Schedule, !- Sunday Schedule:Day Name
   Small Office ClgSetp Default Schedule,  !- Monday Schedule:Day Name
   Small Office ClgSetp Default Schedule,  !- Tuesday Schedule:Day Name
@@ -292,7 +292,7 @@ Schedule:Week:Daily,
 Schedule:Year,
   Small Office ClgSetp,                   !- Name
   Temperature 2,                          !- Schedule Type Limits Name
-  Schedule:Week:Daily {85fcfc17-4a52-410f-885d-9052dc3dfd04}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {cb837ee3-6d87-4277-b48e-14f1a3a0abfa}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
@@ -7026,7 +7026,7 @@ Schedule:Day:Interval,
   29;                                     !- Value Until Time 24
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {cb254053-71fd-4517-9e26-7be7c7367f6e}, !- Name
+  Schedule:Week:Daily {e82fb6f0-2999-4c92-b275-1b4c16fb42bc}, !- Name
   Always Off Default Schedule,            !- Sunday Schedule:Day Name
   Always Off Default Schedule,            !- Monday Schedule:Day Name
   Always Off Default Schedule,            !- Tuesday Schedule:Day Name
@@ -7043,14 +7043,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   Always Off,                             !- Name
   On/Off,                                 !- Schedule Type Limits Name
-  Schedule:Week:Daily {cb254053-71fd-4517-9e26-7be7c7367f6e}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {e82fb6f0-2999-4c92-b275-1b4c16fb42bc}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {a99e9f42-681c-41ae-8189-dbaf082fd1f0}, !- Name
+  Schedule:Week:Daily {e26ee5a6-9df3-43a1-8743-47cf4f66b415}, !- Name
   Always On Default Schedule,             !- Sunday Schedule:Day Name
   Always On Default Schedule,             !- Monday Schedule:Day Name
   Always On Default Schedule,             !- Tuesday Schedule:Day Name
@@ -7067,14 +7067,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   Always On,                              !- Name
   Fractional,                             !- Schedule Type Limits Name
-  Schedule:Week:Daily {a99e9f42-681c-41ae-8189-dbaf082fd1f0}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {e26ee5a6-9df3-43a1-8743-47cf4f66b415}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {c6b1c5d0-d5cb-47f1-93e5-862e8f53e8db}, !- Name
+  Schedule:Week:Daily {9e0dbe13-fa53-466a-8869-f154d2fa1164}, !- Name
   sunCHW Temp 1,                          !- Sunday Schedule:Day Name
   wkdCHW Temp 1,                          !- Monday Schedule:Day Name
   wkdCHW Temp 1,                          !- Tuesday Schedule:Day Name
@@ -7091,14 +7091,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   CHW Temp,                               !- Name
   Temperature 2,                          !- Schedule Type Limits Name
-  Schedule:Week:Daily {c6b1c5d0-d5cb-47f1-93e5-862e8f53e8db}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {9e0dbe13-fa53-466a-8869-f154d2fa1164}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {c0374559-2d05-4b52-a234-8c99f7b91b53}, !- Name
+  Schedule:Week:Daily {8d495b7c-40ae-4d47-93e1-ad78de0e2acd}, !- Name
   sunCW Temp 1,                           !- Sunday Schedule:Day Name
   wkdCW Temp 1,                           !- Monday Schedule:Day Name
   wkdCW Temp 1,                           !- Tuesday Schedule:Day Name
@@ -7115,14 +7115,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   CW Temp,                                !- Name
   Temperature 2,                          !- Schedule Type Limits Name
-  Schedule:Week:Daily {c0374559-2d05-4b52-a234-8c99f7b91b53}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {8d495b7c-40ae-4d47-93e1-ad78de0e2acd}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {1090bc5b-569c-4326-b5a3-436d3baf3f0d}, !- Name
+  Schedule:Week:Daily {807afa29-f54a-4e34-97b7-de9456ea4257}, !- Name
   Small Office Activity Default Schedule, !- Sunday Schedule:Day Name
   Small Office Activity Default Schedule, !- Monday Schedule:Day Name
   Small Office Activity Default Schedule, !- Tuesday Schedule:Day Name
@@ -7139,14 +7139,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   Small Office Activity,                  !- Name
   ActivityLevel,                          !- Schedule Type Limits Name
-  Schedule:Week:Daily {1090bc5b-569c-4326-b5a3-436d3baf3f0d}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {807afa29-f54a-4e34-97b7-de9456ea4257}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {5319f7a0-ba99-4066-aac3-71082cbe2c70}, !- Name
+  Schedule:Week:Daily {2695fc6f-404c-4c85-935b-ed9693c02630}, !- Name
   Small Office Bldg Equip Rule 1 Day Schedule, !- Sunday Schedule:Day Name
   Small Office Bldg Equip Default Schedule, !- Monday Schedule:Day Name
   Small Office Bldg Equip Default Schedule, !- Tuesday Schedule:Day Name
@@ -7163,14 +7163,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   Small Office Bldg Equip,                !- Name
   Fractional,                             !- Schedule Type Limits Name
-  Schedule:Week:Daily {5319f7a0-ba99-4066-aac3-71082cbe2c70}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {2695fc6f-404c-4c85-935b-ed9693c02630}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {35ac1560-9e23-48a8-b0de-96e612a5ac66}, !- Name
+  Schedule:Week:Daily {6c446be7-911c-4bbb-be54-d39ccf6c42c4}, !- Name
   Small Office Bldg Light Rule 1 Day Schedule, !- Sunday Schedule:Day Name
   Small Office Bldg Light Default Schedule, !- Monday Schedule:Day Name
   Small Office Bldg Light Default Schedule, !- Tuesday Schedule:Day Name
@@ -7187,14 +7187,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   Small Office Bldg Light,                !- Name
   Fractional,                             !- Schedule Type Limits Name
-  Schedule:Week:Daily {35ac1560-9e23-48a8-b0de-96e612a5ac66}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {6c446be7-911c-4bbb-be54-d39ccf6c42c4}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {176274a0-3c23-41a6-b7f8-10283a0a2725}, !- Name
+  Schedule:Week:Daily {fc98938e-0f26-4d2f-be6f-3748c615b323}, !- Name
   Small Office Bldg Occ Rule 1 Day Schedule, !- Sunday Schedule:Day Name
   Small Office Bldg Occ Default Schedule, !- Monday Schedule:Day Name
   Small Office Bldg Occ Default Schedule, !- Tuesday Schedule:Day Name
@@ -7211,14 +7211,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   Small Office Bldg Occ,                  !- Name
   Fractional,                             !- Schedule Type Limits Name
-  Schedule:Week:Daily {176274a0-3c23-41a6-b7f8-10283a0a2725}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {fc98938e-0f26-4d2f-be6f-3748c615b323}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {673b6676-9f0e-4d92-b055-02df215a77de}, !- Name
+  Schedule:Week:Daily {6b1728f9-ae9d-48f7-9f9d-770cbb36fe21}, !- Name
   Small Office Infil Quarter On Rule 1 Day Schedule, !- Sunday Schedule:Day Name
   Small Office Infil Quarter On Default Schedule, !- Monday Schedule:Day Name
   Small Office Infil Quarter On Default Schedule, !- Tuesday Schedule:Day Name
@@ -7235,14 +7235,14 @@ Schedule:Week:Daily,
 Schedule:Year,
   Small Office Infil Quarter On,          !- Name
   Fractional,                             !- Schedule Type Limits Name
-  Schedule:Week:Daily {673b6676-9f0e-4d92-b055-02df215a77de}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {6b1728f9-ae9d-48f7-9f9d-770cbb36fe21}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   12,                                     !- End Month 1
   31;                                     !- End Day 1
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {937263cb-d942-46ad-b150-b6e4683aa354}, !- Name
+  Schedule:Week:Daily {ae3c7f5d-3435-4fe6-9b8b-a7d87a0bf1f6}, !- Name
   tpfc_clg_availability_sch_rule_day,     !- Sunday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day,     !- Monday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day,     !- Tuesday Schedule:Day Name
@@ -7257,7 +7257,7 @@ Schedule:Week:Daily,
   Schedule Day 2;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {b3732a28-fd28-49fe-b9cd-1eb953ae78a5}, !- Name
+  Schedule:Week:Daily {4fb7080e-263f-4cbd-aeb5-624fdc8a68d3}, !- Name
   tpfc_clg_availability_sch_rule_day,     !- Sunday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day,     !- Monday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day,     !- Tuesday Schedule:Day Name
@@ -7272,7 +7272,7 @@ Schedule:Week:Daily,
   Schedule Day 2;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {65bc022d-0aff-43df-a7a2-572f3afa1c62}, !- Name
+  Schedule:Week:Daily {edcd10c5-2220-4c76-8a82-c93673d97397}, !- Name
   tpfc_clg_availability_sch_rule_day 1,   !- Sunday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day 1,   !- Monday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day 1,   !- Tuesday Schedule:Day Name
@@ -7287,7 +7287,7 @@ Schedule:Week:Daily,
   Schedule Day 2;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {054b8ac2-de1a-4730-a336-047955f0919b}, !- Name
+  Schedule:Week:Daily {37fb2cf5-b877-4998-af4b-34ecbfd2d33b}, !- Name
   tpfc_clg_availability_sch_rule_day 1,   !- Sunday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day 1,   !- Monday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day 1,   !- Tuesday Schedule:Day Name
@@ -7302,7 +7302,7 @@ Schedule:Week:Daily,
   Schedule Day 2;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {75f29e93-f2e8-4c1d-85cf-145378e0aa97}, !- Name
+  Schedule:Week:Daily {c1fcb332-030b-4a44-9756-9dd6225cf0df}, !- Name
   tpfc_clg_availability_sch_rule_day 2,   !- Sunday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day 2,   !- Monday Schedule:Day Name
   tpfc_clg_availability_sch_rule_day 2,   !- Tuesday Schedule:Day Name
@@ -7319,34 +7319,34 @@ Schedule:Week:Daily,
 Schedule:Year,
   tpfc_clg_availability,                  !- Name
   ,                                       !- Schedule Type Limits Name
-  Schedule:Week:Daily {937263cb-d942-46ad-b150-b6e4683aa354}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {ae3c7f5d-3435-4fe6-9b8b-a7d87a0bf1f6}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   6,                                      !- End Month 1
   24,                                     !- End Day 1
-  Schedule:Week:Daily {b3732a28-fd28-49fe-b9cd-1eb953ae78a5}, !- Schedule:Week Name 2
+  Schedule:Week:Daily {4fb7080e-263f-4cbd-aeb5-624fdc8a68d3}, !- Schedule:Week Name 2
   6,                                      !- Start Month 2
   25,                                     !- Start Day 2
   7,                                      !- End Month 2
   1,                                      !- End Day 2
-  Schedule:Week:Daily {65bc022d-0aff-43df-a7a2-572f3afa1c62}, !- Schedule:Week Name 3
+  Schedule:Week:Daily {edcd10c5-2220-4c76-8a82-c93673d97397}, !- Schedule:Week Name 3
   7,                                      !- Start Month 3
   2,                                      !- Start Day 3
   10,                                     !- End Month 3
   28,                                     !- End Day 3
-  Schedule:Week:Daily {054b8ac2-de1a-4730-a336-047955f0919b}, !- Schedule:Week Name 4
+  Schedule:Week:Daily {37fb2cf5-b877-4998-af4b-34ecbfd2d33b}, !- Schedule:Week Name 4
   10,                                     !- Start Month 4
   29,                                     !- Start Day 4
   11,                                     !- End Month 4
   4,                                      !- End Day 4
-  Schedule:Week:Daily {75f29e93-f2e8-4c1d-85cf-145378e0aa97}, !- Schedule:Week Name 5
+  Schedule:Week:Daily {c1fcb332-030b-4a44-9756-9dd6225cf0df}, !- Schedule:Week Name 5
   11,                                     !- Start Month 5
   5,                                      !- Start Day 5
   12,                                     !- End Month 5
   31;                                     !- End Day 5
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {e5344427-8f43-4ee1-b2d4-14ec7515f706}, !- Name
+  Schedule:Week:Daily {94718c75-428b-415f-a6f2-4b52c6152711}, !- Name
   tpfc_htg_availability_sch_rule_day,     !- Sunday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day,     !- Monday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day,     !- Tuesday Schedule:Day Name
@@ -7361,7 +7361,7 @@ Schedule:Week:Daily,
   Schedule Day 1;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {3ec5ffa1-9524-4e55-8295-c4bc17a69ed9}, !- Name
+  Schedule:Week:Daily {1f3c4730-3645-45bb-8754-a11f1bc2c804}, !- Name
   tpfc_htg_availability_sch_rule_day,     !- Sunday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day,     !- Monday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day,     !- Tuesday Schedule:Day Name
@@ -7376,7 +7376,7 @@ Schedule:Week:Daily,
   Schedule Day 1;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {9dcb8114-c8af-4ddd-a5bd-878cdea6c2cf}, !- Name
+  Schedule:Week:Daily {7584a71c-981d-46f6-be2c-96a492cd3240}, !- Name
   tpfc_htg_availability_sch_rule_day 1,   !- Sunday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day 1,   !- Monday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day 1,   !- Tuesday Schedule:Day Name
@@ -7391,7 +7391,7 @@ Schedule:Week:Daily,
   Schedule Day 1;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {226a71a9-a528-4b2f-80db-82d04e4b06f4}, !- Name
+  Schedule:Week:Daily {a719e0b9-7c26-401f-b00b-772861a00e5b}, !- Name
   tpfc_htg_availability_sch_rule_day 1,   !- Sunday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day 1,   !- Monday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day 1,   !- Tuesday Schedule:Day Name
@@ -7406,7 +7406,7 @@ Schedule:Week:Daily,
   Schedule Day 1;                         !- CustomDay2 Schedule:Day Name
 
 Schedule:Week:Daily,
-  Schedule:Week:Daily {12b10be3-68ef-4af7-ba46-c8ff3e260acd}, !- Name
+  Schedule:Week:Daily {353bd572-9300-4401-b46e-b62bc3be8ad5}, !- Name
   tpfc_htg_availability_sch_rule_day 2,   !- Sunday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day 2,   !- Monday Schedule:Day Name
   tpfc_htg_availability_sch_rule_day 2,   !- Tuesday Schedule:Day Name
@@ -7423,27 +7423,27 @@ Schedule:Week:Daily,
 Schedule:Year,
   tpfc_htg_availability,                  !- Name
   ,                                       !- Schedule Type Limits Name
-  Schedule:Week:Daily {e5344427-8f43-4ee1-b2d4-14ec7515f706}, !- Schedule:Week Name 1
+  Schedule:Week:Daily {94718c75-428b-415f-a6f2-4b52c6152711}, !- Schedule:Week Name 1
   1,                                      !- Start Month 1
   1,                                      !- Start Day 1
   6,                                      !- End Month 1
   24,                                     !- End Day 1
-  Schedule:Week:Daily {3ec5ffa1-9524-4e55-8295-c4bc17a69ed9}, !- Schedule:Week Name 2
+  Schedule:Week:Daily {1f3c4730-3645-45bb-8754-a11f1bc2c804}, !- Schedule:Week Name 2
   6,                                      !- Start Month 2
   25,                                     !- Start Day 2
   7,                                      !- End Month 2
   1,                                      !- End Day 2
-  Schedule:Week:Daily {9dcb8114-c8af-4ddd-a5bd-878cdea6c2cf}, !- Schedule:Week Name 3
+  Schedule:Week:Daily {7584a71c-981d-46f6-be2c-96a492cd3240}, !- Schedule:Week Name 3
   7,                                      !- Start Month 3
   2,                                      !- Start Day 3
   10,                                     !- End Month 3
   28,                                     !- End Day 3
-  Schedule:Week:Daily {226a71a9-a528-4b2f-80db-82d04e4b06f4}, !- Schedule:Week Name 4
+  Schedule:Week:Daily {a719e0b9-7c26-401f-b00b-772861a00e5b}, !- Schedule:Week Name 4
   10,                                     !- Start Month 4
   29,                                     !- Start Day 4
   11,                                     !- End Month 4
   4,                                      !- End Day 4
-  Schedule:Week:Daily {12b10be3-68ef-4af7-ba46-c8ff3e260acd}, !- Schedule:Week Name 5
+  Schedule:Week:Daily {353bd572-9300-4401-b46e-b62bc3be8ad5}, !- Schedule:Week Name 5
   11,                                     !- Start Month 5
   5,                                      !- Start Day 5
   12,                                     !- End Month 5
@@ -8914,106 +8914,6 @@ LifeCycleCost:NonrecurringCost,
   Construction,                           !- Category
   0,                                      !- Cost
   ServicePeriod;                          !- Start of Costs
-
-UtilityCost:Tariff,
-  HydroQuebec,                            !- Name
-  ElectricityPurchased:Facility,          !- Output Meter Name
-  kWh,                                    !- Conversion Factor Choice
-  ,                                       !- Energy Conversion Factor
-  ,                                       !- Demand Conversion Factor
-  ,                                       !- Time of Use Period Schedule Name
-  ,                                       !- Season Schedule Name
-  ,                                       !- Month Schedule Name
-  QuarterHour,                            !- Demand Window Length
-  12.33;                                  !- Monthly Charge or Variable Name
-
-UtilityCost:Tariff,
-  GasMetro,                               !- Name
-  Gas:Facility,                           !- Output Meter Name
-  MJ,                                     !- Conversion Factor Choice
-  ,                                       !- Energy Conversion Factor
-  ,                                       !- Demand Conversion Factor
-  ,                                       !- Time of Use Period Schedule Name
-  ,                                       !- Season Schedule Name
-  ,                                       !- Month Schedule Name
-  QuarterHour,                            !- Demand Window Length
-  31.58;                                  !- Monthly Charge or Variable Name
-
-UtilityCost:Charge:Block,
-  ElectricityBlocksEnergyCharges,         ! Name
-  HydroQuebec,                            ! Tariff Name
-  TotalEnergy,                            ! Source Variable
-  Annual,                                 ! Season
-  EnergyCharges,                          ! Category Variable Name
-  ,                                       ! Remaining Into Variable
-  ,                                       ! Block Size Multiplier Value or Variable Name
-  15090,                                  ! Block Size 1 Value or Variable Name
-  0.0965,                                 ! Block 1 Cost per Unit Value or Variable Name
-  15091,                                  ! Block Size 2 Value or Variable Name
-  0.0613,                                 ! Block 2 Cost per Unit Value or Variable Name
-  15092,                                  ! Block Size 3 Value or Variable Name
-  0.0613,                                 ! Block 3 Cost per Unit Value or Variable Name
-  15093,                                  ! Block Size 4 Value or Variable Name
-  0.0613,                                 ! Block 4 Cost per Unit Value or Variable Name
-  remaining,                              ! Block Size 5 Value or Variable Name
-  0.0613;                                 ! Block 5 Cost per Unit Value or Variable Name
-
-UtilityCost:Charge:Block,
-  ElectricityBlocksDemandCharges,         ! Name
-  HydroQuebec,                            ! Tariff Name
-  TotalDemand,                            ! Source Variable
-  Annual,                                 ! Season
-  DemandCharges,                          ! Category Variable Name
-  ,                                       ! Remaining Into Variable
-  ,                                       ! Block Size Multiplier Value or Variable Name
-  50,                                     ! Block Size 1 Value or Variable Name
-  0,                                      ! Block 1 Cost per Unit Value or Variable Name
-  51,                                     ! Block Size 2 Value or Variable Name
-  17.19,                                  ! Block 2 Cost per Unit Value or Variable Name
-  52,                                     ! Block Size 3 Value or Variable Name
-  17.19,                                  ! Block 3 Cost per Unit Value or Variable Name
-  53,                                     ! Block Size 4 Value or Variable Name
-  17.19,                                  ! Block 4 Cost per Unit Value or Variable Name
-  remaining,                              ! Block Size 5 Value or Variable Name
-  17.19;                                  ! Block 5 Cost per Unit Value or Variable Name
-
-UtilityCost:Charge:Block,
-  GasBlocksEnergyCharges,                 ! Name
-  GasMetro,                               ! Tariff Name
-  TotalEnergy,                            ! Source Variable
-  Annual,                                 ! Season
-  EnergyCharges,                          ! Category Variable Name
-  ,                                       ! Remaining Into Variable
-  ,                                       ! Block Size Multiplier Value or Variable Name
-  1,                                      ! Block Size 1 Value or Variable Name
-  0.010154,                               ! Block 1 Cost per Unit Value or Variable Name
-  2,                                      ! Block Size 2 Value or Variable Name
-  0.010154,                               ! Block 2 Cost per Unit Value or Variable Name
-  3,                                      ! Block Size 3 Value or Variable Name
-  0.010154,                               ! Block 3 Cost per Unit Value or Variable Name
-  4,                                      ! Block Size 4 Value or Variable Name
-  0.010154,                               ! Block 4 Cost per Unit Value or Variable Name
-  remaining,                              ! Block Size 5 Value or Variable Name
-  0.010154;                               ! Block 5 Cost per Unit Value or Variable Name
-
-UtilityCost:Charge:Block,
-  GasBlocksDemandCharges,                 ! Name
-  GasMetro,                               ! Tariff Name
-  TotalDemand,                            ! Source Variable
-  Annual,                                 ! Season
-  DemandCharges,                          ! Category Variable Name
-  ,                                       ! Remaining Into Variable
-  ,                                       ! Block Size Multiplier Value or Variable Name
-  1,                                      ! Block Size 1 Value or Variable Name
-  0,                                      ! Block 1 Cost per Unit Value or Variable Name
-  2,                                      ! Block Size 2 Value or Variable Name
-  0,                                      ! Block 2 Cost per Unit Value or Variable Name
-  3,                                      ! Block Size 3 Value or Variable Name
-  0,                                      ! Block 3 Cost per Unit Value or Variable Name
-  4,                                      ! Block Size 4 Value or Variable Name
-  0,                                      ! Block 4 Cost per Unit Value or Variable Name
-  remaining,                              ! Block Size 5 Value or Variable Name
-  0;                                      ! Block 5 Cost per Unit Value or Variable Name
 
 LifeCycleCost:Parameters,
   FEMP LifeCycle Cost Parameters,         !- Name

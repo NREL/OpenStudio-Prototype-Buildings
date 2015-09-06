@@ -22,7 +22,7 @@ require 'fileutils'
 require 'csv'
 require 'fileutils'
 require "date"
-release_mode = false
+release_mode = true
 folder = "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/"
 
 if release_mode == true
