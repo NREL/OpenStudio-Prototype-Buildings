@@ -20,6 +20,8 @@
 
 
 require "singleton"
+
+
 module BTAP
   module EQuest
     # Author::    Phylroy Lopez  (mailto:plopez@nrcan.gc.ca)
@@ -469,14 +471,19 @@ module BTAP
         #then the minimum outdoor air is set to zero
       end
 
-      def convert_to_openstudio(model)
-        os_zone = OpenStudio::Model::ThermalZone.new(model)
-        os_zone.setAttribute("name", self.name)
-        #set space to thermal zone
-        OpenStudio::Model::getSpaceByName(model,self.space.name).get.setThermalZone(os_zone)
-        puts "\tThermalZone: " + self.name + " created"
+      def convert_to_openstudio(model,runner = nil)
+        if self.space.get_shape() == "NO-SHAPE"
+          BTAP::runner_register("Info", "Thermal Zone contains a NO-SHAPE space named. OS does not support no shape spaces.  Thermal Zone will not be created.",runner)
+        else
+          os_zone = OpenStudio::Model::ThermalZone.new(model)
+          os_zone.setAttribute("name", self.name)
+          #set space to thermal zone
+          OpenStudio::Model::getSpaceByName(model,self.space.name).get.setThermalZone(os_zone)
+          BTAP::runner_register("Info", "\tThermalZone: " + self.name + " created",runner)
+        end
       end
     end
+    
     class DOESystem < DOECommand
       def initialize
         super()
@@ -547,16 +554,16 @@ module BTAP
       
       def get_sub_surface_origin()
         height = ""
-        puts "geting origin"
+        BTAP::runner_register("Info", "geting origin",runner)
         origin = ""
         if self.check_keyword?("X") and self.check_keyword?("Y") and self.check_keyword?("Z")
-          puts "XYZ definition"
+          BTAP::runner_register("Info", "XYZ definition",runner)
           space_xref = self.get_keyword_value("X").to_f
           space_yref = self.get_keyword_value("Y").to_f
           space_zref = self.get_keyword_value("Z").to_f
           return OpenStudio::Vector3d.new(space_xref,space_yref,space_zref)
         end
-        puts get_name()
+        BTAP::runner_register("Info", get_name(),runner)
         array = Array.new()
         origin = ""
         floor = get_parent("FLOOR")
@@ -568,11 +575,10 @@ module BTAP
           height =  space.check_keyword?("HEIGHT") ? space.get_keyword_value("HEIGHT").to_f : floor.get_keyword_value("SPACE-HEIGHT").to_f
 
         end
-
-        puts "Space is #{space.get_shape}"
+        BTAP::runner_register("Info", "Space is #{space.get_shape}",runner)
         case space.get_shape
         when "BOX"
-          puts "Box Space Detected...."
+          BTAP::runner_register("Info", "Box Space Detected....",runner)
           #get height, width and depth of box.
           height = space.check_keyword?("HEIGHT").to_f ? space.check_keyword?("HEIGHT") : height
           width = space.get_keyword_value("WIDTH").to_f
@@ -580,47 +586,47 @@ module BTAP
 
           case get_keyword_value("LOCATION")
           when "TOP"
-            puts "Top of Box...."
+            BTAP::runner_register("Info", "Top of Box....",runner)
             #counter clockwise
             origin = OpenStudio::Point3d.new(0.0,0.0,height)
 
           when "BOTTOM"
-            puts "Bottom of Box...."
+            BTAP::runner_register("Info", "Bottom of Box....",runner)
             #counter clockwise
             origin = OpenStudio::Point3d.new( 0.0, 0.0, 0.0 )
           when "FRONT"
-            puts "Front of Box...."
+            BTAP::runner_register("Info", "Front of Box....",runner)
             #counter clockwise
             origin = OpenStudio::Point3d.new( 0.0, 0.0, 0.0 )
           when "RIGHT"
-            puts "Right of Box...."
+            BTAP::runner_register("Info", "Right of Box....",runner)
             #counter clockwise
             origin = OpenStudio::Point3d.new(width, 0.0, 0.0)
           when "BACK"
-            puts "Back of Box...."
+            BTAP::runner_register("Info", "Back of Box....",runner)
             #counter clockwise
             origin = OpenStudio::Point3d.new(width,depth,0.0)
           when "LEFT"
-            puts "Left of Box...."
+            BTAP::runner_register("Info", "Left of Box....",runner)
             #counter clockwise
             origin = OpenStudio::Point3d.new(0.0,depth,0.0)
 
           end
 
         when "POLYGON"
-          puts "Polygon Space definition detected..."
+          #puts "Polygon Space definition detected..."
           if check_keyword?("LOCATION")
-            puts "LOCATION surface definition detected..."
+            #puts "LOCATION surface definition detected..."
             case get_keyword_value("LOCATION")
             when "BOTTOM"
               origin = OpenStudio::Vector3d.new(0.0,0.0, 0.0 )
             when "TOP"
-              puts "TOP surface definition detected..."
+              #puts "TOP surface definition detected..."
               #need to move floor polygon up to space height for top. Using Transformation.translation matrix for this.
                 
               origin = OpenStudio::Vector3d.new(0.0,0.0, height ) #to-do!!!!!!!!!!!
             when /SPACE-\s*V\s*(.*)/
-              puts "SPACE-V#{$1} surface definition detected..."
+              #puts "SPACE-V#{$1} surface definition detected..."
               index = $1.strip.to_i - 1
               point0 = space.polygon.point_list[index]
               #counter clockwise
@@ -628,7 +634,7 @@ module BTAP
 
             end
           else
-            puts "CATCH-ALL for surface definition.."
+            #puts "CATCH-ALL for surface definition.."
             #nasty. The height is NOT defined if the height is the same as the space height...so gotta get it from it's parent space. 
             space_height =  space.check_keyword?("HEIGHT") ? space.get_keyword_value("HEIGHT").to_f : floor.get_keyword_value("SPACE-HEIGHT").to_f
             height = self.check_keyword?("HEIGHT") ? self.get_keyword_value("HEIGHT").to_f : space_height
@@ -637,11 +643,11 @@ module BTAP
             origin = OpenStudio::Point3d.new(width,0.0,0.0)
           end
         when "NO-SHAPE"
-          raise("Using SHAPE = NO-SHAPE deifnition for space is not supported...yet")
+          raise("Using SHAPE = NO-SHAPE deifnition for space is not supported by open Studio")
         end
         
         origin =  OpenStudio::Vector3d.new(origin.x,origin.y,origin.z)
-        puts "Surface origin vector is #{origin}"
+        #puts "Surface origin vector is #{origin}"
         return origin
       end
       
@@ -656,7 +662,6 @@ module BTAP
       end
 
       def get_3d_polygon()
-        puts get_name()
         array = Array.new()
         origin = ""
         floor = get_parent("FLOOR")
@@ -670,16 +675,16 @@ module BTAP
 
         #if the surface has been given a polygon. Then use it.
         if check_keyword?("POLYGON")
-          puts "Polygon Surface Detected...Doing a local transform.."
-          
-          puts "Point List"
-          puts self.polygon.point_list
-          puts "Origin"
-          puts self.get_origin
-          puts "azimuth"
-          puts self.get_azimuth
-          puts "tilt"
-          puts self.get_tilt
+          #          puts "Polygon Surface Detected...Doing a local transform.."
+          #          
+          #          puts "Point List"
+          #          puts self.polygon.point_list
+          #          puts "Origin"
+          #          puts self.get_origin
+          #          puts "azimuth"
+          #          puts self.get_azimuth
+          #          puts "tilt"
+          #          puts self.get_tilt
           
 
           
@@ -691,7 +696,7 @@ module BTAP
         else
           case space.get_shape
           when "BOX"
-            puts "Box Space Detected...."
+            BTAP::runner_register("Info", "Box Space Detected....",runner)
             #get height, width and depth of box.
             height = space.check_keyword?("HEIGHT").to_f ? space.check_keyword?("HEIGHT") : height
             width = space.get_keyword_value("WIDTH").to_f
@@ -699,7 +704,7 @@ module BTAP
 
             case get_keyword_value("LOCATION")
             when "TOP"
-              puts "Top of Box...."
+              #puts "Top of Box...."
               #counter clockwise
               origin = OpenStudio::Point3d.new(0.0,0.0,height)
               p2 = OpenStudio::Point3d.new(width,0.0,height)
@@ -707,7 +712,7 @@ module BTAP
               p4 = OpenStudio::Point3d.new(0.0,depth,height)
               array =  [origin,p2,p3,p4]
             when "BOTTOM"
-              puts "Bottom of Box...."
+              #puts "Bottom of Box...."
               #counter clockwise
               origin = OpenStudio::Point3d.new( 0.0, 0.0, 0.0 )
               p2 = OpenStudio::Point3d.new( 0.0, depth, 0.0)
@@ -715,7 +720,7 @@ module BTAP
               p4 = OpenStudio::Point3d.new( width,0.0 ,0.0 )
               array =  [origin,p2,p3,p4]
             when "FRONT"
-              puts "Front of Box...."
+              #puts "Front of Box...."
               #counter clockwise
               origin = OpenStudio::Point3d.new( 0.0, 0.0, 0.0 )
               p2 = OpenStudio::Point3d.new( width,0.0 ,0.0 )
@@ -723,7 +728,7 @@ module BTAP
               p4 = OpenStudio::Point3d.new( 0.0, 0.0, height)
               array =  [origin,p2,p3,p4]
             when "RIGHT"
-              puts "Right of Box...."
+              #puts "Right of Box...."
               #counter clockwise
               origin = OpenStudio::Point3d.new(width, 0.0, 0.0)
               p2 = OpenStudio::Point3d.new(width,depth, 0.0)
@@ -731,7 +736,7 @@ module BTAP
               p4 = OpenStudio::Point3d.new(width,0.0,height)
               array =  [origin,p2,p3,p4]
             when "BACK"
-              puts "Back of Box...."
+              #puts "Back of Box...."
               #counter clockwise
               origin = OpenStudio::Point3d.new(width,depth,0.0)
               p2 = OpenStudio::Point3d.new(0.0,depth,0.0)
@@ -739,7 +744,7 @@ module BTAP
               p4 = OpenStudio::Point3d.new(width,depth,height)
               array =  [origin,p2,p3,p4]
             when "LEFT"
-              puts "Left of Box...."
+              #puts "Left of Box...."
               #counter clockwise
               origin = OpenStudio::Point3d.new(0.0,depth,0.0)
               p2 = OpenStudio::Point3d.new( 0.0, 0.0, 0.0 )
@@ -749,22 +754,22 @@ module BTAP
             end
 
           when "POLYGON"
-            puts "Polygon Space definition detected..."
+            #puts "Polygon Space definition detected..."
             if check_keyword?("LOCATION")
-              puts "LOCATION surface definition detected..."
+              #puts "LOCATION surface definition detected..."
               case get_keyword_value("LOCATION")
               when "BOTTOM"
-                puts "BOTTOM surface definition detected..."
+                #puts "BOTTOM surface definition detected..."
                 #reverse array
                 array = space.polygon.point_list.dup
                 first = array.pop
                 array.insert(0,first).reverse!
               when "TOP"
-                puts "TOP surface definition detected..."
+                #puts "TOP surface definition detected..."
                 #need to move floor polygon up to space height for top. Using Transformation.translation matrix for this.
                 array = OpenStudio::createTranslation(OpenStudio::Vector3d.new(0.0,0.0, height )) * space.polygon.point_list
               when /SPACE-\s*V\s*(.*)/
-                puts "SPACE-V#{$1} surface definition detected..."
+                #puts "SPACE-V#{$1} surface definition detected..."
                 index = $1.strip.to_i - 1
                 point0 = space.polygon.point_list[index]
                 point1 = space.polygon.point_list[index + 1] ? space.polygon.point_list[index + 1] : space.polygon.point_list[0]
@@ -776,7 +781,7 @@ module BTAP
                 array =  [origin,p2,p3,p4]
               end
             else
-              puts "CATCH-ALL for surface definition.."
+              #puts "CATCH-ALL for surface definition.."
               #nasty. The height is NOT defined if the height is the same as the space height...so gotta get it from it's parent space. 
               space_height =  space.check_keyword?("HEIGHT") ? space.get_keyword_value("HEIGHT").to_f : floor.get_keyword_value("SPACE-HEIGHT").to_f
               height = self.check_keyword?("HEIGHT") ? self.get_keyword_value("HEIGHT").to_f : space_height
@@ -828,7 +833,7 @@ module BTAP
       end
 
       #This method will try to convert a DOE inp file to an openstudio file.. 
-      def convert_to_openstudio(model)
+      def convert_to_openstudio(model,runner = nil)
         #Get 3d polygon of surface and tranform the points based on space origin and the floor origin since they each may use their own co-ordinate base system.
         total_transform = ""
         if self.check_keyword?("AZIMUTH") or self.check_keyword?("TILT")
@@ -837,16 +842,31 @@ module BTAP
           total_transform =  get_parent("FLOOR").get_transformation_matrix() * get_parent("SPACE").get_transformation_matrix()
         end
         surface_points = total_transform * self.get_3d_polygon()
-        #Add the surface to the new openstudio model. 
+        #Add the surface to the new openstudio model.
+        
         os_surface = OpenStudio::Model::Surface.new(surface_points, model)
         #set the name of the surface. 
         os_surface.setAttribute("name", self.name)
-        #Set the surface boundary condition if it is a ground surface. 
-        BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Ground") if self.commandName == "UNDERGROUND-WALL"
+        case self.commandName
+          #Set the surface boundary condition if it is a ground surface.
+        
+        when "UNDERGROUND-WALL"
+          BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Ground") 
+        when "EXTERIOR-WALL","ROOF"
+          #this is needed since the surface constructor defaults to a Ground boundary and Floor Surface type 
+          #when a horizontal surface is initialized. 
+          if os_surface.outsideBoundaryCondition == "Ground" and os_surface.surfaceType == "Floor" 
+            os_surface.setSurfaceType("RoofCeiling") 
+          end
+          BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Outdoors")
+        when "INTERIOR-WALL"
+          BTAP::Geometry::Surfaces::set_surfaces_boundary_condition(model,os_surface, "Surface")
+        end
+        
         #Add to parent space that was already created. 
         os_surface.setSpace(OpenStudio::Model::getSpaceByName( model,get_parent("SPACE").name).get )
         #output to console for debugging. 
-        puts "\tSurface: " + self.name + " created"
+        BTAP::runner_register("Info", "\tSurface: " + self.name + " created",runner)
         #check if we need to create a mirror surface in another space.
         if self.check_keyword?("NEXT-TO")
           #reverse the points.
@@ -859,7 +879,7 @@ module BTAP
           #Assign the mirror surface to the parent space that is NEXT-TO
           os_surface_mirror.setSpace(OpenStudio::Model::getSpaceByName(model,get_keyword_value("NEXT-TO")).get)
           #output to console for debugging. 
-          puts "\tSurface: " + self.name + "-mirror"  + " created"
+          BTAP::runner_register("Info", "\tSurface: " + self.name + "-mirror"  + " created",runner)
         end #if statement
         
         #Some switches for debugging. 
@@ -870,10 +890,10 @@ module BTAP
         if convert_sub_surfaces
           #convert subsurfaces
           self.get_children().each do |child|
-            puts "child #{child}"
             #Get height and width of subsurface
             height = child.get_keyword_value("HEIGHT").to_f
             width = child.get_keyword_value("WIDTH").to_f
+            
           
             #Sum the origin of the surface and the translation of the window
             x = os_surface.vertices.first().x + ( child.check_keyword?("X")?  child.get_keyword_value("X").to_f : 0.0 )
@@ -910,13 +930,23 @@ module BTAP
               #Add to parent space that was already created. 
               os_sub_surface.setSurface(os_surface)
               #output to console for debugging. 
-              puts "\tSubSurface: " + child.name + " created"
+              BTAP::runner_register("Info", "\tSubSurface: " + child.name + " created",runner)
               case child.commandName
               when "WINDOW"
                 #By default it is a window. 
               when "DOOR"
                 os_sub_surface.setSubSurfaceType( "Door" )
               end #end case.
+              
+              # Add overhang for subsurface if required. Note this only supports overhangs of width the same as the window.  
+              if child.check_keyword?("OVERHANG-D") == true
+                offset = 0.0
+                offset = child.get_keyword_value("OVERHANG-O").to_f if child.check_keyword?("OVERHANG-O")
+                depth = 0.0
+                depth = child.get_keyword_value("OVERHANG-D").to_f 
+                os_sub_surface.addOverhang(	depth , offset )
+              end
+              	
             end
           end
         end
@@ -1649,7 +1679,6 @@ module BTAP
           space_zref = self.check_keyword?("Z")? self.get_keyword_value("Z").to_f : 0.0
           space_origin = OpenStudio::Vector3d.new(space_xref,space_yref,space_zref)
         end
-        puts "#{self.commandName} #{self.get_name} origin is : #{space_origin}"
         return space_origin
       end
 
@@ -1685,7 +1714,6 @@ module BTAP
         else
           angle =  self.check_keyword?("AZIMUTH")? self.get_keyword_value("AZIMUTH").to_f : 0.0
         end
-        puts "#{self.commandName} #{self.get_name} azimuth is : #{angle}"
         return angle
       end
 
@@ -1699,15 +1727,18 @@ module BTAP
         return OpenStudio::Transformation::rotation(OpenStudio::Vector3d.new(0.0, 0.0, 1.0), OpenStudio::degToRad(360.0 - self.get_azimuth()))
       end
 
-      def convert_to_openstudio(model)
-        os_space = OpenStudio::Model::Space.new(model)
-        os_space.setAttribute("name", self.name)
-        #set floor
-        os_space.setBuildingStory(OpenStudio::Model::getBuildingStoryByName(model,self.get_parent("FLOOR").name).get)
-        puts "\tSpace: " + self.name + " created"
-        puts "\t\t Azimuth:#{self.get_azimuth}"
-        puts "\t\t Azimuth:#{self.get_origin}"
-        
+      def convert_to_openstudio(model,runner = nil)
+        if self.get_keyword_value("SHAPE") == "NO-SHAPE"
+          BTAP::runner_register("Info", "OpenStudio does not support NO-SHAPE SPACE definitions currently. Not importing the space #{self.name}.",runner)
+        else
+          os_space = OpenStudio::Model::Space.new(model)
+          os_space.setAttribute("name", self.name)
+          #set floor
+          os_space.setBuildingStory(OpenStudio::Model::getBuildingStoryByName(model,self.get_parent("FLOOR").name).get)
+          BTAP::runner_register("Info", "\tSpace: " + self.name + " created",runner)
+          #puts "\t\t Azimuth:#{self.get_azimuth}"
+          #puts "\t\t Azimuth:#{self.get_origin}"
+        end
       end
 
     end
@@ -1788,10 +1819,10 @@ module BTAP
         return OpenStudio::Transformation::rotation(OpenStudio::Vector3d.new(0.0, 0.0, 1.0), OpenStudio::degToRad(360.0 - self.get_azimuth()))
       end
 
-      def convert_to_openstudio(model)
+      def convert_to_openstudio(model,runner = nil)
         floor = OpenStudio::Model::BuildingStory.new(model)
         floor.setAttribute("name", self.name)
-        puts "\tBuildingStory: " + self.name + " created"
+        BTAP::runner_register("Info", "\tBuildingStory: " + self.name + " created",runner)
       end
 
     end
@@ -2103,8 +2134,8 @@ module BTAP
 
       # Will read an input file into memory and store all the commands into the
       # @commands array.
-      def load_inp(filename)
-        puts "loading file:" + filename
+      def load_inp(filename,runner = nil)
+        BTAP::runner_register("Info", "loading file:" + filename, runner)
         #Open the file.
         #puts filename
         iter = 0
@@ -2128,7 +2159,7 @@ module BTAP
           #line.forced_encoding("US-ASCII")
           #Ignore comments (To do!...strip from file as well as in-line comments.
           if (!line.match(/\$.*/) )
-            
+
             if (myarray = line.match(/(.*?)\.\./) )
               #Add the last part of the command to the newline...may be blank."
               command_string = command_string + myarray[1]
@@ -2143,12 +2174,20 @@ module BTAP
             end
           end
         end
-        puts "Finished Loading File:" + filename
+        
         organize_data()
+        BTAP::runner_register("Info","INP model contains:", runner)
+        #report number of things read in. 
+        ["SPACE","ZONE","EXTERIOR-WALL","ROOF","INTERIOR-WALL","UNDERGROUND-WALL","WINDOW","DOOR","MATERIAL","CONSTRUCTION"].each do |item|
+          items = self.find_all_commands(item)
+          message = "\t#{item} = #{items.size}"
+          BTAP::runner_register("Info",message, runner)
+        end
+        BTAP::runner_register("Info", "\tFinished Loading File:" + filename,runner)
       end
 
-      def set_envelope_hierarchy()
-        puts "Setting Geometry Hierarchy"
+      def set_envelope_hierarchy(runner = nil)
+        
         @commands.each do |command|
           if command.doe_scope() == "envelope"
             #Sets parents of command.
@@ -2162,35 +2201,33 @@ module BTAP
             end
           end
         end
-        puts "Finished Setting Geometry Hierarchy"
       end
 
-      def find_matching_command(searchCommand)
+      def find_matching_command(searchCommand,runner = nil)
         @commands.each do |command|
           #Determine if it is the same command type and name.
           if ( (command.utype == searchCommand.utype) and ( command.commandName == searchCommand.commandName ) )
-            puts "Found matching command and utype"
+            BTAP::runner_register("Info", "Found matching command and utype",runner)
             #determine if all the keywords match.
-            puts "Determine if all the keyword pairs match."
+            BTAP::runner_register("Info", "Determine if all the keyword pairs match.",runner)
             found = 0
             searchCommand.keywordPairs.each { |searchPair|
-              puts "Searching For...." + searchPair.to_s
-
-              puts "iterate through keyword pairs."
+              BTAP::runner_register("Info", "Searching For...." + searchPair.to_s,runner)
+              BTAP::runner_register("Info", "iterate through keyword pairs.",runner)
               command.keywordPairs.each{ |pair|
                 # puts "Current "
                 # puts pair.to_s
 
                 if ( (searchPair[0] == pair[0] ) and (searchPair[1] == pair[1]) )
                   found = found + 1
-                  puts pair.to_s + " found!"
+                  BTAP::runner_register("Info", pair.to_s + " found!",runner)
                   break
                 end
               }
             }
-            puts searchCommand.keywordPairs.length.to_s + " " + found.to_s
+            BTAP::runner_register("Info", searchCommand.keywordPairs.length.to_s + " " + found.to_s,runner)
             if (searchCommand.keywordPairs.length != found)
-              puts "Did not find matching Command: \n\t" + searchCommand.utype.to_s() + " = " + searchCommand.commandName.to_s
+              BTAP::runner_register("Info", "Did not find matching Command: \n\t" + searchCommand.utype.to_s() + " = " + searchCommand.commandName.to_s,runner)
               # Commented out for causing a crash
               #  puts "With Keyword-pair:\n\t " + searchPair[0].to_s + " = " + searchPair[1].to_s + "\n"
               return false
@@ -2319,8 +2356,10 @@ module BTAP
           end
           #Find Polygons for space and add reference to the space.
           spaces.each do |space|
-            if ( polygon.utype == space.get_keyword_value("POLYGON") )
-              space.polygon = polygon
+            if space.check_keyword?("POLYGON")
+              if ( polygon.utype == space.get_keyword_value("POLYGON") )
+                space.polygon = polygon
+              end
             end
           end
         end
@@ -2382,11 +2421,11 @@ module BTAP
 
       #this method will convert a DOE inp file to the OSM file.. This will return
       # and openstudio model object. 
-      def create_openstudio_model_new()
+      def create_openstudio_model_new(runner = nil)
         beginning_time = Time.now
 
         end_time = Time.now
-        puts "Time elapsed #{(end_time - beginning_time)*1000} milliseconds"
+        BTAP::runner_register("Info", "Time elapsed #{(end_time - beginning_time)*1000} milliseconds",runner)
         model = OpenStudio::Model::Model.new()
         #add All Materials
         #    find_all_commands( "Materials" ).each do |doe_material|
@@ -2396,46 +2435,38 @@ module BTAP
         #    end
 
         #this block will create OS story objects in the OS model. 
-        puts "Exporting DOE FLOORS to OS"
+        BTAP::runner_register("Info", "Exporting DOE FLOORS to OS",runner)
         find_all_commands("FLOOR").each do |doe_floor|
           doe_floor.convert_to_openstudio(model)
         end
-        puts OpenStudio::Model::getBuildingStorys(model).size.to_s + " floors created"
+        BTAP::runner_register("Info", OpenStudio::Model::getBuildingStorys(model).size.to_s + " floors created",runner)
 
         #this block will create OS space objects in the OS model. 
-        puts "Exporting DOE SPACES to OS"
+        BTAP::runner_register("Info", "Exporting DOE SPACES to OS",runner)
         find_all_commands("SPACE").each do |doe_space|
           doe_space.convert_to_openstudio(model)
         end
-        puts OpenStudio::Model::getSpaces(model).size.to_s + " spaces created"
+        BTAP::runner_register("Info", OpenStudio::Model::getSpaces(model).size.to_s + " spaces created",runner)
         
         #this block will create OS space objects in the OS model. 
-        puts "Exporting DOE ZONES to OS"
+        BTAP::runner_register("Info", "Exporting DOE ZONES to OS",runner)
         find_all_commands("ZONE").each do |doe_zone|
           doe_zone.convert_to_openstudio(model)
         end
-        puts OpenStudio::Model::getThermalZones(model).size.to_s + " zones created"
+        BTAP::runner_register("Info", OpenStudio::Model::getThermalZones(model).size.to_s + " zones created",runner)
         
         #this block will create OS surface objects in the OS model.
-        puts "Exporting DOE Surfaces to OS"
+        BTAP::runner_register("Info", "Exporting DOE Surfaces to OS",runner)
         get_all_surfaces().each do |doe_surface|
           doe_surface.convert_to_openstudio(model)
         end
-        puts OpenStudio::Model::getSurfaces(model).size.to_s + " surfaces created"
-
-        #this block will create OS surface objects in the OS model.
-        puts "Exporting DOE SubSurfaces to OS"
-        get_all_subsurfaces().each do |doe_subsurface|
-          doe_subsurface.convert_to_openstudio(model)
-        end
-        puts OpenStudio::Model::getSubSurfaces(model).size.to_s + " sub_surfaces created"
-
-        puts "Setting Boundary Conditions for surfaces"
+        BTAP::runner_register("Info", OpenStudio::Model::getSurfaces(model).size.to_s + " surfaces created",runner)
+        BTAP::runner_register("Info", OpenStudio::Model::getSubSurfaces(model).size.to_s + " sub_surfaces created",runner)
+        BTAP::runner_register("Info", "Setting Boundary Conditions for surfaces",runner)
         BTAP::Geometry::match_surfaces(model)
         
         x_scale = y_scale = z_scale = 0.3048
-        
-        puts "scaling model from feet to meters"
+        BTAP::runner_register("Info", "scaling model from feet to meters",runner)
         model.getPlanarSurfaces.each do |surface|
           new_vertices = OpenStudio::Point3dVector.new
           surface.vertices.each do |vertex|
@@ -2453,22 +2484,20 @@ module BTAP
           new_transformation = OpenStudio::createRotation(euler_angles) * OpenStudio::createTranslation(new_translation) 
           surface_group.setTransformation(new_transformation)
         end
-        
-        puts "DOE2.2 -> OS Geometry Conversion Complete"
-
-        puts "Summary of Conversion"
-        puts OpenStudio::Model::getBuildingStorys(model).size.to_s + " floors created"
-        puts OpenStudio::Model::getSpaces(model).size.to_s + " spaces created"
-        puts OpenStudio::Model::getThermalZones(model).size.to_s + " thermal zones created"
-        puts OpenStudio::Model::getSurfaces(model).size.to_s + " surfaces created"
-        puts OpenStudio::Model::getSubSurfaces(model).size.to_s + " sub_surfaces created"
-        puts "No Contruction were converted."
-        puts "No Materials were converted"
-        puts "No HVAC components were converted"
-        puts "No Environment or Simulation setting were converted."
+        BTAP::runner_register("Info", "DOE2.2 -> OS Geometry Conversion Complete",runner)
+        BTAP::runner_register("Info", "Summary of Conversion",runner)
+        BTAP::runner_register("Info", OpenStudio::Model::getBuildingStorys(model).size.to_s + " floors created",runner)
+        BTAP::runner_register("Info", OpenStudio::Model::getSpaces(model).size.to_s + " spaces created",runner)
+        BTAP::runner_register("Info", OpenStudio::Model::getThermalZones(model).size.to_s + " thermal zones created",runner)
+        BTAP::runner_register("Info", OpenStudio::Model::getSurfaces(model).size.to_s + " surfaces created",runner)
+        BTAP::runner_register("Info", OpenStudio::Model::getSubSurfaces(model).size.to_s + " sub_surfaces created",runner)
+        BTAP::runner_register("Info", "No Contruction were converted.",runner)
+        BTAP::runner_register("Info", "No Materials were converted",runner)
+        BTAP::runner_register("Info", "No HVAC components were converted",runner)
+        BTAP::runner_register("Info", "No Environment or Simulation setting were converted.",runner)
 
         end_time = Time.now
-        puts "Time elapsed #{(end_time - beginning_time)} seconds"
+        BTAP::runner_register("Info", "Time elapsed #{(end_time - beginning_time)} seconds",runner)
         return model
       end
 
@@ -2477,24 +2506,21 @@ module BTAP
 
 
       def get_materials()
-        puts "Spaces"
+        BTAP::runner_register("Info", "Spaces",runner)
         find_all_commands("SPACE").each do |space|
-
-          puts space.get_azimuth()
+          BTAP::runner_register("Info", space.get_azimuth(),runner)
         end
-        puts "Materials"
+        BTAP::runner_register("Info", "Materials",runner)
         find_all_commands("MATERIAL").each do |materials|
-          puts materials.get_name()
+          BTAP::runner_register("Info", materials.get_name(),runner)
         end
-
-        puts "Layers"
+        BTAP::runner_register("Info", "Layers",runner)
         find_all_commands("LAYERS").each do |materials|
-          puts materials.get_name()
+          BTAP::runner_register("Info", materials.get_name(),runner)
         end
-
-        puts "Constructions"
+        BTAP::runner_register("Info", "Constructions",runner)
         find_all_commands("CONSTRUCTION").each do |materials|
-          puts materials.get_name()
+          BTAP::runner_register("Info", materials.get_name(),runner)
         end
 
       end
@@ -2640,3 +2666,4 @@ module BTAP
     end
   end
 end
+
