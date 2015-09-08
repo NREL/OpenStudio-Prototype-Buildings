@@ -330,10 +330,10 @@
       "coeff_4": 0.0300588,
       "coeff_5": -0.00105643,
       "coeff_6": 0.0020457,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     },
     {
@@ -456,10 +456,10 @@
       "coeff_4": 0.0132194,
       "coeff_5": 0.000268596,
       "coeff_6": -0.000501131,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     },
     {
@@ -582,10 +582,10 @@
       "coeff_4": -0.00729587,
       "coeff_5": -2.3166e-05,
       "coeff_6": -0.000148943,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     },
     {
@@ -596,10 +596,10 @@
       "coeff_4": 0.0165925,
       "coeff_5": 0.000185393,
       "coeff_6": -0.000375646,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     },
     {
@@ -610,10 +610,10 @@
       "coeff_4": 0.0263844,
       "coeff_5": -0.00091543,
       "coeff_6": 0.00169601,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     },
     {
@@ -624,10 +624,10 @@
       "coeff_4": -0.00455294,
       "coeff_5": 0.000825682,
       "coeff_6": -0.00156152,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     },
     {
@@ -638,10 +638,10 @@
       "coeff_4": -0.00322114,
       "coeff_5": -4.91832e-05,
       "coeff_6": -0.000177584,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     },
     {
@@ -652,10 +652,10 @@
       "coeff_4": 0.00187934,
       "coeff_5": 0.000473461,
       "coeff_6": -0.000711472,
-      "min_x": null,
-      "max_x": null,
-      "min_y": null,
-      "max_y": null,
+      "min_x": 5,
+      "max_x": 10,
+      "min_y": 24,
+      "max_y": 35,
       "notes": "From NECB 2011"
     }
   ]

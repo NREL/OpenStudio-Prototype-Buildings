@@ -28,7 +28,7 @@ class OpenStudio::Model::ChillerElectricEIR
       elsif name.include?('WithoutCondenser')
         condenser_type = 'WithoutCondenser'
       end
-    elsif name.include('WaterCooled')
+    elsif name.include?('WaterCooled')
       if name.include?('Reciprocating')
         compressor_type = 'Reciprocating'
       elsif name.include?('Rotary Screw')
@@ -55,7 +55,7 @@ class OpenStudio::Model::ChillerElectricEIR
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end
- 
+
     # Convert capacity to tons
     capacity_tons = OpenStudio.convert(capacity_w, "W", "ton").get
 
@@ -66,7 +66,7 @@ class OpenStudio::Model::ChillerElectricEIR
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end
-    
+
     # Make the CAPFT curve
     cool_cap_ft = self.model.add_curve(chlr_props['capft'], standards)
     if cool_cap_ft
