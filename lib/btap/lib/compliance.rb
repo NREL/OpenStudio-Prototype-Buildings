@@ -1628,7 +1628,7 @@ module BTAP
           mau_types = [true, false]
           mau_heating_coil_types = ["Hot Water", "Electric"]
           baseboard_types = ["Hot Water" , "Electric"]
-          chiller_types = ["Scroll","Centrifugal","Screw","Reciprocating"]
+          chiller_types = ["Scroll","Centrifugal","Rotary Screw","Reciprocating"]
           mua_cooling_types = ["DX","Hydronic"]
           heating_coil_types_sys3 = ["Electric", "Gas", "DX"]
           heating_coil_types_sys4and6 = ["Electric", "Gas"]

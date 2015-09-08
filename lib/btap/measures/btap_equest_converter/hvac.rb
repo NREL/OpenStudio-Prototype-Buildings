@@ -2546,7 +2546,7 @@ module BTAP
             # -a heating loop, cooling loop and condenser loop to serve four pipe fan coil units
             # Arguments:
             #   boiler_fueltype: "NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"
-            #   chiller_type: "Scroll";"Centrifugal";""Screw";"Reciprocating"
+            #   chiller_type: "Scroll";"Centrifugal";"Rotary Screw";"Reciprocating"
             #   mua_cooling_type: make-up air unit cooling type "DX";"Hydronic"
             #   fan_coil_type options are "TPFC" or "FPFC"
 
@@ -3079,7 +3079,7 @@ module BTAP
             # "NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"
             # "heating_coil_type": "Electric" or "Hot Water"
             # "baseboard_type": "Electric" and "Hot Water"
-            # "chiller_type": "Scroll";"Centrifugal";""Screw";"Reciprocating"
+            # "chiller_type": "Scroll";"Centrifugal";"Rotary Screw";"Reciprocating"
             # "fan_type": "AF_or_BI_rdg_fancurve";"AF_or_BI_inletvanes";"fc_inletvanes";"var_speed_drive"  
 
             always_on = model.alwaysOnDiscreteSchedule
@@ -3294,7 +3294,7 @@ module BTAP
               eir_f_of_plr.setCoefficient1Constant(0.08144133)
               eir_f_of_plr.setCoefficient2x(0.41927141)
               eir_f_of_plr.setCoefficient3xPOW2(0.49939604)
-            elsif(chiller_type == "Screw")
+            elsif(chiller_type == "Rotary Screw")
               clg_cap_f_of_temp.setCoefficient1Constant(0.812998)
               clg_cap_f_of_temp.setCoefficient2x(-0.0142532)
               clg_cap_f_of_temp.setCoefficient3xPOW2(-0.00161799)
