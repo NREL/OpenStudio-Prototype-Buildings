@@ -2654,8 +2654,6 @@ module BTAP
             air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
             fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
-            fan.setPressureRise(640)
-            fan.setFanEfficiency(0.4)
 
             # Assume direct-fired gas heating coil for now; need to add logic
             # to set up hydronic or electric coil depending on proposed?
@@ -2665,7 +2663,7 @@ module BTAP
             # Add DX or hydronic cooling coil
             # TODO: set proper cooling DX COP when sizing data is available
             if(mua_cooling_type == "DX")
-              clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
+              clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
             elsif(mua_cooling_type == "Hydronic")
               if(fan_coil_type == "FPFC")
                 clg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_cool_coil(model, always_on)
@@ -2676,25 +2674,10 @@ module BTAP
             end
 
             # does MAU have an economizer?
-
             oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
-            oa_controller.setEconomizerControlType("DifferentialEnthalpy")
 
             #oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,oa_controller)
             oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
-
-            #TODO: add logic for whether an HRV is needed depending on recoverable heat (NECB 5.2.10.1)  
-            #Create sensible heat exchanger.
-            heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-            heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-            heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-            heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-            heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-            heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-            heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-            heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-            heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-            heat_exchanger.setSupplyAirOutletTemperatureControl(false)
 
             # Add the components to the air loop 
             # in order from closest to zone to furthest from zone
@@ -2703,8 +2686,6 @@ module BTAP
             htg_coil.addToNode(supply_inlet_node)
             clg_coil.addToNode(supply_inlet_node)
             oa_system.addToNode(supply_inlet_node)
-            oa_node = oa_system.outboardOANode
-            heat_exchanger.addToNode(oa_node.get)
 
             # Add a setpoint manager single zone reheat to control the
             # supply air temperature based on the needs of default zone (OpenStudio picks one)
@@ -3265,8 +3246,8 @@ module BTAP
 
             chiller = BTAP::Resources::HVAC::Plant::add_elec_chiller(model,
             clg_cap_f_of_temp,eir_f_of_avail_to_nom_cap,eir_f_of_plr)
-            # update name so it's in agreement with method used in Standards file
             chiller.setCondenserType("WaterCooled")
+            # update name so it's in agreement with method used in Standards file
             chiller_name = chiller.name.to_s + " WaterCooled #{chiller_type}"
             chiller.setName(chiller_name)
 
