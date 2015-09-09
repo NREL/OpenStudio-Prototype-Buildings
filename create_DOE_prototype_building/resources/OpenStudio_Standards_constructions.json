@@ -1052,6 +1052,16 @@
       ]
     },
     {
+      "name": "U 0.52 SHGC 0.615 Simple Glazing Window",
+      "intended_surface_type": "ExteriorWindow",
+      "standards_construction_type": "Metal framing (all other)",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 0.52 SHGC 0.615 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 0.54 SHGC 0.13 Dbl Ref-A-L Clr 6mm/13mm Air",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",
@@ -1244,16 +1254,6 @@
       ]
     },
     {
-      "name": "U 0.62 SHGC 0.41 Simple Glazing Window",
-      "intended_surface_type": "ExteriorWindow",
-      "standards_construction_type": "Metal framing (all other)",
-      "insulation_layer": null,
-      "sort": null,
-      "materials": [
-        "U 0.62 SHGC 0.41 Simple Glazing"
-      ]
-    },
-    {
       "name": "U 0.62 SHGC 0.49 Dbl Blue 6mm/6mm Air",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",
@@ -1397,6 +1397,16 @@
       "sort": null,
       "materials": [
         "U 0.72 SHGC 0.36 Simple Glazing"
+      ]
+    },
+    {
+      "name": "U 0.72 SHGC 0.39 Simple Glazing Window",
+      "intended_surface_type": "ExteriorWindow",
+      "standards_construction_type": "Metal framing (all other)",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 0.72 SHGC 0.39 Simple Glazing"
       ]
     },
     {
@@ -1720,16 +1730,6 @@
       ]
     },
     {
-      "name": "U 1.22 SHGC 0.54 Simple Glazing Window",
-      "intended_surface_type": "ExteriorWindow",
-      "standards_construction_type": "Metal framing (all other)",
-      "insulation_layer": null,
-      "sort": null,
-      "materials": [
-        "U 1.22 SHGC 0.54 Simple Glazing"
-      ]
-    },
-    {
       "name": "U 1.22 SHGC 0.61 Sgl Green 6mm",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",
@@ -1800,6 +1800,26 @@
       ]
     },
     {
+      "name": "U 1.36 SHGC 0.39 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.36 SHGC 0.39 Simple Glazing"
+      ]
+    },
+    {
+      "name": "U 1.36 SHGC 0.61 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.36 SHGC 0.61 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 1.70 SHGC 0.36 Simple Glazing Skylight",
       "intended_surface_type": null,
       "standards_construction_type": null,
@@ -1850,6 +1870,16 @@
       ]
     },
     {
+      "name": "U 1.90 SHGC 0.65 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.90 SHGC 0.65 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 1.98 SHGC 0.16 Simple Glazing Skylight",
       "intended_surface_type": null,
       "standards_construction_type": null,
@@ -1890,6 +1920,16 @@
       ]
     },
     {
+      "name": "U 1.98 SHGC 0.39 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.98 SHGC 0.39 Simple Glazing"
+      ]
+    },
+    {
       "name": "U 1.98 SHGC 0.61 Sgl Green 6mm",
       "intended_surface_type": "ExteriorWindow",
       "standards_construction_type": "Metal framing (all other)",
@@ -1897,6 +1937,16 @@
       "sort": 95.0,
       "materials": [
         "GREEN 6MM"
+      ]
+    },
+    {
+      "name": "U 1.98 SHGC 0.61 Simple Glazing Skylight",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "U 1.98 SHGC 0.61 Simple Glazing"
       ]
     },
     {
@@ -1910,6 +1960,48 @@
         "Compliance Insulation R6.46",
         "Air - Metal Wall Framing - 16 or 24 in. OC",
         "Gypsum Board - 3/8 in."
+      ]
+    },
+    {
+      "name": "ext-slab",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "Unheated",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "HW CONCRETE"
+      ]
+    },
+    {
+      "name": "ext-slab-mass",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "Mass",
+      "insulation_layer": "CP02 CARPET PAD",
+      "sort": null,
+      "materials": [
+        "HW CONCRETE",
+        "CP02 CARPET PAD"
+      ]
+    },
+    {
+      "name": "ext-slab-metal-building",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "Metal Building",
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "HW CONCRETE 8 in"
+      ]
+    },
+    {
+      "name": "ext-slab-steel-frame",
+      "intended_surface_type": "GroundContactFloor",
+      "standards_construction_type": "SteelFramed",
+      "insulation_layer": "CP02 CARPET PAD",
+      "sort": null,
+      "materials": [
+        "HW CONCRETE 8 in",
+        "CP02 CARPET PAD"
       ]
     },
     {

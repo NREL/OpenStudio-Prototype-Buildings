@@ -214,10 +214,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
       # Reference and Prototype vintages
-      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+      case building_vintage
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
         geometry_file = 'Geometry.small_hotel_doe.osm'
-      else
-        geometry_file = 'Geometry.small_hotel_pnnl.osm'
+      when '90.1-2004'
+        geometry_file = 'Geometry.small_hotel_pnnl2004.osm'
+      when '90.1-2007'
+        geometry_file = 'Geometry.small_hotel_pnnl2007.osm'
+      when '90.1-2010'
+        geometry_file = 'Geometry.small_hotel_pnnl2010.osm'
+      when '90.1-2013'
+        geometry_file = 'Geometry.small_hotel_pnnl2013.osm'
       end
     when 'LargeHotel'
       require_relative 'resources/Prototype.large_hotel'
@@ -225,7 +232,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       case building_vintage
         when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
           geometry_file = 'Geometry.large_hotel.doe.osm'
-        when '90.1-2007'
+        when '90.1-2007','90.1-2004'
           geometry_file = 'Geometry.large_hotel.2004_2007.osm'
         when '90.1-2010'
           geometry_file = 'Geometry.large_hotel.2010.osm'
@@ -242,7 +249,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       end
     when 'RetailStandalone'
       require_relative 'resources/Prototype.retail_standalone'
-      geometry_file = 'Geometry.retail_standalone.osm'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.retail_standalone.pre1980_post1980.osm'
+        when '90.1-2004','90.1-2007'
+          geometry_file = 'Geometry.retail_standalone.2004_2007.osm'
+        else #'90.1-2010', '90.1-2013'
+          geometry_file = 'Geometry.retail_standalone.2010_2013.osm'
+      end
       alt_search_name = 'Retail'
     when 'RetailStripmall'
       require_relative 'resources/Prototype.retail_stripmall'
@@ -295,6 +309,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
+
+    # Set the Day of Week for Start Day
+    model.yearDescription.get.setDayofWeekforStartDay('Sunday')
+
     
     # # raise the upper limit of surface temperature
     # heat_balance_algorithm = Openstudio::Model::getUniqueObject<HeatBalanceAlgorithm>(model)

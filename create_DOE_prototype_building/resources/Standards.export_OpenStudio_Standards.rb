@@ -68,6 +68,7 @@ begin
   worksheets_to_skip << 'occupancy'
   worksheets_to_skip << 'interior_lighting'
   worksheets_to_skip << 'lookups'
+  worksheets_to_skip << 'sheetmap'
 
   # List of columns to skip
   cols_to_skip = []
