@@ -1,21 +1,3 @@
-# *********************************************************************
-# *  Copyright (c) 2008-2015, Natural Resources Canada
-# *  All rights reserved.
-# *
-# *  This library is free software; you can redistribute it and/or
-# *  modify it under the terms of the GNU Lesser General Public
-# *  License as published by the Free Software Foundation; either
-# *  version 2.1 of the License, or (at your option) any later version.
-# *
-# *  This library is distributed in the hope that it will be useful,
-# *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# *  Lesser General Public License for more details.
-# *
-# *  You should have received a copy of the GNU Lesser General Public
-# *  License along with this library; if not, write to the Free Software
-# *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-# **********************************************************************/
 
 # see the URL below for information on how to write OpenStudio measures
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
@@ -35,43 +17,44 @@ else
   require "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/btap.rb"
 end
 
+# start the measure
+class SetDefaultConstructionSet < OpenStudio::Ruleset::ModelUserScript
 
-
-#see the URL below for information on how to write OpenStudio measures
-# TODO: Remove this link and replace with the wiki
-# http://openstudio.nrel.gov/openstudio-measure-writing-guide
-
-#see the URL below for access to C++ documentation on model objects (click on "model" in the main window to view model objects)
-# http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/model/html/namespaces.html
-
-
-
-class ChangeBuildingLocation < OpenStudio::Ruleset::ModelUserScript
-
-  attr_reader :weather_directory
+  attr_reader :lib_directory
 
   def initialize
     super
 
-    # Hard code the weather directory for now. This assumes that you are running
+    # Hard code to the weather directory for now. This assumes that you are running
     # the analysis on the OpenStudio distributed analysis server
-    @weather_directory = File.expand_path(File.join(File.dirname(__FILE__), "../../weather"))
+    @lib_directory = File.expand_path(File.join(File.dirname(__FILE__), "../../lib/btap/resources/constructions"))
   end
-
-  #define the name that a user will see, this method may be deprecated as
-  #the display name in PAT comes from the name field in measure.xml
+  
+  # human readable name
   def name
-    'ChangeBuildingLocation'
+    return "Set Default Construction Set"
   end
 
-  #define the arguments that the user will input
+  # human readable description
+  def description
+    return "Loads and Set the a default construction library from an osm file. "
+  end
+
+  # human readable description of modeling approach
+  def modeler_description
+    return "Loads and Set the a default construction library from an osm file.  "
+  end
+
+  # define the arguments that the user will input
   def arguments(model)
     #list of arguments as they will appear in the interface. They are available in the run command as
     @argument_array_of_arrays = [
-      [    "variable_name",          "type",          "required",  "model_dependant", "display_name",                 "default_value",  "min_value",  "max_value",  "string_choice_array",  	"os_object_type"	],
-      [    "weather_file_name",      "STRING",        true,        false,             "Weather File Name",                nil,               nil,          nil,           nil,  	         nil					],
+      [    "variable_name",              "type",          "required",  "model_dependant", "display_name",                 "default_value",  "min_value",  "max_value",  "string_choice_array",  	"os_object_type"	],
+      [    "lib_file_name",              "STRING",        true,        false,             "Lib File Name",                nil,               nil,          nil,           nil,  	         nil					],
+      [    "construction_set_name",      "STRING",        true,        false,             "Construction Set Name",        nil,               nil,          nil,           nil,  	         nil					],
+      
       #Default set for server weather folder.
-      [    "weather_directory",      "STRING",        true,        false,             "Weather Directory",               "../../weather",               nil,          nil,          nil,	                       nil					]
+      [    "lib_directory",      "STRING",        true,        false,             "Lib Directory",               "../../lib/btap/resources/constructions",               nil,          nil,          nil,	                       nil					]
             
     ]
     #set up arguments. 
@@ -80,63 +63,44 @@ class ChangeBuildingLocation < OpenStudio::Ruleset::ModelUserScript
     return args
   end
 
-  # Define what happens when the measure is run
+  # define what happens when the measure is run
   def run(model, runner, user_arguments)
     super(model, runner, user_arguments)
     #use the built-in error checking 
     if not runner.validateUserArguments(arguments(model), user_arguments)
+      BTAP::runner_register("Error","Bad Arguments.", runner)
       return false
     end
     #Set argument to instance variables. 
     self.argument_getter(model, runner,user_arguments)
     
     ################ Start Measure code here ################################
-    # Argument will be passed as instance variable. So if your argument was height, your can access it using @height. 
-
-    # report initial condition
-    site = model.getSite
-    initial_design_days = model.getDesignDays
-    if site.weatherFile.is_initialized
-      weather = site.weatherFile.get
-      runner.registerInitialCondition("The initial weather file path was '#{weather.path.get}' and the model had #{initial_design_days.size} design days.")
-    else
-      runner.registerInitialCondition("The initial weather file has not been set and the model had #{initial_design_days.size} design days.")
+    
+    #Check weather directory Weather File
+    unless (Pathname.new @lib_directory).absolute?
+      @lib_directory = File.expand_path(File.join(File.dirname(__FILE__), @lib_directory))
     end
-
-
-    #Check form weather directory Weather File
-    unless (Pathname.new @weather_directory).absolute?
-      @weather_directory = File.expand_path(File.join(File.dirname(__FILE__), @weather_directory))
-    end
-    weather_file = File.join(@weather_directory, @weather_file_name)
-    if File.exists?(weather_file) and @weather_file_name.downcase.include? ".epw"
-      BTAP::runner_register("Info", "The epw weather file #{weather_file} was found!", runner)
+    lib_file = File.join(@lib_directory, @lib_file_name)
+    if File.exists?(lib_file) and @lib_file_name.downcase.include? ".osm"
+      BTAP::runner_register("Info","#{@lib_file_name} Found!.", runner)
     else
-      BTAP::runner_register("Error","'#{weather_file}' does not exist or is not an .epw file.", runner)
+      BTAP::runner_register("Error","#{lib_file} does not exist or is not an .osm file.", runner)
       return false
     end
-
-    begin
-      weather = BTAP::Environment::WeatherFile.new(weather_file)
-      #Set Weather file to model.
-      weather.set_weather_file(model)
-      #Store information about this run in the runner for output. This will be in the csv and R dumps.
-      runner.registerValue( 'city',weather.city )
-      runner.registerValue( 'state_province_region ',weather.state_province_region )
-      runner.registerValue( 'country',weather.country )
-      runner.registerValue( 'hdd18',weather.hdd18 )
-      runner.registerValue( 'cdd18',weather.cdd18 )
-      runner.registerValue( 'necb_climate_zone',BTAP::Compliance::NECB2011::get_climate_zone_name(weather.hdd18).to_s)
-      runner.registerFinalCondition( "Model ended with weatherfile of #{model.getSite.weatherFile.get.path.get}" )
-    rescue
-      BTAP::runner_register("Error","'#{weather_file}' could not be loaded into model.", runner)
-
+         
+    #load model and test.
+    construction_set = BTAP::Resources::Envelope::ConstructionSets::get_construction_set_from_library( lib_file, @construction_set_name )
+    #Set Construction Set.
+    unless model.building.get.setDefaultConstructionSet( construction_set.clone( model ).to_DefaultConstructionSet.get )
+      BTAP::runner_register("Error","Could not set Default Construction #{@construction_set_name} ", runner)
       return false
     end
-    BTAP::runner_register("FinalCondition","Weather file set to #{weather_file}",runner)
+    BTAP::runner_register("FinalCondition","Default Construction set to #{@construction_set_name} from #{lib_file}",runner)
+    ##########################################################################
     return true
   end
   
+    
   def argument_setter(args)
     #***boilerplate code starts. Do not edit...
     # this converts the 2D array to a array hash for better readability and makes
@@ -216,7 +180,8 @@ class ChangeBuildingLocation < OpenStudio::Ruleset::ModelUserScript
   end
   
   
+  
 end
 
-# This allows the measure to be use by the application
-ChangeBuildingLocation.new.registerWithApplication
+# register the measure to be used by the application
+SetDefaultConstructionSet.new.registerWithApplication

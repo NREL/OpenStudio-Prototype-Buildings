@@ -3,17 +3,20 @@
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
 require 'fileutils'
 require "date"
-#copy most recent btap code into measures folder if available.
+release_mode = false
 folder = "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/"
-ext = "rb"
-btap_ruby_files = Dir.glob("#{folder}/**/*#{ext}")
-btap_ruby_files.each do |file|
-  FileUtils.cp(file, File.dirname(__FILE__))
+
+if release_mode == true
+  #Copy BTAP files to measure from lib folder. Use this to create independant measure. 
+  Dir.glob("#{folder}/**/*rb").each do |file|
+    FileUtils.cp(file, File.dirname(__FILE__))
+  end
+  require "#{File.dirname(__FILE__)}/btap.rb"
+else
+  #For only when using git hub development environment.
+  require "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/btap.rb"
 end
-btaplibpath = "#{File.dirname(__FILE__)}/btap.rb"
-#Check if btap.rb does not exist.
-raise ("could not load btap environment from #{btaplibpath}") unless File.exists?("#{btaplibpath}")
-require "#{btaplibpath}"
+
 
 class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
 
@@ -24,7 +27,7 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
 
   # return a vector of arguments
   def arguments(model)
-        #list of arguments as they will appear in the interface. They are available in the run command as
+    #list of arguments as they will appear in the interface. They are available in the run command as
     @argument_array_of_arrays = [
       [    "variable_name",         "type",          "required",  "model_dependant", "display_name",                "default_value",                                     "min_value",  "max_value",  "string_choice_array",   "os_object_type"	    ],
       [    "alternativeModel",      "STRING",        true,        false,             "Alternative Model",           'FullServiceRestaurant.osm',                          nil,          nil,           nil,  	               nil					],
@@ -49,13 +52,13 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     # Argument will be passed as instance variables. So if your argument was alternativeModel, your can access it using @alternativeModel. 
 
     # report initial condition
-    runner.registerInitialCondition("Initial model.")
+    BTAP::runner_register("InitialCondition", "Model was #{model.building.get.name}.", runner)
 
     #set path to new model. 
 
-    alternativeModelPath = OpenStudio::Path.new(File.dirname(__FILE__) + '/' + @osm_directory.strip + '/' + @alternativeModel.strip)
+    alternativeModelPath = "#{@osm_directory.strip}/#{@alternativeModel.strip}"
     unless File.exist?(alternativeModelPath.to_s) 
-      runner.registerError("File does not exist: #{alternativeModelPath.to_s}") 
+      BTAP::runner_register("Error","File does not exist: #{alternativeModelPath.to_s}", runner) 
       return false
     end
     
@@ -64,7 +67,7 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     translator = OpenStudio::OSVersion::VersionTranslator.new
     oModel = translator.loadModel(alternativeModelPath)
     if oModel.empty?
-      runner.registerError("Could not load alternative model from '" + alternativeModelPath.to_s + "'.")
+      BTAP::runner_register("Error", "Could not load alternative model from '" + alternativeModelPath.to_s + "'.",runner)
       return false
     end
 
@@ -75,7 +78,7 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     weatherFile = newModel.getOptionalWeatherFile
     if not weatherFile.empty?
       weatherFile.get.remove
-      runner.registerInfo("Removed alternate model's weather file object.")
+      BTAP::runner_register("Info", "Removed alternate model's weather file object.",runner)
     end
     originalWeatherFile = model.getOptionalWeatherFile
     if not originalWeatherFile.empty?
@@ -100,8 +103,8 @@ class ReplaceModel < OpenStudio::Ruleset::ModelUserScript
     model.removeObjects(handles)
     # add new file to empty model
     model.addObjects( newModel.toIdfFile.objects )
-    runner.registerFinalCondition("Model replaced with alternative #{alternativeModelPath}. Weather file and design days retained from original.")
-
+    BTAP::runner_register("Info",  "Model name is now #{model.building.get.name}.", runner)
+    BTAP::runner_register("FinalCondition", "Model replaced with alternative #{alternativeModelPath}. Weather file and design days retained from original.", runner)
     return true
   end
   

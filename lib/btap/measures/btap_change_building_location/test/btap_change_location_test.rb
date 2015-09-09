@@ -24,12 +24,13 @@ require 'minitest/autorun'
 require_relative '../measure.rb'
 require 'fileutils'
 
-class ReplaceModel_test < MiniTest::Unit::TestCase
+class Btap_change_location_test < MiniTest::Unit::TestCase
+  
 
     def test_weather_file()   
     # create an instance of the measure, a runner and an empty model
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
-    measure = ReplaceModel.new
+    measure = ChangeBuildingLocation.new
     runner = OpenStudio::Ruleset::OSRunner.new
       
     #Set up arcuments 
@@ -37,15 +38,15 @@ class ReplaceModel_test < MiniTest::Unit::TestCase
     argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
     
       
-    # set argument 0 alternativeModel
-    alternativeModel = arguments[0].clone
-    assert(alternativeModel.setValue("EnvelopeAndLoadTestModel_01.osm"))
-    argument_map["alternativeModel"] = alternativeModel
+    # set argument 0 weather_file_name
+    weather_file_name = arguments[0].clone
+    assert(weather_file_name.setValue("CAN_AB_Calgary.718770_CWEC.epw"))
+    argument_map["weather_file_name"] = weather_file_name
     
-    # set argument 1 osm_directory
-    osm_directory = arguments[1].clone
-    assert(osm_directory.setValue("#{File.dirname(__FILE__)}/"))
-    argument_map["osm_directory"] = osm_directory
+    # set argument 1 weather_directory
+    weather_directory = arguments[1].clone
+    assert(weather_directory.setValue("#{File.dirname(__FILE__)}/"))
+    argument_map["weather_directory"] = weather_directory
       
 
     # run the measure

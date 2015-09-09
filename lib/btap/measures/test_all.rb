@@ -3,8 +3,12 @@
 # and open the template in the editor.
 
 require "#{File.dirname(__FILE__)}/apply_system1/test/CanadianAddUnitaryAndApplyStandard_test.rb"
-require "#{File.dirname(__FILE__)}/btap_equest_converter/tests/btap_equest_converter_test.rb"
+require "#{File.dirname(__FILE__)}/btap_equest_converter/test/btap_equest_converter_test.rb"
+require "#{File.dirname(__FILE__)}/btap_change_building_location/test/btap_change_location_test.rb"
+require "#{File.dirname(__FILE__)}/btap_set_default_construction_set/tests/set_default_construction_set_test.rb"
+require "#{File.dirname(__FILE__)}/btap_replace_model/tests/replacemodel_test.rb"
 require "#{File.dirname(__FILE__)}/UtilityTariffs/tests/UtilityTariffs_Test.rb"
+
 
 
 
