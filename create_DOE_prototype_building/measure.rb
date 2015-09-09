@@ -234,7 +234,12 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       end
     when 'Warehouse'
       require_relative 'resources/Prototype.warehouse'
-      geometry_file = 'Geometry.warehouse.osm'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004'
+          geometry_file = 'Geometry.warehouse_pre_1980_to_2004.osm'
+        else
+          geometry_file = 'Geometry.warehouse.osm'
+      end
     when 'RetailStandalone'
       require_relative 'resources/Prototype.retail_standalone'
       geometry_file = 'Geometry.retail_standalone.osm'
