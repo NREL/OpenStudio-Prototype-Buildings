@@ -25,34 +25,18 @@ require_relative '../measure.rb'
 require 'fileutils'
 
 class ReplaceModel_test < MiniTest::Unit::TestCase
-
-    def test_weather_file()   
-    # create an instance of the measure, a runner and an empty model
+  def test_replace_model()   
+    # create an instance of the measure, a runner and load a model.
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     measure = ReplaceModel.new
     runner = OpenStudio::Ruleset::OSRunner.new
-      
-    #Set up arcuments 
-    arguments = measure.arguments(model)
-    argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
-    
-      
-    # set argument 0 alternativeModel
-    alternativeModel = arguments[0].clone
-    assert(alternativeModel.setValue("EnvelopeAndLoadTestModel_01.osm"))
-    argument_map["alternativeModel"] = alternativeModel
-    
-    # set argument 1 osm_directory
-    osm_directory = arguments[1].clone
-    assert(osm_directory.setValue("#{File.dirname(__FILE__)}/"))
-    argument_map["osm_directory"] = osm_directory
-      
-
-    # run the measure
-    measure.run(model, runner, argument_map)
+    #Set up arguments in order. 
+    argument_values_array = 
+     [["alternativeModel",  "EnvelopeAndLoadTestModel_01.osm"],
+      ["osm_directory",     "#{File.dirname(__FILE__)}/" ]]
+    #run the measure with the arguments.
+    measure.set_user_arguments_and_apply(model,argument_values_array,runner)
     #return condition of measure.
-    
     assert_equal("Success", runner.result.value.valueName)
   end   
-
 end

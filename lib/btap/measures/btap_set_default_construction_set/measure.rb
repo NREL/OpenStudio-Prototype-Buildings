@@ -18,7 +18,7 @@ else
 end
 
 # start the measure
-class SetDefaultConstructionSet < OpenStudio::Ruleset::ModelUserScript
+class SetDefaultConstructionSet < BTAP::Measures::OSMeasures::BTAPModelUserScript
 
   attr_reader :lib_directory
 
@@ -64,16 +64,7 @@ class SetDefaultConstructionSet < OpenStudio::Ruleset::ModelUserScript
   end
 
   # define what happens when the measure is run
-  def run(model, runner, user_arguments)
-    super(model, runner, user_arguments)
-    #use the built-in error checking 
-    if not runner.validateUserArguments(arguments(model), user_arguments)
-      BTAP::runner_register("Error","Bad Arguments.", runner)
-      return false
-    end
-    #Set argument to instance variables. 
-    self.argument_getter(model, runner,user_arguments)
-    
+  def measure_code(model,runner)
     ################ Start Measure code here ################################
     
     #Check weather directory Weather File
@@ -99,88 +90,6 @@ class SetDefaultConstructionSet < OpenStudio::Ruleset::ModelUserScript
     ##########################################################################
     return true
   end
-  
-    
-  def argument_setter(args)
-    #***boilerplate code starts. Do not edit...
-    # this converts the 2D array to a array hash for better readability and makes
-    # column data accessible by name.
-    @argument_array_of_hashes = []
-    @argument_array_of_arrays[1..-1].each do |row|   # [1..-1] skips the first row
-      hsh = {}; @argument_array_of_arrays[0].each_with_index{ |header, idx|   hsh[header] = row[idx] }
-      @argument_array_of_hashes << hsh
-    end
-
-    #iterate through array of hashes and make arguments based on type and set
-    # max and min values where applicable.
-    @argument_array_of_hashes.each do |row|
-      arg = nil
-      case row["type"]
-      when "BOOL"
-        arg = OpenStudio::Ruleset::OSArgument::makeBoolArgument(row["variable_name"],row["required"],row["model_dependant"])
-      when "STRING"
-        arg = OpenStudio::Ruleset::OSArgument::makeStringArgument(row["variable_name"],row["required"],row["model_dependant"])
-      when "INTEGER"
-        arg = OpenStudio::Ruleset::OSArgument::makeIntegerArgument(row["variable_name"],row["required"],row["model_dependant"])
-        arg.setMaxValue( row["max_value"].to_i ) unless row["min_value"].nil?
-        arg.setMaxValue( row["max_value"].to_i ) unless  row["max_value"].nil?
-      when "FLOAT"
-        arg = OpenStudio::Ruleset::OSArgument::makeDoubleArgument(row["variable_name"],row["required"],row["model_dependant"])
-        arg.setMaxValue( row["max_value"].to_f ) unless row["min_value"].nil?
-        arg.setMaxValue( row["max_value"].to_f ) unless  row["max_value"].nil?
-      when "STRINGCHOICE"
-        # #add string choices one by one.
-        chs = OpenStudio::StringVector.new
-        row["string_choice_array"].each {|choice| chs << choice}
-        arg = OpenStudio::Ruleset::OSArgument::makeChoiceArgument(row["variable_name"], chs,row["required"],row["model_dependant"])
-      when "PATH"
-        arg = OpenStudio::Ruleset::OSArgument::makePathArgument("alternativeModelPath",true,"osm")
-      when "WSCHOICE"
-        arg = OpenStudio::Ruleset::makeChoiceArgumentOfWorkspaceObjects( row["variable_name"], row["os_object_type"].to_IddObjectType , model, row["required"])
-      end
-      # #common argument aspects.
-      unless arg.nil?
-        arg.setDisplayName(row["display_name"])
-        arg.setDefaultValue(row["default_value"]) unless row["default_value"].nil?
-        args << arg
-      end
-    end
-    return args
-  end
-
-  def argument_getter(model, runner,user_arguments)
-    @argument_array_of_hashes.each do |row|
-      name = row["variable_name"]
-      case row["type"]
-      when "BOOL"
-        instance_variable_set("@#{name}", runner.getBoolArgumentValue(name, user_arguments) )
-      when "STRING"
-        instance_variable_set("@#{name}", runner.getStringArgumentValue(name, user_arguments) )
-      when "INTEGER"
-        instance_variable_set("@#{name}", runner.getIntegerArgumentValue(name, user_arguments) )
-        if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
-          runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
-          return false
-        end
-      when "FLOAT"
-        instance_variable_set("@#{name}", runner.getDoubleArgumentValue(name, user_arguments) )
-        if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
-          runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
-          return false
-        end
-      when "STRINGCHOICE"
-        instance_variable_set("@#{name}", runner.getStringArgumentValue(name, user_arguments) )
-      when "WSCHOICE"
-        instance_variable_set("@#{name}", runner.getOptionalWorkspaceObjectChoiceValue(name, user_arguments,model) )
-
-      when "PATH"
-        instance_variable_set("@#{name}", runner.getPathArgument(name, user_arguments) )
-      end #end case
-    end #end do
-  end
-  
-  
-  
 end
 
 # register the measure to be used by the application

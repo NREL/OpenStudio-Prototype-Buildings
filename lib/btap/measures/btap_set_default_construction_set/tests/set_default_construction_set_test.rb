@@ -1,4 +1,4 @@
-  # *********************************************************************
+# *********************************************************************
 # *  Copyright (c) 2008-2015, Natural Resources Canada
 # *  All rights reserved.
 # *
@@ -24,40 +24,23 @@ require 'minitest/autorun'
 require_relative '../measure.rb'
 require 'fileutils'
 
-class Btap_change_location_test < MiniTest::Unit::TestCase
-  
-
+class SetDefaultConstructionSet_test < MiniTest::Unit::TestCase
   def test_construction_assignment()   
-    # create an instance of the measure, a runner and an empty model
+    # create an instance of the measure, a runner and load a model.
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     measure = SetDefaultConstructionSet.new
     runner = OpenStudio::Ruleset::OSRunner.new
-      
-    #Set up arguments 
-    arguments = measure.arguments(model)
-    argument_map = OpenStudio::Ruleset.convertOSArgumentVectorToMap(arguments)
-
-    # set argument 0 lib_file_name
-    lib_file_name = arguments[0].clone
-    assert(lib_file_name.setValue("BTAP_Construction_Library.osm"))
-    argument_map["lib_file_name"] = lib_file_name
-    
-    # set argument 1 construction_set_name
-    construction_set_name = arguments[1].clone
-    assert(construction_set_name.setValue("DND-Metal"))
-    argument_map["construction_set_name"] = construction_set_name
-    
-    # set argument 2 lib_directory
-    lib_directory = arguments[2].clone
-    assert(lib_directory.setValue("#{File.dirname(__FILE__)}/"))
-    argument_map["lib_directory"] = lib_directory
-      
-
-    # run the measure
-    measure.run(model, runner, argument_map)
+    #Set up arguments in order. 
+    argument_values_array = 
+      [
+      ["lib_file_name",         "BTAP_Construction_Library.osm"],
+      ["construction_set_name", "DND-Metal" ],
+      ["lib_directory",         "#{File.dirname(__FILE__)}/" ]
+    ]
+    #run the measure with the arguments.
+    measure.set_user_arguments_and_apply(model,argument_values_array,runner)
     #return condition of measure.
-    
     assert_equal("Success", runner.result.value.valueName)
   end   
-
 end
+
