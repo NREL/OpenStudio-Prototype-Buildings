@@ -9,7 +9,7 @@
 
     EnergyManagementSystem:Sensor,
       Core_Retail_ZNTemp,
-      Node 1,  !- Output:Variable or Output:Meter Index Key Name
+      Node 5,  !- Output:Variable or Output:Meter Index Key Name
       System Node Temperature; !- Output:Variable or Output:Meter Name
 
     EnergyManagementSystem:Sensor,
@@ -211,7 +211,7 @@
 
     EnergyManagementSystem:Program,
       CoreRetailZNPSZACSetNumberofStages,
-      SET CoreRetailZNPSZACNumberofStages =  2;
+      SET CoreRetailZNPSZACNumberofStages =  1;
 
     EnergyManagementSystem:ProgramCallingManager,
       CoreRetailZNPSZACSetNumberofStagesCallingManager,

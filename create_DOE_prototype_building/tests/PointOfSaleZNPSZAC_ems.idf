@@ -9,7 +9,7 @@
 
     EnergyManagementSystem:Sensor,
       Point_Of_Sale_ZNTemp,
-      Node 4,  !- Output:Variable or Output:Meter Index Key Name
+      Node 2,  !- Output:Variable or Output:Meter Index Key Name
       System Node Temperature; !- Output:Variable or Output:Meter Name
 
     EnergyManagementSystem:Sensor,
@@ -211,7 +211,7 @@
 
     EnergyManagementSystem:Program,
       PointOfSaleZNPSZACSetNumberofStages,
-      SET PointOfSaleZNPSZACNumberofStages =  2;
+      SET PointOfSaleZNPSZACNumberofStages =  1;
 
     EnergyManagementSystem:ProgramCallingManager,
       PointOfSaleZNPSZACSetNumberofStagesCallingManager,
