@@ -24,7 +24,8 @@ class OpenStudio::Model::Model
               'Perimeter_bot_ZN_3',
               'Perimeter_bot_ZN_4',
               'Core_bottom'
-          ]
+          ],
+          'return_plenum' => 'FirstFloor_Plenum'
       },
       {
           'type' => 'PVAV',
@@ -35,7 +36,8 @@ class OpenStudio::Model::Model
               'Perimeter_mid_ZN_3',
               'Perimeter_mid_ZN_4',
               'Core_mid'
-          ]
+          ],
+          'return_plenum' => 'MidFloor_Plenum'
       },
       {
           'type' => 'PVAV',
@@ -46,7 +48,8 @@ class OpenStudio::Model::Model
               'Perimeter_top_ZN_3',
               'Perimeter_top_ZN_4',
               'Core_top'
-          ]
+          ],
+          'return_plenum' => 'TopFloor_Plenum'
       }
     ]
     return system_to_space_map
@@ -76,15 +79,27 @@ class OpenStudio::Model::Model
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No thermal zone was created for the space called #{space_name}")
           return false
         end
-		if space_name == "Core_bottom"
-			self.add_elevator(prototype_input, hvac_standards, space)
-		end
+    		if space_name == "Core_bottom"
+    			self.add_elevator(prototype_input, hvac_standards, space)
+    		end
         thermal_zones << zone.get
       end
 
+      # return_plenum_space = self.getSpaceByName(system['return_plenum'])
+      # if return_plenum_space.empty?
+      #   OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No space called #{system['return_plenum']} was found in the model")
+      #   return false
+      # end
+      # return_plenum_space = return_plenum_space.get
+      # return_plenum_zone = return_plenum_space.thermalZone
+      # if return_plenum_zone.empty?
+      #   OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "No thermal zone was created for the space called #{system['return_plenum']}")
+      #   return false
+      # end
+
       case system['type']
       when 'PVAV'
-        self.add_pvav(prototype_input, hvac_standards, system['name'], thermal_zones)
+        self.add_pvav(prototype_input, hvac_standards, system['name'], thermal_zones, nil, nil)
       end
 
     end

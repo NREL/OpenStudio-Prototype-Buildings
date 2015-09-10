@@ -650,7 +650,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_pvav(prototype_input, standards, sys_name, thermal_zones, hot_water_loop = nil)
+  def add_pvav(prototype_input, standards, sys_name, thermal_zones, hot_water_loop = nil, return_plenum = nil)
 
     # HVAC operation schedule
     hvac_op_sch = self.add_schedule(prototype_input['vav_operation_schedule'])
@@ -799,6 +799,10 @@ class OpenStudio::Model::Model
       end      
       
       air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
+
+      unless return_plenum.nil?
+        zone.setReturnPlenum(return_plenum)
+      end
     
       # Zone sizing
       sizing_zone = zone.sizingZone
