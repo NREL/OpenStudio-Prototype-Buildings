@@ -101,12 +101,14 @@ These files extend the OpenStudio classes to allow a model to import design days
 This directory contains the simulation results from the legacy IDF files, as well as test fixtures which will run the Measure, create the models, and then compare the model results against the legacy IDF files.
 
 ## Adding a New Building Type
-1. Run Prototype.strip_model to get the geometry-only .osm
-2. In Measure.rb, add the building type name to the arguments
-3. Create the Prototype.building_name file
+1. Use SketchUp to import the prototype IDF, and generate the initial .osm
+2. Run Prototype.strip_model to get the geometry-only .osm
+3. Check the geometry of different vintages. Create one geometry-only.osm for each different version.
+4. In Measure.rb, add the building type name to the arguments
+5. Create the Prototype.building_name file
   - Add the define_space_type_map method
   - Add the define_hvac_system_map method
   - Add the add_hvac method, which might include adding to/changing Prototype.hvac_systems.rb
-4. Add a test for this building type to tests/create_DOE_prototype_buildings_Test.rb
-5. Run the test, look at results, iterate
+6. Add a test for this building type to tests/create_DOE_prototype_buildings_Test.rb
+7. Run the test, look at results, iterate
 

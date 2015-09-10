@@ -876,7 +876,12 @@ class OpenStudio::Model::Model
       
       # Zone sizing
       sizing_zone = zone.sizingZone
-      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      if prototype_input['building_type']=='RetailStandalone' and (prototype_input['template']=='DOE Ref 1980-2004' or prototype_input['template']=='DOE Ref Pre-1980')
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      else
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      end
+
       sizing_zone.setZoneHeatingDesignSupplyAirTemperature(40.0)
             
       # Add a setpoint manager single zone reheat to control the
@@ -885,9 +890,11 @@ class OpenStudio::Model::Model
       setpoint_mgr_single_zone_reheat.setControlZone(zone)        
       
       fan = nil
+      # ConstantVolume: Packaged Rooftop Single Zone Air conditioner;
+      # Cycling: Unitary System;
+      # CyclingHeatPump: Unitary Heat Pump system
       if prototype_input['pszac_fan_type'] == 'ConstantVolume'
-      
-        fan = OpenStudio::Model::FanConstantVolume.new(self,self.alwaysOnDiscreteSchedule)
+        fan = OpenStudio::Model::FanConstantVolume.new(self,hvac_op_sch)
         fan.setName("#{air_loop.name} Fan")
         fan_static_pressure_in_h2o = 2.5    
         fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, 'inH_{2}O','Pa').get
@@ -895,7 +902,7 @@ class OpenStudio::Model::Model
         fan.setFanEfficiency(0.54)
         fan.setMotorEfficiency(0.90)
       elsif prototype_input['pszac_fan_type'] == 'Cycling'
-      
+
         fan = OpenStudio::Model::FanOnOff.new(self,hvac_op_sch) # Set fan op sch manually since fwd translator doesn't
         fan.setName("#{air_loop.name} Fan")
         fan_static_pressure_in_h2o = 2.5    
@@ -910,11 +917,16 @@ class OpenStudio::Model::Model
       if prototype_input['pszac_heating_type'] == 'Gas'
         htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
         htg_coil.setName("#{air_loop.name} Gas Htg Coil")
+
+        if prototype_input['template']=='DOE Ref Pre-1980'
+          htg_coil.setGasBurnerEfficiency(0.78)
+        end
+
       elsif prototype_input['pszac_heating_type'] == 'Water'
-          if hot_water_loop.nil?
-            OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water plant loop supplied')
-            return false
-          end
+        if hot_water_loop.nil?
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water plant loop supplied')
+          return false
+        end
         htg_coil = OpenStudio::Model::CoilHeatingWater.new(self,self.alwaysOnDiscreteSchedule)
         htg_coil.setName("#{air_loop.name} Water Htg Coil")
         htg_coil.setRatedInletWaterTemperature(hw_temp_c)
@@ -1298,7 +1310,6 @@ class OpenStudio::Model::Model
         
         setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(OpenStudio.convert(55,'F','C').get)
         setpoint_mgr_single_zone_reheat.setMaximumSupplyAirTemperature(OpenStudio.convert(104,'F','C').get)
- 
       else
         if fan_location == 'DrawThrough'
           # Add the fan
@@ -2073,7 +2084,7 @@ class OpenStudio::Model::Model
         fan.setMotorEfficiency(0.8)
       else
         puts "No fan type is found"
-      
+
       end
     
     
@@ -2378,120 +2389,56 @@ class OpenStudio::Model::Model
   end
   
   def add_unitheater(prototype_input, standards, thermal_zones)
-        
+
+    fan_schedule = self.add_schedule(prototype_input['unitheater_operation_schedule'])
+    fan_schedule = self.alwaysOnDiscreteSchedule if fan_schedule.class.to_s == "NilClass"
+
     # Make a PTAC for each zone
     thermal_zones.each do |zone|
-
       # Zone sizing
       sizing_zone = zone.sizingZone
-      sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      if prototype_input['building_type']=='RetailStandalone' and prototype_input['template']!='DOE Ref 1980-2004' and prototype_input['template']!='DOE Ref Pre-1980'
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(12.8)
+      else
+        sizing_zone.setZoneCoolingDesignSupplyAirTemperature(14)
+      end
+
       sizing_zone.setZoneHeatingDesignSupplyAirTemperature(50.0)
       sizing_zone.setZoneCoolingDesignSupplyAirHumidityRatio(0.008)
       sizing_zone.setZoneHeatingDesignSupplyAirHumidityRatio(0.008)
 
       # add fan
-      fan = nil
-      if prototype_input["unitheater_fan_type"] == "ConstantVolume"
-      
-        fan = OpenStudio::Model::FanConstantVolume.new(self,self.alwaysOnDiscreteSchedule)
-        fan.setName("#{zone.name} UnitHeater Fan")
-        fan_static_pressure_in_h2o = 0.2 
-        fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, "inH_{2}O","Pa").get
-        fan.setPressureRise(fan_static_pressure_pa)  
-        fan.setFanEfficiency(0.53625)
-        fan.setMotorEfficiency(0.825)
-      elsif prototype_input["unitheater_fan_type"] == "Cycling" 
-      
-        fan = OpenStudio::Model::FanOnOff.new(self,self.alwaysOnDiscreteSchedule)
-        fan.setName("#{zone.name} UnitHeater Fan")
-        fan_static_pressure_in_h2o = 1.33  
-        fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, "inH_{2}O","Pa").get
-        fan.setPressureRise(fan_static_pressure_pa)  
-        fan.setFanEfficiency(0.52)
-        fan.setMotorEfficiency(0.8)
-      else
-        puts "No fan type is found"
-      
-      end
-    
-    
+      fan = OpenStudio::Model::FanConstantVolume.new(self,fan_schedule)
+      fan.setName("#{zone.name} UnitHeater Fan")
+      fan_static_pressure_in_h2o = prototype_input["unitheater_fan_static_pressure"]
+      fan_static_pressure_pa = OpenStudio.convert(fan_static_pressure_in_h2o, "inH_{2}O","Pa").get
+      fan.setPressureRise(fan_static_pressure_pa)
+      fan.setFanEfficiency(0.53625)
+      fan.setMotorEfficiency(0.825)
+
       # add heating coil
       htg_coil = nil
       if prototype_input["unitheater_heating_type"] == "Gas"
-        htg_coil = OpenStudio::Model::CoilHeatingGas.new(self,self.alwaysOnDiscreteSchedule)
+        htg_coil = OpenStudio::Model::CoilHeatingGas.new(self, fan_schedule)
         htg_coil.setName("#{zone.name} UnitHeater Gas Htg Coil")
       elsif prototype_input["unitheater_heating_type"] == "Electric"
-        htg_coil = OpenStudio::Model::CoilHeatingElectric.new(self,self.alwaysOnDiscreteSchedule)
+        htg_coil = OpenStudio::Model::CoilHeatingElectric.new(self, fan_schedule)
         htg_coil.setName("#{zone.name} UnitHeater Electric Htg Coil")
-      elsif prototype_input["unitheater_heating_type"] == "Single Speed Heat Pump"
-        htg_cap_f_of_temp = OpenStudio::Model::CurveCubic.new(self)
-        htg_cap_f_of_temp.setCoefficient1Constant(0.758746)
-        htg_cap_f_of_temp.setCoefficient2x(0.027626)
-        htg_cap_f_of_temp.setCoefficient3xPOW2(0.000148716)
-        htg_cap_f_of_temp.setCoefficient4xPOW3(0.0000034992)
-        htg_cap_f_of_temp.setMinimumValueofx(-20.0)
-        htg_cap_f_of_temp.setMaximumValueofx(20.0)
-
-        htg_cap_f_of_flow = OpenStudio::Model::CurveCubic.new(self)
-        htg_cap_f_of_flow.setCoefficient1Constant(0.84)
-        htg_cap_f_of_flow.setCoefficient2x(0.16)
-        htg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
-        htg_cap_f_of_flow.setCoefficient4xPOW3(0.0)
-        htg_cap_f_of_flow.setMinimumValueofx(0.5)
-        htg_cap_f_of_flow.setMaximumValueofx(1.5)
-
-        htg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveCubic.new(self)
-        htg_energy_input_ratio_f_of_temp.setCoefficient1Constant(1.19248)
-        htg_energy_input_ratio_f_of_temp.setCoefficient2x(-0.0300438)
-        htg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(0.00103745)
-        htg_energy_input_ratio_f_of_temp.setCoefficient4xPOW3(-0.000023328)
-        htg_energy_input_ratio_f_of_temp.setMinimumValueofx(-20.0)
-        htg_energy_input_ratio_f_of_temp.setMaximumValueofx(20.0)
-
-        htg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(self)
-        htg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.3824)
-        htg_energy_input_ratio_f_of_flow.setCoefficient2x(-0.4336)
-        htg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0512)
-        htg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
-        htg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
-
-        htg_part_load_fraction = OpenStudio::Model::CurveQuadratic.new(self)
-        htg_part_load_fraction.setCoefficient1Constant(0.85)
-        htg_part_load_fraction.setCoefficient2x(0.15)
-        htg_part_load_fraction.setCoefficient3xPOW2(0.0)
-        htg_part_load_fraction.setMinimumValueofx(0.0)
-        htg_part_load_fraction.setMaximumValueofx(1.0)
-
-        htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(self,
-                                                                  self.alwaysOnDiscreteSchedule,
-                                                                  htg_cap_f_of_temp,
-                                                                  htg_cap_f_of_flow,
-                                                                  htg_energy_input_ratio_f_of_temp,
-                                                                  htg_energy_input_ratio_f_of_flow,
-                                                                  htg_part_load_fraction) 
-
-        htg_coil.setName("#{zone.name} UnitHeater HP Htg Coil")         
-        
       else
         puts "No heating type is found"
-        
+        return false
       end
       
       fan_control_type = prototype_input["unitheater_fan_control_type"]
       unit_heater = OpenStudio::Model::ZoneHVACUnitHeater.new(self,
-                                                              self.alwaysOnDiscreteSchedule,
+                                                              fan_schedule,
                                                               fan,
                                                               htg_coil)
       unit_heater.setName("#{zone.name} UnitHeater")
-      unit_heater.setFanControlType("OnOff")
-      unit_heater.setHeatingConvergenceTolerance(0.001)
       unit_heater.setFanControlType(fan_control_type)
       unit_heater.addToThermalZone(zone)
-      
     end
-
     return true
-    
   end
 
   def add_high_temp_radiant(prototype_input, standards, thermal_zones, fuel_type, control_type, combustion_efficiency)
