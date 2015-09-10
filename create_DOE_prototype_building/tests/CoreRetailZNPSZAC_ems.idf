@@ -1,0 +1,236 @@
+
+    
+    ! Sensors
+    
+    EnergyManagementSystem:Sensor,
+      CoreRetailZNPSZACOASch,           
+      RetailStandalone MinOA_MotorizedDamper_Sched,         !- Output:Variable or Output:Meter Index Key Name,            
+      Schedule Value;          !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      Core_Retail_ZNTemp,
+      Node 1,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Temperature; !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      CoreRetailZNPSZACOAFlowMass,     
+      Node 22, !- Output:Variable or Output:Meter Index Key Name
+      System Node Mass Flow Rate;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      CoreRetailZNPSZACHeatingRTF,     
+      Core_Retail ZN PSZ-AC Gas Htg Coil,        !- Output:Variable or Output:Meter Index Key Name
+      Heating Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      CoreRetailZNPSZACRTF,            
+      Core_Retail ZN PSZ-AC 2spd DX AC Clg Coil, !- Output:Variable or Output:Meter Index Key Name
+      Cooling Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      CoreRetailZNPSZACSpeedRatio,     
+      Core_Retail ZN PSZ-AC 2spd DX AC Clg Coil CoilSystem,        !- Output:Variable or Output:Meter Index Key Name
+      Coil System Compressor Speed Ratio;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      CoreRetailZNPSZACDATRqd,        
+      Node 18,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Setpoint Temperature;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      CoreRetailZNPSZACEconoStatus,   
+      Core_Retail ZN PSZ-AC,              !- Output:Variable or Output:Meter Index Key Name
+      Air System Outdoor Air Economizer Status;  !- Output:Variable or Output:Meter Name
+
+    ! Internal Variables
+
+    EnergyManagementSystem:InternalVariable,
+      CoreRetailZNPSZACFanDesignPressure,
+      Core_Retail ZN PSZ-AC Fan,          !- Internal Data Index Key Name
+      Fan Nominal Pressure Rise;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      CoreRetailZNPSZACDesignFlowMass, 
+      Core_Retail ZN PSZ-AC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Maximum Mass Flow Rate;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      CoreRetailZNPSZACOADesignMass,   
+      Core_Retail ZN PSZ-AC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Minimum Mass Flow Rate;  !- Internal Data Type
+
+    ! Actuators
+
+    EnergyManagementSystem:Actuator,
+      CoreRetailZNPSZACFanPressure,   
+      Core_Retail ZN PSZ-AC Fan,          !- Actuated Component Unique Name
+      Fan,                     !- Actuated Component Type
+      Fan Pressure Rise;       !- Actuated Component Control Type
+
+    EnergyManagementSystem:Actuator,
+      CoreRetailZNPSZACTimestepEconEff,!- Name
+      CoreRetailZNPSZACmaxOASch,  !- Actuated Component Unique Name
+      Schedule:Year,       !- Actuated Component Type
+      Schedule Value;          !- Actuated Component Control Type
+
+    EnergyManagementSystem:GlobalVariable,
+      CoreRetailZNPSZACFanPwrExp,   !- Erl Variable 1 Name
+      CoreRetailZNPSZACStg1Spd,      !- Erl Variable 2 Name
+      CoreRetailZNPSZACStg2Spd,      !- Erl Variable 3 Name
+      CoreRetailZNPSZACHeatSpeed,      
+      CoreRetailZNPSZACVenSpeed,       
+      CoreRetailZNPSZACNumberofStages; 
+
+    EnergyManagementSystem:Program,
+      CoreRetailZNPSZACEconomizerCTRLProg,
+      SET CoreRetailZNPSZACTimestepEconEff = 0.7,  
+      SET CoreRetailZNPSZACMaxE = 0.7,   
+      SET CoreRetailZNPSZACDATRqd = (CoreRetailZNPSZACDATRqd*1.8)+32,
+      SET OATF = (OATF*1.8)+32,
+      SET OAwbF = (OAwbF*1.8)+32,
+      IF CoreRetailZNPSZACOAFlowMass > (CoreRetailZNPSZACOADesignMass*CoreRetailZNPSZACOASch),
+      SET CoreRetailZNPSZACEconoActive = 1,
+      ELSE,                  
+      SET CoreRetailZNPSZACEconoActive = 0,
+      ENDIF,                 
+      SET CoreRetailZNPSZACdTNeeded = 75-CoreRetailZNPSZACDATRqd,
+      SET CoreRetailZNPSZACCoolDesdT = ((98*0.15)+(75*(1-0.15)))-55,
+      SET CoreRetailZNPSZACCoolLoad = CoreRetailZNPSZACdTNeeded/ CoreRetailZNPSZACCoolDesdT,
+      IF CoreRetailZNPSZACCoolLoad > 1, 
+      SET CoreRetailZNPSZACCoolLoad = 1,
+      ELSEIF CoreRetailZNPSZACCoolLoad < 0,
+      SET CoreRetailZNPSZACCoolLoad = 0,
+      ENDIF,                 
+      IF CoreRetailZNPSZACEconoActive == 1,
+      SET CoreRetailZNPSZACStage = CoreRetailZNPSZACNumberofStages,
+      IF CoreRetailZNPSZACStage == 2,  
+      IF CoreRetailZNPSZACCoolLoad < 0.6,
+      SET CoreRetailZNPSZACTimestepEconEff = CoreRetailZNPSZACMaxE,
+      ELSE,                  
+      SET CoreRetailZNPSZACECOEff = 0-2.18919863612305,
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0-0.674461284910428*CoreRetailZNPSZACCoolLoad),
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0.000459106275872404*(OATF^2)),
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0-0.00000484778537945252*(OATF^3)),
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0.182915713033586*OAwbF),
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0-0.00382838660261133*(OAwbF^2)),
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0.0000255567460240583*(OAwbF^3)),
+      SET CoreRetailZNPSZACTimestepEconEff = CoreRetailZNPSZACECOEff,
+      ENDIF,                 
+      ELSE,                  
+      SET CoreRetailZNPSZACECOEff = 2.36337942464462,
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0-0.409939515512619*CoreRetailZNPSZACCoolLoad),
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0-0.0565205596792225*OAwbF),
+      SET CoreRetailZNPSZACECOEff = CoreRetailZNPSZACECOEff+(0-0.0000632612294169389*(OATF^2)),
+      SET CoreRetailZNPSZACTimestepEconEff = CoreRetailZNPSZACECOEff+(0.000571724868775081*(OAwbF^2)),
+      ENDIF,                 
+      IF CoreRetailZNPSZACTimestepEconEff > CoreRetailZNPSZACMaxE,
+      SET CoreRetailZNPSZACTimestepEconEff = CoreRetailZNPSZACMaxE,
+      ELSEIF CoreRetailZNPSZACTimestepEconEff < (CoreRetailZNPSZACOADesignMass*CoreRetailZNPSZACOASch),
+      SET CoreRetailZNPSZACTimestepEconEff = (CoreRetailZNPSZACOADesignMass*CoreRetailZNPSZACOASch),
+      ENDIF,                 
+      ENDIF;                 
+
+    EnergyManagementSystem:Program,
+      CoreRetailZNPSZACSetFanPar,    
+      IF CoreRetailZNPSZACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      SET CoreRetailZNPSZACFanPwrExp = 2.2,
+      SET CoreRetailZNPSZACOAFrac = CoreRetailZNPSZACOAFlowMass/CoreRetailZNPSZACDesignFlowMass,
+      IF  CoreRetailZNPSZACOAFrac < 0.66,
+      SET CoreRetailZNPSZACVenSpeed = 0.66,
+      SET CoreRetailZNPSZACStg1Spd = 0.66,
+      ELSE,                  
+      SET CoreRetailZNPSZACVenSpeed = CoreRetailZNPSZACOAFrac,
+      SET CoreRetailZNPSZACStg1Spd = CoreRetailZNPSZACOAFrac,
+      ENDIF,                 
+      SET CoreRetailZNPSZACStg2Spd = 1.0,
+      SET CoreRetailZNPSZACHeatSpeed = 1.0;
+
+    EnergyManagementSystem:Program,
+      CoreRetailZNPSZACFanControl,    
+      IF CoreRetailZNPSZACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      IF CoreRetailZNPSZACHeatingRTF > 0,
+      SET CoreRetailZNPSZACHeating = CoreRetailZNPSZACHeatingRTF,
+      SET CoreRetailZNPSZACVen = 1-CoreRetailZNPSZACHeatingRTF,
+      SET CoreRetailZNPSZACEco = 0,    
+      SET CoreRetailZNPSZACStage1 = 0, 
+      SET CoreRetailZNPSZACStage2 = 0, 
+      ELSE,                  
+      SET CoreRetailZNPSZACHeating = 0,
+      SET CoreRetailZNPSZACEcoSpeed = CoreRetailZNPSZACVenSpeed,
+      IF CoreRetailZNPSZACSpeedRatio == 0,
+      IF CoreRetailZNPSZACRTF > 0,     
+      SET CoreRetailZNPSZACStage1 = CoreRetailZNPSZACRTF,
+      SET CoreRetailZNPSZACStage2 = 0, 
+      SET CoreRetailZNPSZACVen = 1-CoreRetailZNPSZACRTF,
+      SET CoreRetailZNPSZACEco = 0,    
+      IF CoreRetailZNPSZACOAFlowMass > (CoreRetailZNPSZACOADesignMass*CoreRetailZNPSZACOASch),
+      SET CoreRetailZNPSZACStg1Spd = 1.0,
+      ENDIF,                 
+      ELSE,                  
+      SET CoreRetailZNPSZACStage1 = 0, 
+      SET CoreRetailZNPSZACStage2 = 0, 
+      IF CoreRetailZNPSZACOAFlowMass > (CoreRetailZNPSZACOADesignMass*CoreRetailZNPSZACOASch),
+      SET CoreRetailZNPSZACEco = 1.0,  
+      SET CoreRetailZNPSZACVen = 0,           
+      !Calculate the expected discharge air temperature if the system runs at its low speed      
+      SET CoreRetailZNPSZACExpDAT = CoreRetailZNPSZACDATRqd-(1-CoreRetailZNPSZACVenSpeed)*Core_Retail_ZNTemp,
+      SET CoreRetailZNPSZACExpDAT = CoreRetailZNPSZACExpDAT/CoreRetailZNPSZACVenSpeed,
+      IF OATF > CoreRetailZNPSZACExpDAT,
+      SET CoreRetailZNPSZACEcoSpeed = CoreRetailZNPSZACStg2Spd,
+      ENDIF,                 
+      ELSE,                  
+      SET CoreRetailZNPSZACEco = 0,    
+      SET CoreRetailZNPSZACVen = 1.0,  
+      ENDIF,                 
+      ENDIF,                 
+      ELSE,                  
+      SET CoreRetailZNPSZACStage1 = 1-CoreRetailZNPSZACSpeedRatio,
+      SET CoreRetailZNPSZACStage2 = CoreRetailZNPSZACSpeedRatio,
+      SET CoreRetailZNPSZACVen = 0,    
+      SET CoreRetailZNPSZACEco = 0,    
+      IF CoreRetailZNPSZACOAFlowMass > (CoreRetailZNPSZACOADesignMass*CoreRetailZNPSZACOASch),
+      SET CoreRetailZNPSZACStg1Spd = 1.0,
+      ENDIF,                 
+      ENDIF,                 
+      ENDIF,                  
+      ! For each mode, (percent time in mode)*(fanSpeer^PwrExp) is the contribution to weighted fan power over time step
+      SET CoreRetailZNPSZACFPR = CoreRetailZNPSZACVen*(CoreRetailZNPSZACVenSpeed ^ CoreRetailZNPSZACFanPwrExp),
+      SET CoreRetailZNPSZACFPR = CoreRetailZNPSZACFPR+CoreRetailZNPSZACEco*(CoreRetailZNPSZACEcoSpeed^CoreRetailZNPSZACFanPwrExp),
+      SET CoreRetailZNPSZACFPR1 = CoreRetailZNPSZACStage1*(CoreRetailZNPSZACStg1Spd^CoreRetailZNPSZACFanPwrExp),
+      SET CoreRetailZNPSZACFPR = CoreRetailZNPSZACFPR+CoreRetailZNPSZACFPR1,
+      SET CoreRetailZNPSZACFPR2 = CoreRetailZNPSZACStage2*(CoreRetailZNPSZACStg2Spd^CoreRetailZNPSZACFanPwrExp),
+      SET CoreRetailZNPSZACFPR = CoreRetailZNPSZACFPR+CoreRetailZNPSZACFPR2,
+      SET CoreRetailZNPSZACFPR3 = CoreRetailZNPSZACHeating*(CoreRetailZNPSZACHeatSpeed^CoreRetailZNPSZACFanPwrExp),
+      SET CoreRetailZNPSZACFanPwrRatio = CoreRetailZNPSZACFPR+ CoreRetailZNPSZACFPR3,
+      ! system fan power is directly proportional to static pressure, so this change linearly adjusts fan energy for speed control
+      SET CoreRetailZNPSZACFanPressure = CoreRetailZNPSZACFanDesignPressure*CoreRetailZNPSZACFanPwrRatio;
+
+    EnergyManagementSystem:Program,
+      CoreRetailZNPSZACSetNumberofStages,
+      SET CoreRetailZNPSZACNumberofStages =  2;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      CoreRetailZNPSZACSetNumberofStagesCallingManager,
+      BeginNewEnvironment,
+      CoreRetailZNPSZACSetNumberofStages;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      CoreRetailZNPSZACECOManager,    
+      InsideHVACSystemIterationLoop,  !- EnergyPlus Model Calling Point
+      CoreRetailZNPSZACEconomizerCTRLProg;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      CoreRetailZNPSZACFanParametermanager,
+      BeginNewEnvironment,
+      CoreRetailZNPSZACSetFanPar;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      CoreRetailZNPSZACFanMainManager,
+      BeginTimestepBeforePredictor,
+      CoreRetailZNPSZACFanControl;
+
+    

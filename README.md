@@ -29,6 +29,15 @@ This Measure covers 6 vintages:
 
 *90.1-2004 is covered by both vintages.  This Measure used the DOE Prototype Buildings as the starting point for 90.1-2004.
 
+## Using this Measure Right Now
+#### Important Note:  
+This Measure is under very active development.  If you download it and try to run it, it may not work or may give you some unreasonable results.  We are working on this (see the Testing section below).  If this doesn't bother you, here's how to use it:
+
+1.	Get the Measure by either downloading the zip and unzipping it somewhere or clone the code using Git.  There are buttons on the right side of this page for both options.  If you download the zip, you will have a copy at that particular moment in time.  If you use Git, you can easily pull changes as we make improvements/fixes.  There are free programs (GitHub for Windows, GitHub for Mac) that make it really easy to use Git.
+2.	Launch OpenStudio, and in `file>preferences>set my measures directory`, pick the OpenStudio-Prototype-Buildings folder you just downloaded and unzipped or cloned with Git.
+3.	In OpenStudio, under `components & measures>apply measure now>Whole Building>Space Types` you should see `create DOE Prototype Buildings`
+4.	Click the measure, pick the building type/vintage/climate zone combo and run.
+
 ## Online Documentation
 Documentation for the latest code is available online #TODO put code on rubydoc.info
 
@@ -92,12 +101,14 @@ These files extend the OpenStudio classes to allow a model to import design days
 This directory contains the simulation results from the legacy IDF files, as well as test fixtures which will run the Measure, create the models, and then compare the model results against the legacy IDF files.
 
 ## Adding a New Building Type
-1. Run Prototype.strip_model to get the geometry-only .osm
-2. In Measure.rb, add the building type name to the arguments
-3. Create the Prototype.building_name file
+1. Use SketchUp to import the prototype IDF, and generate the initial .osm
+2. Run Prototype.strip_model to get the geometry-only .osm
+3. Check the geometry of different vintages. Create one geometry-only.osm for each different version.
+4. In Measure.rb, add the building type name to the arguments
+5. Create the Prototype.building_name file
   - Add the define_space_type_map method
   - Add the define_hvac_system_map method
   - Add the add_hvac method, which might include adding to/changing Prototype.hvac_systems.rb
-4. Add a test for this building type to tests/create_DOE_prototype_buildings_Test.rb
-5. Run the test, look at results, iterate
+6. Add a test for this building type to tests/create_DOE_prototype_buildings_Test.rb
+7. Run the test, look at results, iterate
 
