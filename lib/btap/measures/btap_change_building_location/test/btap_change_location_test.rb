@@ -24,19 +24,22 @@ require 'minitest/autorun'
 require_relative '../measure.rb'
 require 'fileutils'
 
-class ReplaceModel_test < MiniTest::Unit::TestCase
-  def test_replace_model()   
+class Btap_change_location_test < MiniTest::Unit::TestCase
+  def test_construction_assignment()   
     # create an instance of the measure, a runner and load a model.
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
-    measure = ReplaceModel.new
+    measure = ChangeBuildingLocation.new
     runner = OpenStudio::Ruleset::OSRunner.new
     #Set up arguments in order. 
     argument_values_array = 
-     [["alternativeModel",  "EnvelopeAndLoadTestModel_01.osm"],
-      ["osm_directory",     "#{File.dirname(__FILE__)}/" ]]
+      [
+      ["weather_file_name",         "CAN_AB_Calgary.718770_CWEC.epw"],
+      ["weather_directory", "#{File.dirname(__FILE__)}/" ]
+    ]
     #run the measure with the arguments.
     measure.set_user_arguments_and_apply(model,argument_values_array,runner)
     #return condition of measure.
     assert_equal("Success", runner.result.value.valueName)
   end   
 end
+ 
