@@ -137,38 +137,6 @@ module BTAP
             return false
           end
           runner.registerInitialCondition("Initial model.")
-          @argument_array_of_hashes.each do |row|
-            name = row["variable_name"]
-            case row["type"]
-            when "BOOL"
-              instance_variable_set("@#{name}", runner.getBoolArgumentValue(name, user_arguments) )
-            when "STRING"
-              instance_variable_set("@#{name}", runner.getStringArgumentValue(name, user_arguments) )
-            when "INTEGER"
-              instance_variable_set("@#{name}", runner.getIntegerArgumentValue(name, user_arguments) )
-              if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
-                runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
-                return false
-              end
-            when "FLOAT"
-              instance_variable_set("@#{name}", runner.getDoubleArgumentValue(name, user_arguments) )
-              if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
-                runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
-                return false
-              end
-            when "STRINGCHOICE"
-              instance_variable_set("@#{name}", runner.getStringArgumentValue(name, user_arguments) )
-            when "WSCHOICE"
-              instance_variable_set("@#{name}", runner.getOptionalWorkspaceObjectChoiceValue(name, user_arguments,model) )
-
-            when "PATH"
-              instance_variable_set("@#{name}", runner.getPathArgument(name, user_arguments) )
-            end #end case
-          end #end do
-          #use the built-in error checking 
-          if not runner.validateUserArguments(arguments(model), user_arguments)
-            return false
-          end
           #Set argument to instance variables. 
           self.argument_getter(model, runner,user_arguments)
           #will run the childs method measure_code
@@ -223,6 +191,7 @@ module BTAP
         end
 
         def argument_getter(model, runner,user_arguments)
+          unless @argument_array_of_hashes == nil
           @argument_array_of_hashes.each do |row|
             name = row["variable_name"]
             case row["type"]
@@ -251,6 +220,7 @@ module BTAP
               instance_variable_set("@#{name}", runner.getPathArgument(name, user_arguments) )
             end #end case
           end #end do
+          end
         end        
         
         
