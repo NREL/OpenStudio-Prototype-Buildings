@@ -67,7 +67,21 @@ class OpenStudio::Model::Model
       end
 
     end
-    
+
+    # Add the door infiltration for vintage 2004,2007,2010,2013
+    case building_vintage
+      when '90.1-2004','90.1-2007','90.1-2010','90.1-2013'
+        entry_space = self.getSpaceByName('Front_Entry').get
+        infiltration_entry = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self)
+        infiltration_entry.setName("Entry door Infiltration")
+        infiltration_per_zone = 1.418672682
+        infiltration_entry.setDesignFlowRate(infiltration_per_zone)
+        infiltration_entry.setSchedule(add_schedule('RetailStandalone INFIL_Door_Opening_SCH'))
+        infiltration_entry.setSpace(entry_space)
+      else
+        # do nothing
+    end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
     
     return true

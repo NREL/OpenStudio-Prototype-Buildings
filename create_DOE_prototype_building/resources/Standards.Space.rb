@@ -2026,16 +2026,28 @@ Warehouse.Office
     
     OpenStudio::logFree(OpenStudio::Debug, "openstudio.Standards.Space", "For #{self.name}, adj infil = #{all_ext_infil_m3_per_s_per_m2.round(8)} m^3/s*m^2.")
 
-    # Get any infiltration schedule already
-    # assigned to this space
-    infil_sch = self.model.alwaysOnDiscreteSchedule
+    # Get any infiltration schedule already assigned to this space or its space type
+    # If not, the always on schedule will be applied.
+    infil_sch = nil
     if self.spaceInfiltrationDesignFlowRates.size > 0
       old_infil = self.spaceInfiltrationDesignFlowRates[0]
       if old_infil.schedule.is_initialized
         infil_sch = old_infil.schedule.get
       end
     end
-    
+
+    if infil_sch.class.to_s == 'NilClass' and self.spaceType.get
+      space_type = self.spaceType.get
+      if space_type.spaceInfiltrationDesignFlowRates.size > 0
+        old_infil = space_type.spaceInfiltrationDesignFlowRates[0]
+        if old_infil.schedule.is_initialized
+          infil_sch = old_infil.schedule.get
+        end
+      end
+    end
+
+    infil_sch = self.model.alwaysOnDiscreteSchedule if infil_sch.class.to_s == 'NilClass'
+
     # Create an infiltration rate object for this space
     infiltration = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self.model)
     infiltration.setName("#{self.name} Infiltration")

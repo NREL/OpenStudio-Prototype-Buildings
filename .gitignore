@@ -5,3 +5,4 @@ create_DOE_prototype_building/tests/build
 .project
 /.yardoc/
 /doc/
+/create_DOE_prototype_building/tests/*_ems.idf
