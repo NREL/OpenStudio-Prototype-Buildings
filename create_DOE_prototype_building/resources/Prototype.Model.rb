@@ -122,7 +122,6 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Space type called '#{stub_space_type.name}' has no standards space type.")
         return false
       end
-
       new_space_type = self.add_space_type(building_vintage, 'ClimateZone 1-8', stds_building_type, stds_spc_type)
 
       # Apply the new space type to the building      
@@ -420,7 +419,6 @@ class OpenStudio::Model::Model
         space_multiplier_map ={}
     end
 
-
     # Create a thermal zone for each space in the self
     self.getSpaces.each do |space|
       zone = OpenStudio::Model::ThermalZone.new(self)
@@ -668,7 +666,6 @@ class OpenStudio::Model::Model
       infiltration.setVelocityTermCoefficient(0.224)
       infiltration.setVelocitySquaredTermCoefficient(0.0)
     end
-    
   end
 
   # Sets the inside and outside convection algorithms for different vintages

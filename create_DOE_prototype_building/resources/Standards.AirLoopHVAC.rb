@@ -318,6 +318,7 @@ class OpenStudio::Model::AirLoopHVAC
     fans.each do |fan|
       # TODO: Yixing Check the model of the Fan Coil Unit
       next if fan.name.to_s.include?("Fan Coil fan")
+      next if fan.name.to_s.include?("UnitHeater Fan")
 
       OpenStudio::logFree(OpenStudio::Info, "#{fan.name}")
     

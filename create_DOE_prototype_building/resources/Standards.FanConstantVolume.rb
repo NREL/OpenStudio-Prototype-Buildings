@@ -7,7 +7,11 @@ class OpenStudio::Model::FanConstantVolume
   #
   # @return [Bool] true if successful, false if not
   def setStandardEfficiency(template, standards)
-    
+    # TODO: Yixing Check the model of the UnitHeater Fan
+    # The difference between this standard efficiency and the prototype is large (0.2 vs 0.6)
+    # Now, don't change the UnitHeater Fan
+    return if self.name.to_s.include?("UnitHeater Fan")
+
     motors = standards['motors']
     
     # Get the max flow rate from the fan.

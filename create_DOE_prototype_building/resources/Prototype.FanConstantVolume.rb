@@ -6,7 +6,7 @@ class OpenStudio::Model::FanConstantVolume
   # which are governed by the flow rate coming through the fan
   # and whether the fan lives inside a unit heater, PTAC, etc.
   def setPrototypeFanPressureRise
-    
+    return true if self.name.to_s.include?("UnitHeater Fan")
     # Get the max flow rate from the fan.
     maximum_flow_rate_m3_per_s = nil
     if self.maximumFlowRate.is_initialized
