@@ -1,0 +1,49 @@
+baseline_index,building_type,vintage_name,measure_id,cold_deck_reset_enabled,cold_deck_reset_max_supply_air_temp,cold_deck_reset_min_supply_air_temp,cost_per_building
+NA,Barracks,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,10864
+2,Fire Hall,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,3621
+3,Food Service,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,14485
+4,Food Service,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,14485
+5,Hangar,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,7243
+6,Hangar,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,7243
+7,Hangar,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,7243
+8,Maintenance Shop,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,3621
+9,Maintenance Shop,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,3621
+10,Maintenance Shop-Small,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,3621
+11,Maintenance Shop-Small,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,3621
+12,Maintenance Shop-Small,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,3621
+13,Office,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,18106
+14,Office,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,18106
+15,Office,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,18106
+16,Office-Small,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,14485
+17,Office-Small,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,14485
+18,Office-Small,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,14485
+19,Recreation Center,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,32591
+20,Storage Building,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,0
+21,Storage Building,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,0
+22,Storage Building,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,0
+23,Storage Building,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,0
+24,Training Building,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,14485
+25,Training Building,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,14485
+26,Training Building,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,14485
+27,Vehicle Garage,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,9315
+28,Vehicle Garage,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,9315
+NA,Barracks,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,10864
+NA,Barracks,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,10864
+30,Barracks,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,10864
+NA,Fire Hall,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,3621
+NA,Fire Hall,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,3621
+31,Fire Hall,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,3621
+NA,Food Service,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,14485
+NA,Food Service,1980-2004,ecm_cold_deck_reset_control,TRUE,20,13,14485
+29,Hangar,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,7243
+NA,Maintenance Shop,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,3621
+NA,Maintenance Shop,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,3621
+NA,Maintenance Shop-Small,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,3621
+NA,Office,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,18106
+NA,Office-Small,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,14485
+NA,Recreation Center,1959-pre,ecm_cold_deck_reset_control,TRUE,20,13,32591
+NA,Recreation Center,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,32591
+NA,Recreation Center,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,32591
+NA,Training Building,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,14485
+NA,Vehicle Garage,1960-1979,ecm_cold_deck_reset_control,TRUE,20,13,9315
+NA,Vehicle Garage,2005-2014,ecm_cold_deck_reset_control,TRUE,20,13,9315
