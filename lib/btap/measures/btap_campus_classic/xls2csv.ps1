@@ -1,8 +1,10 @@
 ﻿
+function PSScriptRoot { $MyInvocation.ScriptName | Split-Path }
 
     Function ExportWSToCSV ($excelFile, $csvLoc)
 {
-    $excelFile = "$PSScriptRoot\" + $excelFile
+
+    $excelFile = "$(PSScriptRoot)\" + $excelFile
     $E = New-Object -ComObject Excel.Application
     $E.Visible = $false
     $E.DisplayAlerts = $false
@@ -15,4 +17,4 @@
     $E.Quit()
     stop-process -processname EXCEL
 }
-ExportWSToCSV -excelFile ".\campus_modelling_assumptions.xlsx" -csvLoc "$PSScriptRoot\"
+ExportWSToCSV -excelFile ".\campus_modelling_assumptions.xlsx" -csvLoc "$(PSScriptRoot)\"
