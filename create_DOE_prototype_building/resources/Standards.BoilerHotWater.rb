@@ -99,17 +99,16 @@ class OpenStudio::Model::BoilerHotWater
       self.setNominalThermalEfficiency(thermal_eff)
     end   
   
-   # for NECB, check is 2 stage boiler or modulating boiler required 
-   if template = 'NECB 2011' 
-     
+    # for debugging - maria
+    #puts "capacity_w = #{capacity_w}"
+    
+   # for NECB, check if modulating boiler required
+   # TO DO: logic for 2 stage boilers when heating cap > 176 kW and < 352 kW
+   if template = 'NECB 2011'      
       if capacity_w >= 352000 
         self.setBoilerFlowMode('LeavingSetpointModulated')
         self.setMinimumPartLoadRatio(0.25)
       end
-      
-      
-      
-      
    end  # NECB 2011
     
     
