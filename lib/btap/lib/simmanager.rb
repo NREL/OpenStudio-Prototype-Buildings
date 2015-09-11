@@ -20,6 +20,7 @@
 #require "SecureRandom"
 
 module BTAP
+
   module SimManager
 
     #This method will simulate all files in a folder.
@@ -93,7 +94,7 @@ module BTAP
 
       def getPaths
         # Find EnergyPlus on this computer.
-        @ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,2)
+        @ep_hash = OpenStudio::EnergyPlus::find_energyplus(BTAP::ENERGY_PLUS_MAJOR_VERSION,BTAP::ENERGY_PLUS_MINOR_VERSION)
         #set the Energyplus.exe path variable
         @ep_path = OpenStudio::Path.new(  @ep_hash[:energyplus_exe].to_s)
         #set the root folder for E+
@@ -138,7 +139,7 @@ module BTAP
       #@return epw_path [String] a simple string of the epw file path, remember to escape the slashes..(i.e. // not / )
       def self.find_energyplus_folder()
         # Find EnergyPlus on this computer.
-        ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
+        ep_hash = OpenStudio::EnergyPlus::find_energyplus(BTAP::ENERGY_PLUS_MAJOR_VERSION,BTAP::ENERGY_PLUS_MINOR_VERSION)
         #set the Energyplus.exe path variable
         ep_path = OpenStudio::Path.new(  ep_hash[:energyplus_exe].to_s)
         #set the root folder for E+
