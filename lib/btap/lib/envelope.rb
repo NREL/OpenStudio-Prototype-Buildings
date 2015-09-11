@@ -109,6 +109,9 @@ module BTAP
       end
 
 
+      def self.set_all_surfaces_to_default_construction( model )
+        model.getPlanarSurfaces.each { |item| item.resetConstruction }
+      end
 
 
 

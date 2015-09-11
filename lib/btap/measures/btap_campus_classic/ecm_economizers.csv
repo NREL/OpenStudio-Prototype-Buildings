@@ -1,0 +1,49 @@
+baseline_index ,building_type,vintage_name,measure_id,economizer_control_type,economizer_control_action_type,economizer_maximum_limit_dry_bulb_temperature,economizer_maximum_limit_enthalpy,economizer_maximum_limit_dewpoint_temperature,economizer_minimum_limit_dry_bulb_temperature,cost_per_building
+1,Barracks,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4245
+2,Fire Hall,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1104
+3,Food Service,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4830
+4,Food Service,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4830
+5,Hangar,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,2830
+6,Hangar,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,2830
+7,Hangar,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,2830
+8,Maintenance Shop,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1208
+9,Maintenance Shop,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1208
+10,Maintenance Shop-Small,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1415
+11,Maintenance Shop-Small,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1415
+12,Maintenance Shop-Small,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1415
+13,Office,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,7075
+14,Office,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,7075
+15,Office,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,7075
+16,Office-Small,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+17,Office-Small,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+18,Office-Small,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+19,Recreation Center,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,8490
+20,Storage Building,1959-pre,NA,NA,NA,NA,NA,NA,NA,NA
+21,Storage Building,1960-1979,NA,NA,NA,NA,NA,NA,NA,NA
+22,Storage Building,1980-2004,NA,NA,NA,NA,NA,NA,NA,NA
+23,Storage Building,2005-2014,NA,NA,NA,NA,NA,NA,NA,NA
+24,Training Building,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+25,Training Building,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+26,Training Building,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+27,Vehicle Garage,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,3623
+28,Vehicle Garage,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,3623
+NA,Barracks,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4245
+NA,Barracks,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4245
+30,Barracks,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4245
+NA,Fire Hall,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1104
+NA,Fire Hall,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1104
+31,Fire Hall,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1104
+NA,Food Service,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4830
+NA,Food Service,1980-2004,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,4830
+29,Hangar,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,2830
+NA,Maintenance Shop,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1208
+NA,Maintenance Shop,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1208
+NA,Maintenance Shop-Small,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,1415
+NA,Office,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,7075
+NA,Office-Small,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+NA,Recreation Center,1959-pre,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,8490
+NA,Recreation Center,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,8490
+NA,Recreation Center,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,8490
+NA,Training Building,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,5660
+NA,Vehicle Garage,1960-1979,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,3623
+NA,Vehicle Garage,2005-2014,economizers_enabled,FixedDryBulb,ModulateFlow,19,64000,12,-40,3623

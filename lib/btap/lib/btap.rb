@@ -99,7 +99,10 @@ end
 # For full access to the OpenStudio API please refer to the OpenStudio Website.
 # http://openstudio.nrel.gov/latest-c-sdk-documentation/model
 module BTAP
-
+  #EnergyPlus version
+  ENERGY_PLUS_MAJOR_VERSION = 8
+  ENERGY_PLUS_MINOR_VERSION = 3
+  
   #Path constants
   OS_RUBY_PATH = File.expand_path("..\\..\\..", __FILE__)
   TESTING_FOLDER = "C:\\test"
