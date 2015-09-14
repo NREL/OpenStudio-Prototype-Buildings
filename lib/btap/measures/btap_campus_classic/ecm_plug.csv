@@ -1,0 +1,49 @@
+baseline_index,building_type,vintage_name,measure_id,elec_equipment_load_scaling_factor,elec_equipment_fraction_radiant,elec_equipment_fraction_latent,elec_equipment_fraction_lost,cost_per_building
+1,Barracks,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,21281
+2,Fire Hall,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,2750
+3,Food Service,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+4,Food Service,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+5,Hangar,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,21849
+6,Hangar,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,21849
+7,Hangar,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,21849
+8,Maintenance Shop,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,3121
+9,Maintenance Shop,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,3121
+10,Maintenance Shop-Small,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+11,Maintenance Shop-Small,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+12,Maintenance Shop-Small,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+13,Office,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,14471
+14,Office,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,14471
+15,Office,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,14471
+16,Office-Small,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,4540
+17,Office-Small,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,4540
+18,Office-Small,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,4540
+19,Recreation Center,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,9080
+20,Storage Building,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,284
+21,Storage Building,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,284
+22,Storage Building,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,284
+23,Storage Building,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,284
+24,Training Building,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,11634
+25,Training Building,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,11634
+26,Training Building,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,11634
+27,Vehicle Garage,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,2838
+28,Vehicle Garage,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,2838
+NA,Barracks,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,21281
+NA,Barracks,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,21281
+30,Barracks,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,21281
+NA,Fire Hall,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,2750
+NA,Fire Hall,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,2750
+31,Fire Hall,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,2750
+NA,Food Service,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+NA,Food Service,1980-2004,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+29,Hangar,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,21849
+NA,Maintenance Shop,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,3121
+NA,Maintenance Shop,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,3121
+NA,Maintenance Shop-Small,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,2554
+NA,Office,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,14471
+NA,Office-Small,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,4540
+NA,Recreation Center,1959-pre,plug_loads_90_percent,0.9,0.3,NA,NA,9080
+NA,Recreation Center,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,9080
+NA,Recreation Center,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,9080
+NA,Training Building,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,11634
+NA,Vehicle Garage,1960-1979,plug_loads_90_percent,0.9,0.3,NA,NA,2838
+NA,Vehicle Garage,2005-2014,plug_loads_90_percent,0.9,0.3,NA,NA,2838

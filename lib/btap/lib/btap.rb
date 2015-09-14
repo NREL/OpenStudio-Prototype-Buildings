@@ -99,12 +99,23 @@ end
 # For full access to the OpenStudio API please refer to the OpenStudio Website.
 # http://openstudio.nrel.gov/latest-c-sdk-documentation/model
 module BTAP
-
+  #EnergyPlus version
+  ENERGY_PLUS_MAJOR_VERSION = 8
+  ENERGY_PLUS_MINOR_VERSION = 3
+  
   #Path constants
   OS_RUBY_PATH = File.expand_path("..\\..\\..", __FILE__)
   TESTING_FOLDER = "C:\\test"
   
-  
+#  A wrapper for outputing feedback to users and developers. 
+#  BTAP::runner_register("InitialCondition",   "Your Information Message Here", runner)
+#  BTAP::runner_register("Info",    "Your Information Message Here", runner)
+#  BTAP::runner_register("Warning", "Your Information Message Here", runner)
+#  BTAP::runner_register("Error",   "Your Information Message Here", runner)
+#  BTAP::runner_register("Debug",   "Your Information Message Here", runner)
+#  BTAP::runner_register("FinalCondition",   "Your Information Message Here", runner)
+#  @params type [String]
+#  @params runner [OpenStudio::Ruleset::OSRunner] # or a nil. 
   def self.runner_register(type,text,runner = nil)
     #dump to console. 
     puts "#{type.upcase}: #{text}"
@@ -121,8 +132,9 @@ module BTAP
         runner.registerAsNotApplicable(text)
       when "finalcondition"
         runner.registerFinalCondition(text)
-      when "intialcondition"
+      when "initialcondition"
         runner.registerInitialCondition(text)
+      when "debug"
       else
         raise("Runner Register type #{type.downcase} not info,warning,error,notapplicable,finalcondition,initialcondition.")
       end
@@ -130,20 +142,16 @@ module BTAP
   end
   
   def self.runner_register_value(name,value,runner = nil)
-    puts "#{name} = #{value}"
     if runner.is_a?(OpenStudio::Ruleset::OSRunner)
       runner.registerValue( name,value.to_s)
+      BTAP::runner_register("Info", "#{name} = #{value} has been registered in the runner", runner)
     end
   end
   
   
-  #      runner.registerInitialCondition("Model initial condition (for example number of floors.")
-  #      runner.registerInfo("Use this for information to user.")
-  #      runner.registerWarning("Use this for warnings to user.")
-  #      runner.registerError("Use this for fatal error message to user. Will not continue. Return a false.") ; return false
-  #      runner.registerAsNotApplicable("Measure not applicable because XYZ. Return a true and will continue with other chained measures."); return true
-  #      runner.registerFinalCondition("Model ended with # of floors for example")
-  #      runner.registerFinalCondition("Indicate what was changed.")
+  
+  
+
   
   
   

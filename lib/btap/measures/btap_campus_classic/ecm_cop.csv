@@ -1,0 +1,49 @@
+baseline_index,building_type,vintage_name,measure_id,cop,cost_per_building
+1,Barracks,1959-pre,cooling_cop_3_0,3.5,15263
+2,Fire Hall,1959-pre,cooling_cop_3_0,3.5,10120
+3,Food Service,1959-pre,cooling_cop_3_0,3.5,20350
+4,Food Service,2005-2014,cooling_cop_3_0,3.5,20350
+5,Hangar,1959-pre,cooling_cop_3_0,3.5,16588
+6,Hangar,1960-1979,cooling_cop_3_0,3.5,16588
+7,Hangar,1980-2004,cooling_cop_3_0,3.5,16588
+8,Maintenance Shop,1959-pre,cooling_cop_3_0,3.5,5088
+9,Maintenance Shop,1980-2004,cooling_cop_3_0,3.5,5088
+10,Maintenance Shop-Small,1959-pre,cooling_cop_3_0,3.5,10350
+11,Maintenance Shop-Small,1960-1979,cooling_cop_3_0,3.5,10350
+12,Maintenance Shop-Small,1980-2004,cooling_cop_3_0,3.5,10350
+13,Office,1959-pre,cooling_cop_3_0,3.5,20700
+14,Office,1960-1979,cooling_cop_3_0,3.5,20700
+15,Office,1980-2004,cooling_cop_3_0,3.5,20700
+16,Office-Small,1960-1979,cooling_cop_3_0,3.5,17250
+17,Office-Small,1980-2004,cooling_cop_3_0,3.5,17250
+18,Office-Small,2005-2014,cooling_cop_3_0,3.5,17250
+19,Recreation Center,1980-2004,cooling_cop_3_0,3.5,44675
+20,Storage Building,1959-pre,NA,NA,NA
+21,Storage Building,1960-1979,NA,NA,NA
+22,Storage Building,1980-2004,NA,NA,NA
+23,Storage Building,2005-2014,NA,NA,NA
+24,Training Building,1959-pre,cooling_cop_3_0,3.5,20350
+25,Training Building,1980-2004,cooling_cop_3_0,3.5,20350
+26,Training Building,2005-2014,cooling_cop_3_0,3.5,20350
+27,Vehicle Garage,1959-pre,NA,NA,NA
+28,Vehicle Garage,1980-2004,NA,NA,NA
+NA,Barracks,1960-1979,cooling_cop_3_0,3.5,15263
+NA,Barracks,1980-2004,cooling_cop_3_0,3.5,15263
+30,Barracks,2005-2014,cooling_cop_3_0,3.5,15263
+NA,Fire Hall,1960-1979,cooling_cop_3_0,3.5,10120
+NA,Fire Hall,1980-2004,cooling_cop_3_0,3.5,10120
+31,Fire Hall,2005-2014,cooling_cop_3_0,3.5,10120
+NA,Food Service,1960-1979,cooling_cop_3_0,3.5,20350
+NA,Food Service,1980-2004,cooling_cop_3_0,3.5,20350
+29,Hangar,2005-2014,cooling_cop_3_0,3.5,16588
+NA,Maintenance Shop,1960-1979,cooling_cop_3_0,3.5,5088
+NA,Maintenance Shop,2005-2014,cooling_cop_3_0,3.5,5088
+NA,Maintenance Shop-Small,2005-2014,cooling_cop_3_0,3.5,10350
+NA,Office,2005-2014,cooling_cop_3_0,3.5,20700
+NA,Office-Small,1959-pre,cooling_cop_3_0,3.5,17250
+NA,Recreation Center,1959-pre,cooling_cop_3_0,3.5,44675
+NA,Recreation Center,1960-1979,cooling_cop_3_0,3.5,44675
+NA,Recreation Center,2005-2014,cooling_cop_3_0,3.5,44675
+NA,Training Building,1960-1979,cooling_cop_3_0,3.5,20350
+NA,Vehicle Garage,1960-1979,NA,NA,NA
+NA,Vehicle Garage,2005-2014,NA,NA,NA

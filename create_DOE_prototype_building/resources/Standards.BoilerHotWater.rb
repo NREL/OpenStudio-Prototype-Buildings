@@ -26,12 +26,6 @@ class OpenStudio::Model::BoilerHotWater
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.BoilerHotWater', "For #{self.name}, a fuel type of #{self.fuelType} is not yet supported.  Assuming 'Gas.'")
       fuel_type = 'Gas'
     end
-#    if self.fuelType == 'NaturalGas'
-#      fuel_type = 'Gas'
-#    else
-#      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.BoilerHotWater', "For #{self.name}, a fuel type of #{self.fuelType} is not yet supported.  Assuming 'Gas.'")
-#      fuel_type = 'Gas'
-#    end
     
     
     
@@ -105,7 +99,19 @@ class OpenStudio::Model::BoilerHotWater
       self.setNominalThermalEfficiency(thermal_eff)
     end   
   
-
+    # for debugging - maria
+    #puts "capacity_w = #{capacity_w}"
+    
+   # for NECB, check if modulating boiler required
+   # TO DO: logic for 2 stage boilers when heating cap > 176 kW and < 352 kW
+   if template = 'NECB 2011'      
+      if capacity_w >= 352000 
+        self.setBoilerFlowMode('LeavingSetpointModulated')
+        self.setMinimumPartLoadRatio(0.25)
+      end
+   end  # NECB 2011
+    
+    
   end
   
 end

@@ -1,0 +1,49 @@
+baseline_index,building_type,vintage_name,measure_id,exhaust_fans_occ_control_enabled,cost_per_building
+1,Barracks,1959-pre,NA,NA,4523
+2,Fire Hall,1959-pre,NA,NA,2261
+3,Food Service,1959-pre,exhaust_fans_occ_control,TRUE,6784
+4,Food Service,2005-2014,exhaust_fans_occ_control,TRUE,6784
+5,Hangar,1959-pre,exhaust_fans_occ_control,TRUE,3769
+6,Hangar,1960-1979,exhaust_fans_occ_control,TRUE,3769
+7,Hangar,1980-2004,exhaust_fans_occ_control,TRUE,3769
+8,Maintenance Shop,1959-pre,exhaust_fans_occ_control,TRUE,2261
+9,Maintenance Shop,1980-2004,exhaust_fans_occ_control,TRUE,2261
+10,Maintenance Shop-Small,1959-pre,exhaust_fans_occ_control,TRUE,754
+11,Maintenance Shop-Small,1960-1979,exhaust_fans_occ_control,TRUE,754
+12,Maintenance Shop-Small,1980-2004,exhaust_fans_occ_control,TRUE,754
+13,Office,1959-pre,exhaust_fans_occ_control,TRUE,5276
+14,Office,1960-1979,exhaust_fans_occ_control,TRUE,5276
+15,Office,1980-2004,exhaust_fans_occ_control,TRUE,5276
+16,Office-Small,1960-1979,exhaust_fans_occ_control,TRUE,1508
+17,Office-Small,1980-2004,exhaust_fans_occ_control,TRUE,1508
+18,Office-Small,2005-2014,exhaust_fans_occ_control,TRUE,1508
+19,Recreation Center,1980-2004,NA,NA,6030
+20,Storage Building,1959-pre,exhaust_fans_occ_control,TRUE,754
+21,Storage Building,1960-1979,exhaust_fans_occ_control,TRUE,754
+22,Storage Building,1980-2004,exhaust_fans_occ_control,TRUE,754
+23,Storage Building,2005-2014,exhaust_fans_occ_control,TRUE,754
+24,Training Building,1959-pre,exhaust_fans_occ_control,TRUE,1508
+25,Training Building,1980-2004,exhaust_fans_occ_control,TRUE,1508
+26,Training Building,2005-2014,exhaust_fans_occ_control,TRUE,1508
+27,Vehicle Garage,1959-pre,exhaust_fans_occ_control,TRUE,754
+28,Vehicle Garage,1980-2004,exhaust_fans_occ_control,TRUE,754
+NA,Barracks,1960-1979,NA,NA,4523
+NA,Barracks,1980-2004,NA,NA,4523
+30,Barracks,2005-2014,NA,NA,4523
+NA,Fire Hall,1960-1979,NA,NA,2261
+NA,Fire Hall,1980-2004,NA,NA,2261
+31,Fire Hall,2005-2014,NA,NA,2261
+NA,Food Service,1960-1979,exhaust_fans_occ_control,TRUE,6784
+NA,Food Service,1980-2004,exhaust_fans_occ_control,TRUE,6784
+29,Hangar,2005-2014,exhaust_fans_occ_control,TRUE,3769
+NA,Maintenance Shop,1960-1979,exhaust_fans_occ_control,TRUE,2261
+NA,Maintenance Shop,2005-2014,exhaust_fans_occ_control,TRUE,2261
+NA,Maintenance Shop-Small,2005-2014,exhaust_fans_occ_control,TRUE,754
+NA,Office,2005-2014,exhaust_fans_occ_control,TRUE,5276
+NA,Office-Small,1959-pre,exhaust_fans_occ_control,TRUE,1508
+NA,Recreation Center,1959-pre,NA,NA,6030
+NA,Recreation Center,1960-1979,NA,NA,6030
+NA,Recreation Center,2005-2014,NA,NA,6030
+NA,Training Building,1960-1979,exhaust_fans_occ_control,TRUE,1508
+NA,Vehicle Garage,1960-1979,exhaust_fans_occ_control,TRUE,754
+NA,Vehicle Garage,2005-2014,exhaust_fans_occ_control,TRUE,754

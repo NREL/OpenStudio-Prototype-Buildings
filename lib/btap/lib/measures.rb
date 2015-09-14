@@ -137,6 +137,61 @@ module BTAP
             return false
           end
           runner.registerInitialCondition("Initial model.")
+          #Set argument to instance variables. 
+          self.argument_getter(model, runner,user_arguments)
+          #will run the childs method measure_code
+          return self.measure_code(model,runner)
+        end # end method run
+  
+        def argument_setter(args)
+          #***boilerplate code starts. Do not edit...
+          # this converts the 2D array to a array hash for better readability and makes
+          # column data accessible by name.
+          @argument_array_of_hashes = []
+          @argument_array_of_arrays[1..-1].each do |row|   # [1..-1] skips the first row
+            hsh = {}; @argument_array_of_arrays[0].each_with_index{ |header, idx|   hsh[header] = row[idx] }
+            @argument_array_of_hashes << hsh
+          end
+
+          #iterate through array of hashes and make arguments based on type and set
+          # max and min values where applicable.
+          @argument_array_of_hashes.each do |row|
+            arg = nil
+            case row["type"]
+            when "BOOL"
+              arg = OpenStudio::Ruleset::OSArgument::makeBoolArgument(row["variable_name"],row["required"],row["model_dependant"])
+            when "STRING"
+              arg = OpenStudio::Ruleset::OSArgument::makeStringArgument(row["variable_name"],row["required"],row["model_dependant"])
+            when "INTEGER"
+              arg = OpenStudio::Ruleset::OSArgument::makeIntegerArgument(row["variable_name"],row["required"],row["model_dependant"])
+              arg.setMaxValue( row["max_value"].to_i ) unless row["min_value"].nil?
+              arg.setMaxValue( row["max_value"].to_i ) unless  row["max_value"].nil?
+            when "FLOAT"
+              arg = OpenStudio::Ruleset::OSArgument::makeDoubleArgument(row["variable_name"],row["required"],row["model_dependant"])
+              arg.setMaxValue( row["max_value"].to_f ) unless row["min_value"].nil?
+              arg.setMaxValue( row["max_value"].to_f ) unless  row["max_value"].nil?
+            when "STRINGCHOICE"
+              # #add string choices one by one.
+              chs = OpenStudio::StringVector.new
+              row["string_choice_array"].each {|choice| chs << choice}
+              arg = OpenStudio::Ruleset::OSArgument::makeChoiceArgument(row["variable_name"], chs,row["required"],row["model_dependant"])
+            when "PATH"
+              arg = OpenStudio::Ruleset::OSArgument::makePathArgument("alternativeModelPath",true,"osm")
+            when "WSCHOICE"
+              arg = OpenStudio::Ruleset::makeChoiceArgumentOfWorkspaceObjects( row["variable_name"], row["os_object_type"].to_IddObjectType , model, row["required"])
+            end
+            # #common argument aspects.
+            unless arg.nil?
+              arg.setDisplayName(row["display_name"])
+              arg.setDefaultValue(row["default_value"]) unless row["default_value"].nil?
+              args << arg
+            end
+          end
+          return args
+        end
+
+        def argument_getter(model, runner,user_arguments)
+          unless @argument_array_of_hashes == nil
           @argument_array_of_hashes.each do |row|
             name = row["variable_name"]
             case row["type"]
@@ -165,8 +220,10 @@ module BTAP
               instance_variable_set("@#{name}", runner.getPathArgument(name, user_arguments) )
             end #end case
           end #end do
-          return true
-        end # end method run
+          end
+        end        
+        
+        
       end
       #Measure Template simplified. 
       class TemplateModelMeasure < BTAPModelUserScript
