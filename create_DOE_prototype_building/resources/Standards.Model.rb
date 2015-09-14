@@ -14,6 +14,7 @@ class OpenStudio::Model::Model
   require_relative 'Standards.ChillerElectricEIR'
   require_relative 'Standards.CoilCoolingDXTwoSpeed'
   require_relative 'Standards.CoilCoolingDXSingleSpeed'
+  require_relative 'Standards.CoilHeatingDXSingleSpeed'
   require_relative 'Standards.BoilerHotWater'
   require_relative 'Standards.AirLoopHVAC'
   require_relative 'Standards.WaterHeaterMixed'
@@ -34,12 +35,13 @@ class OpenStudio::Model::Model
     self.getFanVariableVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanConstantVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanOnOffs.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
-  
+
     # Unitary ACs
     self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
     self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
-    
+
     # Unitary HPs
+    self.getCoilHeatingDXSingleSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
   
     # Chillers
     self.getChillerElectricEIRs.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
@@ -92,6 +94,7 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_space_types.json'
     standards_files << 'OpenStudio_Standards_templates.json'
     standards_files << 'OpenStudio_Standards_unitary_acs.json'
+    standards_files << 'OpenStudio_Standards_unitary_hps.json'
 
     # Combine the data from the JSON files into a single hash
     standards_hash = {}

@@ -81,7 +81,7 @@
       "notes": "From DOE Pre-1980 Reference Building"
     },
     {
-      "name": "DXCOIL-NECB2011-REF-COOLPLFFPLR",
+      "name": "DXCOOL-NECB2011-REF-COOLPLFFPLR",
       "coeff_1": 0.0277,
       "coeff_2": 4.9151,
       "coeff_3": -8.184,
@@ -89,6 +89,46 @@
       "min_x": 0.7,
       "max_x": 1,
       "notes": "From NECB, curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-CAPFFLOW",
+      "coeff_1": 0.84,
+      "coeff_2": 0.16,
+      "coeff_3": 0,
+      "coeff_4": 0,
+      "min_x": 0.5,
+      "max_x": 1.5,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-CAPFT",
+      "coeff_1": 0.729,
+      "coeff_2": 0.031927,
+      "coeff_3": 0.0001364,
+      "coeff_4": -8.748e-06,
+      "min_x": -20,
+      "max_x": 20,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-EIRFT",
+      "coeff_1": 1.2183,
+      "coeff_2": -0.036117,
+      "coeff_3": 0.0014204,
+      "coeff_4": -2.6827e-05,
+      "min_x": -20,
+      "max_x": 20,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-PLFFPLR",
+      "coeff_1": 0.3696,
+      "coeff_2": 2.3362,
+      "coeff_3": -2.9577,
+      "coeff_4": 1.2596,
+      "min_x": 0.7,
+      "max_x": 1,
+      "notes": "From NECB 2011"
     },
     {
       "name": "Deli_Case:1_ MULTIDECKDIARYANDDELICASEMultiShelfVertical_LatentEnergyMult",
@@ -194,21 +234,21 @@
       "name": "Hospital Kitchen_Flr_5_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
       "coeff_1": 0.026526281,
       "coeff_2": 0.001078032,
-      "coeff_3": 6.02558e-05,
-      "coeff_4": 1.23732e-06,
-      "min_x": -35,
-      "max_x": 20,
-      "notes": "From Prototype Buildings"
-    },
-    {
-      "name": "Hospital Kitchen_Flr_5_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
-      "coeff_1": 0.026526281,
-      "coeff_2": 0.001078032,
       "coeff_3": -6.02558e-05,
       "coeff_4": 1.23732e-06,
       "min_x": -35,
       "max_x": 20,
       "notes": "From Reference Buildings"
+    },
+    {
+      "name": "Hospital Kitchen_Flr_5_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult",
+      "coeff_1": 0.026526281,
+      "coeff_2": 0.001078032,
+      "coeff_3": 6.02558e-05,
+      "coeff_4": 1.23732e-06,
+      "min_x": -35,
+      "max_x": 20,
+      "notes": "From Prototype Buildings"
     },
     {
       "name": "HotelLarge Kitchen_Flr_6_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",

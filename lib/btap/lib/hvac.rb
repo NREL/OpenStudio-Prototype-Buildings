@@ -2745,7 +2745,6 @@ module BTAP
             # boiler_fueltype choices match OS choices for Boiler component fuel type, i.e.
             # "NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"
 
-
             always_on = model.alwaysOnDiscreteSchedule
 
             # Create a hot water loop (if baseboard type is hydronic); hot water baseboards will be connected to this loop
@@ -2760,7 +2759,6 @@ module BTAP
             zones.each do |zone|
 
               air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
-
 
               air_loop.setName("#{zone.name} NECB System 3 PSZ")
 
@@ -2792,18 +2790,15 @@ module BTAP
 
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
                            
-
               case heating_coil_type
               when "Electric"           # electric coil
                 htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
-              
 
               when "Gas"
                 htg_coil = BTAP::Resources::HVAC::Plant::add_gas_heating_coil(model, always_on)
-            
 
               when "DX"
-                htg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil_heating(model, always_on)  
+                htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)  
                 supplemental_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
               else
                 raise("#{heating_coil_type} is not a valid heating coil type.)")
@@ -2811,14 +2806,11 @@ module BTAP
 
               #TO DO: other fuel-fired heating coil types? (not available in OpenStudio/E+ - may need to play with efficiency to mimic other fuel types)
 
-
             # Set up DX coil with NECB performance curve characteristics;
-
-              clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
+              clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 
               #oa_controller 
               oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
-             
 
               #oa_system 
               oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
@@ -2839,24 +2831,6 @@ module BTAP
               setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(13.0)
               setpoint_mgr_single_zone_reheat.addToNode(air_loop.supplyOutletNode)
 
-
-              #Create sensible heat exchanger
-#              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-#              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-#              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-#              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-#
-#              #Connect heat exchanger
-#              oa_node = oa_system.outboardOANode
-#              heat_exchanger.addToNode(oa_node.get)
-
-
               # Create a diffuser and attach the zone/diffuser pair to the air loop
               #diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,always_on)
               diffuser = BTAP::Resources::HVAC::Plant::add_diffuser(model, always_on)
@@ -2875,14 +2849,12 @@ module BTAP
                 #Connect baseboard coil to hot water loop
                 hw_loop.addDemandBranchForComponent(baseboard_coil)
 
-
                 zone_baseboard = BTAP::Resources::HVAC::ZoneEquipment::add_zone_baseboard_convective_water(model, always_on, baseboard_coil)
                 #add zone_baseboard to zone
                 zone_baseboard.addToThermalZone(zone)
               end
-
+              
             end  #zone loop
-
 
             return true
           end  #end add_sys3_single_zone_packaged_rooftop_unit_with_baseboard_heating
