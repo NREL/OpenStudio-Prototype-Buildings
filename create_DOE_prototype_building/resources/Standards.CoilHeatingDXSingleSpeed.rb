@@ -156,7 +156,6 @@ class OpenStudio::Model::CoilHeatingDXSingleSpeed
     
     # If specified as EER
     unless ac_props['minimum_energy_efficiency_ratio'].nil?
-      puts 'test1',ac_props['minimum_energy_efficiency_ratio']
       min_eer = ac_props['minimum_energy_efficiency_ratio']
       cop = eer_to_cop(min_eer)
       self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER")
