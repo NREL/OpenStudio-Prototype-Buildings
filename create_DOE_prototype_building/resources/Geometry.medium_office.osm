@@ -1,7 +1,7 @@
 
 OS:Version,
-  {618fba6e-2dac-4615-96d8-e582d4996456}, !- Handle
-  1.7.0;                                  !- Version Identifier
+  {e882c43b-7ff1-420b-a20c-faa0ad8b6d85}, !- Handle
+  1.8.3;                                  !- Version Identifier
 
 OS:Site,
   {4401af15-c546-44f8-96c5-410b73437a27}, !- Handle
@@ -101,7 +101,8 @@ OS:Space,
   0,                                      !- Z Origin {m}
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
-  Yes;                                    !- Part of Total Floor Area
+  Yes,                                    !- Part of Total Floor Area
+  ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:Surface,
   {ed837c7d-a8d1-48a6-8eef-6bed72d42925}, !- Handle
@@ -257,7 +258,8 @@ OS:Space,
   0,                                      !- Z Origin {m}
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
-  Yes;                                    !- Part of Total Floor Area
+  Yes,                                    !- Part of Total Floor Area
+  ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:Surface,
   {63743c59-278b-4607-b2a3-29b9e0721532}, !- Handle
@@ -357,7 +359,8 @@ OS:Space,
   0,                                      !- Z Origin {m}
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
-  Yes;                                    !- Part of Total Floor Area
+  Yes,                                    !- Part of Total Floor Area
+  ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:Surface,
   {ff6a02f2-f53d-444f-98b8-0a577fc698a1}, !- Handle
@@ -413,7 +416,8 @@ OS:Space,
   0,                                      !- Z Origin {m}
   ,                                       !- Building Story Name
   ,                                       !- Thermal Zone Name
-  Yes;                                    !- Part of Total Floor Area
+  Yes,                                    !- Part of Total Floor Area
+  ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:Surface,
   {366cd017-9214-406c-bf3a-de5e4e5f5140}, !- Handle
@@ -2122,7 +2126,13 @@ OS:Building,
   ,                                       !- Nominal Floor to Floor Height {m}
   ,                                       !- Space Type Name
   ,                                       !- Default Construction Set Name
-  ;                                       !- Default Schedule Set Name
+  ,                                       !- Default Schedule Set Name
+  ,                                       !- Standards Number of Stories
+  ,                                       !- Standards Number of Above Ground Stories
+  ,                                       !- Standards Building Type
+  ,                                       !- Standards Number of Living Units
+  ,                                       !- Relocatable
+  ;                                       !- Nominal Floor to Ceiling Height {m}
 
 OS:RunPeriod,
   {62304c4a-8407-4163-bae6-dba860197b4b}, !- Handle
