@@ -28,9 +28,9 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
    
     # get city name from weather file station
     site_location_obj = workspace.getObjectsByType("Site:Location".to_IddObjectType)
-    weather_station = site_location_obj[0].to_s.split(/\n/)[1]
-    city = weather_station.split[0]
-    
+    weather_station_line = site_location_obj[0].to_s.split(/\n/)[1]
+    weather_station = weather_station_line.split(/,/)[0]
+
     # read tariffs template idf file 
     tariff_template_file = File.open("#{File.dirname(__FILE__)}/resources/Tariff_Template.idf")
     tariff_template_file_content = tariff_template_file.read
@@ -47,7 +47,8 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     monthly_charges = ""
     elec_tariff = ""
     CSV.foreach(electricity_tariffs_file_csv, headers:true) do |tariff|
-      if(tariff["City"] == city)
+      if(weather_station.scan(tariff["City"]).size > 0)
+        city = tariff["City"]
         elec_tariff = tariff["Utility"]
         monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
@@ -88,7 +89,8 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     monthly_charges = ""
     gas_tariff = ""
     CSV.foreach(gas_tariffs_file_csv, headers:true) do |tariff|
-      if(tariff["City"] == city)
+      if(weather_station.scan(tariff["City"]).size > 0)
+        city = tariff["City"]
         gas_tariff = tariff["Utility"]
         monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
@@ -119,12 +121,12 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
 
     # if there was no matching electricity tariff for the city, then register the information
     if(elec_tariff == "")
-      runner.registerInfo("no electricity tariff in database for #{city}")
+      runner.registerInfo("no electricity tariff in database for #{weather_station}")
     end
 
     # if there was no matching gas tariff for the city, then register the information
     if(gas_tariff == "")
-      runner.registerInfo("no gas tariff in database for #{city}")
+      runner.registerInfo("no gas tariff in database for #{weather_station}")
     end
 
     # save new tariff idf file

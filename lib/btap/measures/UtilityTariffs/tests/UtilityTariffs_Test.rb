@@ -5,6 +5,8 @@ require "#{File.dirname(__FILE__)}/../../../lib/btap"
 
 class UtilityTariffsTest < MiniTest::Unit::TestCase
   model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/system_2.osm")
+  BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_PQ_Montreal.Intl.AP.716270_CWEC.epw").set_weather_file(model)
+
   # translate osm to idf
   ft = OpenStudio::EnergyPlus::ForwardTranslator.new
   workspace = ft.translateModel(model)
