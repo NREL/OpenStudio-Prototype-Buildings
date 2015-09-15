@@ -704,6 +704,9 @@ class OpenStudio::Model::Model
     stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(self,sa_temp_sch)    
     stpt_manager.addToNode(air_loop.supplyOutletNode)
     sizing_system = air_loop.sizingSystem
+    # sizing_system.setPreheatDesignTemperature(sys_dsn_prhtg_temp_c)
+    # sizing_system.setCentralCoolingDesignSupplyAirTemperature(sys_dsn_clg_sa_temp_c)
+    sizing_system.setCentralHeatingDesignSupplyAirTemperature(sys_dsn_htg_sa_temp_c)
     sizing_system.setSizingOption('Coincident')
     sizing_system.setAllOutdoorAirinCooling(false)
     sizing_system.setAllOutdoorAirinHeating(false)
@@ -713,12 +716,7 @@ class OpenStudio::Model::Model
     fan = OpenStudio::Model::FanVariableVolume.new(self,self.alwaysOnDiscreteSchedule)
     fan.setName("#{air_loop.name} Fan")
     fan.addToNode(air_loop.supplyInletNode)
-    
-    # Cooling coil
-    clg_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(self)
-    clg_coil.setName("#{air_loop.name} Clg Coil")
-    clg_coil.addToNode(air_loop.supplyInletNode)
-    
+
     # Heating coil - depends on whether heating is hot water or electric,
     # which is determined by whether or not a hot water loop is provided.
     if hot_water_loop.nil?
@@ -735,6 +733,11 @@ class OpenStudio::Model::Model
       htg_coil.addToNode(air_loop.supplyInletNode)
       hot_water_loop.addDemandBranchForComponent(htg_coil)
     end
+    
+    # Cooling coil
+    clg_coil = OpenStudio::Model::CoilCoolingDXTwoSpeed.new(self)
+    clg_coil.setName("#{air_loop.name} Clg Coil")
+    clg_coil.addToNode(air_loop.supplyInletNode)
     
     # Outdoor air intake system
     oa_intake_controller = OpenStudio::Model::ControllerOutdoorAir.new(self)
@@ -788,6 +791,7 @@ class OpenStudio::Model::Model
         min_damper_position = 0.2
         damper_action = 'Reverse'
       end
+
       # Determine whether or not to use the high minimum guess
       zone_oa_per_area = zone.outdoor_airflow_rate_per_area
       if zone_oa_per_area > 0.001 # 0.001 m^3/s*m^2 = .196 cfm/ft2
@@ -796,7 +800,9 @@ class OpenStudio::Model::Model
       else
         # Low OA zones
         terminal.setConstantMinimumAirFlowFraction(min_damper_position)
-      end      
+      end
+
+      terminal.setDamperHeatingAction(damper_action)
       
       air_loop.addBranchForZone(zone,terminal.to_StraightComponent)
 
@@ -2581,7 +2587,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_swh_loop(prototype_input, standards, type, ambient_temperature_thermal_zone=nil)
+  def add_swh_loop(prototype_input, standards, type, ambient_temperature_thermal_zone=nil, building_type=nil)
   
     puts "Adding water heater type = '#{type}'"
   
@@ -2626,8 +2632,12 @@ class OpenStudio::Model::Model
       swh_pump_motor_efficiency = 1
     end
 
-    if prototype_input['template'] == 'DOE Ref 1980-2004' or prototype_input['template'] == 'DOE Ref Pre-1980'
-      swh_pump = OpenStudio::Model::PumpVariableSpeed.new(self)
+    if building_type.nil? and ( prototype_input['template'] == 'DOE Ref 1980-2004' or prototype_input['template'] == 'DOE Ref Pre-1980' )
+      if building_type == 'Medium Office'
+        swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
+      else
+        swh_pump = OpenStudio::Model::PumpVariableSpeed.new(self)
+      end
     else
       swh_pump = OpenStudio::Model::PumpConstantSpeed.new(self)
     end
@@ -2940,6 +2950,7 @@ class OpenStudio::Model::Model
       'space_type' => space_type_name
     }
     data = find_object(self.standards['space_types'],search_criteria)
+    puts "#{data}"
     space = self.getSpaceByName(space_name)
     space = space.get
     space_area = OpenStudio.convert(space.floorArea,'m^2','ft^2').get   # ft2
@@ -3167,6 +3178,16 @@ class OpenStudio::Model::Model
     elevator_sch = self.add_schedule(prototype_input['building_elevator_schedule'])
     elevator_equipment.setSchedule(elevator_sch)
     elevator_equipment.setSpace(space)
+
+    unless prototype_input['building_elevator_fan_power'].nil?
+      elevator_fan_definition = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
+      elevator_fan_definition.setDesignLevel(prototype_input['building_elevator_fan_power'])
+
+      elevator_fan_equipment = OpenStudio::Model::ElectricEquipment.new(elevator_fan_definition)
+      elevator_fan_sch = self.add_schedule(prototype_input['building_elevator_fan_schedule'])
+      elevator_fan_equipment.setSchedule(elevator_fan_sch)
+      elevator_fan_equipment.setSpace(space)
+    end
     
   end
  
