@@ -344,6 +344,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
  
+    # Testing out the primary zones thing
+    # model.getBuildingStorys.each do |story|
+      # primary_zones = story.get_primary_thermal_zones
+      # OpenStudio::logFree(OpenStudio::Info, "openstudio.Standards.Model", "For #{story.name}, primary_zones = #{primary_zones}.")
+    # end
+    # log_msgs
+    # return true
+ 
     model.apply_multizone_vav_outdoor_air_sizing
  
     # Perform a sizing run
