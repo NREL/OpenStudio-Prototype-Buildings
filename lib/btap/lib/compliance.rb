@@ -893,7 +893,7 @@ module BTAP
         
 
         #Set building name to match archetype name.
-        BTAP::FileIO::set_name(model,"#{File.basename(idf_filename,'.idf')}_#{weather.state_province_region}_#{weather.city}_CZ-#{ BTAP::Compliance::NECB2011::get_climate_zone_name(weather.hdd18)}")
+        BTAP::FileIO::set_name(model,"#{File.basename(idf_filename,'.idf')}")
           
         #Set Building Stories
         BTAP::Geometry::BuildingStoreys::auto_assign_spaces_to_stories( model )
@@ -1213,18 +1213,24 @@ module BTAP
       end
       
       def self.set_zones_thermostat_schedule_based_on_space_type_schedules(model,runner = nil)
+        BTAP::runner_register("DEBUG","Start-set_zones_thermostat_schedule_based_on_space_type_schedules" , runner)
         model.getThermalZones.each do |zone|
+          BTAP::runner_register("DEBUG","\tThermalZone:#{zone.name}" , runner)
           array = []
           zone.spaces.each do |space|
-            array << BTAP::Compliance::NECB2011::determine_necb_schedule_type( space ).to_s
+            schedule_type = BTAP::Compliance::NECB2011::determine_necb_schedule_type( space ).to_s
+            BTAP::runner_register("DEBUG","space name/type:#{space.name}/#{schedule_type}" , runner)
+            array << schedule_type
           end
-          array = array.unique
+          array.uniq!
           if array.size > 1
             BTAP::runner_register("Error", "#{zone.name} has spaces with different schedule types. Please ensure that all the spaces are of the same schedule type A to I.",runner)  
             return false
           end
+          puts "NECB-#{array[0]}"
           zone.setThermostatSetpointDualSetpoint(model.getThermostatSetpointDualSetpointByName("NECB-#{array[0]}").get)
           BTAP::runner_register("Info","ThermalZone #{zone.name} set to DualSetpoint Schedule NECB-#{array[0]}",runner)
+          BTAP::runner_register("DEBUG","END-set_zones_thermostat_schedule_based_on_space_type_schedules" , runner)
         end
         
       end
@@ -1400,8 +1406,14 @@ module BTAP
 
         BTAP::Compliance::NECB2011::Data::SpaceTypeData.each do |spacetype|
           spacetype_name = space.spaceType.get.name  unless space.spaceType.empty?
+          #If it is a regular space type.
           if spacetype_name.to_s  == ("NECB-" + spacetype[0]).to_s
             return spacetype[2]
+          end
+          #if it is a wildcard space type the schedule is in the name ensure that 
+
+          if spacetype_name.to_s =~ /#{"NECB-" + spacetype[0]}-(\S)$/i
+            return $1
           end
         end
         raise ("Could not find space type #{space.spaceType.get.name  unless space.spaceType.empty?} as a valid NECB spacetype")
@@ -1436,7 +1448,7 @@ module BTAP
         
         
         #Array to store people objects
-        people_obj_array = []
+        schedule_type_array = []
         
         
         #This remove all ThermalZones in model 
@@ -1450,7 +1462,7 @@ module BTAP
         vented = true
         heated_only = true
         refrigerated = false
-        cooling_capacity = 20.0 #only after sizing run is completed. 
+        cooling_capacity = 19.0 #only after sizing run is completed. 
         
         
         #find the number of stories in the model. 
@@ -1481,8 +1493,7 @@ module BTAP
           case space_system_index
           when nil
           when 0
-            #These are spaces that are defined by whatever is closest to them. For now lets just store them and set system to 0. 
-            wildcard_spaces << space
+            #These are spaces are undefined...so they are unconditioned and have no loads other than infiltration and no systems
             system = 0
           when 1 #Assembly Area.
             if number_of_stories <= 4
@@ -1547,16 +1558,13 @@ module BTAP
           #get placement on floor, core or perimeter and if a top, bottom, middle or single story. 
           horizontal_placement, vertical_placement =  BTAP::Geometry::Spaces::get_space_placement( space )
           #dump all info into an array for debugging and iteration. 
-          unless space.spaceType.empty?
-            space_zoning_data_array << SpacezoningData.new(space,system,building_story, horizontal_placement,vertical_placement,space.spaceType.get.people)
-            people_obj_array << space.spaceType.get.people.first
-            if space.spaceType.empty? 
-              space_type_name = "undefined" 
-            else 
-              space_type_name = space.spaceType.get.name
-            end
+          unless space.spaceType.empty? or space.spaceType.get.name.to_s.include?("undefined")
+            space_zoning_data_array << SpacezoningData.new( space,system,building_story, horizontal_placement,vertical_placement,space.spaceType.get.people )
+            schedule_type_array <<  BTAP::Compliance::NECB2011::determine_necb_schedule_type( space ).to_s
           end
         end
+        #remove duplicates
+        schedule_type_array.uniq!
         
         #now lets apply the rules. 
         # Rule1 all zones must contain only the same schedule / occupancy schedule. 
@@ -1564,12 +1572,6 @@ module BTAP
         # Rule3 zones must not pass from floor to floor. They must be contained to a single floor or level. 
         # Rule4 Wildcard spaces will be associated with the nearest zone of similar schedule type in which is shared most of it's internal surface with.  
         # Rule5 NECB zones must contain spaces of similar system type only. 
-        
-        
-        #remove dupes.
-        people_obj_array.uniq!
-        name = nil
-        
 
         #Thermal zone hash
 
@@ -1582,38 +1584,39 @@ module BTAP
           model.getBuildingStorys.each do |story|
             #puts "Story:#{story}"
             story_counter = story_counter + 1
-            #iterate by people object
-            people_counter = 0 
-            people_obj_array.each do |people|
-              #puts "People:#{people}"
-              people_counter = people_counter + 1
+            #iterate by operation schedule type. 
+            schedule_type_array.each do |schedule_type|
               #iterate by horizontal location
               ["north","east","west","south","core"].each do |horizontal_placement|
                 #puts "horizontal_placement:#{horizontal_placement}"
                 space_array = Array.new
                 space_zoning_data_array.each do |space_info|
-
+                  #puts "Spacename: #{space_info.space.name}:#{space_info.space.spaceType.get.name}"
                   if space_info.system_number == system_number and 
+                      space_info.space.spaceType.get.name.get.include?("- undefined -") == false and
                       space_info.story == story and
-                      space_info.people_obj.first == people and 
+                      BTAP::Compliance::NECB2011::determine_necb_schedule_type(space_info.space).to_s == schedule_type and
                       space_info.horizontal_placement == horizontal_placement
-                    system_number.to_s + story_counter.to_s + people_counter.to_s + horizontal_placement
-                    space_array << space_info.space
 
+                    space_array << space_info.space
                   end
                 end
                 #create Thermal Zone if space_array is not empty.
                 if space_array.size > 0
-
                   #create new zone and add the spaces to it. 
+                  name = "Sys-#{system_number.to_s} Flr-#{story_counter.to_s} Sch-#{schedule_type.to_s} HPlcmt-#{horizontal_placement}"
                   thermal_zone = BTAP::Geometry::Zones::create_thermal_zone(model, space_array)
+                  thermal_zone.setAttribute("name",name)
+                  BTAP::runner_register("INFO", "ThermalZone:#{name} Created with the following spaces:", runner)
+                  space_array.each do |space|
+                    BTAP::runner_register("DEBUG","space name/type:#{space.name}:#{space.spaceType.get.name}" , runner)
+                  end
+                  
                   #default it to ideal air system. 
                   thermal_zone.setUseIdealAirLoads(true)
                   #store zone in 
                   system_zone_array[system_number] << thermal_zone
-                  #construct zone name. 
-                  name = "Sys-#{system.to_s} Flr-#{story_counter.to_s} Sch-#{people_counter.to_s} HPlcmt-#{horizontal_placement}"
-                  thermal_zone.setAttribute("name",name)
+
                 end
               end
             end
