@@ -67,6 +67,11 @@ class OpenStudio::Model::Model
     site.setTimeZone(weather_time)
     site.setElevation(weather_elev)
 
+    # Set climate zone
+    short_climate_zone = climate_zone[climate_zone.length-2,climate_zone.length]
+    climateZones = self.getClimateZones
+    climateZones.setClimateZone("ASHRAE",short_climate_zone)
+
     #Add or update ground temperature data
     ground_temp_vals = self.find_object(standards["ground_temperatures"], {'template'=>building_vintage, 'climate_zone'=>climate_zone, 'building_type'=>building_type})
     if ground_temp_vals && ground_temp_vals['jan']
