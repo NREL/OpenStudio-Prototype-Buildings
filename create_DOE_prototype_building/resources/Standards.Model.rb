@@ -1269,6 +1269,60 @@ class OpenStudio::Model::Model
     end
     
   end
+
+  def get_story_for_nominal_z_coordinate(minz)
+
+    self.getBuildingStorys.each do |story|
+      z = story.nominalZCoordinate
+      if not z.empty?
+        if minz == z.get
+          return story
+        end
+      end
+    end
+
+    story = OpenStudio::Model::BuildingStory.new(self)
+    story.setNominalZCoordinate(minz)
+    return story
+  end
+
+  # this will create building stories and assign spaces to them.
+  # won't affect simulation results directly but can be used by downstream measures that use the story object
+  def assign_spaces_to_stories()
+
+    # get all spaces
+    spaces = self.getSpaces
+
+    # make has of spaces and minz values
+    sorted_spaces = Hash.new
+    spaces.each do |space|
+      # loop through space surfaces to find min z value
+      z_points = []
+      space.surfaces.each do |surface|
+        surface.vertices.each do |vertex|
+          z_points << vertex.z
+        end
+      end
+      minz = z_points.min + space.zOrigin
+      sorted_spaces[space] = minz
+    end
+
+    # pre-sort spaces
+    sorted_spaces = sorted_spaces.sort{|a,b| a[1]<=>b[1]}
+
+    # this should take the sorted list and make and assign stories
+    sorted_spaces.each do |space|
+      space_obj = space[0]
+      space_minz = space[1]
+      if space_obj.buildingStory.empty?
+
+        story = get_story_for_nominal_z_coordinate(space_minz)
+        space_obj.setBuildingStory(story)
+
+      end
+    end
+
+  end
   
   private
 

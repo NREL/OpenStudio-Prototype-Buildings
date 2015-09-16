@@ -281,6 +281,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     model.add_geometry(geometry_file)
     model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
+    model.assign_spaces_to_stories
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
     
     if building_type == "SmallHotel"
