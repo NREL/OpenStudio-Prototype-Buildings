@@ -104,13 +104,12 @@ class OpenStudio::Model::BoilerHotWater
     
    # for NECB, check if modulating boiler required
    # TO DO: logic for 2 stage boilers when heating cap > 176 kW and < 352 kW
-   if template = 'NECB 2011'      
+   if template == 'NECB 2011'      
       if capacity_w >= 352000 
         self.setBoilerFlowMode('LeavingSetpointModulated')
         self.setMinimumPartLoadRatio(0.25)
       end
    end  # NECB 2011
-    
     
   end
   

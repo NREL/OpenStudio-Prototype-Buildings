@@ -39,8 +39,10 @@ class OpenStudio::Model::FanConstantVolume
     end
     
     # Find the motor that meets these size criteria
+    mod_template = template.dup
+    if(mod_template == 'NECB 2011') then mod_template = template+'-CONSTANT' end
     search_criteria = {
-    'template' => template,
+    'template' => mod_template,
     'number_of_poles' => 4.0,
     'type' => 'Enclosed',
     }
@@ -58,7 +60,7 @@ class OpenStudio::Model::FanConstantVolume
     self.setMotorEfficiency(motor_eff)
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.FanConstantVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(2)}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
-    
+
     return true
     
   end

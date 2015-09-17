@@ -4,7 +4,7 @@ release_mode = false
 folder = "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/"
 
 if release_mode == true
-  #Copy BTAP files to measure from lib folder. Use this to create independant measure. 
+  #Copy BTAP files to measure from lib folder. Use this to create independent measure. 
   Dir.glob("#{folder}/**/*rb").each do |file|
     FileUtils.cp(file, File.dirname(__FILE__))
   end

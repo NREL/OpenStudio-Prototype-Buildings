@@ -1,6 +1,16 @@
 {
   "curve_cubics": [
     {
+      "name": "BOILER-EFFFPLR-NECB2011",
+      "coeff_1": 0.2901,
+      "coeff_2": 2.6664,
+      "coeff_3": -3.764,
+      "coeff_4": 1.8241,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
+    },
+    {
       "name": "Bakery_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult",
       "coeff_1": 0.020376,
       "coeff_2": 0.00024378,
@@ -19,16 +29,6 @@
       "min_x": 0,
       "max_x": 1,
       "notes": "From DOE Reference Building"
-    },
-    {
-      "name": "Boiler Efficiency PLR Curve",
-      "coeff_1": 0.2901,
-      "coeff_2": 2.6664,
-      "coeff_3": -3.764,
-      "coeff_4": 1.8241,
-      "min_x": 0,
-      "max_x": 1,
-      "notes": "From NECB 2011"
     },
     {
       "name": "Boiler with Minimum Turndown",

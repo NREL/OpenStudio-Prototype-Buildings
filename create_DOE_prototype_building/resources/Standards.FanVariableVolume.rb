@@ -34,8 +34,10 @@ class OpenStudio::Model::FanVariableVolume
     allowed_hp = brake_hp * 1.1 # Per PNNL document #TODO add reference
     
     # Find the motor that meets these size criteria
+    mod_template = template.dup
+    if(mod_template == 'NECB 2011') then mod_template = mod_template+'-VARIABLE' end
     search_criteria = {
-    'template' => template,
+    'template' => mod_template,
     'number_of_poles' => 4.0,
     'type' => 'Enclosed',
     }
@@ -53,7 +55,7 @@ class OpenStudio::Model::FanVariableVolume
     self.setMotorEfficiency(motor_eff)
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.FanVariableVolume', "For #{template}: #{self.name}: allowed_hp = #{allowed_hp.round(2)}HP; motor eff = #{(motor_eff*100).round(2)}%; total fan eff = #{(total_fan_eff*100).round}%")
-    
+
     return true
     
   end
