@@ -371,7 +371,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
     
     # Add daylighting controls per standard
-    # TODO: There are some bugs in the function
+    # only four zones in large hotel have daylighting controls
+    # todo: YXC to merge to the main function
     if building_type != "LargeHotel"
       model.addDaylightingControls
     end
