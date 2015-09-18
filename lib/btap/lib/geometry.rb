@@ -1179,6 +1179,30 @@ module BTAP
         return model
       end
 
+      def self.create_shape_aspect_ratio(model,
+          aspect_ratio = 0.5,
+          floor_area = 100.0,
+          rotation = 0.0,
+          num_floors = 3,
+          floor_to_floor_height = 3.8,
+          plenum_height = 1,
+          perimeter_zone_depth = 4.57
+        )
+        #determine l and w.
+        length = MATH::sqrt( floor_area / aspect_ratio  )
+        width = MATH::sqrt(  floor_area *  aspect_ratio )
+        BTAP::Geometry::Wizards::create_shape_rectangle(model,
+          length,
+          width,
+          num_floors,
+          floor_to_floor_height,
+          plenum_height,
+          perimeter_zone_depth
+        )
+        BTAP::Geometry::rotate_model(model, rotation)
+      end
+      
+      
       def self.create_shape_rectangle(model,
           length = 100.0,
           width = 100.0,
