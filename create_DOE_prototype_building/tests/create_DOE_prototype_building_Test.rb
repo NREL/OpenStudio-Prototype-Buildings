@@ -999,9 +999,9 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   if hostname == "yxc_lbnl"
     def test_case
       # RetailStandalone, LargeHotel
-      bldg_types = ['RetailStandalone']
+      bldg_types = ['RetailStripmall']
       vintages = ['90.1-2010']
-      climate_zones =['ASHRAE 169-2006-8A']
+      climate_zones =['ASHRAE 169-2006-2A']
 
       all_failures = []
 
