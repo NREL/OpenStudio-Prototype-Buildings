@@ -998,10 +998,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # For Yixing Chen in LBNL
   if hostname == "yxc_lbnl"
     def test_case
-      # RetailStandalone, LargeHotel
-      bldg_types = ['RetailStripmall']
+      # RetailStandalone, LargeHotel,RetailStripmall
+      bldg_types = ['LargeHotel']
       vintages = ['90.1-2010']
-      climate_zones =['ASHRAE 169-2006-2A']
+      climate_zones =['ASHRAE 169-2006-4A']
 
       all_failures = []
 
