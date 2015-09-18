@@ -603,6 +603,36 @@ class OpenStudio::Model::Model
       nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
       nondimming_ext_lts.setControlOption('AstronomicalClock')
     end
+
+    # Fuel Equipment, As Exterior:FuelEquipment is not supported by OpenStudio yet,
+    # temporarily use Exterior:Lights and set the control option to ScheduleNameOnly
+    # todo: change it to Exterior:FuelEquipment when OpenStudio supported it.
+    unless prototype_input['exterior_fuel_equipment1_power'].nil?
+      fuel_ext_power = prototype_input['exterior_fuel_equipment1_power']
+      fuel_ext_sch_name = prototype_input['exterior_fuel_equipment1_schedule']
+      fuel_ext_name = 'Fuel equipment 1'
+      fuel_ext_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      fuel_ext_def.setName("#{fuel_ext_name} Def")
+      fuel_ext_def.setDesignLevel(fuel_ext_power)
+      fuel_ext_sch = self.add_schedule(fuel_ext_sch_name)
+      fuel_ext_lts = OpenStudio::Model::ExteriorLights.new(fuel_ext_def, fuel_ext_sch)
+      fuel_ext_lts.setName("#{fuel_ext_name}")
+      fuel_ext_lts.setControlOption('ScheduleNameOnly')
+    end
+
+    unless prototype_input['exterior_fuel_equipment2_power'].nil?
+      fuel_ext_power = prototype_input['exterior_fuel_equipment2_power']
+      fuel_ext_sch_name = prototype_input['exterior_fuel_equipment2_schedule']
+      fuel_ext_name = 'Fuel equipment 2'
+      fuel_ext_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      fuel_ext_def.setName("#{fuel_ext_name} Def")
+      fuel_ext_def.setDesignLevel(fuel_ext_power)
+      fuel_ext_sch = self.add_schedule(fuel_ext_sch_name)
+      fuel_ext_lts = OpenStudio::Model::ExteriorLights.new(fuel_ext_def, fuel_ext_sch)
+      fuel_ext_lts.setName("#{fuel_ext_name}")
+      fuel_ext_lts.setControlOption('ScheduleNameOnly')
+    end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding exterior lights')
     
     return true
