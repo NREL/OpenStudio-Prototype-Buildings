@@ -1,0 +1,49 @@
+baseline_index,building_type,vintage_name,measure_id,sat_reset_enabled,sat_reset_outdoor_high_temperature,sat_reset_outdoor_low_temperature,sat_reset_setpoint_at_outdoor_high_temperature,sat_reset_setpoint_at_outdoor_low_temperature,cost_per_building
+1,Barracks,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,10864
+2,Fire Hall,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,2760
+3,Food Service,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+4,Food Service,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+5,Hangar,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,7243
+6,Hangar,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,7243
+7,Hangar,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,7243
+8,Maintenance Shop,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+9,Maintenance Shop,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+10,Maintenance Shop-Small,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+11,Maintenance Shop-Small,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+12,Maintenance Shop-Small,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+13,Office,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,18106
+14,Office,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,18106
+15,Office,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,18106
+16,Office-Small,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+17,Office-Small,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+18,Office-Small,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+19,Recreation Center,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,32591
+20,Storage Building,1959-pre,NA,NA,NA,NA,NA,NA,NA
+21,Storage Building,1960-1979,NA,NA,NA,NA,NA,NA,NA
+22,Storage Building,1980-2004,NA,NA,NA,NA,NA,NA,NA
+23,Storage Building,2005-2014,NA,NA,NA,NA,NA,NA,NA
+24,Training Building,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+25,Training Building,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+26,Training Building,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+27,Vehicle Garage,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,9315
+28,Vehicle Garage,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,9315
+NA,Barracks,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,10864
+NA,Barracks,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,10864
+30,Barracks,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,10864
+NA,Fire Hall,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,2760
+NA,Fire Hall,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,2760
+31,Fire Hall,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,2760
+NA,Food Service,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+NA,Food Service,1980-2004,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+29,Hangar,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,7243
+NA,Maintenance Shop,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+NA,Maintenance Shop,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+NA,Maintenance Shop-Small,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,3621
+NA,Office,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,18106
+NA,Office-Small,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+NA,Recreation Center,1959-pre,air_temp_reset_enabled,TRUE,24,10,12.8,24,32591
+NA,Recreation Center,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,32591
+NA,Recreation Center,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,32591
+NA,Training Building,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,14485
+NA,Vehicle Garage,1960-1979,air_temp_reset_enabled,TRUE,24,10,12.8,24,9315
+NA,Vehicle Garage,2005-2014,air_temp_reset_enabled,TRUE,24,10,12.8,24,9315

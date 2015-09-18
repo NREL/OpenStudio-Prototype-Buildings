@@ -1,0 +1,97 @@
+baseline_index,building_type,vintage_name,measure_id,hw_boiler_nominal_thermal_efficiency,hw_boiler_flow_mode,hw_boiler_curve,hw_boiler_efficiency_curve_temperature_evaluation_variable,hw_boiler_reset_enabled,hw_boiler_reset_highsupplytemp,hw_boiler_reset_outsidehighsupplytemp,hw_boiler_reset_lowsupplytemp,hw_boiler_reset_outsidelowsupplytemp,cost_per_building
+1,Barracks,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+2,Fire Hall,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+3,Food Service,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+4,Food Service,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+5,Hangar,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,175036
+6,Hangar,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,175036
+7,Hangar,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+8,Maintenance Shop,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+9,Maintenance Shop,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+10,Maintenance Shop-Small,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+11,Maintenance Shop-Small,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+12,Maintenance Shop-Small,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+13,Office,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,175036
+14,Office,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+15,Office,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+19,Recreation Center,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+24,Training Building,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+25,Training Building,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+26,Training Building,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+27,Vehicle Garage,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+28,Vehicle Garage,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+NA,Barracks,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+NA,Barracks,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+30,Barracks,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+NA,Fire Hall,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+NA,Fire Hall,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+31,Fire Hall,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,12022
+NA,Food Service,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+NA,Food Service,1980-2004,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+29,Hangar,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+NA,Maintenance Shop,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+NA,Maintenance Shop,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,12022
+NA,Maintenance Shop-Small,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+NA,Office,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,33911
+NA,Recreation Center,1959-pre,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,175036
+NA,Recreation Center,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,175036
+NA,Recreation Center,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+NA,Training Building,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+NA,Vehicle Garage,1960-1979,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,67292
+NA,Vehicle Garage,2005-2014,boiler_eff_upgrade,0.9,NA,condensing,LeavingBoiler,FALSE,NA,NA,NA,NA,12022
+1,Barracks,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+2,Fire Hall,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+3,Food Service,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+4,Food Service,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+5,Hangar,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+6,Hangar,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+7,Hangar,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+8,Maintenance Shop,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+9,Maintenance Shop,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+10,Maintenance Shop-Small,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+11,Maintenance Shop-Small,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+12,Maintenance Shop-Small,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+13,Office,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+14,Office,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+15,Office,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+16,Office-Small,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+17,Office-Small,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+18,Office-Small,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+19,Recreation Center,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+24,Training Building,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+25,Training Building,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+26,Training Building,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+27,Vehicle Garage,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+28,Vehicle Garage,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Barracks,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Barracks,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+30,Barracks,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Fire Hall,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Fire Hall,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+31,Fire Hall,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Food Service,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Food Service,1980-2004,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+29,Hangar,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Maintenance Shop,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Maintenance Shop,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Maintenance Shop-Small,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Office,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Office-Small,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Recreation Center,1959-pre,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Recreation Center,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Recreation Center,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Training Building,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Vehicle Garage,1960-1979,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+NA,Vehicle Garage,2005-2014,boiler_reset,NA,LeavingSetpointModulated,atmospheric,NA,TRUE,82,-25,40,20,957
+16,Office-Small,1960-1979,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0
+17,Office-Small,1980-2004,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0
+18,Office-Small,2005-2014,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0
+20,Storage Building,1959-pre,NA,NA,NA,atmospheric,NA,NA,NA,NA,NA,NA,NA
+20,Storage Building,1959-pre,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0
+21,Storage Building,1960-1979,NA,NA,NA,atmospheric,NA,NA,NA,NA,NA,NA,NA
+21,Storage Building,1960-1979,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0
+22,Storage Building,1980-2004,NA,NA,NA,atmospheric,NA,NA,NA,NA,NA,NA,NA
+22,Storage Building,1980-2004,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0
+23,Storage Building,2005-2014,NA,NA,NA,atmospheric,NA,NA,NA,NA,NA,NA,NA
+23,Storage Building,2005-2014,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0
+NA,Office-Small,1959-pre,NA,NA,NA,condensing,NA,FALSE,NA,NA,NA,NA,0

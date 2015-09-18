@@ -2745,7 +2745,6 @@ module BTAP
             # boiler_fueltype choices match OS choices for Boiler component fuel type, i.e.
             # "NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"
 
-
             always_on = model.alwaysOnDiscreteSchedule
 
             # Create a hot water loop (if baseboard type is hydronic); hot water baseboards will be connected to this loop
@@ -2760,7 +2759,6 @@ module BTAP
             zones.each do |zone|
 
               air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
-
 
               air_loop.setName("#{zone.name} NECB System 3 PSZ")
 
@@ -2792,18 +2790,15 @@ module BTAP
 
               fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
                            
-
               case heating_coil_type
               when "Electric"           # electric coil
                 htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
-              
 
               when "Gas"
                 htg_coil = BTAP::Resources::HVAC::Plant::add_gas_heating_coil(model, always_on)
-            
 
               when "DX"
-                htg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil_heating(model, always_on)  
+                htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)  
                 supplemental_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
               else
                 raise("#{heating_coil_type} is not a valid heating coil type.)")
@@ -2811,14 +2806,11 @@ module BTAP
 
               #TO DO: other fuel-fired heating coil types? (not available in OpenStudio/E+ - may need to play with efficiency to mimic other fuel types)
 
-
             # Set up DX coil with NECB performance curve characteristics;
-
-              clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
+              clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 
               #oa_controller 
               oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
-             
 
               #oa_system 
               oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
@@ -2839,24 +2831,6 @@ module BTAP
               setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(13.0)
               setpoint_mgr_single_zone_reheat.addToNode(air_loop.supplyOutletNode)
 
-
-              #Create sensible heat exchanger
-#              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-#              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-#              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-#              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-#
-#              #Connect heat exchanger
-#              oa_node = oa_system.outboardOANode
-#              heat_exchanger.addToNode(oa_node.get)
-
-
               # Create a diffuser and attach the zone/diffuser pair to the air loop
               #diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,always_on)
               diffuser = BTAP::Resources::HVAC::Plant::add_diffuser(model, always_on)
@@ -2875,14 +2849,12 @@ module BTAP
                 #Connect baseboard coil to hot water loop
                 hw_loop.addDemandBranchForComponent(baseboard_coil)
 
-
                 zone_baseboard = BTAP::Resources::HVAC::ZoneEquipment::add_zone_baseboard_convective_water(model, always_on, baseboard_coil)
                 #add zone_baseboard to zone
                 zone_baseboard.addToThermalZone(zone)
               end
-
+              
             end  #zone loop
-
 
             return true
           end  #end add_sys3_single_zone_packaged_rooftop_unit_with_baseboard_heating
@@ -3069,19 +3041,19 @@ module BTAP
 
             if ( baseboard_type == "Hot Water" ) || ( heating_coil_type == "Hot Water") then
 
-              hw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+              hw_loop =  OpenStudio::Model::PlantLoop.new(model)
               BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_hw_loop_with_components(model,hw_loop,boiler_fueltype, always_on)
 
             end  #of if statement
 
             # Chilled Water Plant
 
-            chw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+            chw_loop = OpenStudio::Model::PlantLoop.new(model)
             chiller = BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_chw_loop_with_components(model,chw_loop,chiller_type)
 
             # Condenser System
 
-            cw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+            cw_loop = OpenStudio::Model::PlantLoop.new(model)
             ctower = BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_cw_loop_with_components(model,cw_loop,chiller)
             
             # Make a Packaged VAV w/ PFP Boxes for each story of the building
@@ -3095,8 +3067,6 @@ module BTAP
               sizingSystem.setCentralHeatingDesignSupplyAirTemperature(13.0)
 
               fan = OpenStudio::Model::FanVariableVolume.new(model,always_on)
-              fan.setPressureRise(1000)
-              fan.setFanEfficiency(0.55)
               fan.setFanPowerMinimumFlowRateInputMethod("Fraction")
               fan.setFanPowerCoefficient4(0.0)
               fan.setFanPowerCoefficient5(0.0)
@@ -3128,9 +3098,9 @@ module BTAP
               chw_loop.addDemandBranchForComponent(clg_coil)
 
               oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
-
+              
               oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,oa_controller)
-
+              
               # Add the components to the air loop
               # in order from closest to zone to furthest from zone
               # TODO: still need to define the return fan (tried to access the air loop "returnAirNode" without success)
@@ -3157,7 +3127,7 @@ module BTAP
 
               # TO-do ask Kamel about zonal assignments per storey. 
 
-              # Make a VAV terminal with HW reheat for each zone on this story that is in instersection with the zones array. 
+              # Make a VAV terminal with HW reheat for each zone on this story that is in intersection with the zones array. 
               # and hook the reheat coil to the HW loop
               ( BTAP::Geometry::BuildingStoreys::get_zones_from_storey(story) & zones).each do |zone|
                 if(heating_coil_type == "Hot Water")
@@ -3190,7 +3160,7 @@ module BTAP
             sizing_plant.setLoopDesignTemperatureDifference(16.0)
 
             #pump 
-            pump = BTAP::Resources::HVAC::Plant::add_pump_const_speed(model)
+            pump = OpenStudio::Model::PumpConstantSpeed.new(model)
             #TODO: the keyword "setPumpFlowRateSchedule" does not seem to work. A message
             #was sent to NREL to let them know about this. Once there is a fix for this,
             #use the proper pump schedule depending on whether we have two-pipe or four-pipe
@@ -3199,14 +3169,14 @@ module BTAP
 #            pump.setPumpFlowRateSchedule(pump_flow_sch)
 
             #boiler 
-            boiler = BTAP::Resources::HVAC::Plant::add_hw_boiler(model)                     
+            boiler = OpenStudio::Model::BoilerHotWater.new(model)                   
             boiler.setFuelType(boiler_fueltype)
 
             #boiler_bypass_pipe 
-            boiler_bypass_pipe = BTAP::Resources::HVAC::Plant::add_adiabatic_pipe(model)
-
+            boiler_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(model)
+    
             #supply_outlet_pipe 
-            supply_outlet_pipe = BTAP::Resources::HVAC::Plant::add_adiabatic_pipe(model)
+            supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(model)
 
             # Add the components to the hot water loop
             hw_supply_inlet_node = hw_loop.supplyInletNode
@@ -3219,7 +3189,7 @@ module BTAP
 
             # Add a setpoint manager to control the
             # hot water based on outdoor temperature
-            hw_oareset_stpt_manager = BTAP::Resources::HVAC::Plant::add_oareset_setpoint_mgr(model)
+            hw_oareset_stpt_manager = OpenStudio::Model::SetpointManagerOutdoorAirReset.new(model)
             hw_oareset_stpt_manager.setControlVariable("Temperature")
             hw_oareset_stpt_manager.setSetpointatOutdoorLowTemperature(82.0)
             hw_oareset_stpt_manager.setOutdoorLowTemperature(-16.0)
@@ -3238,22 +3208,17 @@ module BTAP
             sizing_plant.setLoopDesignTemperatureDifference(6.0)       
 
             #pump = OpenStudio::Model::PumpConstantSpeed.new(model)
-            chw_pump = BTAP::Resources::HVAC::Plant::add_pump_const_speed(model)
+            chw_pump = OpenStudio::Model::PumpConstantSpeed.new(model)
 
-            clg_cap_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
-            eir_f_of_avail_to_nom_cap = OpenStudio::Model::CurveBiquadratic.new(model)
-            eir_f_of_plr = OpenStudio::Model::CurveQuadratic.new(model)
-
-            chiller = BTAP::Resources::HVAC::Plant::add_elec_chiller(model,
-            clg_cap_f_of_temp,eir_f_of_avail_to_nom_cap,eir_f_of_plr)
+            chiller = OpenStudio::Model::ChillerElectricEIR.new(model)
             chiller.setCondenserType("WaterCooled")
             # update name so it's in agreement with method used in Standards file
             chiller_name = chiller.name.to_s + " WaterCooled #{chiller_type}"
             chiller.setName(chiller_name)
-
-            chiller_bypass_pipe = BTAP::Resources::HVAC::Plant::add_adiabatic_pipe(model)
-
-            chw_supply_outlet_pipe = BTAP::Resources::HVAC::Plant::add_adiabatic_pipe(model)
+            
+            chiller_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(model)
+            
+            chw_supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(model)
 
             # Add the components to the chilled water loop
             chw_supply_inlet_node = chw_loop.supplyInletNode
@@ -3267,7 +3232,7 @@ module BTAP
             # chilled water to a constant temperature
             chw_t_c = 7.0
             chw_t_sch = BTAP::Resources::Schedules::create_annual_constant_ruleset_schedule(model, "CHW Temp", "Temperature", chw_t_c)
-            chw_t_stpt_manager = BTAP::Resources::HVAC::Plant::add_sched_setpoint_mgr(model,chw_t_sch)
+            chw_t_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model,chw_t_sch)
             chw_t_stpt_manager.addToNode(chw_supply_outlet_node)
 
             return chiller
@@ -3282,15 +3247,15 @@ module BTAP
             cw_sizing_plant.setDesignLoopExitTemperature(29.0)
             cw_sizing_plant.setLoopDesignTemperatureDifference(6.0)
 
-            cw_pump = BTAP::Resources::HVAC::Plant::add_pump_const_speed(model)
+            cw_pump = OpenStudio::Model::PumpConstantSpeed.new(model)
 
-            clg_tower = BTAP::Resources::HVAC::Plant::add_1speed_cooling_tower(model)
+            clg_tower = OpenStudio::Model::CoolingTowerSingleSpeed.new(model)
 
             # TO DO: Need to define and set cooling tower curves
 
-            clg_tower_bypass_pipe = BTAP::Resources::HVAC::Plant::add_adiabatic_pipe(model)
+            clg_tower_bypass_pipe = OpenStudio::Model::PipeAdiabatic.new(model)
 
-            cw_supply_outlet_pipe = BTAP::Resources::HVAC::Plant::add_adiabatic_pipe(model)
+            cw_supply_outlet_pipe = OpenStudio::Model::PipeAdiabatic.new(model)
 
             # Add the components to the condenser water loop
             cw_supply_inlet_node = cw_loop.supplyInletNode
@@ -3305,7 +3270,7 @@ module BTAP
             # condenser water to constant temperature
             cw_t_c = 29.0
             cw_t_sch = BTAP::Resources::Schedules::create_annual_constant_ruleset_schedule(model, "CW Temp", "Temperature", cw_t_c)
-            cw_t_stpt_manager = BTAP::Resources::HVAC::Plant::add_sched_setpoint_mgr(model, cw_t_sch)
+            cw_t_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model, cw_t_sch)
             cw_t_stpt_manager.addToNode(cw_supply_outlet_node)
 
             return clg_tower

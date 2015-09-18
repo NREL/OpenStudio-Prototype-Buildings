@@ -225,7 +225,7 @@
       "minimum_annual_fuel_utilization_efficiency": 0.85,
       "minimum_thermal_efficiency": null,
       "minimum_combustion_efficiency": null,
-      "efffplr": "Boiler Efficiency PLR Curve",
+      "efffplr": "BOILER-EFFFPLR-NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -237,7 +237,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": 0.83,
       "minimum_combustion_efficiency": null,
-      "efffplr": "Boiler Efficiency PLR Curve",
+      "efffplr": "BOILER_EFFFPLR_NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -249,7 +249,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": null,
       "minimum_combustion_efficiency": 0.833,
-      "efffplr": "Boiler Efficiency PLR Curve",
+      "efffplr": "BOILER-EFFFPLR-NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -261,7 +261,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": 1,
       "minimum_combustion_efficiency": null,
-      "efffplr": "Boiler Efficiency PLR Curve",
+      "efffplr": "BOILER_EFFFPLR_NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -273,7 +273,7 @@
       "minimum_annual_fuel_utilization_efficiency": 0.847,
       "minimum_thermal_efficiency": null,
       "minimum_combustion_efficiency": null,
-      "efffplr": "Boiler Efficiency PLR Curve",
+      "efffplr": "BOILER-EFFFPLR-NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -285,7 +285,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": 0.834,
       "minimum_combustion_efficiency": null,
-      "efffplr": "Boiler Efficiency PLR Curve",
+      "efffplr": "BOILER_EFFFPLR_NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -297,7 +297,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": null,
       "minimum_combustion_efficiency": 0.858,
-      "efffplr": "Boiler Efficiency PLR Curve",
+      "efffplr": "BOILER-EFFFPLR-NECB2011",
       "notes": "From NECB 2011"
     }
   ]

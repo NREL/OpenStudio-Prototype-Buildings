@@ -2,6 +2,19 @@
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
 
 require "csv"
+release_mode = false
+folder = "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/"
+
+if release_mode == true
+  #Copy BTAP files to measure from lib folder. Use this to create independant measure. 
+  Dir.glob("#{folder}/**/*rb").each do |file|
+    FileUtils.cp(file, File.dirname(__FILE__))
+  end
+  require "#{File.dirname(__FILE__)}/btap.rb"
+else
+  #For only when using git hub development environment.
+  require "#{File.dirname(__FILE__)}/../../../../lib/btap/lib/btap.rb"
+end
 
 #start the measure
 class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
@@ -28,9 +41,9 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
    
     # get city name from weather file station
     site_location_obj = workspace.getObjectsByType("Site:Location".to_IddObjectType)
-    weather_station = site_location_obj[0].to_s.split(/\n/)[1]
-    city = weather_station.split[0]
-    
+    weather_station_line = site_location_obj[0].to_s.split(/\n/)[1]
+    weather_station = weather_station_line.split(/,/)[0]
+
     # read tariffs template idf file 
     tariff_template_file = File.open("#{File.dirname(__FILE__)}/resources/Tariff_Template.idf")
     tariff_template_file_content = tariff_template_file.read
@@ -47,7 +60,8 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     monthly_charges = ""
     elec_tariff = ""
     CSV.foreach(electricity_tariffs_file_csv, headers:true) do |tariff|
-      if(tariff["City"] == city)
+      if(weather_station.scan(tariff["City"]).size > 0)
+        city = tariff["City"]
         elec_tariff = tariff["Utility"]
         monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
@@ -88,7 +102,9 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     monthly_charges = ""
     gas_tariff = ""
     CSV.foreach(gas_tariffs_file_csv, headers:true) do |tariff|
-      if(tariff["City"] == city)
+      if(weather_station.scan(tariff["City"]).size > 0)
+        city = tariff["City"]
+        BTAP::runner_register("INFO", "Found database match for weather_station :#{weather_station} and city:#{city}" ,runner)
         gas_tariff = tariff["Utility"]
         monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
@@ -119,12 +135,18 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
 
     # if there was no matching electricity tariff for the city, then register the information
     if(elec_tariff == "")
-      runner.registerInfo("no electricity tariff in database for #{city}")
+      BTAP::runner_register("ERROR", "no electricity tariff in database for #{weather_station}",runner)
+      #fail the measure
+      return false
     end
 
     # if there was no matching gas tariff for the city, then register the information
     if(gas_tariff == "")
-      runner.registerInfo("no gas tariff in database for #{city}")
+      runner.registerInfo("")
+      BTAP::runner_register("ERROR", "no gas tariff in database for #{weather_station}",runner)
+      #fail the measure
+      return false
+
     end
 
     # save new tariff idf file
@@ -404,7 +426,7 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
       1.0890,                                 !- Year Escalation 28
       1.0920,                                 !- Year Escalation 29
       1.0950;                                 !- Year Escalation 30
-     "
+    "
     coal_escalation = OpenStudio::IdfObject::load(coal_escalation_string).get
     workspace.addObject(coal_escalation)             
     runner.registerInfo("added fuel escalation rates named #{coal_escalation.name}")                   

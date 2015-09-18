@@ -1594,7 +1594,7 @@
       "template": "NECB 2011",
       "cooling_type": "WaterCooled",
       "condenser_type": null,
-      "compressor_type": "Screw",
+      "compressor_type": "Rotary Screw",
       "absorption_type": null,
       "minimum_capacity": 0,
       "maximum_capacity": 9999,

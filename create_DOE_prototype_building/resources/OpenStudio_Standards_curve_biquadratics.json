@@ -113,7 +113,7 @@
       "notes": "From DOE Pre-1980 Reference Building"
     },
     {
-      "name": "DXCOIL-NECB2011-REF-CAPFT",
+      "name": "DXCOOL-NECB2011-REF-CAPFT",
       "coeff_1": 0.867905,
       "coeff_2": 0.0142459,
       "coeff_3": 0.000554364,
@@ -127,7 +127,7 @@
       "notes": "From NECB 2011"
     },
     {
-      "name": "DXCOIL-NECB2011-REF-COOLEIRFT",
+      "name": "DXCOOL-NECB2011-REF-COOLEIRFT",
       "coeff_1": 0.116936,
       "coeff_2": 0.0284933,
       "coeff_3": -0.000411156,

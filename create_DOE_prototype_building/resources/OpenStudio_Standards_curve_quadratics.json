@@ -91,7 +91,7 @@
       "notes": "From PNNL Prototype Buildings ApartmentMidRise, HotelSmall, OfficeSmall, RetailStandAlone, RetailStripmall, SchoolPrimary, Warehouse"
     },
     {
-      "name": "DXCOIL-NECB2011-REF-CAPFFLOW",
+      "name": "DXCOOL-NECB2011-REF-CAPFFLOW",
       "coeff_1": 1,
       "coeff_2": 0,
       "coeff_3": 0,
@@ -100,10 +100,19 @@
       "notes": "From NECB 2011"
     },
     {
-      "name": "DXCOIL-NECB2011-REF-COOLEIRFFLOW",
+      "name": "DXCOOL-NECB2011-REF-COOLEIRFFLOW",
       "coeff_1": 1,
       "coeff_2": 0,
       "coeff_3": 0,
+      "min_x": 0,
+      "max_x": 1,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-EIRFFLOW",
+      "coeff_1": 1.3824,
+      "coeff_2": -0.4336,
+      "coeff_3": 0.0512,
       "min_x": 0,
       "max_x": 1,
       "notes": "From NECB 2011"
