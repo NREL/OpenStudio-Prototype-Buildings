@@ -52,7 +52,7 @@ class ChangeBuildingLocation < BTAP::Measures::OSMeasures::BTAPModelUserScript
 
   def initialize
     super
-
+    self.file = "#{__FILE__}"
     # Hard code the weather directory for now. This assumes that you are running
     # the analysis on the OpenStudio distributed analysis server
     @weather_directory = File.expand_path(File.join(File.dirname(__FILE__), "../../weather"))

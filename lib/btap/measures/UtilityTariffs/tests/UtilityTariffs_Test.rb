@@ -146,46 +146,46 @@ class UtilityTariffsTest < MiniTest::Unit::TestCase
   end
   def testCAN_NF_St_Johns_718010_CWEC 
     set_weather("CAN_NF_St.Johns.718010_CWEC.epw")
-end
-def testCAN_NF_Stephenville_718150_CWEC 
-  set_weather("CAN_NF_Stephenville.718150_CWEC.epw")
-end
-def testCAN_NS_Greenwood_713970_CWEC 
-  set_weather("CAN_NS_Greenwood.713970_CWEC.epw")
-end
-def testCAN_NS_Sable_Island_716000_CWEC 
-  set_weather("CAN_NS_Sable.Island.716000_CWEC.epw")
-end
-def testCAN_NS_Shearwater_716010_CWEC 
-  set_weather("CAN_NS_Shearwater.716010_CWEC.epw")
-end
-def testCAN_NS_Sydney_717070_CWEC 
-  set_weather("CAN_NS_Sydney.717070_CWEC.epw")
-end
-def testCAN_NS_Truro_713980_CWEC 
-  set_weather("CAN_NS_Truro.713980_CWEC.epw")
-end
-def testCAN_NT_Inuvik_719570_CWEC 
-  set_weather("CAN_NT_Inuvik.719570_CWEC.epw")
-end
-def testCAN_NU_Resolute_719240_CWEC 
-  set_weather("CAN_NU_Resolute.719240_CWEC.epw")
-end
-def testCAN_ON_Kingston_716200_CWEC 
-  set_weather("CAN_ON_Kingston.716200_CWEC.epw")
-end
-def testCAN_ON_London_716230_CWEC 
-  set_weather("CAN_ON_London.716230_CWEC.epw")
-end
-def testCAN_ON_Mount_Forest_716310_CWEC 
-  set_weather("CAN_ON_Mount.Forest.716310_CWEC.epw")
-end
-def testCAN_ON_Muskoka_716300_CWEC 
-  set_weather("CAN_ON_Muskoka.716300_CWEC.epw")
-end
-def testCAN_ON_North_Bay_717310_CWEC 
-  set_weather("CAN_ON_North.Bay.717310_CWEC.epw")
-end
+  end
+  def testCAN_NF_Stephenville_718150_CWEC 
+    set_weather("CAN_NF_Stephenville.718150_CWEC.epw")
+  end
+  def testCAN_NS_Greenwood_713970_CWEC 
+    set_weather("CAN_NS_Greenwood.713970_CWEC.epw")
+  end
+  def testCAN_NS_Sable_Island_716000_CWEC 
+    set_weather("CAN_NS_Sable.Island.716000_CWEC.epw")
+  end
+  def testCAN_NS_Shearwater_716010_CWEC 
+    set_weather("CAN_NS_Shearwater.716010_CWEC.epw")
+  end
+  def testCAN_NS_Sydney_717070_CWEC 
+    set_weather("CAN_NS_Sydney.717070_CWEC.epw")
+  end
+  def testCAN_NS_Truro_713980_CWEC 
+    set_weather("CAN_NS_Truro.713980_CWEC.epw")
+  end
+  def testCAN_NT_Inuvik_719570_CWEC 
+    set_weather("CAN_NT_Inuvik.719570_CWEC.epw")
+  end
+  def testCAN_NU_Resolute_719240_CWEC 
+    set_weather("CAN_NU_Resolute.719240_CWEC.epw")
+  end
+  def testCAN_ON_Kingston_716200_CWEC 
+    set_weather("CAN_ON_Kingston.716200_CWEC.epw")
+  end
+  def testCAN_ON_London_716230_CWEC 
+    set_weather("CAN_ON_London.716230_CWEC.epw")
+  end
+  def testCAN_ON_Mount_Forest_716310_CWEC 
+    set_weather("CAN_ON_Mount.Forest.716310_CWEC.epw")
+  end
+  def testCAN_ON_Muskoka_716300_CWEC 
+    set_weather("CAN_ON_Muskoka.716300_CWEC.epw")
+  end
+  def testCAN_ON_North_Bay_717310_CWEC 
+    set_weather("CAN_ON_North.Bay.717310_CWEC.epw")
+  end
   def testCAN_ON_Ottawa_716280_CWEC 
     set_weather("CAN_ON_Ottawa.716280_CWEC.epw")
   end
