@@ -24,12 +24,18 @@ require 'minitest/autorun'
 require_relative '../measure.rb'
 require 'fileutils'
 
+
+
+
+
 class Btap_change_location_test < MiniTest::Unit::TestCase
-  def test_construction_assignment()   
+  def test_construction_assignment() 
+
     # create an instance of the measure, a runner and load a model.
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     measure = ChangeBuildingLocation.new
     runner = OpenStudio::Ruleset::OSRunner.new
+
     #Set up arguments in order. 
     argument_values_array = 
       [

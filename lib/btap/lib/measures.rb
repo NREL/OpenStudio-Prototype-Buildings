@@ -31,12 +31,25 @@ module BTAP
         #if and E+ measure replace OpenStudio::Ruleset::ModelUserScript with OpenStudio::Ruleset::WorkspaceUserScript
         #Array containing information of all inputs required by measure.
         attr_accessor :argument_array_of_arrays
+        attr_accessor :file
         #Name of measure
         #attr_accessor :name
 
         #if and E+ measure replace OpenStudio::Ruleset::ModelUserScript with OpenStudio::Ruleset::WorkspaceUserScript
         def name
           "BTAPModelUserScript"
+        end
+        
+        #this method will output the ruby macro to perform the change. 
+        def generate_ruby_macro(model,runner)
+          if @file == nil or @file == ""
+            @file = "Enter_Path_To_#{self.class.name}_measure.rb_File!"
+          end
+          BTAP::runner_register("MACRO", "\##{self.class.name} Measure Start", runner)
+          BTAP::runner_register("MACRO", "require \"#{@file}\"", runner)
+          BTAP::runner_register("MACRO", "argument_values = #{@arg_table}", runner)
+          BTAP::runner_register("MACRO", "#{self.class.name}.new.set_user_arguments_and_apply(model,argument_values,runner)",runner)
+          BTAP::runner_register("MACRO", "\##{self.class.name} Measure End", runner)
         end
 
         def arguments(model,argument_array_of_arrays)
@@ -133,14 +146,17 @@ module BTAP
           #IF and E+ measure replace model with workspace as the argument
           #Boilerplate start
           super(model, runner, user_arguments)
+          BTAP::runner_register("INFO", "Initial model being modified by #{self.class.name}",runner)
           if not runner.validateUserArguments(self.arguments(model),user_arguments)
             return false
           end
-          runner.registerInitialCondition("Initial model.")
+          
           #Set argument to instance variables. 
           self.argument_getter(model, runner,user_arguments)
           #will run the childs method measure_code
-          return self.measure_code(model,runner)
+          result =  self.measure_code(model,runner)
+          generate_ruby_macro(model,runner)
+          return result
         end # end method run
   
         def argument_setter(args)
@@ -191,36 +207,51 @@ module BTAP
         end
 
         def argument_getter(model, runner,user_arguments)
+          @arg_table = []
           unless @argument_array_of_hashes == nil
-          @argument_array_of_hashes.each do |row|
-            name = row["variable_name"]
-            case row["type"]
-            when "BOOL"
-              instance_variable_set("@#{name}", runner.getBoolArgumentValue(name, user_arguments) )
-            when "STRING"
-              instance_variable_set("@#{name}", runner.getStringArgumentValue(name, user_arguments) )
-            when "INTEGER"
-              instance_variable_set("@#{name}", runner.getIntegerArgumentValue(name, user_arguments) )
-              if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
-                runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
-                return false
-              end
-            when "FLOAT"
-              instance_variable_set("@#{name}", runner.getDoubleArgumentValue(name, user_arguments) )
-              if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
-                runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
-                return false
-              end
-            when "STRINGCHOICE"
-              instance_variable_set("@#{name}", runner.getStringArgumentValue(name, user_arguments) )
-            when "WSCHOICE"
-              instance_variable_set("@#{name}", runner.getOptionalWorkspaceObjectChoiceValue(name, user_arguments,model) )
+            @argument_array_of_hashes.each do |row|
+              name = row["variable_name"]
+            
+              case row["type"]
+              when "BOOL"
+                value = runner.getBoolArgumentValue(name, user_arguments)
+                instance_variable_set("@#{name}",value)
+                @arg_table << [name,value]
+              when "STRING"
+                value = runner.getStringArgumentValue(name, user_arguments)
+                instance_variable_set("@#{name}",value)
+                @arg_table << [name,value]
+              when "INTEGER"
+                value = runner.getIntegerArgumentValue(name, user_arguments)
+                instance_variable_set("@#{name}",value)
+                @arg_table << [name,value]
+                if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
+                  runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
+                  return false
+                end
+              when "FLOAT"
+                value = runner.getDoubleArgumentValue(name, user_arguments)
+                instance_variable_set("@#{name}",value)
+                @arg_table << [name,value]
+                
+                if ( not row["min_value"].nil?  and instance_variable_get("@#{name}") < row["min_value"] ) or ( not row["max_value"].nil? and instance_variable_get("@#{name}") > row["max_value"] )
+                  runner.registerError("#{row["display_name"]} must be greater than or equal to #{row["min_value"]} and less than or equal to #{row["max_value"]}.  You entered #{instance_variable_get("@#{name}")}.")
+                  return false
+                end
+              when "STRINGCHOICE"
+                @arg_table << [name,runner.getBoolArgumentValue(name, user_arguments)]
+                instance_variable_set("@#{name}", runner.getStringArgumentValue(name, user_arguments) )
+              when "WSCHOICE"
+                @arg_table << [name,runner.getBoolArgumentValue(name, user_arguments)]
+                instance_variable_set("@#{name}", runner.getOptionalWorkspaceObjectChoiceValue(name, user_arguments,model) )
 
-            when "PATH"
-              instance_variable_set("@#{name}", runner.getPathArgument(name, user_arguments) )
-            end #end case
-          end #end do
+              when "PATH"
+                @arg_table << [name,runner.getBoolArgumentValue(name, user_arguments)]
+                instance_variable_set("@#{name}", runner.getPathArgument(name, user_arguments) )
+              end #end case
+            end #end do
           end
+          return @arg_table
         end        
         
         
