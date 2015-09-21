@@ -50,7 +50,7 @@ class UtilityTariffsTest < MiniTest::Unit::TestCase
     # run the measure
     measure.run(workspace, runner, argument_map)
     condition = assert_equal("Success", runner.result.value.valueName)
-    workspace.save("#{output_folder}/#{File.basename(epw_filename, ".epw")}",true)
+    workspace.save("#{output_folder}/#{File.basename(epw_filename, ".epw")}.idf",true)
     #return condition of measure.
     return condition
   end
