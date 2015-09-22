@@ -305,11 +305,20 @@ class OpenStudio::Model::AirLoopHVAC
           OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "For #{self.name} capacity of #{coil.name} is not available, total cooling capacity of air loop will be incorrect when applying standard.")
         end
         # TODO Handle all cooling coil types for economizer determination
+      elsif sc.to_AirLoopHVACUnitaryHeatPumpAirToAir.is_initialized
+        coil = sc.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil
+        dxcoil = coil.to_CoilCoolingDXSingleSpeed.get
+        if dxcoil.ratedTotalCoolingCapacity.is_initialized
+          total_cooling_capacity_w += dxcoil.ratedTotalCoolingCapacity.get
+        elsif dxcoil.autosizedRatedTotalCoolingCapacity.is_initialized
+          total_cooling_capacity_w += dxcoil.autosizedRatedTotalCoolingCapacity.get
+        else
+          OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "For #{self.name} capacity of #{coil.name} is not available, total cooling capacity of air loop will be incorrect when applying standard.")
+        end
       elsif sc.to_CoilCoolingDXMultiSpeed.is_initialized ||
           sc.to_CoilCoolingCooledBeam.is_initialized ||
           sc.to_CoilCoolingWaterToAirHeatPumpEquationFit.is_initialized ||
           sc.to_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.is_initialized ||
-          sc.to_AirLoopHVACUnitaryHeatPumpAirToAir.is_initialized ||
           sc.to_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.is_initialized ||
           sc.to_AirLoopHVACUnitarySystem.is_initialized
         OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "#{self.name} has a cooling coil named #{sc.name}, whose type is not yet covered by economizer checks.")
@@ -322,7 +331,7 @@ class OpenStudio::Model::AirLoopHVAC
         # AirLoopHVACUnitarySystem
       end
     end
-    
+
     return total_cooling_capacity_w
   
   end
