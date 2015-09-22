@@ -29,5 +29,5 @@ end
 puts "close books"
 book.close(savechanges: 'false')
 xl.displayalerts = true
-xl.quit
+xl.Quit
 puts "#{(Time.now - t1)/60.0} minutes"
