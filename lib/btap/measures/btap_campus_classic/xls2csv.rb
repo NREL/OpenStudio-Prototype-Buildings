@@ -1,6 +1,6 @@
 require 'win32ole'
 require 'csv'
-
+t1 = Time.now
 # configure a workbook, turn off excel alarms
 xl = WIN32OLE.new('excel.application')
 book = xl.workbooks.open("#{File.dirname(__FILE__)}/campus_modelling_assumptions.xlsx")
@@ -19,11 +19,15 @@ book.worksheets.each do |sheet|
       csv_row << sheet.cells(xlrow, xlcol).value
     end
     export << CSV.generate_line(csv_row)
+    #puts CSV.generate_line(csv_row)
     csv_row = []
   end
+  puts " Wrote #{File.dirname(__FILE__)}/" + sheet.name + '.csv'
 end
 
 # clean up
+puts "close books"
 book.close(savechanges: 'false')
 xl.displayalerts = true
 xl.quit
+puts "#{(Time.now - t1)/60.0} minutes"
