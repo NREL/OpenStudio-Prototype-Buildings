@@ -107,16 +107,17 @@ module BTAP
   OS_RUBY_PATH = File.expand_path("..\\..\\..", __FILE__)
   TESTING_FOLDER = "C:\\test"
   
-#  A wrapper for outputing feedback to users and developers. 
-#  BTAP::runner_register("InitialCondition",   "Your Information Message Here", runner)
-#  BTAP::runner_register("Info",    "Your Information Message Here", runner)
-#  BTAP::runner_register("Warning", "Your Information Message Here", runner)
-#  BTAP::runner_register("Error",   "Your Information Message Here", runner)
-#  BTAP::runner_register("Debug",   "Your Information Message Here", runner)
-#  BTAP::runner_register("FinalCondition",   "Your Information Message Here", runner)
-#  @params type [String]
-#  @params runner [OpenStudio::Ruleset::OSRunner] # or a nil. 
+  #  A wrapper for outputing feedback to users and developers. 
+  #  BTAP::runner_register("InitialCondition",   "Your Information Message Here", runner)
+  #  BTAP::runner_register("Info",    "Your Information Message Here", runner)
+  #  BTAP::runner_register("Warning", "Your Information Message Here", runner)
+  #  BTAP::runner_register("Error",   "Your Information Message Here", runner)
+  #  BTAP::runner_register("Debug",   "Your Information Message Here", runner)
+  #  BTAP::runner_register("FinalCondition",   "Your Information Message Here", runner)
+  #  @params type [String]
+  #  @params runner [OpenStudio::Ruleset::OSRunner] # or a nil. 
   def self.runner_register(type,text,runner = nil)
+
     #dump to console. 
     puts "#{type.upcase}: #{text}"
     #dump to runner. 
@@ -135,8 +136,9 @@ module BTAP
       when "initialcondition"
         runner.registerInitialCondition(text)
       when "debug"
+      when "macro"
       else
-        raise("Runner Register type #{type.downcase} not info,warning,error,notapplicable,finalcondition,initialcondition.")
+        raise("Runner Register type #{type.downcase} not info,warning,error,notapplicable,finalcondition,initialcondition,macro.")
       end
     end
   end
@@ -359,147 +361,29 @@ module BTAP
       OpenStudio::Time.new(timestring)
     end
   end
+  module IRB # :nodoc:
+    require 'irb'
+    def self.start_session(binding)
+      unless @__initialized
+        args = ARGV
+        ARGV.replace(ARGV.dup)
+        IRB.setup(nil)
+        ARGV.replace(args)
+        @__initialized = true
+      end
+
+      workspace = WorkSpace.new(binding)
+
+      irb = Irb.new(workspace)
+
+      @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
+      @CONF[:MAIN_CONTEXT] = irb.context
+
+      catch(:IRB_EXIT) do
+        irb.eval_input
+      end
+    end
+  end
 end
 #module BTAP
 
-#This method creates a proposed model.
-#@author phylroy.lopez@nrcan.gc.ca
-#@params non_compliance_model [OpenStudio::model::Model]
-def self.create_proposed_model(non_compliance_model)
-  # copy non-compliance model.
-  proposed_model = BTAP::FileIO::deep_copy(non_compliance_model)
-  # Remove all non used resources.
-  proposed_model.purgeUnusedResourceObjects()
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_2(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_2(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_3(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_4(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_5(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_6(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_7(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_8(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_9(non_compliance_model)
-
-  BTAP::Compliance::NECB2011::Rules::rule_8_4_3_10(non_compliance_model)
-
-end
-
-#This method creates a reference model.
-#@author phylroy.lopez@nrcan.gc.ca
-#@params model [OpenStudio::model::Model] A model object
-#@params hdd [String] 
-#@params auto_blinds [Boolean] 
-#@params auto_windows [Boolean] 
-def self.create_reference_model(model, hdd, auto_blinds = false , auto_windows = false)
-  # Section 8.4.4.1
-  #     Sentence 1
-  #         No action required.
-  #     Sentence 2
-  #         Set Precriptive requirements from Section 3.2
-  #         Set Precriptive requirements from Section 4.2
-  #         Set Precriptive requirements from Section 5.2
-  #         Set Precriptive requirements from Section 6.2
-  #         Set Precriptive requirements from Section 7.2
-  #
-  #     Sentence 3
-  #         No action required.
-  #     Sentence 4
-  #         No action required.
-  #     Sentence 5
-  #         No action required.
-  #     Sentence 6
-  #         No action required.
-  #     Sentence 7
-  #         No action required.
-  # Section 8.4.4.2
-  #         No action required. Same as proposed.
-  # Section 8.4.4.3
-  #     Sentence 1
-  #         No action required. Same as proposed.
-  #     Sentence 2
-  #         **This does not make sense, why is this in the reference building?**
-  # Section 8.4.4.4 Building Envelope Components
-  #     Sentence 1
-  #         No action required. Same as proposed.
-  #     Sentence 2
-  #         Set solar absortptance to 0.7 since user will have entered this for the non-compliance building.
-  #     Sentence 3
-  #         Set Fenestration to wall ratio as per 3.2.1.4
-  #     Sentence 4
-  #         Remove all permanent shading devices.
-  #     Sentence 5
-  #         Allow external shading from buildings or external structures.
-  #     Sentence 6
-  #         No action required. Infiltration is the same as proposed.
-  #     Sentence 7
-  #         No action required. Heat transfer through interior partitions are the same as proposed.
-  # Section 8.4.4.5
-  #     Sentence 1
-  #         Set Thermal mass to density = 40.8 kg/m2 and specific heat = 45.5 kJ/(m2*C) for all contructions, as per Appendix A example 1
-  #     Sentence 2
-  #         No action required. Same as proposed.
-  #
-  # Section 8.4.4.6
-  #     Sentence 1
-  #         Ensure that lighting power density adhear to Section 4.2.1.5 and 4.2.1.6
-  #     Sentence 2
-  #         Set dwelling units to a LPD or 5 W/m2. This was done in proposed.
-  #     Sentence 3
-  #         If occupancy sensors are used. Set adjust LPD to 90%
-  #     Sentence 4
-  #         No action required. Radiant, Convective and portion of heat directed to return is the same as proposed.
-  #
-  # Section 8.4.4.7 Purchased Energy
-  #     Sentence 1
-  #         a) Purchased heating should be an electric boiler.
-  #         b) 100% eff constant.
-  #         c) boiler capacity = prop purchased energy capacity / proposed total heating capacity * reference total heating capacity.
-  #     Sentence 2
-  #         a) Purchased heating should be an electric boiler.
-  #         b) 1.0 COP constant.
-  #         c) chiller capacity = prop purchased cooling energy capacity / proposed total cooling capacity * reference total cooling capacity.
-  #     Sentence 3
-  #         a) Purchased hot water should be an electric boiler. (might need a gui)
-  #         b) 100% eff constant.
-  #         c) boiler capacity = prop purchased energy capacity / proposed total heating capacity * reference total heating capacity.
-  #     Sentence 4
-  #         Operating schedules, priority and other operations charecteristics of purchased energy should be included.
-  # Section 8.4.4.8
-  #     Sentence 1 & 2
-  #         Loop though all space types can group systems based on Table 8.4.4.8.A and 8.4.4.8.B Throw an error if space types are not NECB types.
-  #     Sentence 3
-  #         No action required.
-  #     Sentence 4
-  #         For each zone that that has a heat pump in the proposed building, follow Section 8.4.4.14
-  #
-  # Section 8.4.4.9 Equipment Oversizing
-  #     Sentence 1
-  #         heating sizing factor = [proposed heating over sizing, 30%].min
-  #     Sentence 2
-  #         cooling sizing factor = [proposed heating over sizing, 10%].min
-  #
-  #
-  #
-  # Section 8.4.4.10 Heating System
-  # Section 8.4.4.11 Cooling System
-  # Section 8.4.4.12 Cooling Towers
-  # Section 8.4.4.13 Cooling with OA
-  # Section 8.4.4.14 Heat Pumps
-  # Section 8.4.4.15 Hydronic Pumps
-  # Section 8.4.4.16 OA
-  # Section 8.4.4.17 Space Temperature Control
-  # Section 8.4.4.18 Fans
-  # Section 8.4.4.19 Supply Air Systems
-  # Section 8.4.4.20 Heat Recovery Systems
-  # Section 8.4.4.21 Service Water Heating Systems
-  # Section 8.4.4.22 Performance Curves.
-end
