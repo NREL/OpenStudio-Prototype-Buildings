@@ -7,6 +7,7 @@ class OpenStudio::Model::CoilHeatingDXSingleSpeed
     successfully_set_all_properties = true
   
     unitary_hps = standards['unitary_hps']
+    heat_pumps = standards['heat_pumps_heating']
     curve_biquadratics = standards['curve_biquadratics']
     curve_quadratics = standards['curve_quadratics']
     curve_bicubics = standards['curve_bicubics']
@@ -57,11 +58,6 @@ class OpenStudio::Model::CoilHeatingDXSingleSpeed
       end
     end
 
-    # Add the supplemental heating type to the search criteria
-    unless suppl_heating_type.nil?
-      search_criteria['supplemental_heating_type'] = suppl_heating_type
-    end
-    
     # TODO Standards - add split system vs single package to model
     # For now, assume single package
     subcategory = 'Single Package'
@@ -74,7 +70,7 @@ class OpenStudio::Model::CoilHeatingDXSingleSpeed
     elsif self.autosizedRatedTotalHeatingCapacity.is_initialized
       capacity_w = self.autosizedRatedTotalHeatingCapacity.get
     else
-      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilHeatingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilHeatingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end    
@@ -90,7 +86,7 @@ class OpenStudio::Model::CoilHeatingDXSingleSpeed
     else
       ac_props = self.model.find_object(unitary_hps, search_criteria, capacity_btu_per_hr)
     end
-   
+
     # Check to make sure properties were found
     if ac_props.nil?
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilHeatingDXSingleSpeed', "For #{self.name}, cannot find efficiency info, cannot apply efficiency standard.")
@@ -166,7 +162,7 @@ class OpenStudio::Model::CoilHeatingDXSingleSpeed
     unless cop.nil?
       self.setRatedCOP(cop)
     end
-    
+
     return true
 
   end

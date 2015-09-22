@@ -2372,7 +2372,7 @@ module BTAP
 
             if ( (mau == true and mau_heating_coil_type == "Hot Water") or baseboard_type == "Hot Water" ) then
 
-              hw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+              hw_loop = OpenStudio::Model::PlantLoop.new(model)
               BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_hw_loop_with_components(model,hw_loop,boiler_fueltype, always_on)
 
             end  #of if statement
@@ -2382,7 +2382,7 @@ module BTAP
            
             if ( mau == true) then
               
-              mau_air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
+              mau_air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 
 
               mau_air_loop.setName("Make-up air unit")
@@ -2413,15 +2413,15 @@ module BTAP
               air_loop_sizing.setHeatingDesignAirFlowRate(0.0)
               air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
-              mau_fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
+              mau_fan = OpenStudio::Model::FanConstantVolume.new(model, always_on)
                             
 
               if ( mau_heating_coil_type == "Electric") then           # electric coil
-                mau_htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
+                mau_htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
               end
 
               if ( mau_heating_coil_type == "Hot Water") then
-                mau_htg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_heating_coil(model, always_on)
+                mau_htg_coil = OpenStudio::Model::CoilHeatingWater.new(model, always_on)
                 hw_loop.addDemandBranchForComponent(mau_htg_coil)
               end
 
@@ -2431,12 +2431,12 @@ module BTAP
               mau_clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
               #oa_controller 
-              oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
+              oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
               #oa_controller.setEconomizerControlType("DifferentialEnthalpy")
 
 
               #oa_system 
-              oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
+              oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
 
               # Add the components to the air loop
               # in order from closest to zone to furthest from zone
@@ -2448,7 +2448,7 @@ module BTAP
 
               # Add a setpoint manager single zone reheat to control the
               # supply air temperature 
-              setpoint_mgr_single_zone_reheat = BTAP::Resources::HVAC::Plant::add_sz_reheat_setpoint(model)
+              setpoint_mgr_single_zone_reheat = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
               setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(13.0)
               setpoint_mgr_single_zone_reheat.addToNode(mau_air_loop.supplyOutletNode)
               
@@ -2478,7 +2478,7 @@ module BTAP
               # Set up PTAC heating coil; apply always off schedule            
  
               # htg_coil_elec = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
-              htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_off)
+              htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_off)
             
               
               
@@ -2487,7 +2487,7 @@ module BTAP
               
               
               # Set up PTAC constant volume supply fan
-              fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)         
+              fan = OpenStudio::Model::FanConstantVolume.new(model, always_on)         
               fan.setPressureRise(640)
                         
               
@@ -2525,7 +2525,7 @@ module BTAP
               #  # Create a diffuser and attach the zone/diffuser pair to the MAU air loop, if applicable
               if (mau == true) then
           
-                diffuser = BTAP::Resources::HVAC::Plant::add_diffuser(model, always_on)
+                diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, always_on)
                 mau_air_loop.addBranchForZone(zone,diffuser.to_StraightComponent)
                  
               end #components for MAU
@@ -2606,24 +2606,24 @@ module BTAP
 
             # Create a hot water loop
 
-            hw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+            hw_loop = OpenStudio::Model::PlantLoop.new(model)
             BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_hw_loop_with_components(model,hw_loop,boiler_fueltype,tpfc_htg_availability_sch)
 
             # Create a chilled water loop
 
-            chw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+            chw_loop = OpenStudio::Model::PlantLoop.new(model)
             chiller = BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_chw_loop_with_components(model,chw_loop,chiller_type)
 
             # Create a condenser Loop
 
-            cw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+            cw_loop = OpenStudio::Model::PlantLoop.new(model)
             ctower = BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_cw_loop_with_components(model,cw_loop,chiller)
 
             # Set up make-up air unit for ventilation
             # TO DO: Need to investigate characteristics of make-up air unit for NECB reference
             # and define them here
 
-            air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
+            air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 
             air_loop.setName("Make-up air unit")
 
@@ -2653,12 +2653,12 @@ module BTAP
             air_loop_sizing.setHeatingDesignAirFlowRate(0.0)
             air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
-            fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
+            fan = OpenStudio::Model::FanConstantVolume.new(model, always_on)
 
             # Assume direct-fired gas heating coil for now; need to add logic
             # to set up hydronic or electric coil depending on proposed?
 
-            htg_coil = BTAP::Resources::HVAC::Plant::add_gas_heating_coil(model, always_on)
+            htg_coil = OpenStudio::Model::CoilHeatingGas.new(model, always_on)
 
             # Add DX or hydronic cooling coil
             # TODO: set proper cooling DX COP when sizing data is available
@@ -2666,18 +2666,18 @@ module BTAP
               clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
             elsif(mua_cooling_type == "Hydronic")
               if(fan_coil_type == "FPFC")
-                clg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_cool_coil(model, always_on)
+                clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, always_on)
               elsif(fan_coil_type == "TPFC")
-                clg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_cool_coil(model, tpfc_clg_availability_sch)
+                clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, tpfc_clg_availability_sch)
               end
               chw_loop.addDemandBranchForComponent(clg_coil)
             end
 
             # does MAU have an economizer?
-            oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
+            oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 
             #oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,oa_controller)
-            oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
+            oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
 
             # Add the components to the air loop 
             # in order from closest to zone to furthest from zone
@@ -2691,7 +2691,7 @@ module BTAP
             # supply air temperature based on the needs of default zone (OpenStudio picks one)
             # TO DO: need to have method to pick appropriate control zone?
 
-            setpoint_mgr_single_zone_reheat = BTAP::Resources::HVAC::Plant::add_sz_reheat_setpoint(model)
+            setpoint_mgr_single_zone_reheat = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
             setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(12.8)
             setpoint_mgr_single_zone_reheat.setMaximumSupplyAirTemperature(13.0)
             setpoint_mgr_single_zone_reheat.addToNode(air_loop.supplyOutletNode)
@@ -2701,20 +2701,20 @@ module BTAP
             zones.each do |zone| 
 
               # fc supply fan
-              fc_fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
+              fc_fan = OpenStudio::Model::FanConstantVolume.new(model, always_on)
 
               if(fan_coil_type == "FPFC")
                 # heating coil
-                fc_htg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_heating_coil(model, always_on)
+                fc_htg_coil = OpenStudio::Model::CoilHeatingWater.new(model, always_on)
 
                 # cooling coil
-                fc_clg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_cool_coil(model, always_on)
+                fc_clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, always_on)
               elsif(fan_coil_type == "TPFC")
                 # heating coil
-                fc_htg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_heating_coil(model, tpfc_htg_availability_sch)
+                fc_htg_coil = OpenStudio::Model::CoilHeatingWater.new(model, tpfc_htg_availability_sch)
 
                 # cooling coil
-                fc_clg_coil = BTAP::Resources::HVAC::Plant::add_hydronic_cool_coil(model, tpfc_clg_availability_sch)
+                fc_clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, tpfc_clg_availability_sch)
               end
           
               # connect heating coil to hot water loop
@@ -2722,11 +2722,11 @@ module BTAP
               # connect cooling coil to chilled water loop
               chw_loop.addDemandBranchForComponent(fc_clg_coil)
 
-              zone_fc = BTAP::Resources::HVAC::ZoneEquipment::add_zoneHVAC_fpfc(model, always_on, fc_fan, fc_clg_coil, fc_htg_coil)
+              zone_fc = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model, always_on, fc_fan, fc_clg_coil, fc_htg_coil)
               zone_fc.addToThermalZone(zone)
 
               # Create a diffuser and attach the zone/diffuser pair to the air loop (make-up air unit)
-              diffuser = BTAP::Resources::HVAC::Plant::add_diffuser(model, always_on)
+              diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, always_on)
               air_loop.addBranchForZone(zone,diffuser.to_StraightComponent)
 
             end #zone loop
@@ -2751,14 +2751,14 @@ module BTAP
 
             if ( baseboard_type == "Hot Water" ) then
 
-              hw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+              hw_loop = OpenStudio::Model::PlantLoop.new(model)
               BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_hw_loop_with_components(model,hw_loop,boiler_fueltype, always_on)
 
             end  #of if statement
 
             zones.each do |zone|
 
-              air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
+              air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 
               air_loop.setName("#{zone.name} NECB System 3 PSZ")
 
@@ -2788,14 +2788,14 @@ module BTAP
               air_loop_sizing.setHeatingDesignAirFlowRate(0.0)
               air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
-              fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
+              fan = OpenStudio::Model::FanConstantVolume.new(model, always_on)
                            
               case heating_coil_type
               when "Electric"           # electric coil
-                htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
+                htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
 
               when "Gas"
-                htg_coil = BTAP::Resources::HVAC::Plant::add_gas_heating_coil(model, always_on)
+                htg_coil = OpenStudio::Model::CoilHeatingGas.new(model, always_on)
 
               when "DX"
                 htg_coil = OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model)  
@@ -2810,30 +2810,43 @@ module BTAP
               clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 
               #oa_controller 
-              oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
+              oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
 
               #oa_system 
-              oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
+              oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
 
               # Add the components to the air loop
               # in order from closest to zone to furthest from zone
               supply_inlet_node = air_loop.supplyInletNode
-              fan.addToNode(supply_inlet_node)
-              supplemental_htg_coil.addToNode(supply_inlet_node) if heating_coil_type == "DX" 
-              htg_coil.addToNode(supply_inlet_node)
-              clg_coil.addToNode(supply_inlet_node)
+#              fan.addToNode(supply_inlet_node)
+#              supplemental_htg_coil.addToNode(supply_inlet_node) if heating_coil_type == "DX" 
+#              htg_coil.addToNode(supply_inlet_node)
+#              clg_coil.addToNode(supply_inlet_node)
+#              oa_system.addToNode(supply_inlet_node)
+              if(heating_coil_type == 'DX')
+                air_to_air_heatpump = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model,always_on,fan,htg_coil,clg_coil,supplemental_htg_coil)
+                air_to_air_heatpump.setName("#{zone.name} ASHP")
+                air_to_air_heatpump.setControllingZone(zone)
+                air_to_air_heatpump.setSupplyAirFanOperatingModeSchedule(always_on)
+                air_to_air_heatpump.addToNode(supply_inlet_node)
+              else
+                fan.addToNode(supply_inlet_node)
+                supplemental_htg_coil.addToNode(supply_inlet_node) if heating_coil_type == "DX" 
+                htg_coil.addToNode(supply_inlet_node)
+                clg_coil.addToNode(supply_inlet_node)
+              end
               oa_system.addToNode(supply_inlet_node)
 
               # Add a setpoint manager single zone reheat to control the
               # supply air temperature based on the needs of this zone
-              setpoint_mgr_single_zone_reheat = BTAP::Resources::HVAC::Plant::add_sz_reheat_setpoint(model)
+              setpoint_mgr_single_zone_reheat = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
               setpoint_mgr_single_zone_reheat.setControlZone(zone)
               setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(13.0)
               setpoint_mgr_single_zone_reheat.addToNode(air_loop.supplyOutletNode)
 
               # Create a diffuser and attach the zone/diffuser pair to the air loop
               #diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,always_on)
-              diffuser = BTAP::Resources::HVAC::Plant::add_diffuser(model, always_on)
+              diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, always_on)
               air_loop.addBranchForZone(zone,diffuser.to_StraightComponent)
 
               if ( baseboard_type == "Electric") then
@@ -2853,7 +2866,7 @@ module BTAP
                 #add zone_baseboard to zone
                 zone_baseboard.addToThermalZone(zone)
               end
-              
+            
             end  #zone loop
 
             return true
@@ -2884,7 +2897,7 @@ module BTAP
 
             if ( baseboard_type == "Hot Water" ) then
 
-              hw_loop = BTAP::Resources::HVAC::Plant::add_water_loop(model)
+              hw_loop = OpenStudio::Model::PlantLoop.new(model)
               BTAP::Resources::HVAC::HVACTemplates::NECB2011::setup_hw_loop_with_components(model,hw_loop,boiler_fueltype, always_on)
 
             end  #of if statement
@@ -2898,7 +2911,7 @@ module BTAP
 
             zones.each do |zone|
 
-              air_loop = BTAP::Resources::HVAC::Plant::add_air_loop(model)
+              air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
 
 
               air_loop.setName("#{zone.name} NECB System 4 PSZ")
@@ -2929,15 +2942,15 @@ module BTAP
               air_loop_sizing.setHeatingDesignAirFlowRate(0.0)
               air_loop_sizing.setSystemOutdoorAirMethod("ZoneSum")
 
-              fan = BTAP::Resources::HVAC::Plant::add_const_fan(model, always_on)
+              fan = OpenStudio::Model::FanConstantVolume.new(model, always_on)
                             
 
               if ( heating_coil_type == "Electric") then           # electric coil
-                htg_coil = BTAP::Resources::HVAC::Plant::add_elec_heating_coil(model,always_on)
+                htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
               end
 
               if ( heating_coil_type == "Gas") then
-                htg_coil = BTAP::Resources::HVAC::Plant::add_gas_heating_coil(model, always_on)
+                htg_coil = OpenStudio::Model::CoilHeatingGas.new(model, always_on)
               end
 
               #TO DO: other fuel-fired heating coil types? (not available in OpenStudio/E+ - may need to play with efficiency to mimic other fuel types)
@@ -2948,12 +2961,12 @@ module BTAP
               clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
               #oa_controller 
-              oa_controller = BTAP::Resources::HVAC::Plant::add_oa_controller(model)
+              oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
               
 
 
               #oa_system 
-              oa_system = BTAP::Resources::HVAC::Plant::add_OA_system(model, oa_controller)
+              oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model, oa_controller)
 
               # Add the components to the air loop
               # in order from closest to zone to furthest from zone
@@ -2965,7 +2978,7 @@ module BTAP
 
               # Add a setpoint manager single zone reheat to control the
               # supply air temperature based on the needs of this zone
-              setpoint_mgr_single_zone_reheat = BTAP::Resources::HVAC::Plant::add_sz_reheat_setpoint(model)
+              setpoint_mgr_single_zone_reheat = OpenStudio::Model::SetpointManagerSingleZoneReheat.new(model)
               setpoint_mgr_single_zone_reheat.setControlZone(zone)
               setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(13.0)
               setpoint_mgr_single_zone_reheat.addToNode(air_loop.supplyOutletNode)
@@ -2990,7 +3003,7 @@ module BTAP
 
               # Create a diffuser and attach the zone/diffuser pair to the air loop
               #diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model,always_on)
-              diffuser = BTAP::Resources::HVAC::Plant::add_diffuser(model, always_on)
+              diffuser = OpenStudio::Model::AirTerminalSingleDuctUncontrolled.new(model, always_on)
               air_loop.addBranchForZone(zone,diffuser.to_StraightComponent)
 
               if ( baseboard_type == "Electric") then

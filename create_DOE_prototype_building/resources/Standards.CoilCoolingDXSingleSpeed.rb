@@ -8,7 +8,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     successfully_set_all_properties = true
   
     unitary_acs = standards['unitary_acs']
-    heat_pumps = standards['heat_pumps']
+    heat_pumps = standards['heat_pumps_cooling']
     curve_biquadratics = standards['curve_biquadratics']
     curve_quadratics = standards['curve_quadratics']
     curve_bicubics = standards['curve_bicubics']
@@ -43,7 +43,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
         end # TODO Add other zone hvac systems
       end
     end
-    
+
     # Determine the heating type if on an airloop
     if self.airLoopHVAC.is_initialized
       air_loop = self.airLoopHVAC.get
@@ -83,7 +83,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     elsif self.autosizedRatedTotalCoolingCapacity.is_initialized
       capacity_w = self.autosizedRatedTotalCoolingCapacity.get
     else
-      #OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
+      OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name} capacity is not available, cannot apply efficiency standard.")
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end    
@@ -99,7 +99,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     else
       ac_props = self.model.find_object(unitary_acs, search_criteria, capacity_btu_per_hr)
     end
-   
+
     # Check to make sure properties were found
     if ac_props.nil?
       OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{self.name}, cannot find efficiency info, cannot apply efficiency standard.")
@@ -175,7 +175,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     unless cop.nil?
       self.setRatedCOP(OpenStudio::OptionalDouble.new(cop))
     end
-    
+
     return true
 
   end
