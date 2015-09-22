@@ -66,7 +66,7 @@ class ConvertDOEReferenceToNECBOSM < BTAP::Measures::OSMeasures::BTAPModelUserSc
       #Autozone and set to ideal airloads
       use_ideal_air_loads = true
       BTAP::Compliance::NECB2011::necb_autozone_and_autosystem( new_model ,use_ideal_air_loads,runner )
-      file_path = "#{output_folder}/#{File.basename(idf_filename, ".rb")}.osm"
+      file_path = "#{output_folder}/#{File.basename(idf_filename, ".idf")}.osm"
       BTAP::FileIO::save_osm(new_model, file_path)
       BTAP::runner_register("INFO", "IDF file converted to OSM #{file_path}", runner)
     end

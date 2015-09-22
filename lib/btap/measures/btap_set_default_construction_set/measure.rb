@@ -24,7 +24,7 @@ class SetDefaultConstructionSet < BTAP::Measures::OSMeasures::BTAPModelUserScrip
 
   def initialize
     super
-
+    self.file = "#{__FILE__}"
     # Hard code to the weather directory for now. This assumes that you are running
     # the analysis on the OpenStudio distributed analysis server
     @lib_directory = File.expand_path(File.join(File.dirname(__FILE__), "../../lib/btap/resources/constructions"))

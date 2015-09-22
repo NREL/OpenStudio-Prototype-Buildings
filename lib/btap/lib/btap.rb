@@ -361,7 +361,7 @@ module BTAP
       OpenStudio::Time.new(timestring)
     end
   end
-  module IRB # :nodoc:
+  module TESTME # :nodoc:
     require 'irb'
     def self.start_session(binding)
       unless @__initialized
