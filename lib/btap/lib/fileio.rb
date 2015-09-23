@@ -148,7 +148,7 @@ module BTAP
       version_translator.warnings.each {|warning| puts "Warning: #{warning.logMessage}\n\n"}
       #If model did not load correctly.
       if model.empty?
-        raise 'could not load #{filepath}'
+        raise "could not load #{filepath}"
       end
       model = model.get
       if name != "" and not name.nil?
