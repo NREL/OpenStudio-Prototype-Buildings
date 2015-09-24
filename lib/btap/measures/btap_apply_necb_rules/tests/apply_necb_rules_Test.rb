@@ -25,10 +25,10 @@ require_relative '../measure.rb'
 require 'fileutils'
 
 class ApplyNECBRules_test < MiniTest::Unit::TestCase
-  def test_construction_assignment() 
+  def apply_measure(filename) 
 
     # create an instance of the measure, a runner and load a model.
-    model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/FullServiceRestaurant.osm")
+    model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/#{filename}")
     measure = ApplyNECBRules.new
     runner = OpenStudio::Ruleset::OSRunner.new
 
@@ -42,3 +42,22 @@ class ApplyNECBRules_test < MiniTest::Unit::TestCase
     assert_equal("Success", runner.result.value.valueName)
   end   
 end
+
+
+#FullServiceRestaurant.osm
+#Hospital.osm
+#LargeHotel.osm
+#LargeOffice.osm
+#MediumOffice.osm
+#MidriseApartment.osm
+#OutPatient.osm
+#PrimarySchool.osm
+#QuickServiceRestaurant.osm
+#SecondarySchool.osm
+#SmallHotel.osm
+#SmallOffice.osm
+#Stand-aloneRetail.osm
+#StripMall.osm
+#SuperMarket.osm
+#Warehouse.osm
+
