@@ -96,7 +96,7 @@ class ApplyNECBRules < BTAP::Measures::OSMeasures::BTAPModelUserScript
 #          heating_coil_types_sys4and6 = "Gas",
 #          fan_type = "AF_or_BI_rdg_fancurve" )
     
-    BTAP::Compliance::NECB2011::set_zones_thermostat_schedule_based_on_space_type_schedules(model,runner)
+
 
 
 

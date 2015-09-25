@@ -58,35 +58,7 @@ class ReplaceModel < BTAP::Measures::OSMeasures::BTAPModelUserScript
     #try loading the file. 
     new_model = BTAP::FileIO::load_osm(alternative_model_path)
 
-    # pull original weather file object over
-    weather_file = new_model.getOptionalWeatherFile
-    if not weather_file.empty?
-      weather_file.get.remove
-      BTAP::runner_register("Info", "Removed alternate model's weather file object.",runner)
-    end
-    original_weather_file = model.getOptionalWeatherFile
-    if not original_weather_file.empty?
-      original_weather_file.get.clone(new_model)
-    end
-
-    # pull original design days over
-    new_model.getDesignDays.each { |designDay|
-      designDay.remove
-    }
-    model.getDesignDays.each { |designDay|
-      designDay.clone(new_model)
-    }
-
-    # swap underlying data in model with underlying data in new_model
-    # remove existing objects from model
-    handles = OpenStudio::UUIDVector.new
-    model.objects.each do |obj|
-      handles << obj.handle
-    end
-    model.removeObjects(handles)
-    # add new file to empty model
-    model.addObjects( new_model.toIdfFile.objects )
-    BTAP::runner_register("Info",  "Model name is now #{model.building.get.name}.", runner)
+    BTAP::FileIO::replace_model(model, new_model, runner)
     BTAP::runner_register("FinalCondition", "Model replaced with alternative #{alternative_model_path}. Weather file and design days retained from original.", runner)
     return true
   end

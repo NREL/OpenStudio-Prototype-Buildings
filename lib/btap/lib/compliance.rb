@@ -738,10 +738,7 @@ module BTAP
         #Set building name to match archetype name.
         BTAP::FileIO::set_name(model,"#{File.basename(idf_filename,'.idf')}")
           
-        #This remove all ThermalZones in model if any.
-        model.getThermalZones.each do |zone|
-          zone.remove
-        end
+
         
         #Set Building Stories
         BTAP::Geometry::BuildingStoreys::auto_assign_spaces_to_stories( model )
@@ -784,16 +781,7 @@ module BTAP
               necb_spacetype = model.getSpaceTypeByName("NECB-#{row['necb_space_type']}").get
               #set space type
               space.setSpaceType(necb_spacetype)
-              #puts "**space #{space.name} has been set to spacetype #{necb_spacetype.name}"
-              #set thermal heating and cooling setpoint schedule.
-              schedule_type = self.determine_necb_schedule_type( space )
-              if ( schedule_type != "*") 
-                test = space.thermalZone.get.setThermostatSetpointDualSetpoint(model.getThermostatSetpointDualSetpointByName("NECB-#{determine_necb_schedule_type(space)}").get)
-                if test == false
-                  BTAP::runner_register("ERROR","***Unable to Set Dual Thermostat for zone to #{space.thermalZone.get.thermostatSetpointDualSetpoint.get.name} ", runner)
-                end
-                BTAP::runner_register("INFO","***Set Dual Thermostat for zone #{space.thermalZone.get.name} to NECB-#{self.determine_necb_schedule_type(space)}", runner)
-              end
+              puts "**space #{space.name} has been set to spacetype #{necb_spacetype.name}"
             else
               BTAP::runner_register("ERROR","#{row['necb_space_type']} is not a proper NECB space type",runner)
             end
@@ -1082,23 +1070,17 @@ module BTAP
             BTAP::runner_register("Error", "#{zone.name} has spaces with different schedule types. Please ensure that all the spaces are of the same schedule type A to I.",runner)  
             return false
           end
-          puts "Finding NECB-#{array[0]}"
+
           if model.getThermostatSetpointDualSetpointByName("NECB-#{array[0]}").empty? == false
             ds = model.getThermostatSetpointDualSetpointByName("NECB-#{array[0]}").get
-            puts ds.name
-
             zone.setThermostatSetpointDualSetpoint(ds)
-            ds = model.getThermostatSetpointDualSetpointByName("NECB-#{array[0]}").get
-            puts ds.name
 
-#            BTAP::runner_register("Info","Found DualSetpoint Schedule NECB-#{array[0]}",runner)
-#            BTAP::runner_register("Info","ThermalZone #{zone.name} set to DualSetpoint Schedule NECB-#{array[0]}",runner)
-#            BTAP::runner_register("DEBUG","END-set_zones_thermostat_schedule_based_on_space_type_schedules" , runner)
-            puts model.getThermostatSetpointDualSetpoints
+            BTAP::runner_register("Info","Found DualSetpoint Schedule NECB-#{array[0]}",runner)
+            BTAP::runner_register("Info","ThermalZone #{zone.name} set to DualSetpoint Schedule NECB-#{array[0]}",runner)
+            BTAP::runner_register("DEBUG","END-set_zones_thermostat_schedule_based_on_space_type_schedules" , runner)
           else
             BTAP::runner_register("ERROR","set_zones_thermostat_schedule NECB-#{array[0]} does not exist" , runner)
             puts model.getThermostatSetpointDualSetpoints
-
             return false
           end
         end
