@@ -1,0 +1,236 @@
+
+    
+    ! Sensors
+    
+    EnergyManagementSystem:Sensor,
+      BackSpaceZNPSZACOASch,           
+      RetailStandalone MinOA_MotorizedDamper_Sched,         !- Output:Variable or Output:Meter Index Key Name,            
+      Schedule Value;          !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      Back_Space_ZNTemp,
+      Node 2,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Temperature; !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      BackSpaceZNPSZACOAFlowMass,     
+      Node 11, !- Output:Variable or Output:Meter Index Key Name
+      System Node Mass Flow Rate;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      BackSpaceZNPSZACHeatingRTF,     
+      Back_Space ZN PSZ-AC Gas Htg Coil,        !- Output:Variable or Output:Meter Index Key Name
+      Heating Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      BackSpaceZNPSZACRTF,            
+      Back_Space ZN PSZ-AC 2spd DX AC Clg Coil, !- Output:Variable or Output:Meter Index Key Name
+      Cooling Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      BackSpaceZNPSZACSpeedRatio,     
+      Back_Space ZN PSZ-AC 2spd DX AC Clg Coil CoilSystem,        !- Output:Variable or Output:Meter Index Key Name
+      Coil System Compressor Speed Ratio;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      BackSpaceZNPSZACDATRqd,        
+      Node 7,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Setpoint Temperature;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      BackSpaceZNPSZACEconoStatus,   
+      Back_Space ZN PSZ-AC,              !- Output:Variable or Output:Meter Index Key Name
+      Air System Outdoor Air Economizer Status;  !- Output:Variable or Output:Meter Name
+
+    ! Internal Variables
+
+    EnergyManagementSystem:InternalVariable,
+      BackSpaceZNPSZACFanDesignPressure,
+      Back_Space ZN PSZ-AC Fan,          !- Internal Data Index Key Name
+      Fan Nominal Pressure Rise;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      BackSpaceZNPSZACDesignFlowMass, 
+      Back_Space ZN PSZ-AC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Maximum Mass Flow Rate;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      BackSpaceZNPSZACOADesignMass,   
+      Back_Space ZN PSZ-AC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Minimum Mass Flow Rate;  !- Internal Data Type
+
+    ! Actuators
+
+    EnergyManagementSystem:Actuator,
+      BackSpaceZNPSZACFanPressure,   
+      Back_Space ZN PSZ-AC Fan,          !- Actuated Component Unique Name
+      Fan,                     !- Actuated Component Type
+      Fan Pressure Rise;       !- Actuated Component Control Type
+
+    EnergyManagementSystem:Actuator,
+      BackSpaceZNPSZACTimestepEconEff,!- Name
+      BackSpaceZNPSZACmaxOASch,  !- Actuated Component Unique Name
+      Schedule:Year,       !- Actuated Component Type
+      Schedule Value;          !- Actuated Component Control Type
+
+    EnergyManagementSystem:GlobalVariable,
+      BackSpaceZNPSZACFanPwrExp,   !- Erl Variable 1 Name
+      BackSpaceZNPSZACStg1Spd,      !- Erl Variable 2 Name
+      BackSpaceZNPSZACStg2Spd,      !- Erl Variable 3 Name
+      BackSpaceZNPSZACHeatSpeed,      
+      BackSpaceZNPSZACVenSpeed,       
+      BackSpaceZNPSZACNumberofStages; 
+
+    EnergyManagementSystem:Program,
+      BackSpaceZNPSZACEconomizerCTRLProg,
+      SET BackSpaceZNPSZACTimestepEconEff = 0.7,  
+      SET BackSpaceZNPSZACMaxE = 0.7,   
+      SET BackSpaceZNPSZACDATRqd = (BackSpaceZNPSZACDATRqd*1.8)+32,
+      SET OATF = (OATF*1.8)+32,
+      SET OAwbF = (OAwbF*1.8)+32,
+      IF BackSpaceZNPSZACOAFlowMass > (BackSpaceZNPSZACOADesignMass*BackSpaceZNPSZACOASch),
+      SET BackSpaceZNPSZACEconoActive = 1,
+      ELSE,                  
+      SET BackSpaceZNPSZACEconoActive = 0,
+      ENDIF,                 
+      SET BackSpaceZNPSZACdTNeeded = 75-BackSpaceZNPSZACDATRqd,
+      SET BackSpaceZNPSZACCoolDesdT = ((98*0.15)+(75*(1-0.15)))-55,
+      SET BackSpaceZNPSZACCoolLoad = BackSpaceZNPSZACdTNeeded/ BackSpaceZNPSZACCoolDesdT,
+      IF BackSpaceZNPSZACCoolLoad > 1, 
+      SET BackSpaceZNPSZACCoolLoad = 1,
+      ELSEIF BackSpaceZNPSZACCoolLoad < 0,
+      SET BackSpaceZNPSZACCoolLoad = 0,
+      ENDIF,                 
+      IF BackSpaceZNPSZACEconoActive == 1,
+      SET BackSpaceZNPSZACStage = BackSpaceZNPSZACNumberofStages,
+      IF BackSpaceZNPSZACStage == 2,  
+      IF BackSpaceZNPSZACCoolLoad < 0.6,
+      SET BackSpaceZNPSZACTimestepEconEff = BackSpaceZNPSZACMaxE,
+      ELSE,                  
+      SET BackSpaceZNPSZACECOEff = 0-2.18919863612305,
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0-0.674461284910428*BackSpaceZNPSZACCoolLoad),
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0.000459106275872404*(OATF^2)),
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0-0.00000484778537945252*(OATF^3)),
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0.182915713033586*OAwbF),
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0-0.00382838660261133*(OAwbF^2)),
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0.0000255567460240583*(OAwbF^3)),
+      SET BackSpaceZNPSZACTimestepEconEff = BackSpaceZNPSZACECOEff,
+      ENDIF,                 
+      ELSE,                  
+      SET BackSpaceZNPSZACECOEff = 2.36337942464462,
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0-0.409939515512619*BackSpaceZNPSZACCoolLoad),
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0-0.0565205596792225*OAwbF),
+      SET BackSpaceZNPSZACECOEff = BackSpaceZNPSZACECOEff+(0-0.0000632612294169389*(OATF^2)),
+      SET BackSpaceZNPSZACTimestepEconEff = BackSpaceZNPSZACECOEff+(0.000571724868775081*(OAwbF^2)),
+      ENDIF,                 
+      IF BackSpaceZNPSZACTimestepEconEff > BackSpaceZNPSZACMaxE,
+      SET BackSpaceZNPSZACTimestepEconEff = BackSpaceZNPSZACMaxE,
+      ELSEIF BackSpaceZNPSZACTimestepEconEff < (BackSpaceZNPSZACOADesignMass*BackSpaceZNPSZACOASch),
+      SET BackSpaceZNPSZACTimestepEconEff = (BackSpaceZNPSZACOADesignMass*BackSpaceZNPSZACOASch),
+      ENDIF,                 
+      ENDIF;                 
+
+    EnergyManagementSystem:Program,
+      BackSpaceZNPSZACSetFanPar,    
+      IF BackSpaceZNPSZACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      SET BackSpaceZNPSZACFanPwrExp = 2.2,
+      SET BackSpaceZNPSZACOAFrac = BackSpaceZNPSZACOAFlowMass/BackSpaceZNPSZACDesignFlowMass,
+      IF  BackSpaceZNPSZACOAFrac < 0.66,
+      SET BackSpaceZNPSZACVenSpeed = 0.66,
+      SET BackSpaceZNPSZACStg1Spd = 0.66,
+      ELSE,                  
+      SET BackSpaceZNPSZACVenSpeed = BackSpaceZNPSZACOAFrac,
+      SET BackSpaceZNPSZACStg1Spd = BackSpaceZNPSZACOAFrac,
+      ENDIF,                 
+      SET BackSpaceZNPSZACStg2Spd = 1.0,
+      SET BackSpaceZNPSZACHeatSpeed = 1.0;
+
+    EnergyManagementSystem:Program,
+      BackSpaceZNPSZACFanControl,    
+      IF BackSpaceZNPSZACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      IF BackSpaceZNPSZACHeatingRTF > 0,
+      SET BackSpaceZNPSZACHeating = BackSpaceZNPSZACHeatingRTF,
+      SET BackSpaceZNPSZACVen = 1-BackSpaceZNPSZACHeatingRTF,
+      SET BackSpaceZNPSZACEco = 0,    
+      SET BackSpaceZNPSZACStage1 = 0, 
+      SET BackSpaceZNPSZACStage2 = 0, 
+      ELSE,                  
+      SET BackSpaceZNPSZACHeating = 0,
+      SET BackSpaceZNPSZACEcoSpeed = BackSpaceZNPSZACVenSpeed,
+      IF BackSpaceZNPSZACSpeedRatio == 0,
+      IF BackSpaceZNPSZACRTF > 0,     
+      SET BackSpaceZNPSZACStage1 = BackSpaceZNPSZACRTF,
+      SET BackSpaceZNPSZACStage2 = 0, 
+      SET BackSpaceZNPSZACVen = 1-BackSpaceZNPSZACRTF,
+      SET BackSpaceZNPSZACEco = 0,    
+      IF BackSpaceZNPSZACOAFlowMass > (BackSpaceZNPSZACOADesignMass*BackSpaceZNPSZACOASch),
+      SET BackSpaceZNPSZACStg1Spd = 1.0,
+      ENDIF,                 
+      ELSE,                  
+      SET BackSpaceZNPSZACStage1 = 0, 
+      SET BackSpaceZNPSZACStage2 = 0, 
+      IF BackSpaceZNPSZACOAFlowMass > (BackSpaceZNPSZACOADesignMass*BackSpaceZNPSZACOASch),
+      SET BackSpaceZNPSZACEco = 1.0,  
+      SET BackSpaceZNPSZACVen = 0,           
+      !Calculate the expected discharge air temperature if the system runs at its low speed      
+      SET BackSpaceZNPSZACExpDAT = BackSpaceZNPSZACDATRqd-(1-BackSpaceZNPSZACVenSpeed)*Back_Space_ZNTemp,
+      SET BackSpaceZNPSZACExpDAT = BackSpaceZNPSZACExpDAT/BackSpaceZNPSZACVenSpeed,
+      IF OATF > BackSpaceZNPSZACExpDAT,
+      SET BackSpaceZNPSZACEcoSpeed = BackSpaceZNPSZACStg2Spd,
+      ENDIF,                 
+      ELSE,                  
+      SET BackSpaceZNPSZACEco = 0,    
+      SET BackSpaceZNPSZACVen = 1.0,  
+      ENDIF,                 
+      ENDIF,                 
+      ELSE,                  
+      SET BackSpaceZNPSZACStage1 = 1-BackSpaceZNPSZACSpeedRatio,
+      SET BackSpaceZNPSZACStage2 = BackSpaceZNPSZACSpeedRatio,
+      SET BackSpaceZNPSZACVen = 0,    
+      SET BackSpaceZNPSZACEco = 0,    
+      IF BackSpaceZNPSZACOAFlowMass > (BackSpaceZNPSZACOADesignMass*BackSpaceZNPSZACOASch),
+      SET BackSpaceZNPSZACStg1Spd = 1.0,
+      ENDIF,                 
+      ENDIF,                 
+      ENDIF,                  
+      ! For each mode, (percent time in mode)*(fanSpeer^PwrExp) is the contribution to weighted fan power over time step
+      SET BackSpaceZNPSZACFPR = BackSpaceZNPSZACVen*(BackSpaceZNPSZACVenSpeed ^ BackSpaceZNPSZACFanPwrExp),
+      SET BackSpaceZNPSZACFPR = BackSpaceZNPSZACFPR+BackSpaceZNPSZACEco*(BackSpaceZNPSZACEcoSpeed^BackSpaceZNPSZACFanPwrExp),
+      SET BackSpaceZNPSZACFPR1 = BackSpaceZNPSZACStage1*(BackSpaceZNPSZACStg1Spd^BackSpaceZNPSZACFanPwrExp),
+      SET BackSpaceZNPSZACFPR = BackSpaceZNPSZACFPR+BackSpaceZNPSZACFPR1,
+      SET BackSpaceZNPSZACFPR2 = BackSpaceZNPSZACStage2*(BackSpaceZNPSZACStg2Spd^BackSpaceZNPSZACFanPwrExp),
+      SET BackSpaceZNPSZACFPR = BackSpaceZNPSZACFPR+BackSpaceZNPSZACFPR2,
+      SET BackSpaceZNPSZACFPR3 = BackSpaceZNPSZACHeating*(BackSpaceZNPSZACHeatSpeed^BackSpaceZNPSZACFanPwrExp),
+      SET BackSpaceZNPSZACFanPwrRatio = BackSpaceZNPSZACFPR+ BackSpaceZNPSZACFPR3,
+      ! system fan power is directly proportional to static pressure, so this change linearly adjusts fan energy for speed control
+      SET BackSpaceZNPSZACFanPressure = BackSpaceZNPSZACFanDesignPressure*BackSpaceZNPSZACFanPwrRatio;
+
+    EnergyManagementSystem:Program,
+      BackSpaceZNPSZACSetNumberofStages,
+      SET BackSpaceZNPSZACNumberofStages =  2;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      BackSpaceZNPSZACSetNumberofStagesCallingManager,
+      BeginNewEnvironment,
+      BackSpaceZNPSZACSetNumberofStages;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      BackSpaceZNPSZACECOManager,    
+      InsideHVACSystemIterationLoop,  !- EnergyPlus Model Calling Point
+      BackSpaceZNPSZACEconomizerCTRLProg;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      BackSpaceZNPSZACFanParametermanager,
+      BeginNewEnvironment,
+      BackSpaceZNPSZACSetFanPar;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      BackSpaceZNPSZACFanMainManager,
+      BeginTimestepBeforePredictor,
+      BackSpaceZNPSZACFanControl;
+
+    

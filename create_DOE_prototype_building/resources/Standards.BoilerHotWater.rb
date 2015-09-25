@@ -1,7 +1,12 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::BoilerHotWater
 
+  # Applies the standard efficiency ratings and typical performance curves to this object.
+  # 
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @param standards [Hash] the OpenStudio_Standards spreadsheet in hash format
+  # @return [Bool] true if successful, false if not 
   def setStandardEfficiencyAndCurves(template, standards)
   
     successfully_set_all_properties = false
@@ -99,7 +104,6 @@ class OpenStudio::Model::BoilerHotWater
       self.setNominalThermalEfficiency(thermal_eff)
     end   
   
-    # for debugging - maria
     #puts "capacity_w = #{capacity_w}"
     
    # for NECB, check if modulating boiler required
@@ -110,7 +114,7 @@ class OpenStudio::Model::BoilerHotWater
         self.setMinimumPartLoadRatio(0.25)
       end
    end  # NECB 2011
-    
+  return successfully_set_all_properties
   end
   
 end

@@ -11,6 +11,7 @@ class OpenStudio::Model::Model
   require_relative 'Standards.FanConstantVolume'
   require_relative 'Standards.FanVariableVolume'
   require_relative 'Standards.FanOnOff'
+  require_relative 'Standards.FanZoneExhaust'
   require_relative 'Standards.ChillerElectricEIR'
   require_relative 'Standards.CoilCoolingDXTwoSpeed'
   require_relative 'Standards.CoilCoolingDXSingleSpeed'
@@ -20,21 +21,42 @@ class OpenStudio::Model::Model
   require_relative 'Standards.WaterHeaterMixed'
   require_relative 'Standards.Space'
   require_relative 'Standards.Construction'
+  require_relative 'Standards.ThermalZone'
+  require_relative 'Standards.Surface'
+  require_relative 'Standards.SubSurface'
   
-  def applyHVACEfficiencyStandard
+  # Applies the multi-zone VAV outdoor air sizing requirements
+  # to all applicable air loops in the model.
+  #
+  # @note This must be performed before the sizing run because
+  # it impacts component sizes, which in turn impact efficiencies.
+  def apply_multizone_vav_outdoor_air_sizing()
+    
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
+     
+    # Multi-zone VAV outdoor air sizing
+    self.getAirLoopHVACs.sort.each {|obj| obj.apply_multizone_vav_outdoor_air_sizing}  
+
+  end
+  
+  # Applies the HVAC parts of the standard to all objects in the model
+  # using the the template/standard specified in the model.
+  def applyHVACEfficiencyStandard()
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
     
-    #### Economizers
-    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerLimits(self.template, self.climate_zone)}
-    self.getAirLoopHVACs.sort.each {|obj| obj.setEconomizerIntegration(self.template, self.climate_zone)}    
+    #### Controls
     
+    # Air Loop Controls
+    self.getAirLoopHVACs.sort.each {|obj| obj.apply_standard_controls(self.template, self.climate_zone)}  
+
     ##### Apply equipment efficiencies
     
     # Fans
     self.getFanVariableVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanConstantVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanOnOffs.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
+    self.getFanZoneExhausts.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
 
     # Unitary ACs
     self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
@@ -55,8 +77,10 @@ class OpenStudio::Model::Model
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying HVAC efficiency standards.')
   
   end
-  
-  def addDaylightingControls
+ 
+  # Applies daylighting controls to each space in the model
+  # per the standard.
+  def addDaylightingControls()
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding daylighting controls.')
     
@@ -69,7 +93,38 @@ class OpenStudio::Model::Model
   
   end
 
-  # Load the openstudio standards dataset and attach it to the model.
+  # Apply the air leakage requirements to the model,
+  # as described in PNNL section 5.2.1.6.
+  #
+  # base infiltration rates off of.
+  # @return [Bool] true if successful, false if not
+  # @todo This infiltration method is not used by the Reference
+  # buildings, fix this inconsistency.
+  def apply_infiltration_standard()
+  
+    # Set the infiltration rate at each space
+    self.getSpaces.sort.each do |space|
+      space.set_infiltration_rate(self.template)
+    end
+
+    case self.template
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+        #"For 'DOE Ref Pre-1980' and 'DOE Ref 1980-2004', infiltration rates are not defined using this method, no changes have been made to the model.
+      else
+        # Remove infiltration rates set at the space type
+        self.getSpaceTypes.each do |space_type|
+          space_type.spaceInfiltrationDesignFlowRates.each do |infil|
+            infil.remove
+          end
+        end
+      end
+  end
+  
+  # Loads the openstudio standards dataset and attach it to the model
+  # via the :standards instance variable.
+  #
+  # @param standards_data_dir [Directory] The directory that contains all the OpenStudio_Standards_*.json files
+  # @todo test to verify that standards were loaded properly.
   def load_openstudio_standards_json(standards_data_dir)
     
     standards_files = []
@@ -84,7 +139,6 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_curve_biquadratics.json'
     standards_files << 'OpenStudio_Standards_curve_cubics.json'
     standards_files << 'OpenStudio_Standards_curve_quadratics.json'
-    standards_files << 'OpenStudio_Standards_exterior.json'
     standards_files << 'OpenStudio_Standards_ground_temperatures.json'
     standards_files << 'OpenStudio_Standards_heat_pumps_heating.json'
     standards_files << 'OpenStudio_Standards_heat_pumps_cooling.json'
@@ -100,8 +154,8 @@ class OpenStudio::Model::Model
     # Combine the data from the JSON files into a single hash
     standards_hash = {}
     standards_files.sort.each do |standards_file|
-      temp = File.read("#{standards_data_dir}/#{standards_file}")
-      file_hash = JSON.parse(temp)
+      temp = File.open("#{standards_data_dir}/#{standards_file}", 'r:UTF-8')
+      file_hash = JSON.load(temp)
       standards_hash = standards_hash.merge(file_hash)
     end  
       
@@ -113,10 +167,21 @@ class OpenStudio::Model::Model
   end
 
   # Method to search through a hash for the objects that meets the
-  # desired search criteria, as passed via a hash.  If capacity is supplied,
-  # the objects will only be returned if the specified capacity is between
-  # the minimum_capacity and maximum_capacity values.
+  # desired search criteria, as passed via a hash.  
   # Returns an Array (empty if nothing found) of matching objects.
+  #
+  # @param hash_of_objects [Hash] hash of objects to search through
+  # @param search_criteria [Hash] hash of search criteria
+  # @param capacity [Double] capacity of the object in question.  If capacity is supplied,
+  #   the objects will only be returned if the specified capacity is between
+  #   the minimum_capacity and maximum_capacity values.
+  # @return [Array] returns an array of hashes, one hash per object.  Array is empty if no results.
+  # @example Find all the schedule rules that match the name
+  #   rules = self.find_objects(self.standards['schedules'], {'name'=>schedule_name})
+  #   if rules.size == 0
+  #     OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.Model', "Cannot find data for schedule: #{schedule_name}, will not be created.")
+  #     return false #TODO change to return empty optional schedule:ruleset?
+  #   end
   def find_objects(hash_of_objects, search_criteria, capacity = nil)
     
     desired_object = nil
@@ -177,7 +242,21 @@ class OpenStudio::Model::Model
   # desired search criteria, as passed via a hash.  If capacity is supplied,
   # the object will only be returned if the specified capacity is between
   # the minimum_capacity and maximum_capacity values.
-  # Returns tbe first matching object if successful, nil if not.
+  # 
+  #
+  # @param hash_of_objects [Hash] hash of objects to search through
+  # @param search_criteria [Hash] hash of search criteria
+  # @param capacity [Double] capacity of the object in question.  If capacity is supplied,
+  #   the objects will only be returned if the specified capacity is between
+  #   the minimum_capacity and maximum_capacity values.
+  # @return [Hash] Return tbe first matching object hash if successful, nil if not.
+  # @example Find the motor that meets these size criteria
+  #   search_criteria = {
+  #   'template' => template,
+  #   'number_of_poles' => 4.0,
+  #   'type' => 'Enclosed',
+  #   }
+  #   motor_properties = self.model.find_object(motors, search_criteria, 2.5)
   def find_object(hash_of_objects, search_criteria, capacity = nil)
     
     desired_object = nil
@@ -209,7 +288,7 @@ class OpenStudio::Model::Model
       # Round up if capacity is an integer
       if capacity == capacity.round
         capacity = capacity + (capacity * 0.01)
-      end    
+      end
       search_criteria_matching_objects.each do |object|
         # Skip objects that don't have fields for minimum_capacity and maximum_capacity
         next if !object.has_key?('minimum_capacity') || !object.has_key?('maximum_capacity') 
@@ -239,8 +318,12 @@ class OpenStudio::Model::Model
    
   end
   
-  # Create a schedule from the openstudio standards dataset.
-  # TODO make return an OptionalScheduleRuleset
+  # Create a schedule from the openstudio standards dataset and
+  # add it to the model.
+  #
+  # @param schedule_name [String} name of the schedule
+  # @return [ScheduleRuleset] the resulting schedule ruleset
+  # @todo make return an OptionalScheduleRuleset
   def add_schedule(schedule_name)
     return nil if schedule_name == nil or schedule_name == ""
     # First check model and return schedule if it already exists
@@ -294,21 +377,21 @@ class OpenStudio::Model::Model
       if day_types.include?('Default')
         day_sch = sch_ruleset.defaultDaySchedule
         day_sch.setName("#{schedule_name} Default")
-        add_vals_to_sch(day_sch, sch_type, values) 
+        add_vals_to_sch(day_sch, sch_type, values)
       end
-      
+
       # Winter Design Day
       if day_types.include?('WntrDsn')
-        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)
         sch_ruleset.setWinterDesignDaySchedule(day_sch)
         day_sch = sch_ruleset.winterDesignDaySchedule
         day_sch.setName("#{schedule_name} Winter Design Day")
-        add_vals_to_sch(day_sch, sch_type, values) 
+        add_vals_to_sch(day_sch, sch_type, values)
       end    
-      
+
       # Summer Design Day
       if day_types.include?('SmrDsn')
-        day_sch = OpenStudio::Model::ScheduleDay.new(self)  
+        day_sch = OpenStudio::Model::ScheduleDay.new(self)
         sch_ruleset.setSummerDesignDaySchedule(day_sch)
         day_sch = sch_ruleset.summerDesignDaySchedule
         day_sch.setName("#{schedule_name} Summer Design Day")
@@ -329,7 +412,7 @@ class OpenStudio::Model::Model
         # Make the Rule
         sch_rule = OpenStudio::Model::ScheduleRule.new(sch_ruleset)
         day_sch = sch_rule.daySchedule
-        day_sch.setName("#{schedule_name} Summer Design Day")
+        day_sch.setName("#{schedule_name} #{day_types} Day")
         add_vals_to_sch(day_sch, sch_type, values)
         
         # Set the dates when the rule applies
@@ -368,7 +451,7 @@ class OpenStudio::Model::Model
   end
     
   # Create a space type from the openstudio standards dataset.
-  # TODO make return an OptionalSpaceType
+  # @todo make return an OptionalSpaceType
   def add_space_type(template, clim, building_type, spc_type)
     #OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding space type: #{template}-#{clim}-#{building_type}-#{spc_type}")
 
@@ -419,11 +502,20 @@ class OpenStudio::Model::Model
       # Create the lighting definition
       lights_def = OpenStudio::Model::LightsDefinition.new(self)
       lights_def.setName("#{name} Lights Definition")
+      lights_frac_to_return_air = data['lighting_fraction_to_return_air']
+      lights_frac_radiant = data['lighting_fraction_radiant']
+      lights_frac_visible = data['lighting_fraction_visible']
       unless  lighting_per_area == 0 || lighting_per_area.nil?
         lights_def.setWattsperSpaceFloorArea(OpenStudio.convert(lighting_per_area, 'W/ft^2', 'W/m^2').get)
+        lights_def.setReturnAirFraction(lights_frac_to_return_air)
+        lights_def.setFractionRadiant(lights_frac_radiant)
+        lights_def.setFractionVisible(lights_frac_visible)
       end
       unless lighting_per_person == 0 || lighting_per_person.nil?
         lights_def.setWattsperPerson(OpenStudio.convert(lighting_per_person, 'W/person', 'W/person').get)
+        lights_def.setReturnAirFraction(lights_frac_to_return_air)
+        lights_def.setFractionRadiant(lights_frac_radiant)
+        lights_def.setFractionVisible(lights_frac_visible)
       end
 
       # Create the lighting instance and hook it up to the space type
@@ -448,6 +540,7 @@ class OpenStudio::Model::Model
     unless ventilation_per_area  == 0 || ventilation_per_area.nil? then make_ventilation = true  end
     unless ventilation_per_person == 0 || ventilation_per_person.nil? then make_ventilation = true end
     unless ventilation_ach == 0 || ventilation_ach.nil? then make_ventilation = true end
+
 
     if make_ventilation == true
 
@@ -531,6 +624,9 @@ class OpenStudio::Model::Model
 
     make_electric_equipment = false
     elec_equip_per_area = data['electric_equipment_per_area']
+    elec_equip_frac_latent = data['electric_equipment_fraction_latent']
+    elec_equip_frac_radiant = data['electric_equipment_fraction_radiant']
+    elec_equip_frac_lost = data['electric_equipment_fraction_lost']
     unless elec_equip_per_area == 0 || elec_equip_per_area.nil? then make_electric_equipment = true end
 
     if make_electric_equipment == true
@@ -540,6 +636,9 @@ class OpenStudio::Model::Model
       elec_equip_def.setName("#{name} Electric Equipment Definition")
       unless  elec_equip_per_area == 0 || elec_equip_per_area.nil?
         elec_equip_def.setWattsperSpaceFloorArea(OpenStudio.convert(elec_equip_per_area, 'W/ft^2', 'W/m^2').get)
+        elec_equip_def.setFractionLatent(elec_equip_frac_latent)
+        elec_equip_def.setFractionRadiant(elec_equip_frac_radiant)
+        elec_equip_def.setFractionLost(elec_equip_frac_lost)
       end
 
       # Create the electric equipment instance and hook it up to the space type
@@ -559,6 +658,10 @@ class OpenStudio::Model::Model
 
     make_gas_equipment = false
     gas_equip_per_area = data['gas_equipment_per_area']
+    gas_equip_frac_latent = data['gas_equipment_fraction_latent']
+    gas_equip_frac_radiant = data['gas_equipment_fraction_radiant']
+    gas_equip_frac_lost = data['gas_equipment_fraction_lost']
+
     unless  gas_equip_per_area == 0 || gas_equip_per_area.nil? then make_gas_equipment = true end
 
     if make_gas_equipment == true
@@ -566,6 +669,9 @@ class OpenStudio::Model::Model
       # Create the gas equipment definition
       gas_equip_def = OpenStudio::Model::GasEquipmentDefinition.new(self)
       gas_equip_def.setName("#{name} Gas Equipment Definition")
+      gas_equip_def.setFractionLatent(gas_equip_frac_latent)
+      gas_equip_def.setFractionRadiant(gas_equip_frac_radiant)
+      gas_equip_def.setFractionLost(gas_equip_frac_lost)
       unless  gas_equip_per_area == 0 || gas_equip_per_area.nil?
         gas_equip_def.setWattsperSpaceFloorArea(OpenStudio.convert(gas_equip_per_area, 'Btu/hr*ft^2', 'W/m^2').get)
       end
@@ -676,9 +782,8 @@ class OpenStudio::Model::Model
   end # end generate_space_type
   
   # Create a material from the openstudio standards dataset.
-  # TODO make return an OptionalMaterial
+  # @todo make return an OptionalMaterial
   def add_material(material_name)
-    
     # First check model and return material if it already exists
     self.getMaterials.each do |material|
       if material.name.get.to_s == material_name
@@ -715,6 +820,7 @@ class OpenStudio::Model::Model
     elsif material_type == 'MasslessOpaqueMaterial'
       material = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
       material.setName(material_name)
+      material.setThermalResistance(OpenStudio.convert(data['resistance'].to_f, 'hr*ft^2*R/Btu', 'm^2*K/W').get)
 
       material.setConductivity(OpenStudio.convert(data['conductivity'].to_f, 'Btu*in/hr*ft^2*R', 'W/m*K').get)
       material.setDensity(OpenStudio.convert(data['density'].to_f, 'lb/ft^3', 'kg/m^3').get)
@@ -778,7 +884,7 @@ class OpenStudio::Model::Model
 
   # Create a construction from the openstudio standards dataset.
   # If construction_props are specified, modifies the insulation layer accordingly.
-  # TODO make return an OptionalConstruction
+  # @todo make return an OptionalConstruction
   def add_construction(construction_name, construction_props = nil)
 
     # First check model and return construction if it already exists
@@ -902,7 +1008,7 @@ class OpenStudio::Model::Model
   
   # Create a construction set from the openstudio standards dataset.
   # Returns an Optional DefaultConstructionSet
-  def add_construction_set(template, clim, building_type, spc_type)
+  def add_construction_set(template, clim, building_type, spc_type, is_residential)
 
     construction_set = OpenStudio::Model::OptionalDefaultConstructionSet.new
 
@@ -913,13 +1019,15 @@ class OpenStudio::Model::Model
     end
  
     # Get the object data
-    data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
+    data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type, 'is_residential'=>is_residential})
     if !data
-      #OpenStudio::logFree(OpenStudio::Error, 'openstudio.standards.Model', "Could not find construction set for: #{template}-#{clim}-#{building_type}-#{spc_type}")
-      return construction_set
+      data = self.find_object(self.standards['construction_sets'], {'template'=>template, 'climate_zone_set'=> climate_zone_set, 'building_type'=>building_type, 'space_type'=>spc_type})
+      if !data
+        return construction_set
+      end
     end 
   
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}")  
+    OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.Model', "Adding construction set: #{template}-#{clim}-#{building_type}-#{spc_type}-is_residential#{is_residential}")  
   
     name = make_name(template, clim, building_type, spc_type)
 
@@ -1143,10 +1251,10 @@ class OpenStudio::Model::Model
       curve.setCoefficient4y(curve_data["coeff_4"])
       curve.setCoefficient5yPOW2(curve_data["coeff_5"])
       curve.setCoefficient6xTIMESY(curve_data["coeff_6"])
-      curve.setCoefficient7xPOW3 (curve_data["coeff_7"])
-      curve.setCoefficient8yPOW3 (curve_data["coeff_8"])
+      curve.setCoefficient7xPOW3(curve_data["coeff_7"])
+      curve.setCoefficient8yPOW3(curve_data["coeff_8"])
       curve.setCoefficient9xPOW2TIMESY(curve_data["coeff_9"])
-      curve.setCoefficient10xTIMESYPOW2 (curve_data["coeff_10"])
+      curve.setCoefficient10xTIMESYPOW2(curve_data["coeff_10"])
       curve.setMinimumValueofx(eirft_properties["min_x"])
       curve.setMaximumValueofx(eirft_properties["max_x"])
       curve.setMinimumValueofy(eirft_properties["min_y"])
@@ -1161,7 +1269,7 @@ class OpenStudio::Model::Model
       return nil
     end
     
-  end  
+  end
   
   private
 
@@ -1256,10 +1364,16 @@ class OpenStudio::Model::Model
     case building_vintage
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'    
       result = possible_climate_zones.sort.last
-    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+    when '90.1-2007', '90.1-2010', '90.1-2013'
       result = possible_climate_zones.sort.first
+    when '90.1-2004'
+      if possible_climate_zones.include? "ClimateZone 3"
+        result = possible_climate_zones.sort.last
+      else
+        result = possible_climate_zones.sort.first
+      end
     end
-    
+        
     # Check that a climate zone set was found
     if result.nil?
       
@@ -1268,5 +1382,5 @@ class OpenStudio::Model::Model
     return result
   
   end
-  
+
 end

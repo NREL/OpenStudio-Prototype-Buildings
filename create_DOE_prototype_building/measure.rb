@@ -60,24 +60,24 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
 
     # Make an argument for the climate zone
     climate_zone_chs = OpenStudio::StringVector.new
-    #climate_zone_chs << 'ASHRAE 169-2006-1A'
+    climate_zone_chs << 'ASHRAE 169-2006-1A'
     #climate_zone_chs << 'ASHRAE 169-2006-1B'
     climate_zone_chs << 'ASHRAE 169-2006-2A'
-    #climate_zone_chs << 'ASHRAE 169-2006-2B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3A'
+    climate_zone_chs << 'ASHRAE 169-2006-2B'
+    climate_zone_chs << 'ASHRAE 169-2006-3A'
     climate_zone_chs << 'ASHRAE 169-2006-3B'
-    #climate_zone_chs << 'ASHRAE 169-2006-3C'
+    climate_zone_chs << 'ASHRAE 169-2006-3C'
     climate_zone_chs << 'ASHRAE 169-2006-4A'
-    #climate_zone_chs << 'ASHRAE 169-2006-4B'
-    #climate_zone_chs << 'ASHRAE 169-2006-4C'
+    climate_zone_chs << 'ASHRAE 169-2006-4B'
+    climate_zone_chs << 'ASHRAE 169-2006-4C'
     climate_zone_chs << 'ASHRAE 169-2006-5A'
-    #climate_zone_chs << 'ASHRAE 169-2006-5B'
+    climate_zone_chs << 'ASHRAE 169-2006-5B'
     #climate_zone_chs << 'ASHRAE 169-2006-5C'
-    #climate_zone_chs << 'ASHRAE 169-2006-6A'
-    #climate_zone_chs << 'ASHRAE 169-2006-6B'
-    #climate_zone_chs << 'ASHRAE 169-2006-7A'
+    climate_zone_chs << 'ASHRAE 169-2006-6A'
+    climate_zone_chs << 'ASHRAE 169-2006-6B'
+    climate_zone_chs << 'ASHRAE 169-2006-7A'
     #climate_zone_chs << 'ASHRAE 169-2006-7B'
-    #climate_zone_chs << 'ASHRAE 169-2006-8A'
+    climate_zone_chs << 'ASHRAE 169-2006-8A'
     #climate_zone_chs << 'ASHRAE 169-2006-8B'
     climate_zone = OpenStudio::Ruleset::OSArgument::makeChoiceArgument('climate_zone', climate_zone_chs, true)
     climate_zone.setDisplayName('Select a Climate Zone.')
@@ -138,8 +138,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Retrieve the Prototype Inputs from JSON
     search_criteria = {
       'template' => building_vintage,
-      'climate_zone' => climate_zone,
-      'building_type' => building_type,
+      'building_type' => building_type
     }
     prototype_input = model.find_object(model.standards['prototype_inputs'], search_criteria)
     if prototype_input.nil?
@@ -215,10 +214,17 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       require_relative 'resources/Prototype.small_hotel'
       # Small Hotel geometry is different between
       # Reference and Prototype vintages
-      if building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
+      case building_vintage
+      when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
         geometry_file = 'Geometry.small_hotel_doe.osm'
-      else
-        geometry_file = 'Geometry.small_hotel_pnnl.osm'
+      when '90.1-2004'
+        geometry_file = 'Geometry.small_hotel_pnnl2004.osm'
+      when '90.1-2007'
+        geometry_file = 'Geometry.small_hotel_pnnl2007.osm'
+      when '90.1-2010'
+        geometry_file = 'Geometry.small_hotel_pnnl2010.osm'
+      when '90.1-2013'
+        geometry_file = 'Geometry.small_hotel_pnnl2013.osm'
       end
     when 'LargeHotel'
       require_relative 'resources/Prototype.large_hotel'
@@ -226,7 +232,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       case building_vintage
         when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
           geometry_file = 'Geometry.large_hotel.doe.osm'
-        when '90.1-2007'
+        when '90.1-2007','90.1-2004'
           geometry_file = 'Geometry.large_hotel.2004_2007.osm'
         when '90.1-2010'
           geometry_file = 'Geometry.large_hotel.2010.osm'
@@ -238,7 +244,14 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       geometry_file = 'Geometry.warehouse.osm'
     when 'RetailStandalone'
       require_relative 'resources/Prototype.retail_standalone'
-      geometry_file = 'Geometry.retail_standalone.osm'
+      case building_vintage
+        when 'DOE Ref Pre-1980','DOE Ref 1980-2004','DOE Ref 2004'
+          geometry_file = 'Geometry.retail_standalone.pre1980_post1980.osm'
+        when '90.1-2004','90.1-2007'
+          geometry_file = 'Geometry.retail_standalone.2004_2007.osm'
+        else #'90.1-2010', '90.1-2013'
+          geometry_file = 'Geometry.retail_standalone.2010_2013.osm'
+      end
       alt_search_name = 'Retail'
     when 'RetailStripmall'
       require_relative 'resources/Prototype.retail_stripmall'
@@ -264,26 +277,56 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model.add_geometry(geometry_file)
     model.getBuilding.setName("#{building_vintage}-#{building_type}-#{climate_zone} created: #{Time.new}")
     space_type_map = model.define_space_type_map(building_type, building_vintage, climate_zone)
-    model.assign_space_type_stubs(alt_search_name, space_type_map)
+    
+    if building_type == "SmallHotel"
+      building_story_map = model.define_building_story_map(building_type, building_vintage, climate_zone)
+      model.assign_building_story(building_type, building_vintage, climate_zone, building_story_map)
+    end
+    
+    # Assign the standards to the model
+    model.template = building_vintage
+    model.climate_zone = climate_zone      
+    
+    model.assign_space_type_stubs(alt_search_name, space_type_map)    
     model.add_loads(building_vintage, climate_zone)
+    model.apply_infiltration_standard
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
+    model.modify_surface_convection_algorithm(building_vintage)
     model.add_constructions(alt_search_name, building_vintage, climate_zone)
     model.create_thermal_zones(building_type,building_vintage, climate_zone)
     model.add_hvac(building_type, building_vintage, climate_zone, prototype_input, model.standards)
-    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, model.standards)
-    model.add_refrigeration(building_type, building_vintage, climate_zone, prototype_input, model.standards)
+    model.add_swh(building_type, building_vintage, climate_zone, prototype_input, model.standards, space_type_map)
     model.add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     model.add_occupancy_sensors(building_type, building_vintage, climate_zone)
 
     # Set the building location, weather files, ddy files, etc.
-    model.add_design_days_and_weather_file(model.standards, alt_search_name, building_vintage, climate_zone)
+    model.add_design_days_and_weather_file(model.standards, building_type, building_vintage, climate_zone)
     
     # Set the sizing parameters
     model.set_sizing_parameters(building_type, building_vintage)
 
-    # Assign the standards to the model
-    model.template = building_vintage
-    model.climate_zone = climate_zone
+    # Set the Day of Week for Start Day
+    model.yearDescription.get.setDayofWeekforStartDay('Sunday')
+
+    
+    # # raise the upper limit of surface temperature
+    # heat_balance_algorithm = Openstudio::Model::getUniqueObject<HeatBalanceAlgorithm>(model)
+    # heat_balance_algorithm = model.getOptionalUniqueObject<HeatBalanceAlgorithm>()
+    # heat_balance_algorithm.setSurfaceTemperatureUpperLimit(250)
+
+    # Adjust all spaces to have OA per area instead
+    # of OA per zone.  Experiment to see if this
+    # impacts OA flow rates in system.
+    # model.getSpaces.sort.each do |space|
+      # zone = space.thermalZone.get
+      # oa_per_area = zone.outdoor_airflow_rate_per_area
+      # ventilation = OpenStudio::Model::DesignSpecificationOutdoorAir.new(model)
+      # ventilation.setName("#{space.name} OA per area")
+      # ventilation.setOutdoorAirMethod("Flow/Area")
+      # ventilation.setOutdoorAirFlowperFloorArea(oa_per_area)
+      # space.setDesignSpecificationOutdoorAir(ventilation)
+    # end
+
     model_status = '1_initial_creation'
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
@@ -295,6 +338,16 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = "2_after_first_sz_run"
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)
+ 
+    model.apply_multizone_vav_outdoor_air_sizing
+ 
+    # Perform a sizing run
+    if model.runSizingRun("#{osm_directory}/SizingRun2") == false
+      log_msgs
+      return false
+    end
+    model_status = "3_after_second_sz_run"
+    model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true) 
 
     # Apply the prototype HVAC assumptions
     # which include sizing the fan pressure rises based
@@ -316,9 +369,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     model_status = '6_after_apply_hvac_std'
     #model.run("#{osm_directory}/#{model_status}")
     model.save(OpenStudio::Path.new("#{osm_directory}/#{model_status}.osm"), true)  
-
+    
     # Add daylighting controls per standard
-    # TODO: There are some bugs in the function
+    # only four zones in large hotel have daylighting controls
+    # todo: YXC to merge to the main function
     if building_type != "LargeHotel"
       model.addDaylightingControls
     end

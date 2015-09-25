@@ -1,10 +1,17 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::FanConstantVolume
 
-  # Sets the fan motor efficiency based on the standard
+  # Sets the fan motor efficiency based on the standard.
+  # Assumes 65% fan efficiency and 4-pole, enclosed motor.
+  #
+  # @return [Bool] true if successful, false if not
   def setStandardEfficiency(template, standards)
-    
+    # TODO: Yixing Check the model of the UnitHeater Fan
+    # The difference between this standard efficiency and the prototype is large (0.2 vs 0.6)
+    # Now, don't change the UnitHeater Fan
+    return if self.name.to_s.include?("UnitHeater Fan")
+
     motors = standards['motors']
     
     # Get the max flow rate from the fan.
@@ -33,10 +40,12 @@ class OpenStudio::Model::FanConstantVolume
     brake_hp = (pressure_rise_in_h2o * maximum_flow_rate_cfm)/(fan_eff * 6356) 
     allowed_hp = brake_hp * 1.1 # Per PNNL document #TODO add reference
     if allowed_hp > 0.1
-      allowed_hp = allowed_hp.round(2)
+      allowed_hp = allowed_hp.round(2)+0.0001
     elsif allowed_hp < 0.01
       allowed_hp = 0.01
     end
+    puts "brake_hp = #{self.name}  #{brake_hp}"
+    puts "allowed_hp = #{self.name} #{allowed_hp}"
     
     # Find the motor that meets these size criteria
     mod_template = template.dup
@@ -48,7 +57,7 @@ class OpenStudio::Model::FanConstantVolume
     }
     
     motor_properties = self.model.find_object(motors, search_criteria, allowed_hp)
-  
+ 
     # Get the nominal motor efficiency
     motor_eff = motor_properties['nominal_full_load_efficiency']
   
@@ -65,7 +74,11 @@ class OpenStudio::Model::FanConstantVolume
     
   end
 
-  # Determines the fan power (W)
+  # Determines the fan power (W) based on 
+  # flow rate, pressure rise, and total fan efficiency(impeller eff * motor eff) 
+  # 
+  # @return [Double] fan power
+  #   @units Watts (W)
   def fanPower()
     
     # Get design supply air flow rate (whether autosized or hard-sized)
@@ -90,6 +103,10 @@ class OpenStudio::Model::FanConstantVolume
   end
 
   # Determines the brake horsepower of the fan
+  # based on fan power and fan motor efficiency.
+  # 
+  # @return [Double] brake horsepower
+  #   @units horsepower (hp)  
   def brakeHorsepower()
   
     # Get the fan motor efficiency
@@ -107,6 +124,8 @@ class OpenStudio::Model::FanConstantVolume
 
   # Changes the fan motor efficiency and also the fan total efficiency
   # at the same time, preserving the impeller efficiency.
+  #
+  # @param motor_eff [Double] motor efficiency (0.0 to 1.0)
   def changeMotorEfficiency(motor_eff)
     
     # Calculate the existing impeller efficiency
@@ -125,6 +144,8 @@ class OpenStudio::Model::FanConstantVolume
 
   # Changes the fan impeller efficiency and also the fan total efficiency
   # at the same time, preserving the motor efficiency.
+  #
+  # @param impeller_eff [Double] impeller efficiency (0.0 to 1.0)  
   def changeImpellerEfficiency(impeller_eff)
     
     # Get the existing motor efficiency
@@ -139,7 +160,11 @@ class OpenStudio::Model::FanConstantVolume
   end
   
   # Determines the baseline fan impeller efficiency
-  # based on the specified fan type.
+  # based on the specified fan type.  
+  # Currently always returns 65% impeller efficiency.
+  #
+  # @return [Double] impeller efficiency (0.0 to 1.0)
+  # @todo Add fan type to data model and modify this method
   def baselineImpellerEfficiency(template)
   
     # Assume that the fan efficiency is 65% based on
@@ -157,6 +182,9 @@ class OpenStudio::Model::FanConstantVolume
   
   # Determines the minimum fan motor efficiency 
   # for a given motor bhp
+  #
+  # @param motor_bhp [Double] motor brake horsepower (hp)
+  # @return [Double] minimum motor efficiency (0.0 to 1.0)
   def standardMinimumMotorEfficiency(template, standards, motor_bhp)
   
     # Lookup the minimum motor efficiency
