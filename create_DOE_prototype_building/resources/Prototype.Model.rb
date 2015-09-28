@@ -807,7 +807,7 @@ class OpenStudio::Model::Model
           #oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_100_pct_oa_sch)     
         end  
         
-        end
+       
         
               
       end
