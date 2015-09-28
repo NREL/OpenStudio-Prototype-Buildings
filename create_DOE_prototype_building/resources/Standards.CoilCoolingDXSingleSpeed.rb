@@ -3,7 +3,7 @@
 class OpenStudio::Model::CoilCoolingDXSingleSpeed
 
 
-  def setStandardEfficiencyAndCurves(template, standards)
+  def setStandardEfficiencyAndCurves(template, standards, sql_db_vars_map)
   
     successfully_set_all_properties = true
   
@@ -87,7 +87,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       successfully_set_all_properties = false
       return successfully_set_all_properties
     end    
-    
+
     # Convert capacity to Btu/hr
     capacity_btu_per_hr = OpenStudio.convert(capacity_w, "W", "Btu/hr").get
     capacity_kbtu_per_hr = OpenStudio.convert(capacity_w, "W", "kBtu/hr").get
@@ -159,7 +159,8 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     unless ac_props['minimum_seasonal_energy_efficiency_ratio'].nil?
       min_seer = ac_props['minimum_seasonal_energy_efficiency_ratio']
       cop = seer_to_cop(min_seer)
-      self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
+      new_comp_name = "#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER"
+#      self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
     end
     
@@ -167,16 +168,19 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     unless ac_props['minimum_energy_efficiency_ratio'].nil?
       min_eer = ac_props['minimum_energy_efficiency_ratio']
       cop = eer_to_cop(min_eer)
-      self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER")
+      new_comp_name = "#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER"
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
     end
+
+    sql_db_vars_map[new_comp_name] = self.name.to_s
+    self.setName(new_comp_name)
 
     # Set the efficiency values
     unless cop.nil?
       self.setRatedCOP(OpenStudio::OptionalDouble.new(cop))
     end
 
-    return true
+    return sql_db_vars_map
 
   end
 
