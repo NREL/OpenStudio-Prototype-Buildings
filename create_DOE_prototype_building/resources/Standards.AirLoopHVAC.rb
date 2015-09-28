@@ -1960,7 +1960,7 @@ class OpenStudio::Model::AirLoopHVAC
     # Number of stages is determined by the template
     num_stages = nil
     case template       
-    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', 'NECB 2011'
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: No special economizer controls were modeled.")
       return true
     when '90.1-2004', '90.1-2007'
