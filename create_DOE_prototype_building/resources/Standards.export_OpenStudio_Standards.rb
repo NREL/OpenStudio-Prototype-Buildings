@@ -258,7 +258,7 @@ begin
     sorted_standards_data = standards_data.sort_by_key_updated(true) {|x,y| x.to_s <=> y.to_s}
 
     # Write the hash to a JSON file
-    File.open("#{Dir.pwd}/OpenStudio_Standards_#{sheet_name}.json", 'w:UTF-8') do |file|
+    File.open("#{File.dirname(__FILE__)}/OpenStudio_Standards_#{sheet_name}.json", 'w:UTF-8') do |file|
       file << JSON::pretty_generate(sorted_standards_data)
     end
     puts "Successfully generated OpenStudio_Standards_#{sheet_name}.json"    
