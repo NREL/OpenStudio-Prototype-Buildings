@@ -82,10 +82,11 @@ class ApplyNECBRules < BTAP::Measures::OSMeasures::BTAPModelUserScript
     
     #--HVAC
     BTAP::runner_register("INFO", "Applying NECB HVAC", runner)
+    use_ideal_air_loads = true
     BTAP::Compliance::NECB2011::necb_autozone_and_autosystem(
           model,
-          runner)
-#          use_ideal_air_loads = true,
+          runner,
+          use_ideal_air_loads)
 #          boiler_fueltype = "NaturalGas",
 #          mau_type = true,
 #          mau_heating_coil_type = "Hot Water",
