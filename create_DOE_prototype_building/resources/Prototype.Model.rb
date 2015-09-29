@@ -6,6 +6,12 @@ class OpenStudio::Model::Model
   attr_accessor :template
   attr_accessor :climate_zone
  
+  # Loads an .osm as a starting point.  Typically used to load
+  # a model containing only geometry.
+  #
+  # @param geometry_osm_name [String] the name of 
+  #   a .osm file in the /resources directory
+  # @return [Bool] returns true if successful, false if not 
   def add_geometry(geometry_osm_name)
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding geometry')
@@ -28,6 +34,19 @@ class OpenStudio::Model::Model
     
   end
 
+  # Reads in a mapping between names of space types and
+  # names of spaces in the model, creates an empty OpenStudio::Model::SpaceType
+  # (no loads, occupants, schedules, etc.) for each space type, and assigns this 
+  # space type to the list of spaces named.  Later on, these empty space types
+  # can be used as keys in a lookup to add loads, schedules, and
+  # other inputs that are either typical or governed by a standard.
+  #
+  # @param building_type [String] the name of the building type
+  # @param space_type_map [Hash] a hash where the key is the space type name
+  #   and the value is a vector of space names that should be assigned this space type.
+  #   The hash for each building is defined inside the Prototype.building_name
+  #   e.g. (Prototype.secondary_school.rb) file.
+  # @return [Bool] returns true if successful, false if not  
   def assign_space_type_stubs(building_type, space_type_map)
 
     space_type_map.each do |space_type_name, space_names|
@@ -48,6 +67,33 @@ class OpenStudio::Model::Model
 
     return true
   end
+
+  def assign_building_story(building_type, building_vintage, climate_zone, building_story_map)
+    building_story_map.each do |building_story_name, space_names|
+      stub_building_story = OpenStudio::Model::BuildingStory.new(self)
+      stub_building_story.setName(building_story_name)
+      
+      space_names.each do |space_name|
+        space = self.getSpaceByName(space_name)
+        next if space.empty?
+        space = space.get
+        space.setBuildingStory(stub_building_story)
+      end
+    end
+    
+    return true
+  end
+
+  # Adds the loads and associated schedules for each space type
+  # as defined in the OpenStudio_Standards_space_types.json file.
+  # This includes lights, plug loads, occupants, ventilation rate requirements,
+  # infiltration, gas equipment (for kitchens, etc.) and typical schedules for each.
+  # Some loads are governed by the standard, others are typical values
+  # pulled from sources such as the DOE Reference and DOE Prototype Buildings.
+  #
+  # @param building_vintage [String] the template/standard to draw data from
+  # @param climate_zone [String] the name of the climate zone the building is in
+  # @return [Bool] returns true if successful, false if not  
 
   def add_loads(building_vintage, climate_zone)
 
@@ -76,7 +122,6 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Space type called '#{stub_space_type.name}' has no standards space type.")
         return false
       end
-
       new_space_type = self.add_space_type(building_vintage, 'ClimateZone 1-8', stds_building_type, stds_spc_type)
 
       # Apply the new space type to the building      
@@ -96,9 +141,20 @@ class OpenStudio::Model::Model
 
   end
 
+  # Adds code-minimum constructions based on the building type
+  # as defined in the OpenStudio_Standards_construction_sets.json file.
+  # Where there is a separate construction set specified for the 
+  # individual space type, this construction set will be created and applied
+  # to this space type, overriding the whole-building construction set.
+  #
+  # @param building_type [String] the type of building
+  # @param building_vintage [String] the template/standard to draw data from
+  # @param climate_zone [String] the name of the climate zone the building is in
+  # @return [Bool] returns true if successful, false if not   
   def add_constructions(building_type, building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying constructions')
+    is_residential = "No"  #default is nonresidential for building level
 
     # Assign construction to adiabatic construction
     # Assign a material to all internal mass objects
@@ -121,30 +177,80 @@ class OpenStudio::Model::Model
     nonres_floor_insulation = OpenStudio::Model::MasslessOpaqueMaterial.new(self)
     nonres_floor_insulation.setName('Nonres_Floor_Insulation')
     nonres_floor_insulation.setRoughness("MediumSmooth")
-    nonres_floor_insulation.setThermalResistance(4.13066404430099)
+    nonres_floor_insulation.setThermalResistance(2.88291975297193)
     nonres_floor_insulation.setThermalAbsorptance(0.9)
     nonres_floor_insulation.setSolarAbsorptance(0.7)
     nonres_floor_insulation.setVisibleAbsorptance(0.7)
 
-    adiabatic_construction = OpenStudio::Model::Construction.new(self)
-    adiabatic_construction.setName('nonres_floor_ceiling')
-    layers = OpenStudio::Model::MaterialVector.new
-    layers << cp02_carpet_pad
-    layers << normalweight_concrete_floor
-    layers << nonres_floor_insulation
+    floor_adiabatic_construction = OpenStudio::Model::Construction.new(self)
+    floor_adiabatic_construction.setName('Floor Adiabatic construction')
+    floor_layers = OpenStudio::Model::MaterialVector.new
+    floor_layers << cp02_carpet_pad
+    floor_layers << normalweight_concrete_floor
+    floor_layers << nonres_floor_insulation
+    floor_adiabatic_construction.setLayers(floor_layers)
 
-    adiabatic_construction.setLayers(layers)
+    g01_13mm_gypsum_board = OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    g01_13mm_gypsum_board.setName('G01 13mm gypsum board')
+    g01_13mm_gypsum_board.setRoughness('Smooth')
+    g01_13mm_gypsum_board.setThickness(0.0127)
+    g01_13mm_gypsum_board.setConductivity(0.1600)
+    g01_13mm_gypsum_board.setDensity(800)
+    g01_13mm_gypsum_board.setSpecificHeat(1090)
+    g01_13mm_gypsum_board.setThermalAbsorptance(0.9)
+    g01_13mm_gypsum_board.setSolarAbsorptance(0.7)
+    g01_13mm_gypsum_board.setVisibleAbsorptance(0.5)
+
+    wall_adiabatic_construction = OpenStudio::Model::Construction.new(self)
+    wall_adiabatic_construction.setName('Wall Adiabatic construction')
+    wall_layers = OpenStudio::Model::MaterialVector.new
+    wall_layers << g01_13mm_gypsum_board
+    wall_layers << g01_13mm_gypsum_board
+    wall_adiabatic_construction.setLayers(wall_layers)
+
+    m10_200mm_concrete_block_basement_wall= OpenStudio::Model::StandardOpaqueMaterial.new(self)
+    m10_200mm_concrete_block_basement_wall.setName('M10 200mm concrete block basement wall')
+    m10_200mm_concrete_block_basement_wall.setRoughness('MediumRough')
+    m10_200mm_concrete_block_basement_wall.setThickness(0.2032)
+    m10_200mm_concrete_block_basement_wall.setConductivity(1.326)
+    m10_200mm_concrete_block_basement_wall.setDensity(1842)
+    m10_200mm_concrete_block_basement_wall.setSpecificHeat(912)
+
+    basement_wall_construction = OpenStudio::Model::Construction.new(self)
+    basement_wall_construction.setName('Basement Wall construction')
+    basement_wall_layers = OpenStudio::Model::MaterialVector.new
+    basement_wall_layers << m10_200mm_concrete_block_basement_wall
+    basement_wall_construction.setLayers(basement_wall_layers)
+
+    basement_floor_construction = OpenStudio::Model::Construction.new(self)
+    basement_floor_construction.setName('Basement Floor construction')
+    basement_floor_layers = OpenStudio::Model::MaterialVector.new
+    basement_floor_layers << m10_200mm_concrete_block_basement_wall
+    basement_floor_layers << cp02_carpet_pad
+    basement_floor_construction.setLayers(basement_floor_layers)
+
     self.getSurfaces.each do |surface|
       if surface.outsideBoundaryCondition.to_s == "Adiabatic"
-        surface.setConstruction(adiabatic_construction)
+        if surface.surfaceType.to_s == "Wall"
+          surface.setConstruction(wall_adiabatic_construction)
+        else
+          surface.setConstruction(floor_adiabatic_construction)
+        end
       elsif  surface.outsideBoundaryCondition.to_s == "OtherSideCoefficients"
-        surface.setOutsideBoundaryCondition("Adiabatic")
-        surface.setConstruction(adiabatic_construction)
+        # Ground
+        if surface.surfaceType.to_s == "Wall"
+          surface.setOutsideBoundaryCondition("Ground")
+          surface.setConstruction(basement_wall_construction)
+        else
+          surface.setOutsideBoundaryCondition("Ground")
+          surface.setConstruction(basement_floor_construction)
+        end
       end
     end
 
     # Make the default construction set for the building
-    bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil)
+    bldg_def_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil, is_residential)
+
     if bldg_def_const_set.is_initialized
       self.getBuilding.setDefaultConstructionSet(bldg_def_const_set.get)
     else
@@ -179,17 +285,53 @@ class OpenStudio::Model::Model
 
       # Attempt to make a construction set for this space type
       # and assign it if it can be created.
-      spc_type_const_set = self.add_construction_set(building_vintage, climate_zone, stds_building_type, stds_spc_type)
+      spc_type_const_set = self.add_construction_set(building_vintage, climate_zone, stds_building_type, stds_spc_type, is_residential)
       if spc_type_const_set.is_initialized
         space_type.setDefaultConstructionSet(spc_type_const_set.get)
       end
     
     end
     
+    # Add construction from story level, especially for the case when there are residential and nonresidential construction in the same building
+    if building_type == 'SmallHotel'
+      self.getBuildingStorys.each do |story|
+        next if story.name.get == 'AtticStory'
+        puts "story = #{story.name}"
+        is_residential = "No"  #default for building story level
+        exterior_spaces_area = 0
+        story_exterior_residential_area = 0
+        
+        # calculate the propotion of residential area in exterior spaces, see if this story is residential or not
+        story::spaces.each do |space|
+          next if space.exteriorWallArea == 0
+          space_type = space.spaceType.get
+          if space_type.standardsSpaceType.is_initialized
+            space_type_name = space_type.standardsSpaceType.get
+          end
+          data = self.find_object(self.standards['space_types'], {'template'=>building_vintage, 'building_type'=>building_type, 'space_type'=>space_type_name})
+          exterior_spaces_area += space.floorArea
+          story_exterior_residential_area += space.floorArea if data['is_residential'] == "Yes"   # "Yes" is residential, "No" or nil is nonresidential
+        end
+        is_residential = "Yes" if story_exterior_residential_area/exterior_spaces_area >= 0.5
+        next if is_residential == "No"
+        
+        # if the story is identified as residential, assign residential construction set to the spaces on this story.
+        building_story_const_set = self.add_construction_set(building_vintage, climate_zone, building_type, nil, is_residential)
+        if building_story_const_set.is_initialized
+          story::spaces.each do |space|
+            space.setDefaultConstructionSet(building_story_const_set.get)
+          end
+        end
+      end
+      # Standars: For whole buildings or floors where 50% or more of the spaces adjacent to exterior walls are used primarily for living and sleeping quarters
+      
+    end    
+    
     # Make skylights have the same construction as fixed windows
     # sub_surface = self.getBuilding.defaultConstructionSet.get.defaultExteriorSubSurfaceConstructions.get
     # window_construction = sub_surface.fixedWindowConstruction.get
     # sub_surface.setSkylightConstruction(window_construction)
+
 
     # Assign a material to all internal mass objects
     material = OpenStudio::Model::StandardOpaqueMaterial.new(self)
@@ -208,20 +350,31 @@ class OpenStudio::Model::Model
     layers << material
     construction.setLayers(layers)
 
+    # Assign the internal mass construction to existing internal mass objects
+    self.getSpaces.each do |space|
+      internal_masses = space.internalMass
+      internal_masses.each do |internal_mass|
+        internal_mass.internalMassDefinition.setConstruction(construction)
+      end
+    end
+
     # get all the space types that are conditioned
     conditioned_space_names = find_conditioned_space_names(building_type, building_vintage, climate_zone)
     
     # add internal mass
     unless (building_type == 'SmallHotel') &&
         (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
+      internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
+      internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
+      internal_mass_def.setConstruction(construction)
       conditioned_space_names.each do |conditioned_space_name|
-        internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
-        internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
-        internal_mass_def.setConstruction(construction)
-        internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
         space = self.getSpaceByName(conditioned_space_name)
-        space = space.get
-        internal_mass.setSpace(space)
+        if space.is_initialized
+          space = space.get
+          internal_mass = OpenStudio::Model::InternalMass.new(internal_mass_def)
+          internal_mass.setName("#{space.name} Mass")  
+          internal_mass.setSpace(space)
+        end
       end
     end
 
@@ -231,7 +384,12 @@ class OpenStudio::Model::Model
 
   end  
   
-  # get all the space types that are conditioned
+  # Get the list of all conditioned spaces, as defined for each building in the
+  # system_to_space_map inside the Prototype.building_name
+  # e.g. (Prototype.secondary_school.rb) file.
+  #
+  # @param (see #add_constructions)
+  # @return [Array<String>] returns an array of space names as strings   
   def find_conditioned_space_names(building_type, building_vintage, climate_zone)
     system_to_space_map = define_hvac_system_map(building_type, building_vintage, climate_zone)
     conditioned_space_names = OpenStudio::StringVector.new
@@ -242,7 +400,13 @@ class OpenStudio::Model::Model
     end
     return conditioned_space_names
   end
-  
+
+  # Creates thermal zones to contain each space, as defined for each building in the
+  # system_to_space_map inside the Prototype.building_name
+  # e.g. (Prototype.secondary_school.rb) file.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not  
   def create_thermal_zones(building_type,building_vintage, climate_zone)
 
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started creating thermal zones')
@@ -254,7 +418,6 @@ class OpenStudio::Model::Model
     else
       space_multiplier_map ={}
     end
-
 
     # Create a thermal zone for each space in the self
     self.getSpaces.each do |space|
@@ -285,6 +448,12 @@ class OpenStudio::Model::Model
 
   end
 
+  # Adds occupancy sensors to certain space types per
+  # the PNNL documentation.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo genericize and move this method to Standards.Space 
   def add_occupancy_sensors(building_type, building_vintage, climate_zone)
    
     # Only add occupancy sensors for 90.1-2010
@@ -391,101 +560,94 @@ class OpenStudio::Model::Model
     
   end #add occupancy sensors
 
+  # Adds exterior lights to the building, as specified
+  # in OpenStudio_Standards_prototype_inputs
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo translate w/linear foot of facade, door, parking, etc
+  #   into lookup table and implement that way instead of hard-coding as
+  #   inputs in the spreadsheet.   
   def add_exterior_lights(building_type, building_vintage, climate_zone, prototype_input)
     # TODO Standards - translate w/linear foot of facade, door, parking, etc
     # into lookup table and implement that way instead of hard-coding as
     # inputs in the spreadsheet.
-    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding exterior lights')
 
-    if building_type == "LargeHotel"
-      data = self.find_object(self.standards['exterior'], {'template'=>building_vintage, 'climate_zone_set'=>'ClimateZone 1-8', 'building_type'=>building_type})
-
-      ext_lts_power = data['exterior_lights']
-      ext_lts_sch_name = data['exterior_lights_schedule']
-      ext_lts_name = 'Exterior Lights'
-      ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      ext_lts_def.setName("#{ext_lts_name} Def")
-      ext_lts_def.setDesignLevel(ext_lts_power)
-      ext_lts_sch = self.add_schedule(ext_lts_sch_name)
-
-      ext_lts = OpenStudio::Model::ExteriorLights.new(ext_lts_def, ext_lts_sch)
-      ext_lts.setName("#{ext_lts_name}")
-      ext_lts.setControlOption('AstronomicalClock')
-
-      # TODO: The exterior fuel equipment is not available yet. Use exterior lights instead.
-      ext_fuel_equip_power = data['fuel_equipment']
-      ext_fuel_equip_sch_name = data['fuel_equipment_schedule']
-      ext_fuel_equip_name = 'Exterior Fuel Equipment'
-      ext_fuel_equip_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      ext_fuel_equip_def.setName("#{ext_fuel_equip_name} Def")
-      ext_fuel_equip_def.setDesignLevel(ext_fuel_equip_power)
-      ext_fuel_equip_sch = self.add_schedule(ext_fuel_equip_sch_name)
-
-      ext_fuel_equip = OpenStudio::Model::ExteriorLights.new(ext_fuel_equip_def, ext_fuel_equip_sch)
-      ext_fuel_equip.setName("#{ext_fuel_equip_name}")
-      ext_fuel_equip.setControlOption('ScheduleNameOnly')
-
-    else
-      # Occupancy Sensing Exterior Lights
-      # which reduce to 70% power when no one is around.
-      unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
-        occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
-        occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
-        occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-        occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
-        occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
-        occ_sens_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-        occ_sens_ext_lts_sch.setName("#{occ_sens_ext_lts_name} Sch")
-        occ_sens_ext_lts_sch.defaultDaySchedule.setName("#{occ_sens_ext_lts_name} Default Sch")
-        if building_type == "SmallHotel"
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-        else
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0.7)
-          occ_sens_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-        end
-        occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
-        occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
-        occ_sens_ext_lts.setControlOption('AstronomicalClock')
-      end
-
-      # Building Facade and Landscape Lights
-      # that don't dim at all at night.
-      unless prototype_input['nondimming_exterior_lighting_power'].nil?
-        nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
-        nondimming_ext_lts_name = 'NonDimming Exterior Lights'
-        nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-        nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
-        nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
-        #
-        nondimming_ext_lts_sch = nil
-        if building_vintage == '90.1-2010'
-          nondimming_ext_lts_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-          nondimming_ext_lts_sch.setName("#{nondimming_ext_lts_name} Sch")
-          nondimming_ext_lts_sch.defaultDaySchedule.setName("#{nondimming_ext_lts_name} Default Sch")
-          if building_type == "SmallHotel"
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-          else
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,6,0,0),0)
-            nondimming_ext_lts_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0),1)
-          end
-        elsif building_vintage == 'DOE Ref Pre-1980' || building_vintage == 'DOE Ref 1980-2004'
-          nondimming_ext_lts_sch = self.alwaysOnDiscreteSchedule
-        end
-        nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
-        nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
-        nondimming_ext_lts.setControlOption('AstronomicalClock')
-      end
+    # Occupancy Sensing Exterior Lights
+    # which reduce to 70% power when no one is around.
+    unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
+      occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
+      occ_sens_ext_lts_sch_name = prototype_input['occ_sensing_exterior_lighting_schedule']
+      occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
+      occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
+      occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
+      occ_sens_ext_lts_sch = self.add_schedule(occ_sens_ext_lts_sch_name)
+      occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
+      occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
+      occ_sens_ext_lts.setControlOption('AstronomicalClock')
     end
+
+    # Building Facade and Landscape Lights
+    # that don't dim at all at night.
+    unless prototype_input['nondimming_exterior_lighting_power'].nil?
+      nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
+      nondimming_ext_lts_sch_name = prototype_input['nondimming_exterior_lighting_schedule']
+      nondimming_ext_lts_name = 'NonDimming Exterior Lights'
+      nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
+      nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
+      nondimming_ext_lts_sch = self.add_schedule(nondimming_ext_lts_sch_name)
+      nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
+      nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
+      nondimming_ext_lts.setControlOption('AstronomicalClock')
+    end
+
+    # Fuel Equipment, As Exterior:FuelEquipment is not supported by OpenStudio yet,
+    # temporarily use Exterior:Lights and set the control option to ScheduleNameOnly
+    # todo: change it to Exterior:FuelEquipment when OpenStudio supported it.
+    unless prototype_input['exterior_fuel_equipment1_power'].nil?
+      fuel_ext_power = prototype_input['exterior_fuel_equipment1_power']
+      fuel_ext_sch_name = prototype_input['exterior_fuel_equipment1_schedule']
+      fuel_ext_name = 'Fuel equipment 1'
+      fuel_ext_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      fuel_ext_def.setName("#{fuel_ext_name} Def")
+      fuel_ext_def.setDesignLevel(fuel_ext_power)
+      fuel_ext_sch = self.add_schedule(fuel_ext_sch_name)
+      fuel_ext_lts = OpenStudio::Model::ExteriorLights.new(fuel_ext_def, fuel_ext_sch)
+      fuel_ext_lts.setName("#{fuel_ext_name}")
+      fuel_ext_lts.setControlOption('ScheduleNameOnly')
+    end
+
+    unless prototype_input['exterior_fuel_equipment2_power'].nil?
+      fuel_ext_power = prototype_input['exterior_fuel_equipment2_power']
+      fuel_ext_sch_name = prototype_input['exterior_fuel_equipment2_schedule']
+      fuel_ext_name = 'Fuel equipment 2'
+      fuel_ext_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      fuel_ext_def.setName("#{fuel_ext_name} Def")
+      fuel_ext_def.setDesignLevel(fuel_ext_power)
+      fuel_ext_sch = self.add_schedule(fuel_ext_sch_name)
+      fuel_ext_lts = OpenStudio::Model::ExteriorLights.new(fuel_ext_def, fuel_ext_sch)
+      fuel_ext_lts.setName("#{fuel_ext_name}")
+      fuel_ext_lts.setControlOption('ScheduleNameOnly')
+    end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding exterior lights')
     
     return true
   end #add exterior lights  
   
+  # Changes the infiltration coefficients for the prototype vintages.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo Consistency - make prototype and reference vintages consistent
+  # @todo Add 90.1-2013?
   def modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
   
-    # Only modify the infiltration coefficients for 90.1-2010
-    return true unless building_vintage == '90.1-2010'
+    # modify the infiltration coefficients for 90.1-2004, 90.1-2007, 90.1-2010, 90.1-2013
+    return true unless building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013' 
   
     # The pre-1980 and 1980-2004 buildings have this:
     # 1.0000,                  !- Constant Term Coefficient
@@ -499,13 +661,40 @@ class OpenStudio::Model::Model
     # 0.0000;                  !- Velocity Squared Term Coefficient
     self.getSpaceInfiltrationDesignFlowRates.each do |infiltration|
       infiltration.setConstantTermCoefficient(0.0)
-      infiltration.setTemperatureTermCoefficient (0.0)
+      infiltration.setTemperatureTermCoefficient(0.0)
       infiltration.setVelocityTermCoefficient(0.224)
       infiltration.setVelocitySquaredTermCoefficient(0.0)
     end
-    
   end
 
+  # Sets the inside and outside convection algorithms for different vintages
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo Consistency - make prototype and reference vintages consistent
+  def modify_surface_convection_algorithm(building_vintage)
+  
+    inside = self.getInsideSurfaceConvectionAlgorithm
+    outside = self.getOutsideSurfaceConvectionAlgorithm
+  
+    case building_vintage
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+      inside.setAlgorithm('TARP')
+      outside.setAlgorithm('DOE-2')     
+    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+      inside.setAlgorithm('TARP')
+      outside.setAlgorithm('TARP')
+    end
+    
+  end  
+  
+  
+  # Changes the infiltration coefficients for the prototype vintages.
+  #
+  # @param (see #add_constructions)
+  # @return [Bool] returns true if successful, false if not   
+  # @todo Consistency - make sizing factors consistent 
+  #   between building types, climate zones, and vintages?
   def set_sizing_parameters(building_type, building_vintage)
     
     # Default unless otherwise specified
@@ -544,7 +733,9 @@ class OpenStudio::Model::Model
     require_relative 'Prototype.FanConstantVolume'
     require_relative 'Prototype.FanVariableVolume'
     require_relative 'Prototype.FanOnOff'
+    require_relative 'Prototype.FanZoneExhaust'
     require_relative 'Prototype.HeatExchangerAirToAirSensibleAndLatent'
+    require_relative 'Prototype.ControllerWaterCoil'
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying prototype HVAC assumptions.')
     
@@ -554,6 +745,7 @@ class OpenStudio::Model::Model
     self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_vintage)}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanZoneExhausts.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
     ##### Add Economizers
     
@@ -574,7 +766,7 @@ class OpenStudio::Model::Model
     
     # Check each airloop
     self.getAirLoopHVACs.each do |air_loop|
-      if air_loop.isEconomizerRequired(self.template, self.climate_zone) == true
+      if air_loop.is_economizer_required(self.template, self.climate_zone) == true
         # If an economizer is required, determine the economizer type
         # in the prototype buildings, which depends on climate zone.
         economizer_type = nil
@@ -587,9 +779,9 @@ class OpenStudio::Model::Model
               'ASHRAE 169-2006-2A',
               'ASHRAE 169-2006-3A',
               'ASHRAE 169-2006-4A'
-            economizer_type = 'DifferentialDryBulb'
+            economizer_type = 'DifferentialEnthalpy'
           else
-            economizer_type = 'FixedDryBulb'
+            economizer_type = 'DifferentialDryBulb'
           end
         when 'NECB 2011'
           # NECB 5.2.2.8 states that economizer can be controlled based on difference betweeen
@@ -597,6 +789,7 @@ class OpenStudio::Model::Model
           # and outside air enthalphy; latter chosen to be consistent with MNECB and CAN-QUEST implementation
           economizer_type = 'DifferentialEnthalpy'
         end
+
         # Set the economizer type
         # Get the OA system and OA controller
         oa_sys = air_loop.airLoopHVACOutdoorAirSystem
@@ -611,90 +804,19 @@ class OpenStudio::Model::Model
         if (building_vintage != 'NECB 2011') then
           oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
         else
-          oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_100_pct_oa_sch)     
+          #oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_100_pct_oa_sch)     
         end  
-      end
-    end
-
-    #### Add ERVs
-    # Check each airloop and add an ERV if required
-    self.getAirLoopHVACs.each do |air_loop|
-      if air_loop.isEnergyRecoveryVentilatorRequired(self.template, self.climate_zone) == true
-    
-        # Get the AHU design supply air flow rate
-        dsn_flow_m3_per_s = nil
-        if air_loop.designSupplyAirFlowRate.is_initialized
-          dsn_flow_m3_per_s = air_loop.designSupplyAirFlowRate.get
-        elsif air_loop.autosizedDesignSupplyAirFlowRate.is_initialized
-          dsn_flow_m3_per_s = air_loop.autosizedDesignSupplyAirFlowRate.get
-        else
-          OpenStudio::logFree(OpenStudio::Warn, "openstudio.prototype.AirLoopHVAC", "For #{air_loop.name} design supply air flow rate is not available, cannot apply ERV.")
-          return false
-        end
-        dsn_flow_cfm = OpenStudio.convert(dsn_flow_m3_per_s, 'm^3/s', 'cfm').get    
-    
-        # Get the oa system
-        oa_system = nil
-        if air_loop.airLoopHVACOutdoorAirSystem.is_initialized
-          oa_system = air_loop.airLoopHVACOutdoorAirSystem.get
-        else
-          runner.registerError("ERV not applicable to '#{air_loop.name}' because it has no OA intake.")
-          next
-        end
-      
-        # Create an ERV
-        erv = OpenStudio::Model::HeatExchangerAirToAirSensibleAndLatent.new(self)
-        erv.setName("#{air_loop.name} ERV")
-
-        if building_vintage == 'NECB 2011' then
         
-          erv.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-          erv.setLatentEffectivenessat100HeatingAirFlow(0.0)
-          erv.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-          erv.setLatentEffectivenessat75HeatingAirFlow(0.0)
-          erv.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-          erv.setLatentEffectivenessat100CoolingAirFlow(0.0)
-          erv.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-          erv.setLatentEffectivenessat75CoolingAirFlow(0.0)
-          erv.setSupplyAirOutletTemperatureControl(false)
-
-          
-        else
-
-          erv.setSensibleEffectivenessat100HeatingAirFlow(0.7)
-          erv.setLatentEffectivenessat100HeatingAirFlow(0.6)
-          erv.setSensibleEffectivenessat75HeatingAirFlow(0.7)
-          erv.setLatentEffectivenessat75HeatingAirFlow(0.6)
-          erv.setSensibleEffectivenessat100CoolingAirFlow(0.75)
-          erv.setLatentEffectivenessat100CoolingAirFlow(0.6)
-          erv.setSensibleEffectivenessat75CoolingAirFlow(0.75)
-          erv.setLatentEffectivenessat75CoolingAirFlow(0.6)
-          erv.setSupplyAirOutletTemperatureControl(true)
+       
         
-        end
-        
-        erv.setHeatExchangerType('Rotary')
-        erv.setFrostControlType('ExhaustOnly')
-        erv.setThresholdTemperature(-23.3)
-        erv.setInitialDefrostTimeFraction(0.167)
-        erv.setRateofDefrostTimeFractionIncrease(1.44)
-        erv.setEconomizerLockout(true)
-        erv.setFrostControlType('ExhaustOnly')
-        erv.setThresholdTemperature(-23.3) # -10F
-        erv.setInitialDefrostTimeFraction(0.167)
-        erv.setRateofDefrostTimeFractionIncrease(1.44)
-
               
-        # Add the ERV to the OA system
-        erv.addToNode(oa_system.outboardOANode.get)    
-    
       end
-    
     end
 
-    # Heat Exchanger power
-    self.getHeatExchangerAirToAirSensibleAndLatents.sort.each {|obj| obj.setPrototypeNominalElectricPower}
-
+    # TODO What is the logic behind hard-sizing
+    # hot water coil convergence tolerances?
+    self.getControllerWaterCoils.sort.each {|obj| obj.set_convergence_limits}
+    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished applying prototype HVAC assumptions.')
     
   end 
@@ -806,11 +928,10 @@ class OpenStudio::Model::Model
       OpenStudio::logFree(OpenStudio::Info, "openstudio.prototype.Model", "Running sizing run with RunManager.")
 
       # Find EnergyPlus
-      require 'openstudio/energyplus/find_energyplus'
-      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
-      ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+      ep_dir = OpenStudio.getEnergyPlusDirectory
+      ep_path = OpenStudio.getEnergyPlusExecutable
       ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-      idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+      idd_path = OpenStudio::Path.new(ep_dir.to_s + "/Energy+.idd")
       output_path = OpenStudio::Path.new("#{run_dir}/")
       
       # Make a run manager and queue up the sizing run
@@ -899,34 +1020,47 @@ class OpenStudio::Model::Model
     # "monthly"
    
     vars = []
-    vars << ['Heating Coil Gas Rate', 'detailed']
+    # vars << ['Heating Coil Gas Rate', 'detailed']
     vars << ['Zone Thermostat Air Temperature', 'detailed']
     vars << ['Zone Thermostat Heating Setpoint Temperature', 'detailed']
     vars << ['Zone Thermostat Cooling Setpoint Temperature', 'detailed']
-    vars << ['Zone Air System Sensible Heating Rate', 'detailed']
-    vars << ['Zone Air System Sensible Cooling Rate', 'detailed']
-    vars << ['Fan Electric Power', 'detailed']
-    vars << ['Zone Mechanical Ventilation Standard Density Volume Flow Rate', 'detailed']
-    vars << ['Air System Outdoor Air Mass Flow Rate', 'detailed']
-    vars << ['Air System Outdoor Air Flow Fraction', 'detailed']
-    vars << ['Air System Outdoor Air Minimum Flow Fraction', 'detailed']
+    # vars << ['Zone Air System Sensible Heating Rate', 'detailed']
+    # vars << ['Zone Air System Sensible Cooling Rate', 'detailed']
+    # vars << ['Fan Electric Power', 'detailed']
+    # vars << ['Zone Mechanical Ventilation Standard Density Volume Flow Rate', 'detailed']
+    # vars << ['Air System Outdoor Air Mass Flow Rate', 'detailed']
+    # vars << ['Air System Outdoor Air Flow Fraction', 'detailed']
+    # vars << ['Air System Outdoor Air Minimum Flow Fraction', 'detailed']
     
-    vars << ['Water Use Equipment Hot Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Cold Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Total Volume Flow Rate', 'hourly']
-    vars << ['Water Use Equipment Hot Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Cold Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Target Water Temperature', 'hourly']
-    vars << ['Water Use Equipment Mixed Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Hot Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Cold Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Total Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Equipment Hot Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Cold Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Target Water Temperature', 'hourly']
+    # vars << ['Water Use Equipment Mixed Water Temperature', 'hourly']
     
-    vars << ['Water Use Connections Hot Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Cold Water Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Total Volume Flow Rate', 'hourly']
-    vars << ['Water Use Connections Hot Water Temperature', 'hourly']
-    vars << ['Water Use Connections Cold Water Temperature', 'hourly']
-    vars << ['Water Use Connections Plant Hot Water Energy', 'hourly']
-    vars << ['Water Use Connections Return Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Hot Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Cold Water Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Total Volume Flow Rate', 'hourly']
+    # vars << ['Water Use Connections Hot Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Cold Water Temperature', 'hourly']
+    # vars << ['Water Use Connections Plant Hot Water Energy', 'hourly']
+    # vars << ['Water Use Connections Return Water Temperature', 'hourly']
   
+    vars << ['Air System Outdoor Air Economizer Status','timestep']
+    vars << ['Air System Outdoor Air Heat Recovery Bypass Status','timestep']
+    vars << ['Air System Outdoor Air High Humidity Control Status','timestep']
+    vars << ['Air System Outdoor Air Flow Fraction','timestep']
+    vars << ['Air System Outdoor Air Minimum Flow Fraction','timestep']
+    vars << ['Air System Outdoor Air Mass Flow Rate','timestep']
+    vars << ['Air System Mixed Air Mass Flow Rate','timestep']
+  
+    vars << ['Heating Coil Gas Rate','timestep']
+    vars << ['Boiler Part Load Ratio','timestep']
+    vars << ['Boiler Gas Rate','timestep']
+    vars << ['Fan Electric Power','timestep']
+    
     vars.each do |var, freq|  
       outputVariable = OpenStudio::Model::OutputVariable.new(var, self)
       outputVariable.setReportingFrequency(freq)

@@ -1,0 +1,236 @@
+
+    
+    ! Sensors
+    
+    EnergyManagementSystem:Sensor,
+      PointOfSaleZNPSZACOASch,           
+      RetailStandalone MinOA_MotorizedDamper_Sched,         !- Output:Variable or Output:Meter Index Key Name,            
+      Schedule Value;          !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      Point_Of_Sale_ZNTemp,
+      Node 4,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Temperature; !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      PointOfSaleZNPSZACOAFlowMass,     
+      Node 33, !- Output:Variable or Output:Meter Index Key Name
+      System Node Mass Flow Rate;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      PointOfSaleZNPSZACHeatingRTF,     
+      Point_Of_Sale ZN PSZ-AC Gas Htg Coil,        !- Output:Variable or Output:Meter Index Key Name
+      Heating Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      PointOfSaleZNPSZACRTF,            
+      Point_Of_Sale ZN PSZ-AC 2spd DX AC Clg Coil, !- Output:Variable or Output:Meter Index Key Name
+      Cooling Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      PointOfSaleZNPSZACSpeedRatio,     
+      Point_Of_Sale ZN PSZ-AC 2spd DX AC Clg Coil CoilSystem,        !- Output:Variable or Output:Meter Index Key Name
+      Coil System Compressor Speed Ratio;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      PointOfSaleZNPSZACDATRqd,        
+      Node 29,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Setpoint Temperature;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      PointOfSaleZNPSZACEconoStatus,   
+      Point_Of_Sale ZN PSZ-AC,              !- Output:Variable or Output:Meter Index Key Name
+      Air System Outdoor Air Economizer Status;  !- Output:Variable or Output:Meter Name
+
+    ! Internal Variables
+
+    EnergyManagementSystem:InternalVariable,
+      PointOfSaleZNPSZACFanDesignPressure,
+      Point_Of_Sale ZN PSZ-AC Fan,          !- Internal Data Index Key Name
+      Fan Nominal Pressure Rise;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      PointOfSaleZNPSZACDesignFlowMass, 
+      Point_Of_Sale ZN PSZ-AC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Maximum Mass Flow Rate;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      PointOfSaleZNPSZACOADesignMass,   
+      Point_Of_Sale ZN PSZ-AC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Minimum Mass Flow Rate;  !- Internal Data Type
+
+    ! Actuators
+
+    EnergyManagementSystem:Actuator,
+      PointOfSaleZNPSZACFanPressure,   
+      Point_Of_Sale ZN PSZ-AC Fan,          !- Actuated Component Unique Name
+      Fan,                     !- Actuated Component Type
+      Fan Pressure Rise;       !- Actuated Component Control Type
+
+    EnergyManagementSystem:Actuator,
+      PointOfSaleZNPSZACTimestepEconEff,!- Name
+      PointOfSaleZNPSZACmaxOASch,  !- Actuated Component Unique Name
+      Schedule:Year,       !- Actuated Component Type
+      Schedule Value;          !- Actuated Component Control Type
+
+    EnergyManagementSystem:GlobalVariable,
+      PointOfSaleZNPSZACFanPwrExp,   !- Erl Variable 1 Name
+      PointOfSaleZNPSZACStg1Spd,      !- Erl Variable 2 Name
+      PointOfSaleZNPSZACStg2Spd,      !- Erl Variable 3 Name
+      PointOfSaleZNPSZACHeatSpeed,      
+      PointOfSaleZNPSZACVenSpeed,       
+      PointOfSaleZNPSZACNumberofStages; 
+
+    EnergyManagementSystem:Program,
+      PointOfSaleZNPSZACEconomizerCTRLProg,
+      SET PointOfSaleZNPSZACTimestepEconEff = 0.7,  
+      SET PointOfSaleZNPSZACMaxE = 0.7,   
+      SET PointOfSaleZNPSZACDATRqd = (PointOfSaleZNPSZACDATRqd*1.8)+32,
+      SET OATF = (OATF*1.8)+32,
+      SET OAwbF = (OAwbF*1.8)+32,
+      IF PointOfSaleZNPSZACOAFlowMass > (PointOfSaleZNPSZACOADesignMass*PointOfSaleZNPSZACOASch),
+      SET PointOfSaleZNPSZACEconoActive = 1,
+      ELSE,                  
+      SET PointOfSaleZNPSZACEconoActive = 0,
+      ENDIF,                 
+      SET PointOfSaleZNPSZACdTNeeded = 75-PointOfSaleZNPSZACDATRqd,
+      SET PointOfSaleZNPSZACCoolDesdT = ((98*0.15)+(75*(1-0.15)))-55,
+      SET PointOfSaleZNPSZACCoolLoad = PointOfSaleZNPSZACdTNeeded/ PointOfSaleZNPSZACCoolDesdT,
+      IF PointOfSaleZNPSZACCoolLoad > 1, 
+      SET PointOfSaleZNPSZACCoolLoad = 1,
+      ELSEIF PointOfSaleZNPSZACCoolLoad < 0,
+      SET PointOfSaleZNPSZACCoolLoad = 0,
+      ENDIF,                 
+      IF PointOfSaleZNPSZACEconoActive == 1,
+      SET PointOfSaleZNPSZACStage = PointOfSaleZNPSZACNumberofStages,
+      IF PointOfSaleZNPSZACStage == 2,  
+      IF PointOfSaleZNPSZACCoolLoad < 0.6,
+      SET PointOfSaleZNPSZACTimestepEconEff = PointOfSaleZNPSZACMaxE,
+      ELSE,                  
+      SET PointOfSaleZNPSZACECOEff = 0-2.18919863612305,
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0-0.674461284910428*PointOfSaleZNPSZACCoolLoad),
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0.000459106275872404*(OATF^2)),
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0-0.00000484778537945252*(OATF^3)),
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0.182915713033586*OAwbF),
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0-0.00382838660261133*(OAwbF^2)),
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0.0000255567460240583*(OAwbF^3)),
+      SET PointOfSaleZNPSZACTimestepEconEff = PointOfSaleZNPSZACECOEff,
+      ENDIF,                 
+      ELSE,                  
+      SET PointOfSaleZNPSZACECOEff = 2.36337942464462,
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0-0.409939515512619*PointOfSaleZNPSZACCoolLoad),
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0-0.0565205596792225*OAwbF),
+      SET PointOfSaleZNPSZACECOEff = PointOfSaleZNPSZACECOEff+(0-0.0000632612294169389*(OATF^2)),
+      SET PointOfSaleZNPSZACTimestepEconEff = PointOfSaleZNPSZACECOEff+(0.000571724868775081*(OAwbF^2)),
+      ENDIF,                 
+      IF PointOfSaleZNPSZACTimestepEconEff > PointOfSaleZNPSZACMaxE,
+      SET PointOfSaleZNPSZACTimestepEconEff = PointOfSaleZNPSZACMaxE,
+      ELSEIF PointOfSaleZNPSZACTimestepEconEff < (PointOfSaleZNPSZACOADesignMass*PointOfSaleZNPSZACOASch),
+      SET PointOfSaleZNPSZACTimestepEconEff = (PointOfSaleZNPSZACOADesignMass*PointOfSaleZNPSZACOASch),
+      ENDIF,                 
+      ENDIF;                 
+
+    EnergyManagementSystem:Program,
+      PointOfSaleZNPSZACSetFanPar,    
+      IF PointOfSaleZNPSZACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      SET PointOfSaleZNPSZACFanPwrExp = 2.2,
+      SET PointOfSaleZNPSZACOAFrac = PointOfSaleZNPSZACOAFlowMass/PointOfSaleZNPSZACDesignFlowMass,
+      IF  PointOfSaleZNPSZACOAFrac < 0.66,
+      SET PointOfSaleZNPSZACVenSpeed = 0.66,
+      SET PointOfSaleZNPSZACStg1Spd = 0.66,
+      ELSE,                  
+      SET PointOfSaleZNPSZACVenSpeed = PointOfSaleZNPSZACOAFrac,
+      SET PointOfSaleZNPSZACStg1Spd = PointOfSaleZNPSZACOAFrac,
+      ENDIF,                 
+      SET PointOfSaleZNPSZACStg2Spd = 1.0,
+      SET PointOfSaleZNPSZACHeatSpeed = 1.0;
+
+    EnergyManagementSystem:Program,
+      PointOfSaleZNPSZACFanControl,    
+      IF PointOfSaleZNPSZACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      IF PointOfSaleZNPSZACHeatingRTF > 0,
+      SET PointOfSaleZNPSZACHeating = PointOfSaleZNPSZACHeatingRTF,
+      SET PointOfSaleZNPSZACVen = 1-PointOfSaleZNPSZACHeatingRTF,
+      SET PointOfSaleZNPSZACEco = 0,    
+      SET PointOfSaleZNPSZACStage1 = 0, 
+      SET PointOfSaleZNPSZACStage2 = 0, 
+      ELSE,                  
+      SET PointOfSaleZNPSZACHeating = 0,
+      SET PointOfSaleZNPSZACEcoSpeed = PointOfSaleZNPSZACVenSpeed,
+      IF PointOfSaleZNPSZACSpeedRatio == 0,
+      IF PointOfSaleZNPSZACRTF > 0,     
+      SET PointOfSaleZNPSZACStage1 = PointOfSaleZNPSZACRTF,
+      SET PointOfSaleZNPSZACStage2 = 0, 
+      SET PointOfSaleZNPSZACVen = 1-PointOfSaleZNPSZACRTF,
+      SET PointOfSaleZNPSZACEco = 0,    
+      IF PointOfSaleZNPSZACOAFlowMass > (PointOfSaleZNPSZACOADesignMass*PointOfSaleZNPSZACOASch),
+      SET PointOfSaleZNPSZACStg1Spd = 1.0,
+      ENDIF,                 
+      ELSE,                  
+      SET PointOfSaleZNPSZACStage1 = 0, 
+      SET PointOfSaleZNPSZACStage2 = 0, 
+      IF PointOfSaleZNPSZACOAFlowMass > (PointOfSaleZNPSZACOADesignMass*PointOfSaleZNPSZACOASch),
+      SET PointOfSaleZNPSZACEco = 1.0,  
+      SET PointOfSaleZNPSZACVen = 0,           
+      !Calculate the expected discharge air temperature if the system runs at its low speed      
+      SET PointOfSaleZNPSZACExpDAT = PointOfSaleZNPSZACDATRqd-(1-PointOfSaleZNPSZACVenSpeed)*Point_Of_Sale_ZNTemp,
+      SET PointOfSaleZNPSZACExpDAT = PointOfSaleZNPSZACExpDAT/PointOfSaleZNPSZACVenSpeed,
+      IF OATF > PointOfSaleZNPSZACExpDAT,
+      SET PointOfSaleZNPSZACEcoSpeed = PointOfSaleZNPSZACStg2Spd,
+      ENDIF,                 
+      ELSE,                  
+      SET PointOfSaleZNPSZACEco = 0,    
+      SET PointOfSaleZNPSZACVen = 1.0,  
+      ENDIF,                 
+      ENDIF,                 
+      ELSE,                  
+      SET PointOfSaleZNPSZACStage1 = 1-PointOfSaleZNPSZACSpeedRatio,
+      SET PointOfSaleZNPSZACStage2 = PointOfSaleZNPSZACSpeedRatio,
+      SET PointOfSaleZNPSZACVen = 0,    
+      SET PointOfSaleZNPSZACEco = 0,    
+      IF PointOfSaleZNPSZACOAFlowMass > (PointOfSaleZNPSZACOADesignMass*PointOfSaleZNPSZACOASch),
+      SET PointOfSaleZNPSZACStg1Spd = 1.0,
+      ENDIF,                 
+      ENDIF,                 
+      ENDIF,                  
+      ! For each mode, (percent time in mode)*(fanSpeer^PwrExp) is the contribution to weighted fan power over time step
+      SET PointOfSaleZNPSZACFPR = PointOfSaleZNPSZACVen*(PointOfSaleZNPSZACVenSpeed ^ PointOfSaleZNPSZACFanPwrExp),
+      SET PointOfSaleZNPSZACFPR = PointOfSaleZNPSZACFPR+PointOfSaleZNPSZACEco*(PointOfSaleZNPSZACEcoSpeed^PointOfSaleZNPSZACFanPwrExp),
+      SET PointOfSaleZNPSZACFPR1 = PointOfSaleZNPSZACStage1*(PointOfSaleZNPSZACStg1Spd^PointOfSaleZNPSZACFanPwrExp),
+      SET PointOfSaleZNPSZACFPR = PointOfSaleZNPSZACFPR+PointOfSaleZNPSZACFPR1,
+      SET PointOfSaleZNPSZACFPR2 = PointOfSaleZNPSZACStage2*(PointOfSaleZNPSZACStg2Spd^PointOfSaleZNPSZACFanPwrExp),
+      SET PointOfSaleZNPSZACFPR = PointOfSaleZNPSZACFPR+PointOfSaleZNPSZACFPR2,
+      SET PointOfSaleZNPSZACFPR3 = PointOfSaleZNPSZACHeating*(PointOfSaleZNPSZACHeatSpeed^PointOfSaleZNPSZACFanPwrExp),
+      SET PointOfSaleZNPSZACFanPwrRatio = PointOfSaleZNPSZACFPR+ PointOfSaleZNPSZACFPR3,
+      ! system fan power is directly proportional to static pressure, so this change linearly adjusts fan energy for speed control
+      SET PointOfSaleZNPSZACFanPressure = PointOfSaleZNPSZACFanDesignPressure*PointOfSaleZNPSZACFanPwrRatio;
+
+    EnergyManagementSystem:Program,
+      PointOfSaleZNPSZACSetNumberofStages,
+      SET PointOfSaleZNPSZACNumberofStages =  2;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      PointOfSaleZNPSZACSetNumberofStagesCallingManager,
+      BeginNewEnvironment,
+      PointOfSaleZNPSZACSetNumberofStages;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      PointOfSaleZNPSZACECOManager,    
+      InsideHVACSystemIterationLoop,  !- EnergyPlus Model Calling Point
+      PointOfSaleZNPSZACEconomizerCTRLProg;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      PointOfSaleZNPSZACFanParametermanager,
+      BeginNewEnvironment,
+      PointOfSaleZNPSZACSetFanPar;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      PointOfSaleZNPSZACFanMainManager,
+      BeginTimestepBeforePredictor,
+      PointOfSaleZNPSZACFanControl;
+
+    

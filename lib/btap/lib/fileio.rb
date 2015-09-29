@@ -127,6 +127,39 @@ module BTAP
       return model
     end
 
+    def self.replace_model(model,new_model,runner = nil)
+      # pull original weather file object over
+      weather_file = new_model.getOptionalWeatherFile
+      if not weather_file.empty?
+        weather_file.get.remove
+        BTAP::runner_register("Info", "Removed alternate model's weather file object.",runner)
+      end
+      original_weather_file = model.getOptionalWeatherFile
+      if not original_weather_file.empty?
+        original_weather_file.get.clone(new_model)
+      end
+
+      # pull original design days over
+      new_model.getDesignDays.each { |designDay|
+        designDay.remove
+      }
+      model.getDesignDays.each { |designDay|
+        designDay.clone(new_model)
+      }
+
+      # swap underlying data in model with underlying data in new_model
+      # remove existing objects from model
+      handles = OpenStudio::UUIDVector.new
+      model.objects.each do |obj|
+        handles << obj.handle
+      end
+      model.removeObjects(handles)
+      # add new file to empty model
+      model.addObjects( new_model.toIdfFile.objects )
+      BTAP::runner_register("Info",  "Model name is now #{model.building.get.name}.", runner)
+    end
+    
+    
 
     # This method loads an Openstudio file into the model.
     # @author Phylroy A. Lopez
@@ -148,7 +181,7 @@ module BTAP
       version_translator.warnings.each {|warning| puts "Warning: #{warning.logMessage}\n\n"}
       #If model did not load correctly.
       if model.empty?
-        raise 'could not load #{filepath}'
+        raise "could not load #{filepath}"
       end
       model = model.get
       if name != "" and not name.nil?
@@ -642,54 +675,54 @@ module BTAP
     # outputFile = "/tmp/out.zip"
     # zf = BTAP::FileIO::ZipFileGenerator.new(directoryToZip, outputFile)
     # zf.write()
-#
-#    class ZipFileGenerator
-#      # Initialize with the directory to zip and the location of the output archive.
-#      def initialize(input_dir, output_file)
-#        @input_dir = input_dir
-#        @output_file = output_file
-#        self.write()
-#      end
-#
-#      # Zip the input directory.
-#      def write
-#        entries = Dir.entries(@input_dir) - %w(. ..)
-#
-#        ::Zip::File.open(@output_file, ::Zip::File::CREATE) do |io|
-#          write_entries entries, '', io
-#        end
-#      end
-#
-#      private
-#
-#      # A helper method to make the recursion work.
-#      def write_entries(entries, path, io)
-#        entries.each do |e|
-#          zip_file_path = path == '' ? e : File.join(path, e)
-#          disk_file_path = File.join(@input_dir, zip_file_path)
-#          puts "Deflating #{disk_file_path}"
-#
-#          if File.directory? disk_file_path
-#            recursively_deflate_directory(disk_file_path, io, zip_file_path)
-#          else
-#            put_into_archive(disk_file_path, io, zip_file_path)
-#          end
-#        end
-#      end
-#
-#      def recursively_deflate_directory(disk_file_path, io, zip_file_path)
-#        io.mkdir zip_file_path
-#        subdir = Dir.entries(disk_file_path) - %w(. ..)
-#        write_entries subdir, zip_file_path, io
-#      end
-#
-#      def put_into_archive(disk_file_path, io, zip_file_path)
-#        io.get_output_stream(zip_file_path) do |f|
-#          f.puts(File.open(disk_file_path, 'rb').read)
-#        end
-#      end
-#    end
-#      
+    #
+    #    class ZipFileGenerator
+    #      # Initialize with the directory to zip and the location of the output archive.
+    #      def initialize(input_dir, output_file)
+    #        @input_dir = input_dir
+    #        @output_file = output_file
+    #        self.write()
+    #      end
+    #
+    #      # Zip the input directory.
+    #      def write
+    #        entries = Dir.entries(@input_dir) - %w(. ..)
+    #
+    #        ::Zip::File.open(@output_file, ::Zip::File::CREATE) do |io|
+    #          write_entries entries, '', io
+    #        end
+    #      end
+    #
+    #      private
+    #
+    #      # A helper method to make the recursion work.
+    #      def write_entries(entries, path, io)
+    #        entries.each do |e|
+    #          zip_file_path = path == '' ? e : File.join(path, e)
+    #          disk_file_path = File.join(@input_dir, zip_file_path)
+    #          puts "Deflating #{disk_file_path}"
+    #
+    #          if File.directory? disk_file_path
+    #            recursively_deflate_directory(disk_file_path, io, zip_file_path)
+    #          else
+    #            put_into_archive(disk_file_path, io, zip_file_path)
+    #          end
+    #        end
+    #      end
+    #
+    #      def recursively_deflate_directory(disk_file_path, io, zip_file_path)
+    #        io.mkdir zip_file_path
+    #        subdir = Dir.entries(disk_file_path) - %w(. ..)
+    #        write_entries subdir, zip_file_path, io
+    #      end
+    #
+    #      def put_into_archive(disk_file_path, io, zip_file_path)
+    #        io.get_output_stream(zip_file_path) do |f|
+    #          f.puts(File.open(disk_file_path, 'rb').read)
+    #        end
+    #      end
+    #    end
+    #      
 
   end #FileIO
 

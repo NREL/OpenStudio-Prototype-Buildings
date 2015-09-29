@@ -19,6 +19,7 @@ class OpenStudio::Model::Model
     system_to_space_map = [
       {
           'type' => 'VAV',
+          'name' => 'VAV_bot WITH REHEAT',
           'space_names' =>
           [
               'Perimeter_bot_ZN_1',
@@ -30,6 +31,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'VAV',
+          'name' => 'VAV_mid WITH REHEAT',
           'space_names' =>
           [
               'Perimeter_mid_ZN_1',
@@ -41,6 +43,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'VAV',
+          'name' => 'VAV_top WITH REHEAT',
           'space_names' =>
           [
               'Perimeter_top_ZN_1',
@@ -52,6 +55,7 @@ class OpenStudio::Model::Model
       },
       {
           'type' => 'CAV',
+          'name' => 'CAV_bas',
           'space_names' =>
           [
               'Basement'
@@ -125,14 +129,14 @@ class OpenStudio::Model::Model
       case system['type']
       when 'VAV'
         if hot_water_loop && chilled_water_loop
-          self.add_vav(prototype_input, hvac_standards, hot_water_loop, chilled_water_loop, thermal_zones)
+          self.add_vav(prototype_input, hvac_standards, system['name'], hot_water_loop, chilled_water_loop, thermal_zones)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false
         end
       when 'CAV'
         if hot_water_loop && chilled_water_loop
-          self.add_psz_ac(prototype_input, hvac_standards, thermal_zones, 'DrawThrough', hot_water_loop, chilled_water_loop)
+          self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones, 'DrawThrough', hot_water_loop, chilled_water_loop)
         else
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'No hot water and chilled water plant loops in model')
           return false
@@ -161,7 +165,7 @@ class OpenStudio::Model::Model
     
   end #add hvac
 
-  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
 

@@ -43,33 +43,29 @@ class ConvertDOEReferenceToNECBOSM < BTAP::Measures::OSMeasures::BTAPModelUserSc
 
   #define the arguments that the user will input
   def arguments(model)
+    #list of arguments as they will appear in the interface. They are available in the run command as
+    @argument_array_of_arrays = [
+      [    "variable_name",          "type",          "required",  "model_dependant", "display_name",                 "default_value",  "min_value",  "max_value",  "string_choice_array",  	"os_object_type"	],
+      [    "idf_file_path",      "STRING",        true,        false,             "IDF File Path",                nil,               nil,          nil,           nil,  	         nil					],
+    ]
+    #set up arguments. 
     args = OpenStudio::Ruleset::OSArgumentVector.new
+    self.argument_setter(args)
     return args
   end #end the arguments method
 
 
   def measure_code(model,runner)
     #get idf files in measure
-    BTAP::runner_register("INFO", "IDF folder is #{File.dirname(__FILE__)}", runner)
-    idf_files = BTAP::FileIO::get_find_files_from_folder_by_extension("#{File.dirname(__FILE__)}", '.idf')
     
-    #Note: place output folder locally to run faster! (e.g. your C drive)
-    
-    output_folder = "#{File.dirname(__FILE__)}/output"
-    BTAP::runner_register("INFO", "IDF folder is #{output_folder}", runner)
-    
-    
-    idf_files.each do |idf_filename|
-      #Convert to osm and necb space types. 
-      new_model = BTAP::Compliance::NECB2011::convert_idf_to_osm_and_map_doe_zones_to_necb_space_types(idf_filename)
+    #Convert to osm and necb space types. 
+    new_model = BTAP::Compliance::NECB2011::convert_idf_to_osm_and_map_doe_zones_to_necb_space_types(@idf_file_path)
 
-      #Autozone and set to ideal airloads
-      use_ideal_air_loads = true
-      BTAP::Compliance::NECB2011::necb_autozone_and_autosystem( new_model ,use_ideal_air_loads,runner )
-      file_path = "#{output_folder}/#{File.basename(idf_filename, ".rb")}.osm"
-      BTAP::FileIO::save_osm(new_model, file_path)
-      BTAP::runner_register("INFO", "IDF file converted to OSM #{file_path}", runner)
-    end
+    #Autozone and set to ideal airloads
+    use_ideal_air_loads = true
+    BTAP::Compliance::NECB2011::necb_autozone_and_autosystem( new_model ,runner, use_ideal_air_loads )
+    BTAP::FileIO::replace_model(model, new_model, runner)
+    
   end
   
 end #end the measure

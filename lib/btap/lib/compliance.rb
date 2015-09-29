@@ -446,166 +446,6 @@ module BTAP
         end
       end
 
-      #This module contains methods as they DIRECTLY relate to sections in
-      #NECB 2011.
-      module Rules
-        #Section 8.4.3.1 (Done)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        #@return model[String]
-        def self.rule_8_4_3_1(model)
-          #    EnergyPlus takes into account all aspects of the building as indicated in sentence 1) 2) 3) 4) 5) 6)
-          #    Sentence 7
-          #        All blind controls in model are to be considered automated.
-          #    Sentence 8
-          #        Will not remove any permanant shading devices. I promise.
-          return model
-        end
-        # Section 8.4.3.2 (Done..need to test)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_2(model)
-          #This rule ensures that the space types will all be reset to the default
-          # NECB 2011 values.
-          spacetypemap = Array.new
-          model.getSpaceTypes().each do |spacetype|
-            #keep track of space type name and spaces that it is being used in .
-            spacetypemap.push([spacetype.name,spacetype.spaces])
-            #remove the possibly tainted space type.
-            spacetype.remove
-          end
-          #add NECB pristine spacetypes.
-          BTAP::Compliance::NECB2011::add_necb_schedules(model)
-          BTAP::Compliance::NECB2011::add_necb_building_types(model)
-          BTAP::Compliance::NECB2011::add_necb_space_types(model)
-          spacetypemap.each do |row|
-            spacetype_name  = row[0]
-            spaces = row[1]
-            spacetype = model.getSpaceTypeByName(spacetype_name)
-            if spacetype.empty
-              raise( "Error: This space type is not a defined exactly as a NECB space type. #{spacetype_name} please only use NECB space types. ")
-            else
-              spaces.each do |space|
-                space.setSpaceType(spacetype)
-              end
-            end
-          end
-        end
-        # Section 8.4.3.3(Todo)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_3(model)
-          #    Reset all SHW properly based on space types
-        end
-        # Section 8.4.3.4(Todo)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_4(model)
-          #    Sentence 1
-          #        Solar Absorptance is set by the user.
-          #    Sentence 2
-          #        Shading is set by user.
-          #    Sentence 3
-          #        Set air leakage to 0.25 L/s/m2 for all above ground constructions (wall and roof)
-
-
-        end
-        # Section 8.4.3.5(Todo)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model objec
-        def self.rule_8_4_3_5(model)
-          #    Sentence 1
-          #        Set Dwelling units to a 5W/m2 LPD....what is a dwelling unit?
-          #    Sentence 2
-          #        If Occupancy sensor are used, use adjustment factor. (This may require a UI change)
-          #    Sentence 3
-          #        If detailed daylighting should be activated for daylight sensors...if possible...
-        end
-        # Section 8.4.3.6(Todo)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_6(model)
-          #    Sentence 1
-          #        No action required.
-          #    Sentence 2
-          #        If using district heating, convert to an electric boiler at 100% eff.
-          #    Sentence 3
-          #        If using district cooling, convert to an air-cooled electric chiller at 1.0 COP.
-          #    Sentence 4
-          #        if using district energy for SHW use a electric shw heater with 100% eff and auto-size tank size. (This is dumb...what size is a purchased water heater..? May as well just put the actual water heater in.)
-          #    Sentence 5
-          #        Not sure what this means. We can include anything though..this is not clear how it will be used.
-          #    Sentence 6
-          #        Thanks for letting us use purchased energy for secondary use. (Zonal systems...duh)
-        end
-        # Section 8.4.3.7 (Done)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_7(model)
-          #    All OA rate should be reset based on space / building type. Already done.
-        end
-        # Section 8.4.3.8 (Done)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_8(model)
-          #    Ensure throttling ranges are set to +/- 1C
-        end
-        # Section 8.4.3.9 (Done)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_9(model)
-          #    Sentence 1
-          #        Don't change the non-compliance part load performance curve. (I promise)
-          #    Sentence 2
-          #        User will have to enter the correct curves...or access it from the reference curves library.
-
-        end
-        # Section 8.4.3.10 (Done...no ice rink support.)
-        #@author phylroy.lopez@nrcan.gc.ca
-        #@params model [OpenStudio::model::Model] A model object
-        def self.rule_8_4_3_10(model)
-          #    Sadly...Ice rinks cannot be supported at this time.. More research is required.
-        end
-      end
-      
-      #This method will create a proposed building from the non-compliance model
-      #with NECB proposed restrictions applied.
-      #@author phylroy.lopez@nrcan.gc.ca
-      #@params model [OpenStudio::model::Model] A model object
-      #@return proposed_building [Object]
-      def self.create_proposed_building(model)
-        proposed_building = create_proposed_building(BTAP::FileIO::deep_copy(model))
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_1(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_2(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_3(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_4(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_5(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_6(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_7(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_8(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_9(proposed_building)
-        BTAP::Compliance::NECB2011::Rules::rule_8_4_3_10(proposed_building)
-        return proposed_building
-      end
-      
-      #This method will return the reference building given a model object and
-      #the HDD value. In the future, we will obtain the HDD from the weather file.
-      # Note: Had a requested that the code match the compliance rules. This
-      # is a very good idea and will be the methodology moving forward.
-      #@author phylroy.lopez@nrcan.gc.ca
-      #@params model [OpenStudio::model::Model] A model object
-      #@params hdd [Float]
-      def self.create_reference_building(model,hdd)
-        #create proposed building from user model.
-        proposed_building = BTAP::Compliance::NECB2011::create_proposed_building(BTAP::FileIO::deep_copy(model))
-        #Create copy for reference building
-        reference_model = BTAP::FileIO::deep_copy(proposed_building)
-        #Convert Envelope to reference values.
-        #Converts all surfaces conductances, FWR and SSR.
-        BTAP::Compliance::NECB2011::set_necb_envelope(reference_model, hdd)
-        #Converts Construction sets as a precaution.
-        BTAP::Compliance::NECB2011::set_all_construction_sets_to_necb!(reference_model,hdd)
-      end
 
       # This method will set the the envelope (wall, roof, glazings) to  values to
       # the default NECB 2011 values based on the heating degree day value (hdd) surface by surface.
@@ -643,7 +483,8 @@ module BTAP
           scale_window = 1.0
         )
         BTAP::runner_register("Info","set_construction_set_to_necb!", runner) 
-        if model.weatherFile.empty? or model.weatherFile.get.path.empty? or not File.exists?(model.weatherFile.get.path.to_s)
+        if model.weatherFile.empty? or model.weatherFile.get.path.empty? or not File.exists?(model.weatherFile.get.path.get.to_s)
+          
           BTAP::runner_register("Error","Weather file is not defined. Please ensure the weather file is defined and exists.", runner) 
           return false
         end
@@ -730,7 +571,7 @@ module BTAP
       #@params use_max [Boolean]
       def self.set_necb_fwdr(model,use_max = false, runner = nil)
         BTAP::runner_register("Info","set_necb_fwdr", runner) 
-        if model.weatherFile.empty? or model.weatherFile.get.path.empty? or not File.exists?(model.weatherFile.get.path.to_s)
+        if model.weatherFile.empty? or model.weatherFile.get.path.empty? or not File.exists?(model.weatherFile.get.path.get.to_s)
           BTAP::runner_register("Error","Weather file is not defined. Please ensure the weather file is defined and exists.", runner) 
           return false
         end
@@ -883,10 +724,12 @@ module BTAP
       #@params space_type_csv_file [String]
       #@params idf_filename [String] a idf file
       #@params model [OpenStudio::model::Model] A model object
-      def self.convert_idf_to_osm_and_map_doe_zones_to_necb_space_types(idf_filename)
+      def self.convert_idf_to_osm_and_map_doe_zones_to_necb_space_types(idf_filename, runner = nil)
                 
+        
         #spacetype map file should be in IDF folder.
         space_type_csv_file = File.dirname(idf_filename) + "/SpaceTypeConversions.csv"
+        BTAP::runner_register("ERROR","Spacemap file #{space_type_csv_file} could not be found", runner) unless File.exist?(space_type_csv_file)
         
         #Load IDF file
         model = BTAP::FileIO.load_idf(idf_filename)
@@ -895,23 +738,25 @@ module BTAP
         #Set building name to match archetype name.
         BTAP::FileIO::set_name(model,"#{File.basename(idf_filename,'.idf')}")
           
+
+        
         #Set Building Stories
         BTAP::Geometry::BuildingStoreys::auto_assign_spaces_to_stories( model )
 
-
-       
         #Add NECB Libraries
-        puts "Adding NECB default spacetype libs to model... (this may take a while)"
+        BTAP::runner_register("INFO", "Adding NECB default spacetype libs to model... (this may take a while)....", runner)
         BTAP::Compliance::NECB2011::add_necb_schedules( model )
         BTAP::Compliance::NECB2011::add_necb_space_types( model )
         BTAP::Compliance::NECB2011::add_necb_building_types( model )
+        BTAP::runner_register("INFO", "Done!.", runner)
+        
         
         #iterate thourgh all spaces.
-        puts "Mapping NECB space types."
-        #open CSV file.
+        BTAP::runner_register("INFO", "Mapping NECB space types.",runner)
+        #Open CSV Map file.. this contains the map from DOE spacenames to NECB space types.
         found_idf_file_in_space_type_csv = false  
-        #puts "Loading CSV map file."
         idf_base_filename = Pathname.new(idf_filename).basename.to_s
+        BTAP::runner_register("INFO", "Loaded CSV DOE Space name to NECB SpaceType map file #{space_type_csv_file}.",runner)
         CSV.foreach( space_type_csv_file, :headers => true, :converters => :all ) do |row|
           #puts "Checking #{row['idf_file']} for map."
           if row['idf_file'] == idf_base_filename
@@ -923,25 +768,22 @@ module BTAP
               #get space as named in csv file.
               space_name  = row['zone_name'].gsub(/\bThermal Zone\b/, '').strip
               #get space by space name
-              raise ("Space name #{space_name} not found in model.") if  model.getSpaceByName(space_name).empty?
+              if model.getSpaceTypeByName("NECB-#{row['necb_space_type']}").empty?
+                BTAP::runner_register("ERROR","Missing spacetype: #{row['necb_space_type']}", runner) 
+              end
               space = model.getSpaceByName(space_name).get
           
               #Get NECB spacetype
-              raise ("ERROR - Missing spacetype: #{row['necb_space_type']}") if model.getSpaceTypeByName("NECB-#{row['necb_space_type']}").empty?
+              if model.getSpaceTypeByName("NECB-#{row['necb_space_type']}").empty?
+                BTAP::runner_register("ERROR","Space name #{space_name} not found in model.", runner)
+                return false
+              end
               necb_spacetype = model.getSpaceTypeByName("NECB-#{row['necb_space_type']}").get
               #set space type
               space.setSpaceType(necb_spacetype)
-              #puts "**space #{space.name} has been set to spacetype #{necb_spacetype.name}"
-              #set thermal heating and cooling setpoint schedule.
-              schedule_type = self.determine_necb_schedule_type( space )
-              if ( schedule_type != "*") 
-                test = space.thermalZone.get.setThermostatSetpointDualSetpoint(model.getThermostatSetpointDualSetpointByName("NECB-#{determine_necb_schedule_type(space)}").get)
-                raise("***Unable to Set Dual Thermostat for zone to #{space.thermalZone.get.thermostatSetpointDualSetpoint.get.name} ") if test == false
-                puts "***Set Dual Thermostat for zone #{space.thermalZone.get.name} to NECB-#{self.determine_necb_schedule_type(space)}"
-       
-              end
+              puts "**space #{space.name} has been set to spacetype #{necb_spacetype.name}"
             else
-              raise("#{row['necb_space_type']} is not a proper NECB space type")
+              BTAP::runner_register("ERROR","#{row['necb_space_type']} is not a proper NECB space type",runner)
             end
           else
             if found_idf_file_in_space_type_csv == true
@@ -951,8 +793,9 @@ module BTAP
             end
           end
         end
-
-        raise ("#{Pathname.new(idf_filename).basename.to_s} not found in spacetype csv mapping in #{space_type_csv_file}.") unless found_idf_file_in_space_type_csv == true
+        unless found_idf_file_in_space_type_csv == true
+          BTAP::runner_register("ERROR","#{Pathname.new(idf_filename).basename.to_s} not found in spacetype csv mapping in #{space_type_csv_file}.") 
+        end
         return model
       end
       
@@ -1227,12 +1070,21 @@ module BTAP
             BTAP::runner_register("Error", "#{zone.name} has spaces with different schedule types. Please ensure that all the spaces are of the same schedule type A to I.",runner)  
             return false
           end
-          puts "NECB-#{array[0]}"
-          zone.setThermostatSetpointDualSetpoint(model.getThermostatSetpointDualSetpointByName("NECB-#{array[0]}").get)
-          BTAP::runner_register("Info","ThermalZone #{zone.name} set to DualSetpoint Schedule NECB-#{array[0]}",runner)
-          BTAP::runner_register("DEBUG","END-set_zones_thermostat_schedule_based_on_space_type_schedules" , runner)
+
+          if model.getThermostatSetpointDualSetpointByName("NECB-#{array[0]}").empty? == false
+            ds = model.getThermostatSetpointDualSetpointByName("NECB-#{array[0]}").get
+            zone.setThermostatSetpointDualSetpoint(ds)
+
+            BTAP::runner_register("Info","Found DualSetpoint Schedule NECB-#{array[0]}",runner)
+            BTAP::runner_register("Info","ThermalZone #{zone.name} set to DualSetpoint Schedule NECB-#{array[0]}",runner)
+            BTAP::runner_register("DEBUG","END-set_zones_thermostat_schedule_based_on_space_type_schedules" , runner)
+          else
+            BTAP::runner_register("ERROR","set_zones_thermostat_schedule NECB-#{array[0]} does not exist" , runner)
+            puts model.getThermostatSetpointDualSetpoints
+            return false
+          end
         end
-        
+        return true
       end
       
       # This model converts all DOE to NECB reference building.
@@ -1244,6 +1096,7 @@ module BTAP
         #Load up idf as OSM file and convert spacetypes based on map contained in File.dirname(idf_filename) + "/SpaceTypeConversions.csv"
         model = BTAP::Compliance::NECB2011::convert_idf_to_osm_and_map_doe_zones_to_necb_space_types(idf_filename,runner)
         
+        #Taking care of wildcard spacetypes. 
         BTAP::Compliance::NECB2011::set_wildcard_schedules_to_dominant_building_schedule(model, runner)
         
         #set weather file        
@@ -1253,13 +1106,13 @@ module BTAP
         BTAP::Resources::Envelope::ConstructionSets::set_construction_set_by_file(model, construction_library_file, construction_set_name, runner)
 
         #set NECB u-values to construction. 
-        BTAP::Compliance::NECB2011::set_all_construction_sets_to_necb!(model, runner) 
+        BTAP::Compliance::NECB2011::set_all_construction_sets_to_necb!( model, runner ) 
         
         #Set FWDR
         BTAP::Compliance::NECB2011::set_necb_fwdr( model, true, runner)
         
         # Set Surface if they are out of wack.
-        BTAP::Geometry::match_surfaces(model)
+        BTAP::Geometry::match_surfaces( model )
         
         #*** HVAC ***
         BTAP::Compliance::NECB2011::necb_autozoner(model)
@@ -1321,7 +1174,7 @@ module BTAP
         return model
       end
 
-      # This model confirms if the type is the proper space type
+      # This method confirms if the type is the proper space type
       #@author phylroy.lopez@nrcan.gc.ca
       #@params type [String]
       #@return item [String]
@@ -1334,13 +1187,45 @@ module BTAP
         return false
       end
       
-      # This model gets the building space type info
+      # This method determines if all the spacetype names match the NECB spacetypes. This is a prerequisite for NECB zoning and system assignment
+      #@author phylroy.lopez@nrcan.gc.ca
+      #@params type [String]
+      #@return item [String] 
+      def self.check_all_spacetypes_are_valid_necb_names( model,runner = nil)
+        #collect space type and building type names. 
+        spacetypenames = []
+        found = false
+        BTAP::Compliance::NECB2011::Data::SpaceTypeData.each    {  |item| spacetypenames << item[0]}
+        BTAP::Compliance::NECB2011::Data::BuildingTypeData.each {  |item| spacetypenames << item[0]}
+        non_necb_spacetype_names = []
+        model.getSpaceTypes.each do |model_spacetype|
+          found = false
+          spacetypenames.each do |valid_spacetype_name|
+            # The optional suffix allows for for defined "wildcard" spacetypes to pass through. 
+            if model_spacetype.name =~ /NECB-#{valid_spacetype_name}(\-[ABCDEFGHI])?/
+              found = true
+            end
+          end
+          non_necb_spacetype_names << model_spacetype.name unless found == true
+        end
+        if non_necb_spacetype_names.size > 0
+          BTAP::runner_register("ERROR","The following spacetypes are not NECB space types.", runner)
+          non_necb_spacetype_names.each {|item| BTAP::runner_register("ERROR","-#{item}", runner) }
+          BTAP::runner_register("ERROR","Please edit model and assign valid space types.", runner)
+          return false
+        end
+        BTAP::runner_register("INFO","All spacetypes conform to NECB naming.", runner)
+        return true
+      end
+      
+      
+      
+      # This model gets the building space type info from lookup table. 
       #@author phylroy.lopez@nrcan.gc.ca
       #@params type [String]
       #@return item [String]
-      def self.get_building_spacetype_info(type)
+      def self.lookup_spacetype_info(type)
         BTAP::Compliance::NECB2011::Data::SpaceTypeData.each do |item|
-
           # The optional suffix allows for for defined "wildcard" spacetypes to pass through. 
           if type.strip =~ /NECB-#{item[0]}(\-[ABCDEFGHI])?/
             return item
@@ -1352,7 +1237,6 @@ module BTAP
             return item
           end
         end
-        
         raise ("#{type} is not a NECB space type, Cannot use NECB system definitions!!")
       end
 
@@ -1386,6 +1270,9 @@ module BTAP
               s[ spacetype[2] ] = s[ spacetype[2] ] + space.floorArea() if "*" != spacetype[2]
               #puts "Found #{space.spaceType.get.name} schedule #{spacetype[2]} match with floor area of #{space.floorArea()}"
               found_space_type = true
+            elsif spacetype_name.to_s =~ /NECB-#{spacetype[0].to_s}(\-[ABCDEFGHI])?/
+              #found wildcard..will not count to total. 
+              found_space_type = true
             end
       
           end
@@ -1396,14 +1283,13 @@ module BTAP
         raise("default necb schedule could not be determined for . ") if 0.0 == s.values.max
         return s.each { |k, v| return k.to_s if v == s.values.max }
       end
-  
-       
-      #This method determines the spacetype schedule type.
+      
+      #This method determines the spacetype schedule type. This will re
       #@author phylroy.lopez@nrcan.gc.ca
       #@params space [String]
-      #@retun spacetype [Fixnum]
+      #@retun spacetype [String]:["A","B","C","D","E","F","G","H","I"]
+      
       def self.determine_necb_schedule_type(space)
-
         BTAP::Compliance::NECB2011::Data::SpaceTypeData.each do |spacetype|
           spacetype_name = space.spaceType.get.name  unless space.spaceType.empty?
           #If it is a regular space type.
@@ -1411,7 +1297,6 @@ module BTAP
             return spacetype[2]
           end
           #if it is a wildcard space type the schedule is in the name ensure that 
-
           if spacetype_name.to_s =~ /#{"NECB-" + spacetype[0]}-(\S)$/i
             return $1
           end
@@ -1441,29 +1326,63 @@ module BTAP
       #@author phylroy.lopez@nrcan.gc.ca
       #@params model [OpenStudio::model::Model] A model object
       #@return system_zone_array<String>
-      def self.necb_autozone_and_autosystem(model,use_ideal_air_loads = true,runner = nil  )
+      def self.necb_autozone_and_autosystem(
+          model,
+          runner,
+          use_ideal_air_loads = true,
+          boiler_fueltype = "NaturalGas",
+          mau_type = true,
+          mau_heating_coil_type = "Hot Water",
+          baseboard_type = "Hot Water",
+          chiller_type = "Scroll",
+          mua_cooling_type = "DX",
+          heating_coil_types_sys3 = "Gas",
+          heating_coil_types_sys4and6 = "Gas",
+          fan_type = "AF_or_BI_rdg_fancurve" )
         
-        # Reassign / set floors if required. 
-        BTAP::Geometry::BuildingStoreys::auto_assign_stories(model)
-        
-        
-        #Array to store people objects
-        schedule_type_array = []
-        
-        
-        #This remove all ThermalZones in model 
-        model.getThermalZones.each do |zone|
-          zone.remove
+        #system assignment. 
+        unless  ["NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"].include?(boiler_fueltype) and
+            [true, false].include?(mau_type) and
+            ["Hot Water", "Electric"].include?(mau_heating_coil_type) and
+            ["Hot Water" , "Electric"].include?(baseboard_type) and
+            ["Scroll","Centrifugal","Rotary Screw","Reciprocating"].include?(chiller_type) and
+            ["DX","Hydronic"].include?(mua_cooling_type) and
+            ["Electric", "Gas", "DX"].include?(heating_coil_types_sys3) and
+            ["Electric", "Gas"].include?(heating_coil_types_sys4and6) and
+            ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_speed_drive"].include?(fan_type)
+          BTAP::runner_register("ERROR","User input for autozoner_and_autosystem invalid" ,runner)
+          BTAP::runner_register("ERROR","boiler_fueltype = #{boiler_fueltype}",runner)
+          BTAP::runner_register("ERROR","mau_type = #{mau_type}",runner)
+          BTAP::runner_register("ERROR","mau_heating_coil_type = #{mau_heating_coil_type}",runner)
+          BTAP::runner_register("ERROR","baseboard_type = #{baseboard_type}",runner)
+          BTAP::runner_register("ERROR","chiller_type = #{chiller_type}",runner)
+          BTAP::runner_register("ERROR","mua_cooling_type = #{mua_cooling_type}",runner)
+          BTAP::runner_register("ERROR","heating_coil_types_sys3 = #{heating_coil_types_sys3}",runner)
+          BTAP::runner_register("ERROR","heating_coil_types_sys4and6 = #{heating_coil_types_sys4and6}",runner)
+          BTAP::runner_register("ERROR","fan_type = #{fan_type}",runner)
+          
         end
         
-        BTAP::Compliance::NECB2011::set_wildcard_schedules_to_dominant_building_schedule(model, runner)
-        
-        #some defaults until we figure out how to handle them. 
+        #some defaults until we figure out how to handle them. (TODO) 
         vented = true
         heated_only = true
         refrigerated = false
         cooling_capacity = 19.0 #only after sizing run is completed. 
+        # Reassign / set floors if required. 
+        BTAP::Geometry::BuildingStoreys::auto_assign_stories(model)
         
+        
+        #Array to store schedule objects
+        schedule_type_array = []
+        
+        
+        #This remove all ThermalZones in model just in case
+        model.getThermalZones.each do |zone|
+          zone.remove
+        end
+        
+        #this method replaces all the "*" space types with concrete "A-I" schedule based shedules. 
+        BTAP::Compliance::NECB2011::set_wildcard_schedules_to_dominant_building_schedule(model, runner)
         
         #find the number of stories in the model. 
         number_of_stories = model.getBuildingStorys.size
@@ -1485,7 +1404,7 @@ module BTAP
           if space.spaceType.empty?
             space_system_index = nil
           else
-            space_system_index = self.get_building_spacetype_info(space.spaceType.get.name.get)[11]
+            space_system_index = self.lookup_spacetype_info(space.spaceType.get.name.get)[11]
           end
           
           #identify space-system_index and assign the right NECB system type 1-7. 
@@ -1626,16 +1545,9 @@ module BTAP
         BTAP::Compliance::NECB2011::set_zones_thermostat_schedule_based_on_space_type_schedules(model,runner)
 
         unless use_ideal_air_loads == true
-          #system assignment. 
-          boiler_fueltypes = ["NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"]
-          mau_types = [true, false]
-          mau_heating_coil_types = ["Hot Water", "Electric"]
-          baseboard_types = ["Hot Water" , "Electric"]
-          chiller_types = ["Scroll","Centrifugal","Rotary Screw","Reciprocating"]
-          mua_cooling_types = ["DX","Hydronic"]
-          heating_coil_types_sys3 = ["Electric", "Gas", "DX"]
-          heating_coil_types_sys4and6 = ["Electric", "Gas"]
-          fan_types = ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_speed_drive"]
+          
+
+          puts boiler_fueltype
 
           system_zone_array.each_with_index do |zones,system_index|
             #skip if no thermal zones for this system.
@@ -1643,19 +1555,19 @@ module BTAP
             puts "Zone Names for System #{system_index}"
             case system_index
             when 1
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys1(model, zones, boiler_fueltypes[0], mau_types[0], mau_heating_coil_types[0], baseboard_types[0])
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys1(model, zones, boiler_fueltype, mau_type, mau_heating_coil_type, baseboard_type)
             when 2
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys2(model, zones, boiler_fueltypes[0], chiller_types[0], mua_cooling_types[0])
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys2(model, zones, boiler_fueltype, chiller_type, mua_cooling_type)
             when 3
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys3(model, zones, boiler_fueltypes[0], heating_coil_types_sys3[0], baseboard_types[0])
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys3(model, zones, boiler_fueltype, heating_coil_types_sys3, baseboard_type)
             when 4
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys4(model, zones, boiler_fueltypes[0], heating_coil_types_sys4and6[0], baseboard_types[0])
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys4(model, zones, boiler_fueltype, heating_coil_types_sys4and6, baseboard_type)
             when 5
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys5(model, zones, boiler_fueltypes[0], chiller_types[0], mua_cooling_types[0])
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys5(model, zones, boiler_fueltype, chiller_type, mua_cooling_type)
             when 6
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys6(model, zones, boiler_fueltypes[0], heating_coil_types_sys4and6[0], baseboard_types[0], chiller_types[0], fan_types[0])
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys6(model, zones, boiler_fueltype, heating_coil_types_sys4and6, baseboard_type, chiller_type, fan_type)
             when 7
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys2(model, zones, boiler_fueltypes[0], chiller_types[0], mua_cooling_types[0])
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys2(model, zones, boiler_fueltype, chiller_type, mua_cooling_type)
             end
           end
         end

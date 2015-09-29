@@ -1,18 +1,18 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::CoilCoolingDXSingleSpeed
 
-
+  # Applies the standard efficiency ratings and typical performance curves to this object.
+  # 
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @param standards [Hash] the OpenStudio_Standards spreadsheet in hash format
+  # @return [Bool] true if successful, false if not 
   def setStandardEfficiencyAndCurves(template, standards, sql_db_vars_map)
   
     successfully_set_all_properties = true
   
     unitary_acs = standards['unitary_acs']
     heat_pumps = standards['heat_pumps_cooling']
-    curve_biquadratics = standards['curve_biquadratics']
-    curve_quadratics = standards['curve_quadratics']
-    curve_bicubics = standards['curve_bicubics']
-    curve_cubics = standards['curve_cubics']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -20,6 +20,10 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     search_criteria['template'] = template
     cooling_type = self.condenserType
     search_criteria['cooling_type'] = cooling_type
+    
+    # TODO Standards - add split system vs single package to model
+    # For now, assume single package as default
+    subcategory = 'Single Package'
     
     # Determine the heating type if unitary or zone hvac
     heat_pump = false
@@ -34,6 +38,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       elsif self.containingZoneHVACComponent.is_initialized
         containing_comp = containingZoneHVACComponent.get
         if containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.is_initialized
+          subcategory = 'PTAC'
           htg_coil = containing_comp.to_ZoneHVACPackagedTerminalAirConditioner.get.heatingCoil
           if htg_coil.to_CoilHeatingElectric.is_initialized
             heating_type = 'Electric Resistance or None'          
@@ -70,12 +75,9 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     unless heating_type.nil?
       search_criteria['heating_type'] = heating_type
     end
-    
-    # TODO Standards - add split system vs single package to model
-    # For now, assume single package
-    subcategory = 'Single Package'
-    search_criteria['subcategory'] = subcategory
 
+    search_criteria['subcategory'] = subcategory
+    
     # Get the coil capacity
     capacity_w = nil
     if self.ratedTotalCoolingCapacity.is_initialized
@@ -154,6 +156,17 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
  
     # Get the minimum efficiency standards
     cop = nil
+    
+    if subcategory == 'PTAC'
+      ptac_eer_coeff_1 = ac_props['ptac_eer_coefficient_1']
+      ptac_eer_coeff_2 = ac_props['ptac_eer_coefficient_2']
+      capacity_btu_per_hr = 7000 if capacity_btu_per_hr < 7000
+      capacity_btu_per_hr = 15000 if capacity_btu_per_hr > 15000
+      ptac_eer = ptac_eer_coeff_1 + (ptac_eer_coeff_2 * capacity_btu_per_hr)
+      cop = eer_to_cop(ptac_eer)
+      self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{ptac_eer}EER")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{ptac_eer}")      
+    end
     
     # If specified as SEER
     unless ac_props['minimum_seasonal_energy_efficiency_ratio'].nil?

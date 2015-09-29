@@ -1,7 +1,17 @@
 
-# open the class to add methods to return sizing values
+# Reopen the OpenStudio class to add methods to apply standards to this object
 class OpenStudio::Model::WaterHeaterMixed
 
+  # Applies the standard efficiency ratings and typical losses and paraisitic loads to this object.
+  # Efficiency and skin loss coefficient (UA)
+  # Per PNNL http://www.energycodes.gov/sites/default/files/documents/PrototypeModelEnhancements_2014_0.pdf
+  # Appendix A: Service Water Heating
+  #
+  # @param template [String] valid choices: 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013'
+  # @param standards [Hash] the OpenStudio_Standards spreadsheet in hash format
+  # @return [Bool] true if successful, false if not
+  # @todo break parasitic/skin losses into a separate method in
+  #   Prototype.WaterHeaterMixed because not governed by standard?
   def setStandardEfficiency(template, standards)
   
     # Get the capacity of the water heater

@@ -67,7 +67,11 @@ class OpenStudio::Model::FanVariableVolume
           if maximum_flow_rate_cfm < 4648
             pressure_rise_in_h2o = 4.0
           elsif maximum_flow_rate_cfm >= 4648 && maximum_flow_rate_cfm < 20000
-            pressure_rise_in_h2o = 6.32
+          #pressure_rise_in_h2o = 6.32
+          # TODO VAV fans in prototypes have pressure rise
+          # of 5.58 in w.c. even when well less than 20,000 cfm.
+          # See secondary school model.  This contradicts documentation.
+          pressure_rise_in_h2o = 5.58          
           else # Over 20,000 cfm
             pressure_rise_in_h2o = 5.58
           end

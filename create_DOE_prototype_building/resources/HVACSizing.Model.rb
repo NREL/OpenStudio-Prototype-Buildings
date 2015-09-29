@@ -37,6 +37,7 @@ class OpenStudio::Model::Model
   require_relative 'HVACSizing.CoolingTowerSingleSpeed'
   require_relative 'HVACSizing.ControllerWaterCoil'
   require_relative 'HVACSizing.SizingSystem'
+  require_relative 'HVACSizing.ThermalZone'
 
   # Methods not yet implemented
   require_relative 'HVACSizing.AirConditionerVariableRefrigerantFlow'
@@ -121,11 +122,10 @@ class OpenStudio::Model::Model
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Running sizing run with RunManager.')
 
       # Find EnergyPlus
-      require 'openstudio/energyplus/find_energyplus'
-      ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,3)
-      ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
+      ep_dir = OpenStudio.getEnergyPlusDirectory
+      ep_path = OpenStudio.getEnergyPlusExecutable
       ep_tool = OpenStudio::Runmanager::ToolInfo.new(ep_path)
-      idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
+      idd_path = OpenStudio::Path.new(ep_dir.to_s + "/Energy+.idd")
       output_path = OpenStudio::Path.new("#{sizing_run_dir}/")
       
       # Make a run manager and queue up the sizing run
@@ -462,13 +462,11 @@ class OpenStudio::Model::Model
       else
         #OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Data not found for query: #{query}")
       end
-
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has no sql file containing results, cannot lookup data.')
     end
 
     return result
-      
   end   
    
 end
