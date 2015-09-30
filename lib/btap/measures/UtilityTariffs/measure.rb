@@ -62,6 +62,7 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     CSV.foreach(electricity_tariffs_file_csv, headers:true) do |tariff|
       if(weather_station.scan(tariff["City"]).size > 0)
         city = tariff["City"]
+        BTAP::runner_register("INFO", "Found electricity tariff database match for weather_station :#{weather_station} and city:#{city}" ,runner)
         elec_tariff = tariff["Utility"]
         monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
@@ -72,7 +73,7 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
         end
         energy_charges_blk_rate[4] = tariff["Energy_Charges_Block_5_Rate_($)"]
         demand_charges_blk_rate[4] = tariff["Demand_Charges_Block_5_Rate_($)"]
-        elec_tariff_template_file_content = tariff_template_file_content.gsub("%utility_tariff_name%",tariff["Utility"])
+        elec_tariff_template_file_content = (tariff_template_file_content.gsub("%utility_tariff_name%",tariff["Utility"])).dup
         elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%tariff_output_meter_name%","ElectricityPurchased:Facility")
         elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%conv_factor%","kWh")
         elec_tariff_template_file_content = elec_tariff_template_file_content.sub("%monthly_charges%",monthly_charges)
@@ -104,7 +105,7 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     CSV.foreach(gas_tariffs_file_csv, headers:true) do |tariff|
       if(weather_station.scan(tariff["City"]).size > 0)
         city = tariff["City"]
-        BTAP::runner_register("INFO", "Found database match for weather_station :#{weather_station} and city:#{city}" ,runner)
+        BTAP::runner_register("INFO", "Found gas tariff database match for weather_station :#{weather_station} and city:#{city}" ,runner)
         gas_tariff = tariff["Utility"]
         monthly_charges = tariff["Monthly_Charge_($)"]
         for i in 0..3 do
@@ -115,7 +116,7 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
         end
         energy_charges_blk_rate[4] = tariff["Energy_Charges_Block_5_Rate_($)"]
         demand_charges_blk_rate[4] = tariff["Demand_Charges_Block_5_Rate_($)"]
-        gas_tariff_template_file_content = tariff_template_file_content.gsub("%utility_tariff_name%",tariff["Utility"])
+        gas_tariff_template_file_content = (tariff_template_file_content.gsub("%utility_tariff_name%",tariff["Utility"])).dup
         gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%tariff_output_meter_name%","Gas:Facility")
         gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%conv_factor%","MJ")
         gas_tariff_template_file_content = gas_tariff_template_file_content.sub("%monthly_charges%",monthly_charges)
@@ -133,6 +134,49 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
       end
     end
 
+    # read database of oil utility data
+    oil_tariffs_file_csv = "#{File.dirname(__FILE__)}/resources/utility_oil_tariffs.csv"
+
+    # update content of oil tariff idf file with tariff data for location
+    energy_charges_blk_limit = []
+    energy_charges_blk_rate = []
+    demand_charges_blk_limit = []
+    demand_charges_blk_rate = []
+    oil_tariff_template_file_content = ""
+    monthly_charges = ""
+    oil_tariff = ""
+    CSV.foreach(oil_tariffs_file_csv, headers:true) do |tariff|
+      if(weather_station.scan(tariff["City"]).size > 0)
+        city = tariff["City"]
+        BTAP::runner_register("INFO", "Found oil tariff database match for weather_station :#{weather_station} and city:#{city}" ,runner)
+        oil_tariff = tariff["Utility"]
+        monthly_charges = tariff["Monthly_Charge_($)"]
+        for i in 0..3 do
+          energy_charges_blk_limit[i] = tariff["Energy_Charges_Block_#{i+1}_Limit_(MJ)"]
+          energy_charges_blk_rate[i] = tariff["Energy_Charges_Block_#{i+1}_Rate_($)"]
+          demand_charges_blk_limit[i] = tariff["Demand_Charges_Block_#{i+1}_Limit_(MJ_per_hr)"]
+          demand_charges_blk_rate[i] = tariff["Demand_Charges_Block_#{i+1}_Rate_($)"]
+        end
+        energy_charges_blk_rate[4] = tariff["Energy_Charges_Block_5_Rate_($)"]
+        demand_charges_blk_rate[4] = tariff["Demand_Charges_Block_5_Rate_($)"]
+        oil_tariff_template_file_content = (tariff_template_file_content.gsub("%utility_tariff_name%",tariff["Utility"])).dup
+        oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%tariff_output_meter_name%","FuelOil#2:Facility")
+        oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%conv_factor%","MJ")
+        oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%monthly_charges%",monthly_charges)
+        oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%blocks_energy_charges_name%","OilBlocksEnergyCharges")
+        oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%blocks_demand_charges_name%","OilBlocksDemandCharges")
+        for i in 0..3 do
+          oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_limit%",energy_charges_blk_limit[i])
+          oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%energy_charges_blk#{i+1}_rate%",energy_charges_blk_rate[i])
+          oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_limit%",demand_charges_blk_limit[i])
+          oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%demand_charges_blk#{i+1}_rate%",demand_charges_blk_rate[i])
+        end
+        oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%energy_charges_blk5_rate%",energy_charges_blk_rate[4])
+        oil_tariff_template_file_content = oil_tariff_template_file_content.sub("%demand_charges_blk5_rate%",demand_charges_blk_rate[4])
+        break
+      end
+    end
+    
     # if there was no matching electricity tariff for the city, then register the information
     if(elec_tariff == "")
       BTAP::runner_register("ERROR", "no electricity tariff in database for #{weather_station}",runner)
@@ -140,19 +184,27 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
       return false
     end
 
-    # if there was no matching gas tariff for the city, then register the information
+    # if there was no matching Gas tariff for the city, then register the information
     if(gas_tariff == "")
       runner.registerInfo("")
       BTAP::runner_register("ERROR", "no gas tariff in database for #{weather_station}",runner)
       #fail the measure
       return false
-
     end
 
+    # if there was no matching Oil tariff for the city, then register the information
+    if(oil_tariff == "")
+      runner.registerInfo("")
+      BTAP::runner_register("ERROR", "no oil tariff in database for #{weather_station}",runner)
+      #fail the measure
+      return false
+    end
+    
     # save new tariff idf file
     tariff_file = File.new("#{File.dirname(__FILE__)}/resources/tariff.idf","w")
     tariff_file.puts(elec_tariff_template_file_content)
     tariff_file.puts(gas_tariff_template_file_content)
+    tariff_file.puts(oil_tariff_template_file_content)
     tariff_file.close
 
     # load the idf file containing the electric tariff
@@ -183,7 +235,7 @@ class UtilityTariffsModelSetup < OpenStudio::Ruleset::WorkspaceUserScript
     workspace.addObjects(tar_file.getObjectsByType("UtilityCost:Charge:Block".to_IddObjectType))
     
     # let the user know what happened
-    runner.registerInfo("added a tariffs named #{elec_tariff} and #{gas_tariff}")
+    runner.registerInfo("added a tariffs named #{elec_tariff}, #{gas_tariff}, and #{oil_tariff}")
     
     # set the simulation timestep to 15min (4 per hour) to match the demand window of the tariffs
     if not workspace.getObjectsByType("Timestep".to_IddObjectType).empty?

@@ -54,8 +54,7 @@ class UtilityTariffsTest < MiniTest::Unit::TestCase
     #return condition of measure.
     return condition
   end
-  
-  
+
   def testCAN_AB_Calgary_718770_CWEC 
     set_weather("CAN_AB_Calgary.718770_CWEC.epw")
   end
@@ -294,5 +293,5 @@ class UtilityTariffsTest < MiniTest::Unit::TestCase
   def testCAN_YT_Whitehorse_719640_CWEC 
     set_weather("CAN_YT_Whitehorse.719640_CWEC.epw")
   end
-  
+
 end
