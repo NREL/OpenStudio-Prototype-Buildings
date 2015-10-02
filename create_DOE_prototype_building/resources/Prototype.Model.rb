@@ -572,68 +572,67 @@ class OpenStudio::Model::Model
     # TODO Standards - translate w/linear foot of facade, door, parking, etc
     # into lookup table and implement that way instead of hard-coding as
     # inputs in the spreadsheet.
-    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started adding exterior lights')
 
-    if building_type == "LargeHotel"
-      data = self.find_object(self.standards['exterior'], {'template'=>building_vintage, 'climate_zone_set'=>'ClimateZone 1-8', 'building_type'=>building_type})
+    # Occupancy Sensing Exterior Lights
+    # which reduce to 70% power when no one is around.
+    unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
+      occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
+      occ_sens_ext_lts_sch_name = prototype_input['occ_sensing_exterior_lighting_schedule']
+      occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
+      occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
+      occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
+      occ_sens_ext_lts_sch = self.add_schedule(occ_sens_ext_lts_sch_name)
+      occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
+      occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
+      occ_sens_ext_lts.setControlOption('AstronomicalClock')
+    end
 
-      ext_lts_power = data['exterior_lights']
-      ext_lts_sch_name = data['exterior_lights_schedule']
-      ext_lts_name = 'Exterior Lights'
-      ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      ext_lts_def.setName("#{ext_lts_name} Def")
-      ext_lts_def.setDesignLevel(ext_lts_power)
-      ext_lts_sch = self.add_schedule(ext_lts_sch_name)
+    # Building Facade and Landscape Lights
+    # that don't dim at all at night.
+    unless prototype_input['nondimming_exterior_lighting_power'].nil?
+      nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
+      nondimming_ext_lts_sch_name = prototype_input['nondimming_exterior_lighting_schedule']
+      nondimming_ext_lts_name = 'NonDimming Exterior Lights'
+      nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
+      nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
+      nondimming_ext_lts_sch = self.add_schedule(nondimming_ext_lts_sch_name)
+      nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
+      nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
+      nondimming_ext_lts.setControlOption('AstronomicalClock')
+    end
 
-      ext_lts = OpenStudio::Model::ExteriorLights.new(ext_lts_def, ext_lts_sch)
-      ext_lts.setName("#{ext_lts_name}")
-      ext_lts.setControlOption('AstronomicalClock')
+    # Fuel Equipment, As Exterior:FuelEquipment is not supported by OpenStudio yet,
+    # temporarily use Exterior:Lights and set the control option to ScheduleNameOnly
+    # todo: change it to Exterior:FuelEquipment when OpenStudio supported it.
+    unless prototype_input['exterior_fuel_equipment1_power'].nil?
+      fuel_ext_power = prototype_input['exterior_fuel_equipment1_power']
+      fuel_ext_sch_name = prototype_input['exterior_fuel_equipment1_schedule']
+      fuel_ext_name = 'Fuel equipment 1'
+      fuel_ext_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      fuel_ext_def.setName("#{fuel_ext_name} Def")
+      fuel_ext_def.setDesignLevel(fuel_ext_power)
+      fuel_ext_sch = self.add_schedule(fuel_ext_sch_name)
+      fuel_ext_lts = OpenStudio::Model::ExteriorLights.new(fuel_ext_def, fuel_ext_sch)
+      fuel_ext_lts.setName("#{fuel_ext_name}")
+      fuel_ext_lts.setControlOption('ScheduleNameOnly')
+    end
 
-      # TODO: The exterior fuel equipment is not available yet. Use exterior lights instead.
-      ext_fuel_equip_power = data['fuel_equipment']
-      ext_fuel_equip_sch_name = data['fuel_equipment_schedule']
-      ext_fuel_equip_name = 'Exterior Fuel Equipment'
-      ext_fuel_equip_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-      ext_fuel_equip_def.setName("#{ext_fuel_equip_name} Def")
-      ext_fuel_equip_def.setDesignLevel(ext_fuel_equip_power)
-      ext_fuel_equip_sch = self.add_schedule(ext_fuel_equip_sch_name)
+    unless prototype_input['exterior_fuel_equipment2_power'].nil?
+      fuel_ext_power = prototype_input['exterior_fuel_equipment2_power']
+      fuel_ext_sch_name = prototype_input['exterior_fuel_equipment2_schedule']
+      fuel_ext_name = 'Fuel equipment 2'
+      fuel_ext_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
+      fuel_ext_def.setName("#{fuel_ext_name} Def")
+      fuel_ext_def.setDesignLevel(fuel_ext_power)
+      fuel_ext_sch = self.add_schedule(fuel_ext_sch_name)
+      fuel_ext_lts = OpenStudio::Model::ExteriorLights.new(fuel_ext_def, fuel_ext_sch)
+      fuel_ext_lts.setName("#{fuel_ext_name}")
+      fuel_ext_lts.setControlOption('ScheduleNameOnly')
+    end
 
-      ext_fuel_equip = OpenStudio::Model::ExteriorLights.new(ext_fuel_equip_def, ext_fuel_equip_sch)
-      ext_fuel_equip.setName("#{ext_fuel_equip_name}")
-      ext_fuel_equip.setControlOption('ScheduleNameOnly')
-
-    else
-      # Occupancy Sensing Exterior Lights
-      # which reduce to 70% power when no one is around.
-      unless prototype_input['occ_sensing_exterior_lighting_power'].nil?
-        occ_sens_ext_lts_power = prototype_input['occ_sensing_exterior_lighting_power']
-        occ_sens_ext_lts_sch_name = prototype_input['occ_sensing_exterior_lighting_schedule']
-        occ_sens_ext_lts_name = 'Occ Sensing Exterior Lights'
-        occ_sens_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-        occ_sens_ext_lts_def.setName("#{occ_sens_ext_lts_name} Def")
-        occ_sens_ext_lts_def.setDesignLevel(occ_sens_ext_lts_power)
-        occ_sens_ext_lts_sch = self.add_schedule(occ_sens_ext_lts_sch_name)
-        occ_sens_ext_lts = OpenStudio::Model::ExteriorLights.new(occ_sens_ext_lts_def, occ_sens_ext_lts_sch)
-        occ_sens_ext_lts.setName("#{occ_sens_ext_lts_name} Def")
-        occ_sens_ext_lts.setControlOption('AstronomicalClock')
-      end
-
-      # Building Facade and Landscape Lights
-      # that don't dim at all at night.
-      unless prototype_input['nondimming_exterior_lighting_power'].nil?
-        nondimming_ext_lts_power = prototype_input['nondimming_exterior_lighting_power']
-        nondimming_ext_lts_sch_name = prototype_input['nondimming_exterior_lighting_schedule']
-        nondimming_ext_lts_name = 'NonDimming Exterior Lights'
-        nondimming_ext_lts_def = OpenStudio::Model::ExteriorLightsDefinition.new(self)
-        nondimming_ext_lts_def.setName("#{nondimming_ext_lts_name} Def")
-        nondimming_ext_lts_def.setDesignLevel(nondimming_ext_lts_power)
-        nondimming_ext_lts_sch = self.add_schedule(nondimming_ext_lts_sch_name)
-        nondimming_ext_lts = OpenStudio::Model::ExteriorLights.new(nondimming_ext_lts_def, nondimming_ext_lts_sch)
-        nondimming_ext_lts.setName("#{nondimming_ext_lts_name} Def")
-        nondimming_ext_lts.setControlOption('AstronomicalClock')
-      end
-   end
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding exterior lights')
     
     return true

@@ -15,7 +15,52 @@ class OpenStudio::Model::Model
     system_to_space_map = [
       {
           'type' => 'CAV',
-          'space_names' => ['LGstore1', 'SMstore1', 'SMstore2', 'SMstore3', 'SMstore4', 'LGstore2', 'SMstore5', 'SMstore6', 'SMstore7', 'SMstore8']
+          'name' => 'PSZ-AC_1',
+          'space_names' => ['LGSTORE1']
+      },
+      {
+          'type' => 'CAV',
+          'name' => 'PSZ-AC_2',
+          'space_names' => ['SMstore1']
+      },
+      {
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_3',
+        'space_names' => ['SMstore2']
+      },
+      {
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_4',
+        'space_names' => ['SMstore3']
+      },
+      {
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_5',
+        'space_names' => ['SMstore4']
+      },{
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_6',
+        'space_names' => ['LGSTORE2']
+      },
+      {
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_7',
+        'space_names' => ['SMstore5']
+      },
+      {
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_8',
+        'space_names' => ['SMstore6']
+      },
+      {
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_9',
+        'space_names' => ['SMstore7']
+      },
+      {
+        'type' => 'CAV',
+        'name' => 'PSZ-AC_10',
+        'space_names' => ['SMstore8']
       }
     ]
     return system_to_space_map
@@ -50,7 +95,7 @@ class OpenStudio::Model::Model
 
       case system['type']
       when 'CAV'
-        self.add_psz_ac(prototype_input, hvac_standards, thermal_zones)
+        self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
       end
 
     end
@@ -61,7 +106,7 @@ class OpenStudio::Model::Model
     
   end #add hvac
 
-  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards)
+  def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
    
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
 

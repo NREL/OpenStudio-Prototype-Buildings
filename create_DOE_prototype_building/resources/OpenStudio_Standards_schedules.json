@@ -34721,7 +34721,6 @@
         0.05,
         0.05,
         0.05,
-        0.0452,
         0.04311628,
         0.04311628,
         0.04311628,
@@ -34732,7 +34731,8 @@
         0.04311628,
         0.04311628,
         0.04311628,
-        0.05,
+        0.04311628,
+        0.04311628,
         0.05,
         0.05,
         0.05,
@@ -38612,7 +38612,7 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
+        29.44
       ]
     },
     {
@@ -38687,7 +38687,7 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
+        23.89
       ]
     },
     {
@@ -38726,7 +38726,7 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
+        23.89
       ]
     },
     {
@@ -39042,7 +39042,7 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
+        15.56
       ]
     },
     {
@@ -39117,7 +39117,7 @@
       "type": "Constant",
       "notes": "From DOE Prototype Buildings",
       "values": [
-        0.0
+        15.56
       ]
     },
     {

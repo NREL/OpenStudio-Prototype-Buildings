@@ -70,7 +70,7 @@ class OpenStudio::Model::Model
             'condenser_fan_pwr_curve_name' => 'RACK1_RackCondFanCurve2',
             'space_names' =>
             [
-                'Kitchen_ZN_1_FLR_1'
+                'Kitchen_Flr_6'
             ]
         },
         {
@@ -89,7 +89,7 @@ class OpenStudio::Model::Model
             'condenser_fan_pwr_curve_name' => 'RACK1_RackCondFanCurve2',
             'space_names' =>
             [
-                'Kitchen_ZN_1_FLR_1'
+                'Kitchen_Flr_6'
             ]
         }
     ]

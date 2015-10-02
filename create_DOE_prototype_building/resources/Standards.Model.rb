@@ -137,7 +137,6 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_curve_biquadratics.json'
     standards_files << 'OpenStudio_Standards_curve_cubics.json'
     standards_files << 'OpenStudio_Standards_curve_quadratics.json'
-    standards_files << 'OpenStudio_Standards_exterior.json'
     standards_files << 'OpenStudio_Standards_ground_temperatures.json'
     standards_files << 'OpenStudio_Standards_heat_pumps.json'
     standards_files << 'OpenStudio_Standards_materials.json'

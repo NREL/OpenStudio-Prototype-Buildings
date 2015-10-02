@@ -462,13 +462,11 @@ class OpenStudio::Model::Model
       else
         #OpenStudio::logFree(OpenStudio::Warn, "openstudio.model.Model", "Data not found for query: #{query}")
       end
-
     else
       OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', 'Model has no sql file containing results, cannot lookup data.')
     end
 
     return result
-      
   end   
    
 end
