@@ -285,7 +285,7 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     
     # Assign the standards to the model
     model.template = building_vintage
-    model.climate_zone = climate_zone      
+    model.climate_zone = climate_zone
     
     model.assign_space_type_stubs(alt_search_name, space_type_map)    
     model.add_loads(building_vintage, climate_zone)

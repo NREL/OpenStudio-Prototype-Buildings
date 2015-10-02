@@ -996,6 +996,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   if hostname == "SRG-SKY" 
     def test_small_hotel_ptool
       bldg_types = ['SmallHotel']
+      # vintages = ['DOE Ref 1980-2004', 'DOE Ref Pre-1980','90.1-2004'] 
       # vintages = ['90.1-2004'] 
       vintages = ['DOE Ref 1980-2004', 'DOE Ref Pre-1980', '90.1-2007', '90.1-2010', '90.1-2013', '90.1-2004'] 
        # climate_zones = ['ASHRAE 169-2006-1A', 'ASHRAE 169-2006-1B', 'ASHRAE 169-2006-2A','ASHRAE 169-2006-2B',
@@ -1012,10 +1013,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       all_failures = []
 
       # Create the models
-      # all_failures += create_models(bldg_types, vintages, climate_zones)
+      all_failures += create_models(bldg_types, vintages, climate_zones)
 
       # Run the models
-      # all_failures += run_models(bldg_types, vintages, climate_zones)
+      all_failures += run_models(bldg_types, vintages, climate_zones)
 
       # Compare the results to the legacy idf results
       all_failures += compare_results(bldg_types, vintages, climate_zones)

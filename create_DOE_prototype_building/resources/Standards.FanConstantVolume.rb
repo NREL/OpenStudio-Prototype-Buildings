@@ -11,7 +11,9 @@ class OpenStudio::Model::FanConstantVolume
     # The difference between this standard efficiency and the prototype is large (0.2 vs 0.6)
     # Now, don't change the UnitHeater Fan
     return if self.name.to_s.include?("UnitHeater Fan")
-
+    return if self.name.to_s.include?("PTAC Fan")
+    return if self.name.to_s.include?("SAC Fan")
+    
     motors = standards['motors']
     
     # Get the max flow rate from the fan.
