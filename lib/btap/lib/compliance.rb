@@ -1341,27 +1341,51 @@ module BTAP
           fan_type = "AF_or_BI_rdg_fancurve" )
         
         #system assignment. 
-        unless  ["NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"].include?(boiler_fueltype) and
-            [true, false].include?(mau_type) and
-            ["Hot Water", "Electric"].include?(mau_heating_coil_type) and
-            ["Hot Water" , "Electric"].include?(baseboard_type) and
-            ["Scroll","Centrifugal","Rotary Screw","Reciprocating"].include?(chiller_type) and
-            ["DX","Hydronic"].include?(mua_cooling_type) and
-            ["Electric", "Gas", "DX"].include?(heating_coil_types_sys3) and
-            ["Electric", "Gas"].include?(heating_coil_types_sys4and6) and
-            ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_speed_drive"].include?(fan_type)
-          BTAP::runner_register("ERROR","User input for autozoner_and_autosystem invalid" ,runner)
+        unless  ["NaturalGas","Electricity","PropaneGas","FuelOil#1","FuelOil#2","Coal","Diesel","Gasoline","OtherFuel1"].include?(boiler_fueltype)
           BTAP::runner_register("ERROR","boiler_fueltype = #{boiler_fueltype}",runner)
-          BTAP::runner_register("ERROR","mau_type = #{mau_type}",runner)
-          BTAP::runner_register("ERROR","mau_heating_coil_type = #{mau_heating_coil_type}",runner)
-          BTAP::runner_register("ERROR","baseboard_type = #{baseboard_type}",runner)
-          BTAP::runner_register("ERROR","chiller_type = #{chiller_type}",runner)
-          BTAP::runner_register("ERROR","mua_cooling_type = #{mua_cooling_type}",runner)
-          BTAP::runner_register("ERROR","heating_coil_types_sys3 = #{heating_coil_types_sys3}",runner)
-          BTAP::runner_register("ERROR","heating_coil_types_sys4and6 = #{heating_coil_types_sys4and6}",runner)
-          BTAP::runner_register("ERROR","fan_type = #{fan_type}",runner)
-          
+          return
         end
+          
+        unless [true, false].include?(mau_type) 
+          BTAP::runner_register("ERROR","mau_type = #{mau_type}",runner)
+          return 
+        end
+            
+        unless ["Hot Water", "Electric"].include?(mau_heating_coil_type)
+          BTAP::runner_register("ERROR","mau_heating_coil_type = #{mau_heating_coil_type}",runner)
+          return false
+        end
+        
+        unless ["Hot Water" , "Electric"].include?(baseboard_type)
+          BTAP::runner_register("ERROR","baseboard_type = #{baseboard_type}",runner)
+          return false
+        end
+        
+        
+        unless ["Scroll","Centrifugal","Rotary Screw","Reciprocating"].include?(chiller_type)
+          BTAP::runner_register("ERROR","chiller_type = #{chiller_type}",runner)
+          return false
+        end
+        unless ["DX","Hydronic"].include?(mua_cooling_type)
+            BTAP::runner_register("ERROR","mua_cooling_type = #{mua_cooling_type}",runner)
+          return false
+        end
+        
+        unless ["Electric", "Gas", "DX"].include?(heating_coil_types_sys3)
+          BTAP::runner_register("ERROR","heating_coil_types_sys3 = #{heating_coil_types_sys3}",runner)
+          return false
+        end
+        
+        unless ["Electric", "Gas", "DX"].include?(heating_coil_types_sys3)
+          BTAP::runner_register("ERROR","heating_coil_types_sys4and6 = #{heating_coil_types_sys4and6}",runner)
+          return false
+        end
+        
+        unless ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_speed_drive"].include?(fan_type)
+          BTAP::runner_register("ERROR","fan_type = #{fan_type}",runner)
+          return false
+        end
+      
         
         #some defaults until we figure out how to handle them. (TODO) 
         vented = true
