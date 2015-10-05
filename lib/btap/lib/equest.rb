@@ -61,6 +61,25 @@ module BTAP
       # Pointer to the building obj.
       attr_accessor :building
 
+
+
+
+      def remove()
+        #unlink children
+        self.children.each {|item| item.remove}
+        #unlink from parent.
+        self.get_parents[0].children.delete(self)
+        #remove from command array.
+        @building.commands.delete(self)
+        return self
+      end
+
+      def set_parent(parent)
+        @parents.clear
+        parent.get_parents().each {|parent| @parents << parent}
+        @parents << parent
+      end
+
       #This method will return the value of the keyword pair if available.
       #Example:
       #If you object has this data in it...
@@ -82,7 +101,6 @@ module BTAP
       #"CONDITIONED".
       #
       #if the keyword does not exist, it will return a nil object.
-
       # Returns the value associated with the keyword.
       def get_keyword_value(string)
         return_string = String.new()
@@ -129,11 +147,7 @@ module BTAP
         return return_string
       end
 
-      def is_this_an_envelope_heirchy_command()
-        @envelopeLevel
-      end
-
-      def initialize
+      def initialize()
         @utype = String.new()
         @commandName= String.new()
         @keywordPairs=Array.new()
@@ -354,7 +368,7 @@ module BTAP
             return findcommand
           end
         end
-        raise("#{keyword} parent not defined!")
+        return nil
 
       end
 
@@ -430,46 +444,15 @@ module BTAP
         return @space.get_children()
       end
 
-      # This method returns "Electricity" as the default fuel source
-      def get_heating_fuel_source()
-        return "Electricity"
-      end
 
-      # This method returns "direct" as the default condition type
-      def condition_type()
-        return "direct"
-        #return "indirect"
-      end
 
       # This method returns the area of the space
       def get_area()
         @space.get_area()
       end
 
-      # This method returns "office" as the default usage of the space
-      def get_space_use()
-        return "Office"
-      end
 
-      def set_occupant_number(value)
-        #according to rule 4.3.1.3.2 if the condition is "indirect
-        #then the number of occupants is set to zero
-      end
-
-      def set_recepticle_power( value)
-        #according to rule 4.3.1.3.2 if the condition is "indirect
-        #then the receptical power is set to zero
-      end
-
-      def set_service_water_heating( value )
-        #according to rule 4.3.1.3.2 if the condition is "indirect
-        #then the service water heating is set to zero
-      end
-
-      def set_min_outdoor_air( value )
-        #according to rule 4.3.1.3.2 if the condition is "indirect
-        #then the minimum outdoor air is set to zero
-      end
+     
 
       def convert_to_openstudio(model,runner = nil)
         if self.space.get_shape() == "NO-SHAPE"
@@ -484,11 +467,7 @@ module BTAP
       end
     end
     
-    class DOESystem < DOECommand
-      def initialize
-        super()
-      end
-    end
+
     class DOESurface < DOECommand
       attr_accessor :construction
       attr_accessor :polygon
@@ -1045,22 +1024,6 @@ module BTAP
       end
     end
     
-    #Subclass for a DOE window...the implemenation is the same as the base class. 
-    class DOEWindow < DOESubSurface
-      def initialize
-        super()
-      end
-    end
-    
-    #Subclass for a DOE door. the implemenation is the same as the base class. 
-    class DOEDoor < DOESubSurface
-      #Contains uvalue of door
-      def initialize
-        super()
-      end
-
-    end
-    
     #an attempt to organize the BDLlibs...don't think it works well at all. 
     class DOEBDLlib
 
@@ -1326,10 +1289,6 @@ module BTAP
         return area
       end
 
-
-
-
-
       # This method checks if the construction only has a defined U-value
       def just_u_value?()
         @construction.check_keyword?("U-VALUE")
@@ -1339,21 +1298,9 @@ module BTAP
     end
     
     
-    #The interface for the Interior wall command.. same as parent. 
-    class DOEInteriorWall < DOESurface
-      def initialize
-        super()
-      end
-      # Finds the area of the interior wall
-    end
-    
-    #The interface for the UG wall command.. same as parent. 
-    class DOEUndergroundWall < DOESurface
-      def initialize
-        super()
-      end
 
-    end
+    
+
     
     #The interface for the roof command.. same as parent. 
     class DOERoof < DOECommand
@@ -1742,11 +1689,6 @@ module BTAP
       end
 
     end
-    class DOE_Building_Parameter < DOECommand
-      def initialize
-        super()
-      end
-    end
     class DOEFloor < DOESurface
       attr_accessor :polygon
       # a string object which defines the type of roof (e.g. attic)
@@ -2004,8 +1946,6 @@ module BTAP
           end
         end
         case command_name
-        when  "SYSTEM" then
-          command = DOESystem.new()
         when  "ZONE" then
           command = DOEZone.new()
         when  "FLOOR" then
@@ -2015,15 +1955,15 @@ module BTAP
         when  "EXTERIOR-WALL" then
           command = DOEExteriorWall.new()
         when  "INTERIOR-WALL" then
-          command = DOEInteriorWall.new()
+          command = DOESurface.new()
         when  "UNDERGROUND-WALL" then
-          command = DOEUndergroundWall.new()
+          command = DOESurface.new()
         when  "ROOF" then
           command = DOERoof.new()
         when "WINDOW" then
-          command = DOEWindow.new()
+          command = DOESubSurface.new()
         when "DOOR" then
-          command = DOEDoor.new()
+          command = DOESubSurface.new()
         when "POLYGON" then
           command = DOEPolygon.new()
         when "LAYER" then
@@ -2032,11 +1972,10 @@ module BTAP
           command = DOEMaterial.new()
         when "CONSTRUCTION" then
           command = DOEConstruction.new()
-
         else
           command = DOECommand.new()
         end
-        
+
         command.get_command_from_string(command_string)
         command.building = building
         return command
@@ -2054,8 +1993,8 @@ module BTAP
 
 
       # This method makes a deep copy of the building object.
-      def deep_clone
-        Marshal::load(Marshal.dump(self))
+      def clone
+        return Marshal::load(Marshal.dump(self))
       end
 
       # The Constructor.
@@ -2115,9 +2054,9 @@ module BTAP
       # all the commands that have the
       # TYPE = CONDITIONED"
       # Keyword pair.
-      def find_keyword_value(arrayOfCommands, keyword, value)
+      def search_by_keyword_value( keyword, value)
         returnarray = Array.new()
-        arrayOfCommands.each do |command|
+        @commands.each do |command|
           if ( command.keywordPairs[keyword] == value )
             returnarray.push(command)
           end
@@ -2125,12 +2064,6 @@ module BTAP
         return returnarray
       end
 
-      # Find the surface get_area of a wall, roof, space or zone..
-      # Example if the command is a zone, roof or surface it will return the get_area.
-      # If it is anything else, it will throw an exception.
-      def find_area_of(command)
-        #only if needed...About 1 days work for window, wall and space/zone.
-      end
 
       # Will read an input file into memory and store all the commands into the
       # @commands array.
@@ -2151,9 +2084,7 @@ module BTAP
         lines = f.readlines
         #Set up the temp string.
         command_string =""
-        #iterate through the file.
-        parents = Array.new()
-        children = Array.new()
+
         lines.each do|line|
           iter = iter.next
           #line.forced_encoding("US-ASCII")
@@ -2186,8 +2117,61 @@ module BTAP
         BTAP::runner_register("Info", "\tFinished Loading File:" + filename,runner)
       end
 
-      def set_envelope_hierarchy(runner = nil)
-        
+
+
+      # This will right a clean output file, meaning no comments. Good for doing
+      # diffs
+      def save_inp(string)
+        array = @commands
+        w = File.open(string, 'w')
+        array.each { |command| w.print command.output }
+        w.close
+      end
+
+
+
+      
+
+      #This routine organizes the hierarchy of the space <-> zones and the polygon
+      # associations that are not formally identified by the sequential relationship
+      # like the floor, walls, windows. It would seem that zones and spaces are 1 to
+      # one relationships.  So each zone will have a reference to its space and vice versa.
+      # If there is a polygon command in the space or floor definition, a reference to the
+      # polygon class will be set.
+      def organize_data()
+        # set_envelope_hierarchy
+        # This method determines the current parents of the current command.
+        def determine_current_parents(new_command)
+          if @last_command.nil?
+            @last_command = new_command
+          end
+          #Check to see if scope (HVAC versus Envelope) has changed or the parent depth is undefined "0"
+          if (!@parents.empty? and (new_command.doe_scope != @parents.last.doe_scope or new_command.depth == 0 ))
+            @parents.clear
+          end
+          #no change in parent.
+          if ( (new_command.depth  == @last_command.depth))
+            #no change
+            @last_command = new_command
+            #puts "#{new_command.commandName}"
+          end
+          #Parent depth added
+          if ( new_command.depth  > @last_command.depth)
+            @parents.push(@last_command)
+            #puts "Added parent#{@last_command.commandName}"
+            @last_command = new_command
+          end
+          #parent depth removed.
+          if ( new_command.depth  < @last_command.depth)
+            parent = @parents.pop
+            #puts "Removed parent #{parent}"
+            @last_command = new_command
+          end
+          array = Array.new(@parents)
+          return array
+        end
+
+
         @commands.each do |command|
           if command.doe_scope() == "envelope"
             #Sets parents of command.
@@ -2201,114 +2185,6 @@ module BTAP
             end
           end
         end
-      end
-
-      def find_matching_command(searchCommand,runner = nil)
-        @commands.each do |command|
-          #Determine if it is the same command type and name.
-          if ( (command.utype == searchCommand.utype) and ( command.commandName == searchCommand.commandName ) )
-            BTAP::runner_register("Info", "Found matching command and utype",runner)
-            #determine if all the keywords match.
-            BTAP::runner_register("Info", "Determine if all the keyword pairs match.",runner)
-            found = 0
-            searchCommand.keywordPairs.each { |searchPair|
-              BTAP::runner_register("Info", "Searching For...." + searchPair.to_s,runner)
-              BTAP::runner_register("Info", "iterate through keyword pairs.",runner)
-              command.keywordPairs.each{ |pair|
-                # puts "Current "
-                # puts pair.to_s
-
-                if ( (searchPair[0] == pair[0] ) and (searchPair[1] == pair[1]) )
-                  found = found + 1
-                  BTAP::runner_register("Info", pair.to_s + " found!",runner)
-                  break
-                end
-              }
-            }
-            BTAP::runner_register("Info", searchCommand.keywordPairs.length.to_s + " " + found.to_s,runner)
-            if (searchCommand.keywordPairs.length != found)
-              BTAP::runner_register("Info", "Did not find matching Command: \n\t" + searchCommand.utype.to_s() + " = " + searchCommand.commandName.to_s,runner)
-              # Commented out for causing a crash
-              #  puts "With Keyword-pair:\n\t " + searchPair[0].to_s + " = " + searchPair[1].to_s + "\n"
-              return false
-            else
-              return true
-            end
-
-          end
-        end
-        return false
-      end
-
-
-
-
-
-      # This will right a clean output file, meaning no comments. Good for doing
-      # diffs
-      def save_inp(string)
-        array = @commands
-        w = File.open(string, 'w')
-        array.each { |command| w.print command.output }
-        w.close
-      end
-
-      #Helper method to print banner comments in eQuest style.
-      def header(string)
-        outstring ="$ ---------------------------------------------------------\n$              #{string}\n$ ---------------------------------------------------------\n"
-        return outstring
-      end
-
-      #Helper method to print big banner comments in eQuest style.
-      def big_header(string)
-        outstring = "$ *********************************************************\n$ **                                                     **\n$ **            #{string}             \n$ **                                                     **\n$ *********************************************************\n"
-        return outstring
-      end
-
-      # This method determines the current parents of the current command. ONLY TO
-      # BE USED BY READINPUTFILE method!
-      def determine_current_parents(new_command)
-        if (@last_command == nil)
-          @last_command = new_command
-        end
-        #Check to see if scope (HVAC versus Envelope) has changed or the parent depth is undefined "0"
-        if (!@parents.empty? and (new_command.doe_scope != @parents.last.doe_scope or new_command.depth == 0 ))
-          @parents.clear
-          #puts "Change of scope or no parent"
-          #@last_command = new_command
-          #return
-        end
-        #no change in parent.
-        if ( (new_command.depth  == @last_command.depth))
-          #no change
-          @last_command = new_command
-          #puts "#{new_command.commandName}"
-        end
-        #Parent depth added
-        if ( new_command.depth  > @last_command.depth)
-          @parents.push(@last_command)
-          #puts "Added parent#{@last_command.commandName}"
-          @last_command = new_command
-        end
-        #parent depth removed.
-        if ( new_command.depth  < @last_command.depth)
-          parent = @parents.pop
-          #puts "Removed parent #{parent}"
-          @last_command = new_command
-        end
-        array = Array.new(@parents)
-        return array
-      end
-
-
-      #This routine organizes the hierarchy of the space <-> zones and the polygon
-      # associations that are not formally identified by the sequential relationship
-      # like the floor, walls, windows. It would seem that zones and spaces are 1 to
-      # one relationships.  So each zone will have a reference to its space and vice versa.
-      # If there is a polygon command in the space or floor definition, a reference to the
-      # polygon class will be set.
-      def organize_data()
-        set_envelope_hierarchy()
         # Associating the polygons with the FLoor and spaces.
         polygons =  find_all_commands("POLYGON")
         spaces = find_all_commands("SPACE")
@@ -2377,11 +2253,7 @@ module BTAP
         end
       end
 
-      #MNECB Commands Using MNECB terminology.
 
-      def get_all_thermal_blocks()
-        zones = find_all_commands("ZONE")
-      end
 
       def get_building_transformation_matrix()
         build_params = self.find_all_commands("BUILD-PARAMETERS")[0]
@@ -2392,31 +2264,7 @@ module BTAP
         return  OpenStudio::Transformation::rotation(OpenStudio::Vector3d(0.0, 0.0, 1.0), openstudio::degToRad(building_azimuth)) * OpenStudio::Transformation::translation(building_origin)
       end
 
-      def get_all_surfaces()
 
-        array = Array.new()
-        @commands.each do |command|
-          if (command.commandName == "EXTERIOR-WALL" or
-                command.commandName == "INTERIOR-WALL" or
-                command.commandName == "UNDERGROUND-WALL" or
-                command.commandName == "ROOF")
-            array.push(command)
-          end
-        end
-        return array
-      end
-
-      def get_all_subsurfaces()
-
-        array = Array.new()
-        @commands.each do |command|
-          if (command.commandName == "WINDOW" or
-                command.commandName == "DOOR")
-            array.push(command)
-          end
-        end
-        return array
-      end
 
 
       #this method will convert a DOE inp file to the OSM file.. This will return
@@ -2457,7 +2305,14 @@ module BTAP
         
         #this block will create OS surface objects in the OS model.
         BTAP::runner_register("Info", "Exporting DOE Surfaces to OS",runner)
-        get_all_surfaces().each do |doe_surface|
+        all_surfaces = Array.new()
+        @commands.each do |command|
+          case command.commandName
+          when "EXTERIOR-WALL","INTERIOR-WALL","UNDERGROUND-WALL","ROOF"
+            all_surfaces.push(command)
+          end
+        end
+        all_surfaces.each do |doe_surface|
           doe_surface.convert_to_openstudio(model)
         end
         BTAP::runner_register("Info", OpenStudio::Model::getSurfaces(model).size.to_s + " surfaces created",runner)
