@@ -60,6 +60,9 @@ class ConvertDOEReferenceToNECBOSM < BTAP::Measures::OSMeasures::BTAPModelUserSc
     
     #Convert to osm and necb space types. 
     new_model = BTAP::Compliance::NECB2011::convert_idf_to_osm_and_map_doe_zones_to_necb_space_types(@idf_file_path)
+    
+    #Add constructions so it will run. 
+    
 
     #Autozone and set to ideal airloads
     use_ideal_air_loads = true

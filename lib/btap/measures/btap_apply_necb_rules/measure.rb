@@ -65,7 +65,42 @@ class ApplyNECBRules < BTAP::Measures::OSMeasures::BTAPModelUserScript
 
       BTAP::runner_register("INFO", "Location set to #{weather.location_name}.", runner)
     end
+    
+    #Get default fuel types. 
+    found_defaults = false
+    boiler_fueltype = nil
+    mau_type= nil
+    mau_heating_coil_type = nil
+    baseboard_type= nil
+    chiller_type = nil
+    mua_cooling_type = nil
+    heating_coil_type_sys3 = nil
+    heating_coil_type_sys4and6 = nil
+    fan_type = nil
+          
+    regional_fuel_type_defaults = "#{File.dirname(__FILE__)}/regional_fuel_type_defaults.csv"
+    CSV.foreach(regional_fuel_type_defaults, headers:true) do |default_fuel_info|
 
+      if weather.energy_plus_location_name.to_s.strip == default_fuel_info["Location"].to_s.strip
+        boiler_fueltype = default_fuel_info["boiler_fueltype"].strip
+        mau_type = default_fuel_info["mau_type"].strip.to_bool
+        mau_heating_coil_type = default_fuel_info["mau_heating_coil_type"].strip
+        baseboard_type = default_fuel_info["baseboard_type"].strip
+        chiller_type = default_fuel_info["chiller_type"].strip
+        mua_cooling_type = default_fuel_info["mau_cooling_type"].strip
+        heating_coil_type_sys3 = default_fuel_info["heating_coil_type_sys_3"].strip
+        heating_coil_type_sys4and6 = default_fuel_info["heating_coil_type_sys4and6"].strip
+        puts "YOYO#{heating_coil_type_sys4and6}"
+        fan_type = default_fuel_info["fan_type"].strip
+        found_defaults = true
+      end
+
+    end
+    unless found_defaults == true
+      BTAP::runner_register("ERROR", "Could not find location #{weather.energy_plus_location_name} in #{regional_fuel_type_defaults}", runner) 
+      return false
+    end
+    
     
     
     #--ENVELOPE
@@ -82,20 +117,20 @@ class ApplyNECBRules < BTAP::Measures::OSMeasures::BTAPModelUserScript
     
     #--HVAC
     BTAP::runner_register("INFO", "Applying NECB HVAC", runner)
-    use_ideal_air_loads = true
+    use_ideal_air_loads = false
     BTAP::Compliance::NECB2011::necb_autozone_and_autosystem(
-          model,
-          runner,
-          use_ideal_air_loads)
-#          boiler_fueltype = "NaturalGas",
-#          mau_type = true,
-#          mau_heating_coil_type = "Hot Water",
-#          baseboard_type = "Hot Water",
-#          chiller_type = "Scroll",
-#          mua_cooling_type = "DX",
-#          heating_coil_types_sys3 = "Gas",
-#          heating_coil_types_sys4and6 = "Gas",
-#          fan_type = "AF_or_BI_rdg_fancurve" )
+      model,
+      runner,
+      use_ideal_air_loads,
+      boiler_fueltype,
+      mau_type,
+      mau_heating_coil_type,
+      baseboard_type,
+      chiller_type,
+      mua_cooling_type,
+      heating_coil_type_sys3,
+      heating_coil_type_sys4and6,
+      fan_type  )
     
 
 

@@ -33,9 +33,20 @@ class ApplyNECBRules_test < MiniTest::Unit::TestCase
     runner = OpenStudio::Ruleset::OSRunner.new
     output_folder = "#{File.dirname(__FILE__)}/output/"
 
+    #set weather file. 
     weatherfile = "#{File.dirname(__FILE__)}/CAN_AB_Calgary.718770_CWEC.epw"
     BTAP::Environment::WeatherFile.new(weatherfile).set_weather_file( model, runner)
 
+    #Add default Construction.
+    construction_file = "#{File.dirname(__FILE__)}/BTAP_Construction_Library.osm"
+    construction_set = BTAP::Resources::Envelope::ConstructionSets::get_construction_set_from_library( construction_file, "DND-Metal")
+    #Set Construction Set.
+    unless model.building.get.setDefaultConstructionSet( construction_set.clone( model ).to_DefaultConstructionSet.get )
+      BTAP::runner_register("Error","Could not set Default Construction #{@construction_set_name} ", runner)
+      return false
+    end
+    
+    
     #Set up arguments in order. 
     argument_values_array = 
       [
@@ -45,7 +56,10 @@ class ApplyNECBRules_test < MiniTest::Unit::TestCase
     
     file_path = "#{output_folder}/#{filename}"
     BTAP::FileIO::save_osm(model, file_path)
-    BTAP::runner_register("INFO", "OSM file converted to NECB 2011 defaults #{file_path}", runner)
+    BTAP::runner_register("INFO", "OSM file converted to NECB 2011 rules #{file_path}", runner)
+    
+    
+    
     
     #return condition of measure.
     assert_equal("Success", runner.result.value.valueName)
