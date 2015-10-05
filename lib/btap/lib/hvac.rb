@@ -293,66 +293,66 @@ module BTAP
         #Create a new DX cooling coil with NECB curve characteristics
         def self.add_onespeed_DX_coil(model,always_on)
 
-              #clg_cap_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
-              clg_cap_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
-              clg_cap_f_of_temp.setCoefficient1Constant(0.867905)
-              clg_cap_f_of_temp.setCoefficient2x(0.0142459)
-              clg_cap_f_of_temp.setCoefficient3xPOW2(0.000554364)
-              clg_cap_f_of_temp.setCoefficient4y(-0.00755748)
-              clg_cap_f_of_temp.setCoefficient5yPOW2(3.3048e-05)
-              clg_cap_f_of_temp.setCoefficient6xTIMESY(-0.000191808)
-              clg_cap_f_of_temp.setMinimumValueofx(13.0)
-              clg_cap_f_of_temp.setMaximumValueofx(24.0)
-              clg_cap_f_of_temp.setMinimumValueofy(24.0)
-              clg_cap_f_of_temp.setMaximumValueofy(46.0)
+          #clg_cap_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
+          clg_cap_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
+          clg_cap_f_of_temp.setCoefficient1Constant(0.867905)
+          clg_cap_f_of_temp.setCoefficient2x(0.0142459)
+          clg_cap_f_of_temp.setCoefficient3xPOW2(0.000554364)
+          clg_cap_f_of_temp.setCoefficient4y(-0.00755748)
+          clg_cap_f_of_temp.setCoefficient5yPOW2(3.3048e-05)
+          clg_cap_f_of_temp.setCoefficient6xTIMESY(-0.000191808)
+          clg_cap_f_of_temp.setMinimumValueofx(13.0)
+          clg_cap_f_of_temp.setMaximumValueofx(24.0)
+          clg_cap_f_of_temp.setMinimumValueofy(24.0)
+          clg_cap_f_of_temp.setMaximumValueofy(46.0)
 
-              #clg_cap_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
-              clg_cap_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
-              clg_cap_f_of_flow.setCoefficient1Constant(1.0)
-              clg_cap_f_of_flow.setCoefficient2x(0.0)
-              clg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
-              clg_cap_f_of_flow.setMinimumValueofx(0.0)
-              clg_cap_f_of_flow.setMaximumValueofx(1.0)
+          #clg_cap_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
+          clg_cap_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
+          clg_cap_f_of_flow.setCoefficient1Constant(1.0)
+          clg_cap_f_of_flow.setCoefficient2x(0.0)
+          clg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
+          clg_cap_f_of_flow.setMinimumValueofx(0.0)
+          clg_cap_f_of_flow.setMaximumValueofx(1.0)
 
-              #clg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
-              clg_energy_input_ratio_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
-              clg_energy_input_ratio_f_of_temp.setCoefficient1Constant(0.116936)
-              clg_energy_input_ratio_f_of_temp.setCoefficient2x(0.0284933)
-              clg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(-0.000411156)
-              clg_energy_input_ratio_f_of_temp.setCoefficient4y(0.0214108)
-              clg_energy_input_ratio_f_of_temp.setCoefficient5yPOW2(0.000161028)
-              clg_energy_input_ratio_f_of_temp.setCoefficient6xTIMESY(-0.000679104)
-              clg_energy_input_ratio_f_of_temp.setMinimumValueofx(13.0)
-              clg_energy_input_ratio_f_of_temp.setMaximumValueofx(24.0)
-              clg_energy_input_ratio_f_of_temp.setMinimumValueofy(24.0)
-              clg_energy_input_ratio_f_of_temp.setMaximumValueofy(46.0)
+          #clg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveBiquadratic.new(model)
+          clg_energy_input_ratio_f_of_temp = BTAP::Resources::HVAC::Plant::add_biquad_curve(model)
+          clg_energy_input_ratio_f_of_temp.setCoefficient1Constant(0.116936)
+          clg_energy_input_ratio_f_of_temp.setCoefficient2x(0.0284933)
+          clg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(-0.000411156)
+          clg_energy_input_ratio_f_of_temp.setCoefficient4y(0.0214108)
+          clg_energy_input_ratio_f_of_temp.setCoefficient5yPOW2(0.000161028)
+          clg_energy_input_ratio_f_of_temp.setCoefficient6xTIMESY(-0.000679104)
+          clg_energy_input_ratio_f_of_temp.setMinimumValueofx(13.0)
+          clg_energy_input_ratio_f_of_temp.setMaximumValueofx(24.0)
+          clg_energy_input_ratio_f_of_temp.setMinimumValueofy(24.0)
+          clg_energy_input_ratio_f_of_temp.setMaximumValueofy(46.0)
 
-              #clg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
-              clg_energy_input_ratio_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
-              clg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.0)
-              clg_energy_input_ratio_f_of_flow.setCoefficient2x(0.0)
-              clg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0)
-              clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
-              clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
+          #clg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
+          clg_energy_input_ratio_f_of_flow = BTAP::Resources::HVAC::Plant::add_quad_curve(model)
+          clg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.0)
+          clg_energy_input_ratio_f_of_flow.setCoefficient2x(0.0)
+          clg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0)
+          clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
+          clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
 
-              #clg_part_load_ratio = OpenStudio::Model::CurveCubic.new(model)
-              clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
-              #these coefficients are directly from NECB
-              clg_part_load_ratio.setCoefficient1Constant(0.2012301)
-              clg_part_load_ratio.setCoefficient2x(-0.0312175)
-              clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
-              clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
-              clg_part_load_ratio.setMinimumValueofx(0.0)
-              clg_part_load_ratio.setMaximumValueofx(1.0)
+          #clg_part_load_ratio = OpenStudio::Model::CurveCubic.new(model)
+          clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
+          #these coefficients are directly from NECB
+          clg_part_load_ratio.setCoefficient1Constant(0.2012301)
+          clg_part_load_ratio.setCoefficient2x(-0.0312175)
+          clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
+          clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
+          clg_part_load_ratio.setMinimumValueofx(0.0)
+          clg_part_load_ratio.setMaximumValueofx(1.0)
 
-              # NECB curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)
-              clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
-              clg_part_load_ratio.setCoefficient1Constant(0.0277)
-              clg_part_load_ratio.setCoefficient2x(4.9151)
-              clg_part_load_ratio.setCoefficient3xPOW2(-8.184)
-              clg_part_load_ratio.setCoefficient4xPOW3(4.2702)
-              clg_part_load_ratio.setMinimumValueofx(0.7)
-              clg_part_load_ratio.setMaximumValueofx(1.0)
+          # NECB curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)
+          clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
+          clg_part_load_ratio.setCoefficient1Constant(0.0277)
+          clg_part_load_ratio.setCoefficient2x(4.9151)
+          clg_part_load_ratio.setCoefficient3xPOW2(-8.184)
+          clg_part_load_ratio.setCoefficient4xPOW3(4.2702)
+          clg_part_load_ratio.setMinimumValueofx(0.7)
+          clg_part_load_ratio.setMaximumValueofx(1.0)
 
 
           return OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model,
@@ -367,52 +367,52 @@ module BTAP
         #Create a new DX heating coil with NECB curve characteristics
         def self.add_onespeed_DX_coil_heating(model,always_on)
 
-              htg_cap_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
-              htg_cap_f_of_temp.setCoefficient1Constant(0.729)
-              htg_cap_f_of_temp.setCoefficient2x(0.031927)
-              htg_cap_f_of_temp.setCoefficient3xPOW2(0.0001364)
-              htg_cap_f_of_temp.setCoefficient4xPOW3(-0.000008748)
-              htg_cap_f_of_temp.setMinimumValueofx(-20.0)
-              htg_cap_f_of_temp.setMaximumValueofx(20.0)
+          htg_cap_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
+          htg_cap_f_of_temp.setCoefficient1Constant(0.729)
+          htg_cap_f_of_temp.setCoefficient2x(0.031927)
+          htg_cap_f_of_temp.setCoefficient3xPOW2(0.0001364)
+          htg_cap_f_of_temp.setCoefficient4xPOW3(-0.000008748)
+          htg_cap_f_of_temp.setMinimumValueofx(-20.0)
+          htg_cap_f_of_temp.setMaximumValueofx(20.0)
 
-              htg_cap_f_of_flow = OpenStudio::Model::CurveCubic.new(model)
-              htg_cap_f_of_flow.setCoefficient1Constant(0.84)
-              htg_cap_f_of_flow.setCoefficient2x(0.16)
-              htg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
-              htg_cap_f_of_flow.setCoefficient4xPOW3(0.0)
-              htg_cap_f_of_flow.setMinimumValueofx(0.5)
-              htg_cap_f_of_flow.setMaximumValueofx(1.5)
+          htg_cap_f_of_flow = OpenStudio::Model::CurveCubic.new(model)
+          htg_cap_f_of_flow.setCoefficient1Constant(0.84)
+          htg_cap_f_of_flow.setCoefficient2x(0.16)
+          htg_cap_f_of_flow.setCoefficient3xPOW2(0.0)
+          htg_cap_f_of_flow.setCoefficient4xPOW3(0.0)
+          htg_cap_f_of_flow.setMinimumValueofx(0.5)
+          htg_cap_f_of_flow.setMaximumValueofx(1.5)
 
-              htg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
-              htg_energy_input_ratio_f_of_temp.setCoefficient1Constant(1.2183)
-              htg_energy_input_ratio_f_of_temp.setCoefficient2x(-0.036117)
-              htg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(0.0014204)
-              htg_energy_input_ratio_f_of_temp.setCoefficient4xPOW3(-0.000026827)
-              htg_energy_input_ratio_f_of_temp.setMinimumValueofx(-20.0)
-              htg_energy_input_ratio_f_of_temp.setMaximumValueofx(20.0)
+          htg_energy_input_ratio_f_of_temp = OpenStudio::Model::CurveCubic.new(model)
+          htg_energy_input_ratio_f_of_temp.setCoefficient1Constant(1.2183)
+          htg_energy_input_ratio_f_of_temp.setCoefficient2x(-0.036117)
+          htg_energy_input_ratio_f_of_temp.setCoefficient3xPOW2(0.0014204)
+          htg_energy_input_ratio_f_of_temp.setCoefficient4xPOW3(-0.000026827)
+          htg_energy_input_ratio_f_of_temp.setMinimumValueofx(-20.0)
+          htg_energy_input_ratio_f_of_temp.setMaximumValueofx(20.0)
 
-              htg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
-              htg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.3824)
-              htg_energy_input_ratio_f_of_flow.setCoefficient2x(-0.4336)
-              htg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0512)
-              htg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
-              htg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
+          htg_energy_input_ratio_f_of_flow = OpenStudio::Model::CurveQuadratic.new(model)
+          htg_energy_input_ratio_f_of_flow.setCoefficient1Constant(1.3824)
+          htg_energy_input_ratio_f_of_flow.setCoefficient2x(-0.4336)
+          htg_energy_input_ratio_f_of_flow.setCoefficient3xPOW2(0.0512)
+          htg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
+          htg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
 
-              htg_part_load_fraction = OpenStudio::Model::CurveCubic.new(model)
-              htg_part_load_fraction.setCoefficient1Constant(0.3696)
-              htg_part_load_fraction.setCoefficient2x(2.3362)
-              htg_part_load_fraction.setCoefficient3xPOW2(-2.9577)
-              htg_part_load_fraction.setCoefficient4xPOW3(1.2596)
-              htg_part_load_fraction.setMinimumValueofx(0.7)
-              htg_part_load_fraction.setMaximumValueofx(1.0)
+          htg_part_load_fraction = OpenStudio::Model::CurveCubic.new(model)
+          htg_part_load_fraction.setCoefficient1Constant(0.3696)
+          htg_part_load_fraction.setCoefficient2x(2.3362)
+          htg_part_load_fraction.setCoefficient3xPOW2(-2.9577)
+          htg_part_load_fraction.setCoefficient4xPOW3(1.2596)
+          htg_part_load_fraction.setMinimumValueofx(0.7)
+          htg_part_load_fraction.setMaximumValueofx(1.0)
 
-              return OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model,
-                always_on,
-                htg_cap_f_of_temp,
-                htg_cap_f_of_flow,
-                htg_energy_input_ratio_f_of_temp,
-                htg_energy_input_ratio_f_of_flow,
-                htg_part_load_fraction)
+          return OpenStudio::Model::CoilHeatingDXSingleSpeed.new(model,
+            always_on,
+            htg_cap_f_of_temp,
+            htg_cap_f_of_flow,
+            htg_energy_input_ratio_f_of_temp,
+            htg_energy_input_ratio_f_of_flow,
+            htg_part_load_fraction)
         end
  
         #Create a new outdoor air controller
@@ -497,11 +497,11 @@ module BTAP
         # Create an electric chiller. This differs from add_chiller_electric_eir_to_water_loop in
         # that it does not connect the chiller to a water loop
         def self.add_elec_chiller(model,clg_cap_f_of_temp,
-              eir_f_of_avail_to_nom_cap,
-              eir_f_of_plr)
+            eir_f_of_avail_to_nom_cap,
+            eir_f_of_plr)
           return OpenStudio::Model::ChillerElectricEIR.new(model,clg_cap_f_of_temp,
-              eir_f_of_avail_to_nom_cap,
-              eir_f_of_plr)
+            eir_f_of_avail_to_nom_cap,
+            eir_f_of_plr)
         end
 
         # Create a one speed cooling tower. This routine does not attach cooling tower
@@ -573,19 +573,19 @@ module BTAP
           raise("setInitialDefrostTimeFraction for erv not correct") unless   erv.setInitialDefrostTimeFraction(setInitialDefrostTimeFraction.to_f)
           raise("setNominalElectricPower for erv not correct")  unless   erv.setNominalElectricPower(nominal_electric_power)
 
-        # Temporary solution, may need to fix later. 12/22/2013 Da
-        #erv.setEconomizerLockout('Yes')
-        #erv.setEconomizerLockout(true)
-        #erv.setString(23, "Yes")
+          # Temporary solution, may need to fix later. 12/22/2013 Da
+          #erv.setEconomizerLockout('Yes')
+          #erv.setEconomizerLockout(true)
+          #erv.setString(23, "Yes")
 
-        #erv.setSupplyAirOutletTemperatureControl ('No')
-        #erv.setSupplyAirOutletTemperatureControl (false)
-        #erv.setString(17, "No")
+          #erv.setSupplyAirOutletTemperatureControl ('No')
+          #erv.setSupplyAirOutletTemperatureControl (false)
+          #erv.setString(17, "No")
 
-        return erv
-      end
-      def self.add_economizer(
-          model,
+          return erv
+        end
+        def self.add_economizer(
+            model,
             air_loop,
             setEconomizerControlType = "FixedDryBulb",
             setEconomizerControlActionType = "ModulateFlow",
@@ -2377,8 +2377,8 @@ module BTAP
 
             end  #of if statement
             
-             #Create MAU 
-             # TO DO: MAU sizing, characteristics (fan operation schedules, temperature setpoints, outdoor air, etc)
+            #Create MAU 
+            # TO DO: MAU sizing, characteristics (fan operation schedules, temperature setpoints, outdoor air, etc)
            
             if ( mau == true) then
               
@@ -2426,7 +2426,7 @@ module BTAP
               end
 
 
-            # Set up DX coil with default curves (set to NECB);
+              # Set up DX coil with default curves (set to NECB);
 
               mau_clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
@@ -2530,7 +2530,7 @@ module BTAP
                  
               end #components for MAU
                           
-           end # of zone loop
+            end # of zone loop
             
 
             return true
@@ -2806,7 +2806,7 @@ module BTAP
 
               #TO DO: other fuel-fired heating coil types? (not available in OpenStudio/E+ - may need to play with efficiency to mimic other fuel types)
 
-            # Set up DX coil with NECB performance curve characteristics;
+              # Set up DX coil with NECB performance curve characteristics;
               clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
 
               #oa_controller 
@@ -2818,11 +2818,11 @@ module BTAP
               # Add the components to the air loop
               # in order from closest to zone to furthest from zone
               supply_inlet_node = air_loop.supplyInletNode
-#              fan.addToNode(supply_inlet_node)
-#              supplemental_htg_coil.addToNode(supply_inlet_node) if heating_coil_type == "DX" 
-#              htg_coil.addToNode(supply_inlet_node)
-#              clg_coil.addToNode(supply_inlet_node)
-#              oa_system.addToNode(supply_inlet_node)
+              #              fan.addToNode(supply_inlet_node)
+              #              supplemental_htg_coil.addToNode(supply_inlet_node) if heating_coil_type == "DX" 
+              #              htg_coil.addToNode(supply_inlet_node)
+              #              clg_coil.addToNode(supply_inlet_node)
+              #              oa_system.addToNode(supply_inlet_node)
               if(heating_coil_type == 'DX')
                 air_to_air_heatpump = OpenStudio::Model::AirLoopHVACUnitaryHeatPumpAirToAir.new(model,always_on,fan,htg_coil,clg_coil,supplemental_htg_coil)
                 air_to_air_heatpump.setName("#{zone.name} ASHP")
@@ -2956,7 +2956,7 @@ module BTAP
               #TO DO: other fuel-fired heating coil types? (not available in OpenStudio/E+ - may need to play with efficiency to mimic other fuel types)
 
 
-            # Set up DX coil with NECB performance curve characteristics;
+              # Set up DX coil with NECB performance curve characteristics;
 
               clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,always_on)
 
@@ -2985,20 +2985,20 @@ module BTAP
 
 
               #Create sensible heat exchanger
-#              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
-#              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
-#              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
-#              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
-#              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
-#              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
-#
-#              Connect heat exchanger
-#              oa_node = oa_system.outboardOANode
-#              heat_exchanger.addToNode(oa_node.get)
+              #              heat_exchanger = BTAP::Resources::HVAC::Plant::add_hrv(model)
+              #              heat_exchanger.setSensibleEffectivenessat100HeatingAirFlow(0.5)
+              #              heat_exchanger.setSensibleEffectivenessat75HeatingAirFlow(0.5)
+              #              heat_exchanger.setSensibleEffectivenessat100CoolingAirFlow(0.5)
+              #              heat_exchanger.setSensibleEffectivenessat75CoolingAirFlow(0.5)
+              #              heat_exchanger.setLatentEffectivenessat100HeatingAirFlow(0.0)
+              #              heat_exchanger.setLatentEffectivenessat75HeatingAirFlow(0.0)
+              #              heat_exchanger.setLatentEffectivenessat100CoolingAirFlow(0.0)
+              #              heat_exchanger.setLatentEffectivenessat75CoolingAirFlow(0.0)
+              #              heat_exchanger.setSupplyAirOutletTemperatureControl(false)
+              #
+              #              Connect heat exchanger
+              #              oa_node = oa_system.outboardOANode
+              #              heat_exchanger.addToNode(oa_node.get)
 
 
               # Create a diffuser and attach the zone/diffuser pair to the air loop
@@ -3073,91 +3073,91 @@ module BTAP
             model.getBuildingStorys.sort.each do |story|
               if not ( BTAP::Geometry::BuildingStoreys::get_zones_from_storey(story) & zones).empty?
 
-              air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
-              air_loop.setName("VAV with Reheat")
-              sizingSystem = air_loop.sizingSystem
-              sizingSystem.setCentralCoolingDesignSupplyAirTemperature(13.0)
-              sizingSystem.setCentralHeatingDesignSupplyAirTemperature(13.0)
+                air_loop = OpenStudio::Model::AirLoopHVAC.new(model)
+                air_loop.setName("VAV with Reheat")
+                sizingSystem = air_loop.sizingSystem
+                sizingSystem.setCentralCoolingDesignSupplyAirTemperature(13.0)
+                sizingSystem.setCentralHeatingDesignSupplyAirTemperature(13.0)
 
-              fan = OpenStudio::Model::FanVariableVolume.new(model,always_on)
-              fan.setFanPowerMinimumFlowRateInputMethod("Fraction")
-              fan.setFanPowerCoefficient4(0.0)
-              fan.setFanPowerCoefficient5(0.0)
-              if(fan_type == "AF_or_BI_rdg_fancurve")
-                fan.setFanPowerMinimumFlowFraction(0.47)
-                fan.setFanPowerCoefficient1(0.227143)
-                fan.setFanPowerCoefficient2(1.178929)
-                fan.setFanPowerCoefficient3(-0.41071)
-              elsif(fan_type == "AF_or_BI_inletvanes")
-                fan.setFanPowerMinimumFlowFraction(0.35)
-                fan.setFanPowerCoefficient1(0.584345)
-                fan.setFanPowerCoefficient2(-0.57917)
-                fan.setFanPowerCoefficient3(0.970238)
-              elsif(fan_type == "fc_inletvanes")
-                fan.setFanPowerMinimumFlowFraction(0.25)
-                fan.setFanPowerCoefficient1(0.339619)
-                fan.setFanPowerCoefficient2(-0.84814)
-                fan.setFanPowerCoefficient3(1.495671)
-              elsif(fan_type == "var_speed_drive")
-                fan.setFanPowerMinimumFlowFraction(0.20)
-                fan.setFanPowerCoefficient1(0.00153028)
-                fan.setFanPowerCoefficient2(0.00520806)
-                fan.setFanPowerCoefficient3(1.0086242)
-              end
-              htg_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
-              hw_loop.addDemandBranchForComponent(htg_coil)
-
-              clg_coil = OpenStudio::Model::CoilCoolingWater.new(model,always_on)
-              chw_loop.addDemandBranchForComponent(clg_coil)
-
-              oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
-              
-              oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,oa_controller)
-              
-              # Add the components to the air loop
-              # in order from closest to zone to furthest from zone
-              # TODO: still need to define the return fan (tried to access the air loop "returnAirNode" without success)
-              # TODO: The OS sdk indicates that this keyword should be active but I get a "Not implemented" error when I
-              # TODO: try to access it through "air_loop.returnAirNode"
-              supply_inlet_node = air_loop.supplyInletNode
-              supply_outlet_node = air_loop.supplyOutletNode
-              fan.addToNode(supply_inlet_node)
-              htg_coil.addToNode(supply_inlet_node)
-              clg_coil.addToNode(supply_inlet_node)
-              oa_system.addToNode(supply_inlet_node)
-              
-#              return_inlet_node = air_loop.returnAirNode
-
-              # Add a setpoint manager to control the
-              # supply air to a constant temperature
-              sat_c = 13.0
-              sat_sch = OpenStudio::Model::ScheduleRuleset.new(model)
-              sat_sch.setName("Supply Air Temp")
-              sat_sch.defaultDaySchedule().setName("Supply Air Temp Default")
-              sat_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),sat_c)
-              sat_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model,sat_sch)
-              sat_stpt_manager.addToNode(supply_outlet_node)
-
-              # TO-do ask Kamel about zonal assignments per storey. 
-
-              # Make a VAV terminal with HW reheat for each zone on this story that is in intersection with the zones array. 
-              # and hook the reheat coil to the HW loop
-              ( BTAP::Geometry::BuildingStoreys::get_zones_from_storey(story) & zones).each do |zone|
-                if(heating_coil_type == "Hot Water")
-                  reheat_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
-                elsif(heating_coil_type == "Electric")
-                  reheat_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
+                fan = OpenStudio::Model::FanVariableVolume.new(model,always_on)
+                fan.setFanPowerMinimumFlowRateInputMethod("Fraction")
+                fan.setFanPowerCoefficient4(0.0)
+                fan.setFanPowerCoefficient5(0.0)
+                if(fan_type == "AF_or_BI_rdg_fancurve")
+                  fan.setFanPowerMinimumFlowFraction(0.47)
+                  fan.setFanPowerCoefficient1(0.227143)
+                  fan.setFanPowerCoefficient2(1.178929)
+                  fan.setFanPowerCoefficient3(-0.41071)
+                elsif(fan_type == "AF_or_BI_inletvanes")
+                  fan.setFanPowerMinimumFlowFraction(0.35)
+                  fan.setFanPowerCoefficient1(0.584345)
+                  fan.setFanPowerCoefficient2(-0.57917)
+                  fan.setFanPowerCoefficient3(0.970238)
+                elsif(fan_type == "fc_inletvanes")
+                  fan.setFanPowerMinimumFlowFraction(0.25)
+                  fan.setFanPowerCoefficient1(0.339619)
+                  fan.setFanPowerCoefficient2(-0.84814)
+                  fan.setFanPowerCoefficient3(1.495671)
+                elsif(fan_type == "var_speed_drive")
+                  fan.setFanPowerMinimumFlowFraction(0.20)
+                  fan.setFanPowerCoefficient1(0.00153028)
+                  fan.setFanPowerCoefficient2(0.00520806)
+                  fan.setFanPowerCoefficient3(1.0086242)
                 end
-                hw_loop.addDemandBranchForComponent(reheat_coil)
-                vav_terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(model,always_on,reheat_coil)
-                air_loop.addBranchForZone(zone,vav_terminal.to_StraightComponent)
-                vav_terminal.setZoneMinimumAirFlowMethod("FixedFlowRate")
-                #TODO: currently the minimum flow rate is set to 2 L/s-m2. In fact we need to create a minimum flow rate
-                #TODO: schedule based on whether the zone is occupied or not as stipulated in 8.4.4.22 of NECB2011
-                min_flow_rate = 0.002*zone.floorArea
-                vav_terminal.setFixedMinimumAirFlowRate(min_flow_rate) 
+                htg_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
+                hw_loop.addDemandBranchForComponent(htg_coil)
+
+                clg_coil = OpenStudio::Model::CoilCoolingWater.new(model,always_on)
+                chw_loop.addDemandBranchForComponent(clg_coil)
+
+                oa_controller = OpenStudio::Model::ControllerOutdoorAir.new(model)
+              
+                oa_system = OpenStudio::Model::AirLoopHVACOutdoorAirSystem.new(model,oa_controller)
+              
+                # Add the components to the air loop
+                # in order from closest to zone to furthest from zone
+                # TODO: still need to define the return fan (tried to access the air loop "returnAirNode" without success)
+                # TODO: The OS sdk indicates that this keyword should be active but I get a "Not implemented" error when I
+                # TODO: try to access it through "air_loop.returnAirNode"
+                supply_inlet_node = air_loop.supplyInletNode
+                supply_outlet_node = air_loop.supplyOutletNode
+                fan.addToNode(supply_inlet_node)
+                htg_coil.addToNode(supply_inlet_node)
+                clg_coil.addToNode(supply_inlet_node)
+                oa_system.addToNode(supply_inlet_node)
+              
+                #              return_inlet_node = air_loop.returnAirNode
+
+                # Add a setpoint manager to control the
+                # supply air to a constant temperature
+                sat_c = 13.0
+                sat_sch = OpenStudio::Model::ScheduleRuleset.new(model)
+                sat_sch.setName("Supply Air Temp")
+                sat_sch.defaultDaySchedule().setName("Supply Air Temp Default")
+                sat_sch.defaultDaySchedule().addValue(OpenStudio::Time.new(0,24,0,0),sat_c)
+                sat_stpt_manager = OpenStudio::Model::SetpointManagerScheduled.new(model,sat_sch)
+                sat_stpt_manager.addToNode(supply_outlet_node)
+
+                # TO-do ask Kamel about zonal assignments per storey. 
+
+                # Make a VAV terminal with HW reheat for each zone on this story that is in intersection with the zones array. 
+                # and hook the reheat coil to the HW loop
+                ( BTAP::Geometry::BuildingStoreys::get_zones_from_storey(story) & zones).each do |zone|
+                  if(heating_coil_type == "Hot Water")
+                    reheat_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
+                  elsif(heating_coil_type == "Electric")
+                    reheat_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
+                  end
+                  hw_loop.addDemandBranchForComponent(reheat_coil)
+                  vav_terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(model,always_on,reheat_coil)
+                  air_loop.addBranchForZone(zone,vav_terminal.to_StraightComponent)
+                  vav_terminal.setZoneMinimumAirFlowMethod("FixedFlowRate")
+                  #TODO: currently the minimum flow rate is set to 2 L/s-m2. In fact we need to create a minimum flow rate
+                  #TODO: schedule based on whether the zone is occupied or not as stipulated in 8.4.4.22 of NECB2011
+                  min_flow_rate = 0.002*zone.floorArea
+                  vav_terminal.setFixedMinimumAirFlowRate(min_flow_rate) 
+                end
               end
-            end
             end # next story
 
             return true
@@ -3178,8 +3178,8 @@ module BTAP
             #was sent to NREL to let them know about this. Once there is a fix for this,
             #use the proper pump schedule depending on whether we have two-pipe or four-pipe
             #fan coils.
-#            pump.resetPumpFlowRateSchedule()
-#            pump.setPumpFlowRateSchedule(pump_flow_sch)
+            #            pump.resetPumpFlowRateSchedule()
+            #            pump.setPumpFlowRateSchedule(pump_flow_sch)
 
             #boiler 
             boiler = OpenStudio::Model::BoilerHotWater.new(model)                   
