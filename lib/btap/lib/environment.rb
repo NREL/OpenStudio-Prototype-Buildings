@@ -399,6 +399,7 @@ module BTAP
     class WeatherFile
 
       attr_accessor :location_name,
+        :energy_plus_location_name,
         :latitude,
         :longitude,
         :elevation,
@@ -490,6 +491,7 @@ module BTAP
         @mean_dry_bulb = @stat_file.mean_dry_bulb
         @delta_dry_bulb = @stat_file.delta_dry_bulb
         @location_name = "#{@country}-#{@state_province_region}-#{@city}"
+        @energy_plus_location_name = "#{@city}_#{@state_province_region}_#{@country}"
         @heating_design_info = @stat_file.heating_design_info 
         @cooling_design_info  = @stat_file.cooling_design_info
         @extremes_design_info = @stat_file.extremes_design_info
