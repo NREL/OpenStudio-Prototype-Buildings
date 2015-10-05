@@ -3105,7 +3105,11 @@ module BTAP
                   fan.setFanPowerCoefficient3(1.0086242)
                 end
                 htg_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
-                hw_loop.addDemandBranchForComponent(htg_coil)
+                #Ensure hot water loop is updated with coil only if needed. 
+                if ( baseboard_type == "Hot Water" ) || ( heating_coil_type == "Hot Water") 
+                  hw_loop.addDemandBranchForComponent(htg_coil)
+                end
+                
 
                 clg_coil = OpenStudio::Model::CoilCoolingWater.new(model,always_on)
                 chw_loop.addDemandBranchForComponent(clg_coil)
