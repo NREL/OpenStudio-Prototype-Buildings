@@ -9,8 +9,30 @@ require 'fileutils'
 require 'json'
 require 'rubygems'
 
-class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
+#This will run all the combinations possible with the inputs for each system.  The test will.
+#0. Save the baseline file as baseline.osm 
+#1.	Add the system to the model using the hvac.rb routines and save that step as *.rb
+#2.	Run the Standards methods and save that as the *.osm. 
+#3.	The name of the file will represent the combination used for that system
+#4.	Only after all the system files are created the files will then be simulated. 
+#5.	Annual results will be contained in the Annual_results.csv file and failed simulations will be in the Failted.txt file.
+# 
+#All output is in the test/output folder. 
+#Set the switch true to run the standards in the test
+#PERFORM_STANDARDS = true
+#Set to true to run the simulations. 
+#FULL_SIMULATIONS = true
+#
+#NOTE: The test will fail on the first error for each system to save time.
+#NOTE: You can use Kdiff3 three file to select the baseline, *.hvac.rb, and *.osm file for a three way diff.
+#
+# Hopefully this makes is easier to debug the HVAC stuff!
+
+
+class FullHVACTest < MiniTest::Unit::TestCase
+  #set to true to run the standards in the test. 
   PERFORM_STANDARDS = true
+  #set to true to run the simulations. 
   FULL_SIMULATIONS = true
 
   def test_system_1()
@@ -25,6 +47,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     baseboard_types = ["Hot Water" , "Electric"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
+    #save baseline
+    BTAP::FileIO::save_osm(model, "#{output_folder}/baseline.osm")
     #interate through combinations. 
     boiler_fueltypes.each do |boiler_fueltype|
       baseboard_types.each do |baseboard_type|
@@ -39,8 +63,12 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
                 mau_type, 
                 mau_heating_coil_type, 
                 baseboard_type)
-              run_the_measure(model) 
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
+              runner = run_the_measure(model) 
+              #Save model after standards
               BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
+              assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
             end
           else
             name =  "sys1_Boiler~#{boiler_fueltype}_Mau~#{mau_type}_MauCoil~None_Baseboard~#{baseboard_type}"
@@ -51,9 +79,13 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
               mau_type, 
               "Electric", #value will not be used.  
               baseboard_type)
-            runner = run_the_measure(model) 
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
+              runner = run_the_measure(model) 
+              #Save model after standards
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
             assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
-            BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")  
+
           end
         end
       end
@@ -76,6 +108,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     mua_cooling_types = ["DX","Hydronic"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
+        #save baseline
+    BTAP::FileIO::save_osm(model, "#{output_folder}/baseline.osm")
     boiler_fueltypes.each do |boiler_fueltype|
       chiller_types.each do |chiller_type|
         mua_cooling_types.each do |mua_cooling_type|
@@ -86,9 +120,12 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
             boiler_fueltype, 
             chiller_type, 
             mua_cooling_type)
-          runner = run_the_measure(model) 
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
+              runner = run_the_measure(model) 
+              #Save model after standards
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
           assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
-          BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
         end
       end
     end
@@ -111,6 +148,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
 
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
+        #save baseline
+    BTAP::FileIO::save_osm(model, "#{output_folder}/baseline.osm")
     boiler_fueltypes.each do |boiler_fueltype|
       baseboard_types.each do |baseboard_type|
         heating_coil_types_sys3.each do |heating_coil_type_sys3|
@@ -121,9 +160,13 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
             boiler_fueltype, 
             heating_coil_type_sys3, 
             baseboard_type)
-          runner = run_the_measure(model) 
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
+              runner = run_the_measure(model) 
+              #Save model after standards
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
           assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
-          BTAP::FileIO::save_osm(model, "#{output_folder}/.osm")
+
         end
       end
     end
@@ -145,6 +188,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     heating_coil_types_sys4 = ["Electric", "Gas"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
+        #save baseline
+    BTAP::FileIO::save_osm(model, "#{output_folder}/baseline.osm")
     boiler_fueltypes.each do |boiler_fueltype|
       baseboard_types.each do |baseboard_type|
         heating_coil_types_sys4.each do |heating_coil|
@@ -155,9 +200,13 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
             boiler_fueltype, 
             heating_coil, 
             baseboard_type)
-          runner = run_the_measure(model) 
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
+              runner = run_the_measure(model) 
+              #Save model after standards
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
           assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
-          BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
+
         end
       end
     end
@@ -179,6 +228,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     mua_cooling_types = ["DX","Hydronic"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
+        #save baseline
+    BTAP::FileIO::save_osm(model, "#{output_folder}/baseline.osm")
     boiler_fueltypes.each do |boiler_fueltype|
       chiller_types.each do |chiller_type|
         mua_cooling_types.each do |mua_cooling_type|
@@ -189,9 +240,12 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
             boiler_fueltype, 
             chiller_type, 
             mua_cooling_type)
-          runner = run_the_measure(model) 
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
+              runner = run_the_measure(model) 
+              #Save model after standards
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
           assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}") 
-          BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
         end
       end 
     end
@@ -218,6 +272,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     fan_types = ["AF_or_BI_rdg_fancurve","AF_or_BI_inletvanes","fc_inletvanes","var_speed_drive"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
+        #save baseline
+    BTAP::FileIO::save_osm(model, "#{output_folder}/baseline.osm")
     boiler_fueltypes.each do |boiler_fueltype|
       chiller_types.each do |chiller_type|
         baseboard_types.each do |baseboard_type|
@@ -233,9 +289,12 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
                 baseboard_type, 
                 chiller_type, 
                 fan_type)
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
               runner = run_the_measure(model) 
-              assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
+              #Save model after standards
               BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
+              assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
             end
           end
         end
@@ -259,6 +318,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
     mua_cooling_types = ["DX","Hydronic"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
+        #save baseline
+    BTAP::FileIO::save_osm(model, "#{output_folder}/baseline.osm")
     boiler_fueltypes.each do |boiler_fueltype|
       chiller_types.each do |chiller_type|
         mua_cooling_types.each do |mua_cooling_type|
@@ -269,9 +330,12 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
             boiler_fueltype, 
             chiller_type, 
             mua_cooling_type)
-          runner = run_the_measure(model) 
+              #Save the model after btap hvac. 
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.hvacrb")
+              runner = run_the_measure(model) 
+              #Save model after standards
+              BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
           assert_equal("Success", runner.result.value.valueName,"Failure in Standards for #{name}")
-          BTAP::FileIO::save_osm(model, "#{output_folder}/#{name}.osm")
         end
       end
     end
@@ -294,21 +358,8 @@ class CanadianAddUnitaryAndApplyStandardTest < MiniTest::Unit::TestCase
       # run the measure
       measure.run(model, runner, argument_map)
       #return condition of measure.
-      
-      
+     
       return runner
     end 
   end
 end
-
-#def test_auto_zoner()
-#  #try loading the file. 
-#  BTAP::FileIO::get_find_files_from_folder_by_extension( "#{File.dirname(__FILE__)}/../../../weather/resources/models/DOEArchetypes/OSM_NECB_Space_Types", '.osm' ).each do |file|
-#    model = BTAP::FileIO::load_osm( file )
-#    #suto zone it and assign systems. 
-#    BTAP::Compliance::NECB2011::necb_autozoner( model )
-#    #save file under new name
-#    new_file = "#{File.dirname(file)}/auto_zoned/#{File.basename(file,".osm")}.osm"
-#    BTAP::FileIO::save_osm( model, new_file )
-#  end
-#end
