@@ -903,7 +903,6 @@ class OpenStudio::Model::AirLoopHVAC
       controller_mv = controller_oa.controllerMechanicalVentilation
       if controller_mv.demandControlledVentilation == true
         OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "For #{template} #{self.name}, ERV not applicable because DCV enabled.")
-        runner.registerInfo()
         return false
       end
     else
@@ -1918,7 +1917,6 @@ class OpenStudio::Model::AirLoopHVAC
   # @return [Bool] Returns true if successful, false if not
   # @todo see if this impacts the sizing run.
   def set_vav_damper_action(template, climate_zone)
-  #TODO:PHYLROY
     damper_action = nil
     case template       
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', 'NECB 2011'

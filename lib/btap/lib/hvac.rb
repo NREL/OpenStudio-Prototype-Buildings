@@ -3149,10 +3149,12 @@ module BTAP
                 ( BTAP::Geometry::BuildingStoreys::get_zones_from_storey(story) & zones).each do |zone|
                   if(heating_coil_type == "Hot Water")
                     reheat_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
+                    hw_loop.addDemandBranchForComponent(reheat_coil)
                   elsif(heating_coil_type == "Electric")
                     reheat_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
                   end
-                  hw_loop.addDemandBranchForComponent(reheat_coil)
+                  
+                  
                   vav_terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(model,always_on,reheat_coil)
                   air_loop.addBranchForZone(zone,vav_terminal.to_StraightComponent)
                   vav_terminal.setZoneMinimumAirFlowMethod("FixedFlowRate")
