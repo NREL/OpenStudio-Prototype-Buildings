@@ -27,13 +27,21 @@ module BTAP
     #@author phylroy.lopez@nrcan.gc.ca
     #@params folder [String] folder
     def self.simulate_all_files_in_folder(folder)
+      osm_files = BTAP::FileIO::get_find_files_from_folder_by_extension(folder, ".osm")
+      self.simulate_files(folder,osm_files)
+    end
+    
+ #This method will simulate all files in a array.
+    #@author phylroy.lopez@nrcan.gc.ca
+    #@params folder Array[String] folder
+    def self.simulate_files(folder,osm_files)
 
       co = OpenStudio::Runmanager::ConfigOptions.new()
       co.fastFindEnergyPlus() 
       rm = OpenStudio::Runmanager::RunManager.new("SecureRandom.hex.db", true)
       rm.setPaused(false)
       counter = 0
-      osm_files = BTAP::FileIO::get_find_files_from_folder_by_extension(folder, ".osm")
+      
       osm_files.each do |model_path|
         counter = counter + 1
         work_items = OpenStudio::Runmanager::WorkItemVector.new
