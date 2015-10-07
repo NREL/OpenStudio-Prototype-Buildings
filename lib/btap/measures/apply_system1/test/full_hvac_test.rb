@@ -393,6 +393,9 @@ class FullHVACTest < MiniTest::Unit::TestCase
       end
       BTAP::SimManager::simulate_files(output_folder, file_array)
       BTAP::Reporting::get_all_annual_results_from_runmanger_by_files(output_folder,file_array)
+      
+      are_there_no_severe_errors = File.zero?("#{output_folder}/failed simulations.txt")
+      assert_equal(true, are_there_no_severe_errors,"Simulations had severe errors. Check #{output_folder}/failed simulations.txt ")
     end
   end
 
