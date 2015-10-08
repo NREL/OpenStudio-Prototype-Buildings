@@ -176,7 +176,14 @@ class OpenStudio::Model::Model
 
     # Add Exhaust Fan
     space_type_map = define_space_type_map(building_type, building_vintage, climate_zone)
-    ['Banquet', 'Kitchen','Laundry'].each do |space_type|
+    case building_vintage
+      when '90.1-2004','90.1-2007'
+        exhaust_fan_space_types =['Kitchen','Laundry']
+      else
+        exhaust_fan_space_types =['Banquet', 'Kitchen','Laundry']
+    end
+
+    exhaust_fan_space_types.each do |space_type|
       space_type_data = self.find_object(self.standards['space_types'], {'template'=>building_vintage, 'building_type'=>building_type, 'space_type'=>space_type})
       if space_type_data == nil
         OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find space type #{building_vintage}-#{building_type}-#{space_type}")
@@ -188,6 +195,7 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find Exhaust Schedule for space type #{building_vintage}-#{building_type}-#{space_type}")
         return false
       end
+
       balanced_exhaust_schedule = add_schedule(space_type_data['balanced_exhaust_fraction_schedule'])
 
       space_names = space_type_map[space_type]

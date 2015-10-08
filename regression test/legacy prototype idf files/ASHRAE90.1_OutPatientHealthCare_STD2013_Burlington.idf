@@ -54750,48 +54750,8 @@ EnergyManagementSystem:InternalVariable,
     CM DSZAD Floor 3 Office Toilet,  !- Design Specification Zone Air Distribution Object Name
     Floor 3 Physical Therapy 1,   !- Zone 50 Name
     CM DSOA Floor 3 Physical Therapy 1,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Physical Therapy 1,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Physical Therapy 2,   !- Extended Field
-    CM DSOA Floor 3 Physical Therapy 2,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Physical Therapy 2,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Physical Therapy Toilet,   !- Extended Field
-    CM DSOA Floor 3 Physical Therapy Toilet,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Physical Therapy Toilet,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Storage 1,        !- Extended Field
-    CM DSOA Floor 3 Storage 1,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Storage 1,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Storage 2,        !- Extended Field
-    CM DSOA Floor 3 Storage 2,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Storage 2,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Treatment,        !- Extended Field
-    CM DSOA Floor 3 Treatment,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Treatment,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Undeveloped 1,    !- Extended Field
-    CM DSOA Floor 3 Undeveloped 1,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Undeveloped 1,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Undeveloped 2,    !- Extended Field
-    CM DSOA Floor 3 Undeveloped 2,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Undeveloped 2,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Utility,          !- Extended Field
-    CM DSOA Floor 3 Utility,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Utility,  !- Design Specification Zone Air Distribution Object Name
-    Floor 3 Work,             !- Extended Field
-    CM DSOA Floor 3 Work,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD Floor 3 Work,  !- Design Specification Zone Air Distribution Object Name
-    NE Stair,                 !- Extended Field
-    CM DSOA NE Stair,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD NE Stair,  !- Design Specification Zone Air Distribution Object Name
-    NW Elevator,              !- Extended Field
-    CM DSOA NW Elevator,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD NW Elevator,  !- Design Specification Zone Air Distribution Object Name
-    NW Stair,                 !- Extended Field
-    CM DSOA NW Stair,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD NW Stair,  !- Design Specification Zone Air Distribution Object Name
-    SW Stair,                 !- Extended Field
-    CM DSOA SW Stair,  !- Design Specification Outdoor Air Object Name
-    CM DSZAD SW Stair;  !- Design Specification Zone Air Distribution Object Name
-
-
+    CM DSZAD Floor 3 Physical Therapy 1;  !- Design Specification Zone Air Distribution Object Name
+    
   DesignSpecification:ZoneAirDistribution,
     CM DSZAD Floor 2 Conference,         !- Name
     1,                        !- Zone Air Distribution Effectiveness in Cooling Mode 1 {dimensionless}
