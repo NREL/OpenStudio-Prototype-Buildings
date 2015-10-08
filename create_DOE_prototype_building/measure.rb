@@ -375,6 +375,8 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # todo: YXC to merge to the main function
     if building_type != "LargeHotel"
       model.addDaylightingControls
+    else
+      model.add_daylighting_controls(building_vintage)
     end
    
    
