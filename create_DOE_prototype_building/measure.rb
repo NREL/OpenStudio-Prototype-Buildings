@@ -285,11 +285,11 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     
     # Assign the standards to the model
     model.template = building_vintage
-    model.climate_zone = climate_zone      
+    model.climate_zone = climate_zone
     
     model.assign_space_type_stubs(alt_search_name, space_type_map)    
     model.add_loads(building_vintage, climate_zone)
-    model.apply_infiltration_standard
+    # model.apply_infiltration_standard
     model.modify_infiltration_coefficients(building_type, building_vintage, climate_zone)
     model.modify_surface_convection_algorithm(building_vintage)
     model.add_constructions(alt_search_name, building_vintage, climate_zone)

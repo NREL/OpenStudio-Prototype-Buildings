@@ -1,0 +1,236 @@
+
+    
+    ! Sensors
+    
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1ZNSACOASch,           
+      SmallHotel Split-AC OA Damper,         !- Output:Variable or Output:Meter Index Key Name,            
+      Schedule Value;          !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1_ZNTemp,
+      Node 41,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Temperature; !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1ZNSACOAFlowMass,     
+      Node 188, !- Output:Variable or Output:Meter Index Key Name
+      System Node Mass Flow Rate;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1ZNSACHeatingRTF,     
+      MeetingRoomFlr1 ZN SAC Gas Htg Coil,        !- Output:Variable or Output:Meter Index Key Name
+      Heating Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1ZNSACRTF,            
+      MeetingRoomFlr1 ZN SAC 1spd DX AC Clg Coil, !- Output:Variable or Output:Meter Index Key Name
+      Cooling Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1ZNSACSpeedRatio,     
+      MeetingRoomFlr1 ZN SAC 1spd DX AC Clg Coil CoilSystem,        !- Output:Variable or Output:Meter Index Key Name
+      Coil System Compressor Speed Ratio;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1ZNSACDATRqd,        
+      Node 184,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Setpoint Temperature;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      MeetingRoomFlr1ZNSACEconoStatus,   
+      MeetingRoomFlr1 ZN SAC,              !- Output:Variable or Output:Meter Index Key Name
+      Air System Outdoor Air Economizer Status;  !- Output:Variable or Output:Meter Name
+
+    ! Internal Variables
+
+    EnergyManagementSystem:InternalVariable,
+      MeetingRoomFlr1ZNSACFanDesignPressure,
+      MeetingRoomFlr1 ZN SAC Fan,          !- Internal Data Index Key Name
+      Fan Nominal Pressure Rise;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      MeetingRoomFlr1ZNSACDesignFlowMass, 
+      MeetingRoomFlr1 ZN SAC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Maximum Mass Flow Rate;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      MeetingRoomFlr1ZNSACOADesignMass,   
+      MeetingRoomFlr1 ZN SAC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Minimum Mass Flow Rate;  !- Internal Data Type
+
+    ! Actuators
+
+    EnergyManagementSystem:Actuator,
+      MeetingRoomFlr1ZNSACFanPressure,   
+      MeetingRoomFlr1 ZN SAC Fan,          !- Actuated Component Unique Name
+      Fan,                     !- Actuated Component Type
+      Fan Pressure Rise;       !- Actuated Component Control Type
+
+    EnergyManagementSystem:Actuator,
+      MeetingRoomFlr1ZNSACTimestepEconEff,!- Name
+      MeetingRoomFlr1ZNSACmaxOASch,  !- Actuated Component Unique Name
+      Schedule:Year,       !- Actuated Component Type
+      Schedule Value;          !- Actuated Component Control Type
+
+    EnergyManagementSystem:GlobalVariable,
+      MeetingRoomFlr1ZNSACFanPwrExp,   !- Erl Variable 1 Name
+      MeetingRoomFlr1ZNSACStg1Spd,      !- Erl Variable 2 Name
+      MeetingRoomFlr1ZNSACStg2Spd,      !- Erl Variable 3 Name
+      MeetingRoomFlr1ZNSACHeatSpeed,      
+      MeetingRoomFlr1ZNSACVenSpeed,       
+      MeetingRoomFlr1ZNSACNumberofStages; 
+
+    EnergyManagementSystem:Program,
+      MeetingRoomFlr1ZNSACEconomizerCTRLProg,
+      SET MeetingRoomFlr1ZNSACTimestepEconEff = 0.7,  
+      SET MeetingRoomFlr1ZNSACMaxE = 0.7,   
+      SET MeetingRoomFlr1ZNSACDATRqd = (MeetingRoomFlr1ZNSACDATRqd*1.8)+32,
+      SET OATF = (OATF*1.8)+32,
+      SET OAwbF = (OAwbF*1.8)+32,
+      IF MeetingRoomFlr1ZNSACOAFlowMass > (MeetingRoomFlr1ZNSACOADesignMass*MeetingRoomFlr1ZNSACOASch),
+      SET MeetingRoomFlr1ZNSACEconoActive = 1,
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACEconoActive = 0,
+      ENDIF,                 
+      SET MeetingRoomFlr1ZNSACdTNeeded = 75-MeetingRoomFlr1ZNSACDATRqd,
+      SET MeetingRoomFlr1ZNSACCoolDesdT = ((98*0.15)+(75*(1-0.15)))-55,
+      SET MeetingRoomFlr1ZNSACCoolLoad = MeetingRoomFlr1ZNSACdTNeeded/ MeetingRoomFlr1ZNSACCoolDesdT,
+      IF MeetingRoomFlr1ZNSACCoolLoad > 1, 
+      SET MeetingRoomFlr1ZNSACCoolLoad = 1,
+      ELSEIF MeetingRoomFlr1ZNSACCoolLoad < 0,
+      SET MeetingRoomFlr1ZNSACCoolLoad = 0,
+      ENDIF,                 
+      IF MeetingRoomFlr1ZNSACEconoActive == 1,
+      SET MeetingRoomFlr1ZNSACStage = MeetingRoomFlr1ZNSACNumberofStages,
+      IF MeetingRoomFlr1ZNSACStage == 2,  
+      IF MeetingRoomFlr1ZNSACCoolLoad < 0.6,
+      SET MeetingRoomFlr1ZNSACTimestepEconEff = MeetingRoomFlr1ZNSACMaxE,
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACECOEff = 0-2.18919863612305,
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0-0.674461284910428*MeetingRoomFlr1ZNSACCoolLoad),
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0.000459106275872404*(OATF^2)),
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0-0.00000484778537945252*(OATF^3)),
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0.182915713033586*OAwbF),
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0-0.00382838660261133*(OAwbF^2)),
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0.0000255567460240583*(OAwbF^3)),
+      SET MeetingRoomFlr1ZNSACTimestepEconEff = MeetingRoomFlr1ZNSACECOEff,
+      ENDIF,                 
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACECOEff = 2.36337942464462,
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0-0.409939515512619*MeetingRoomFlr1ZNSACCoolLoad),
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0-0.0565205596792225*OAwbF),
+      SET MeetingRoomFlr1ZNSACECOEff = MeetingRoomFlr1ZNSACECOEff+(0-0.0000632612294169389*(OATF^2)),
+      SET MeetingRoomFlr1ZNSACTimestepEconEff = MeetingRoomFlr1ZNSACECOEff+(0.000571724868775081*(OAwbF^2)),
+      ENDIF,                 
+      IF MeetingRoomFlr1ZNSACTimestepEconEff > MeetingRoomFlr1ZNSACMaxE,
+      SET MeetingRoomFlr1ZNSACTimestepEconEff = MeetingRoomFlr1ZNSACMaxE,
+      ELSEIF MeetingRoomFlr1ZNSACTimestepEconEff < (MeetingRoomFlr1ZNSACOADesignMass*MeetingRoomFlr1ZNSACOASch),
+      SET MeetingRoomFlr1ZNSACTimestepEconEff = (MeetingRoomFlr1ZNSACOADesignMass*MeetingRoomFlr1ZNSACOASch),
+      ENDIF,                 
+      ENDIF;                 
+
+    EnergyManagementSystem:Program,
+      MeetingRoomFlr1ZNSACSetFanPar,    
+      IF MeetingRoomFlr1ZNSACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      SET MeetingRoomFlr1ZNSACFanPwrExp = 2.2,
+      SET MeetingRoomFlr1ZNSACOAFrac = MeetingRoomFlr1ZNSACOAFlowMass/MeetingRoomFlr1ZNSACDesignFlowMass,
+      IF  MeetingRoomFlr1ZNSACOAFrac < 0.66,
+      SET MeetingRoomFlr1ZNSACVenSpeed = 0.66,
+      SET MeetingRoomFlr1ZNSACStg1Spd = 0.66,
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACVenSpeed = MeetingRoomFlr1ZNSACOAFrac,
+      SET MeetingRoomFlr1ZNSACStg1Spd = MeetingRoomFlr1ZNSACOAFrac,
+      ENDIF,                 
+      SET MeetingRoomFlr1ZNSACStg2Spd = 1.0,
+      SET MeetingRoomFlr1ZNSACHeatSpeed = 1.0;
+
+    EnergyManagementSystem:Program,
+      MeetingRoomFlr1ZNSACFanControl,    
+      IF MeetingRoomFlr1ZNSACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      IF MeetingRoomFlr1ZNSACHeatingRTF > 0,
+      SET MeetingRoomFlr1ZNSACHeating = MeetingRoomFlr1ZNSACHeatingRTF,
+      SET MeetingRoomFlr1ZNSACVen = 1-MeetingRoomFlr1ZNSACHeatingRTF,
+      SET MeetingRoomFlr1ZNSACEco = 0,    
+      SET MeetingRoomFlr1ZNSACStage1 = 0, 
+      SET MeetingRoomFlr1ZNSACStage2 = 0, 
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACHeating = 0,
+      SET MeetingRoomFlr1ZNSACEcoSpeed = MeetingRoomFlr1ZNSACVenSpeed,
+      IF MeetingRoomFlr1ZNSACSpeedRatio == 0,
+      IF MeetingRoomFlr1ZNSACRTF > 0,     
+      SET MeetingRoomFlr1ZNSACStage1 = MeetingRoomFlr1ZNSACRTF,
+      SET MeetingRoomFlr1ZNSACStage2 = 0, 
+      SET MeetingRoomFlr1ZNSACVen = 1-MeetingRoomFlr1ZNSACRTF,
+      SET MeetingRoomFlr1ZNSACEco = 0,    
+      IF MeetingRoomFlr1ZNSACOAFlowMass > (MeetingRoomFlr1ZNSACOADesignMass*MeetingRoomFlr1ZNSACOASch),
+      SET MeetingRoomFlr1ZNSACStg1Spd = 1.0,
+      ENDIF,                 
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACStage1 = 0, 
+      SET MeetingRoomFlr1ZNSACStage2 = 0, 
+      IF MeetingRoomFlr1ZNSACOAFlowMass > (MeetingRoomFlr1ZNSACOADesignMass*MeetingRoomFlr1ZNSACOASch),
+      SET MeetingRoomFlr1ZNSACEco = 1.0,  
+      SET MeetingRoomFlr1ZNSACVen = 0,           
+      !Calculate the expected discharge air temperature if the system runs at its low speed      
+      SET MeetingRoomFlr1ZNSACExpDAT = MeetingRoomFlr1ZNSACDATRqd-(1-MeetingRoomFlr1ZNSACVenSpeed)*MeetingRoomFlr1_ZNTemp,
+      SET MeetingRoomFlr1ZNSACExpDAT = MeetingRoomFlr1ZNSACExpDAT/MeetingRoomFlr1ZNSACVenSpeed,
+      IF OATF > MeetingRoomFlr1ZNSACExpDAT,
+      SET MeetingRoomFlr1ZNSACEcoSpeed = MeetingRoomFlr1ZNSACStg2Spd,
+      ENDIF,                 
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACEco = 0,    
+      SET MeetingRoomFlr1ZNSACVen = 1.0,  
+      ENDIF,                 
+      ENDIF,                 
+      ELSE,                  
+      SET MeetingRoomFlr1ZNSACStage1 = 1-MeetingRoomFlr1ZNSACSpeedRatio,
+      SET MeetingRoomFlr1ZNSACStage2 = MeetingRoomFlr1ZNSACSpeedRatio,
+      SET MeetingRoomFlr1ZNSACVen = 0,    
+      SET MeetingRoomFlr1ZNSACEco = 0,    
+      IF MeetingRoomFlr1ZNSACOAFlowMass > (MeetingRoomFlr1ZNSACOADesignMass*MeetingRoomFlr1ZNSACOASch),
+      SET MeetingRoomFlr1ZNSACStg1Spd = 1.0,
+      ENDIF,                 
+      ENDIF,                 
+      ENDIF,                  
+      ! For each mode, (percent time in mode)*(fanSpeer^PwrExp) is the contribution to weighted fan power over time step
+      SET MeetingRoomFlr1ZNSACFPR = MeetingRoomFlr1ZNSACVen*(MeetingRoomFlr1ZNSACVenSpeed ^ MeetingRoomFlr1ZNSACFanPwrExp),
+      SET MeetingRoomFlr1ZNSACFPR = MeetingRoomFlr1ZNSACFPR+MeetingRoomFlr1ZNSACEco*(MeetingRoomFlr1ZNSACEcoSpeed^MeetingRoomFlr1ZNSACFanPwrExp),
+      SET MeetingRoomFlr1ZNSACFPR1 = MeetingRoomFlr1ZNSACStage1*(MeetingRoomFlr1ZNSACStg1Spd^MeetingRoomFlr1ZNSACFanPwrExp),
+      SET MeetingRoomFlr1ZNSACFPR = MeetingRoomFlr1ZNSACFPR+MeetingRoomFlr1ZNSACFPR1,
+      SET MeetingRoomFlr1ZNSACFPR2 = MeetingRoomFlr1ZNSACStage2*(MeetingRoomFlr1ZNSACStg2Spd^MeetingRoomFlr1ZNSACFanPwrExp),
+      SET MeetingRoomFlr1ZNSACFPR = MeetingRoomFlr1ZNSACFPR+MeetingRoomFlr1ZNSACFPR2,
+      SET MeetingRoomFlr1ZNSACFPR3 = MeetingRoomFlr1ZNSACHeating*(MeetingRoomFlr1ZNSACHeatSpeed^MeetingRoomFlr1ZNSACFanPwrExp),
+      SET MeetingRoomFlr1ZNSACFanPwrRatio = MeetingRoomFlr1ZNSACFPR+ MeetingRoomFlr1ZNSACFPR3,
+      ! system fan power is directly proportional to static pressure, so this change linearly adjusts fan energy for speed control
+      SET MeetingRoomFlr1ZNSACFanPressure = MeetingRoomFlr1ZNSACFanDesignPressure*MeetingRoomFlr1ZNSACFanPwrRatio;
+
+    EnergyManagementSystem:Program,
+      MeetingRoomFlr1ZNSACSetNumberofStages,
+      SET MeetingRoomFlr1ZNSACNumberofStages =  2;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      MeetingRoomFlr1ZNSACSetNumberofStagesCallingManager,
+      BeginNewEnvironment,
+      MeetingRoomFlr1ZNSACSetNumberofStages;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      MeetingRoomFlr1ZNSACECOManager,    
+      InsideHVACSystemIterationLoop,  !- EnergyPlus Model Calling Point
+      MeetingRoomFlr1ZNSACEconomizerCTRLProg;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      MeetingRoomFlr1ZNSACFanParametermanager,
+      BeginNewEnvironment,
+      MeetingRoomFlr1ZNSACSetFanPar;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      MeetingRoomFlr1ZNSACFanMainManager,
+      BeginTimestepBeforePredictor,
+      MeetingRoomFlr1ZNSACFanControl;
+
+    

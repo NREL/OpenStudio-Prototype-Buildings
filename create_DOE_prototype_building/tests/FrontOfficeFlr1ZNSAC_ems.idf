@@ -1,0 +1,236 @@
+
+    
+    ! Sensors
+    
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1ZNSACOASch,           
+      SmallHotel Split-AC OA Damper,         !- Output:Variable or Output:Meter Index Key Name,            
+      Schedule Value;          !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1_ZNTemp,
+      Node 66,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Temperature; !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1ZNSACOAFlowMass,     
+      Node 177, !- Output:Variable or Output:Meter Index Key Name
+      System Node Mass Flow Rate;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1ZNSACHeatingRTF,     
+      FrontOfficeFlr1 ZN SAC Gas Htg Coil,        !- Output:Variable or Output:Meter Index Key Name
+      Heating Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1ZNSACRTF,            
+      FrontOfficeFlr1 ZN SAC 1spd DX AC Clg Coil, !- Output:Variable or Output:Meter Index Key Name
+      Cooling Coil Runtime Fraction;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1ZNSACSpeedRatio,     
+      FrontOfficeFlr1 ZN SAC 1spd DX AC Clg Coil CoilSystem,        !- Output:Variable or Output:Meter Index Key Name
+      Coil System Compressor Speed Ratio;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1ZNSACDATRqd,        
+      Node 173,  !- Output:Variable or Output:Meter Index Key Name
+      System Node Setpoint Temperature;  !- Output:Variable or Output:Meter Name
+
+    EnergyManagementSystem:Sensor,
+      FrontOfficeFlr1ZNSACEconoStatus,   
+      FrontOfficeFlr1 ZN SAC,              !- Output:Variable or Output:Meter Index Key Name
+      Air System Outdoor Air Economizer Status;  !- Output:Variable or Output:Meter Name
+
+    ! Internal Variables
+
+    EnergyManagementSystem:InternalVariable,
+      FrontOfficeFlr1ZNSACFanDesignPressure,
+      FrontOfficeFlr1 ZN SAC Fan,          !- Internal Data Index Key Name
+      Fan Nominal Pressure Rise;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      FrontOfficeFlr1ZNSACDesignFlowMass, 
+      FrontOfficeFlr1 ZN SAC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Maximum Mass Flow Rate;  !- Internal Data Type
+
+    EnergyManagementSystem:InternalVariable,
+      FrontOfficeFlr1ZNSACOADesignMass,   
+      FrontOfficeFlr1 ZN SAC OA Sys Controller,!- Internal Data Index Key Name
+      Outdoor Air Controller Minimum Mass Flow Rate;  !- Internal Data Type
+
+    ! Actuators
+
+    EnergyManagementSystem:Actuator,
+      FrontOfficeFlr1ZNSACFanPressure,   
+      FrontOfficeFlr1 ZN SAC Fan,          !- Actuated Component Unique Name
+      Fan,                     !- Actuated Component Type
+      Fan Pressure Rise;       !- Actuated Component Control Type
+
+    EnergyManagementSystem:Actuator,
+      FrontOfficeFlr1ZNSACTimestepEconEff,!- Name
+      FrontOfficeFlr1ZNSACmaxOASch,  !- Actuated Component Unique Name
+      Schedule:Year,       !- Actuated Component Type
+      Schedule Value;          !- Actuated Component Control Type
+
+    EnergyManagementSystem:GlobalVariable,
+      FrontOfficeFlr1ZNSACFanPwrExp,   !- Erl Variable 1 Name
+      FrontOfficeFlr1ZNSACStg1Spd,      !- Erl Variable 2 Name
+      FrontOfficeFlr1ZNSACStg2Spd,      !- Erl Variable 3 Name
+      FrontOfficeFlr1ZNSACHeatSpeed,      
+      FrontOfficeFlr1ZNSACVenSpeed,       
+      FrontOfficeFlr1ZNSACNumberofStages; 
+
+    EnergyManagementSystem:Program,
+      FrontOfficeFlr1ZNSACEconomizerCTRLProg,
+      SET FrontOfficeFlr1ZNSACTimestepEconEff = 0.7,  
+      SET FrontOfficeFlr1ZNSACMaxE = 0.7,   
+      SET FrontOfficeFlr1ZNSACDATRqd = (FrontOfficeFlr1ZNSACDATRqd*1.8)+32,
+      SET OATF = (OATF*1.8)+32,
+      SET OAwbF = (OAwbF*1.8)+32,
+      IF FrontOfficeFlr1ZNSACOAFlowMass > (FrontOfficeFlr1ZNSACOADesignMass*FrontOfficeFlr1ZNSACOASch),
+      SET FrontOfficeFlr1ZNSACEconoActive = 1,
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACEconoActive = 0,
+      ENDIF,                 
+      SET FrontOfficeFlr1ZNSACdTNeeded = 75-FrontOfficeFlr1ZNSACDATRqd,
+      SET FrontOfficeFlr1ZNSACCoolDesdT = ((98*0.15)+(75*(1-0.15)))-55,
+      SET FrontOfficeFlr1ZNSACCoolLoad = FrontOfficeFlr1ZNSACdTNeeded/ FrontOfficeFlr1ZNSACCoolDesdT,
+      IF FrontOfficeFlr1ZNSACCoolLoad > 1, 
+      SET FrontOfficeFlr1ZNSACCoolLoad = 1,
+      ELSEIF FrontOfficeFlr1ZNSACCoolLoad < 0,
+      SET FrontOfficeFlr1ZNSACCoolLoad = 0,
+      ENDIF,                 
+      IF FrontOfficeFlr1ZNSACEconoActive == 1,
+      SET FrontOfficeFlr1ZNSACStage = FrontOfficeFlr1ZNSACNumberofStages,
+      IF FrontOfficeFlr1ZNSACStage == 2,  
+      IF FrontOfficeFlr1ZNSACCoolLoad < 0.6,
+      SET FrontOfficeFlr1ZNSACTimestepEconEff = FrontOfficeFlr1ZNSACMaxE,
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACECOEff = 0-2.18919863612305,
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0-0.674461284910428*FrontOfficeFlr1ZNSACCoolLoad),
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0.000459106275872404*(OATF^2)),
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0-0.00000484778537945252*(OATF^3)),
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0.182915713033586*OAwbF),
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0-0.00382838660261133*(OAwbF^2)),
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0.0000255567460240583*(OAwbF^3)),
+      SET FrontOfficeFlr1ZNSACTimestepEconEff = FrontOfficeFlr1ZNSACECOEff,
+      ENDIF,                 
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACECOEff = 2.36337942464462,
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0-0.409939515512619*FrontOfficeFlr1ZNSACCoolLoad),
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0-0.0565205596792225*OAwbF),
+      SET FrontOfficeFlr1ZNSACECOEff = FrontOfficeFlr1ZNSACECOEff+(0-0.0000632612294169389*(OATF^2)),
+      SET FrontOfficeFlr1ZNSACTimestepEconEff = FrontOfficeFlr1ZNSACECOEff+(0.000571724868775081*(OAwbF^2)),
+      ENDIF,                 
+      IF FrontOfficeFlr1ZNSACTimestepEconEff > FrontOfficeFlr1ZNSACMaxE,
+      SET FrontOfficeFlr1ZNSACTimestepEconEff = FrontOfficeFlr1ZNSACMaxE,
+      ELSEIF FrontOfficeFlr1ZNSACTimestepEconEff < (FrontOfficeFlr1ZNSACOADesignMass*FrontOfficeFlr1ZNSACOASch),
+      SET FrontOfficeFlr1ZNSACTimestepEconEff = (FrontOfficeFlr1ZNSACOADesignMass*FrontOfficeFlr1ZNSACOASch),
+      ENDIF,                 
+      ENDIF;                 
+
+    EnergyManagementSystem:Program,
+      FrontOfficeFlr1ZNSACSetFanPar,    
+      IF FrontOfficeFlr1ZNSACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      SET FrontOfficeFlr1ZNSACFanPwrExp = 2.2,
+      SET FrontOfficeFlr1ZNSACOAFrac = FrontOfficeFlr1ZNSACOAFlowMass/FrontOfficeFlr1ZNSACDesignFlowMass,
+      IF  FrontOfficeFlr1ZNSACOAFrac < 0.66,
+      SET FrontOfficeFlr1ZNSACVenSpeed = 0.66,
+      SET FrontOfficeFlr1ZNSACStg1Spd = 0.66,
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACVenSpeed = FrontOfficeFlr1ZNSACOAFrac,
+      SET FrontOfficeFlr1ZNSACStg1Spd = FrontOfficeFlr1ZNSACOAFrac,
+      ENDIF,                 
+      SET FrontOfficeFlr1ZNSACStg2Spd = 1.0,
+      SET FrontOfficeFlr1ZNSACHeatSpeed = 1.0;
+
+    EnergyManagementSystem:Program,
+      FrontOfficeFlr1ZNSACFanControl,    
+      IF FrontOfficeFlr1ZNSACNumberofStages == 1,  
+      Return,                  
+      ENDIF,                 
+      IF FrontOfficeFlr1ZNSACHeatingRTF > 0,
+      SET FrontOfficeFlr1ZNSACHeating = FrontOfficeFlr1ZNSACHeatingRTF,
+      SET FrontOfficeFlr1ZNSACVen = 1-FrontOfficeFlr1ZNSACHeatingRTF,
+      SET FrontOfficeFlr1ZNSACEco = 0,    
+      SET FrontOfficeFlr1ZNSACStage1 = 0, 
+      SET FrontOfficeFlr1ZNSACStage2 = 0, 
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACHeating = 0,
+      SET FrontOfficeFlr1ZNSACEcoSpeed = FrontOfficeFlr1ZNSACVenSpeed,
+      IF FrontOfficeFlr1ZNSACSpeedRatio == 0,
+      IF FrontOfficeFlr1ZNSACRTF > 0,     
+      SET FrontOfficeFlr1ZNSACStage1 = FrontOfficeFlr1ZNSACRTF,
+      SET FrontOfficeFlr1ZNSACStage2 = 0, 
+      SET FrontOfficeFlr1ZNSACVen = 1-FrontOfficeFlr1ZNSACRTF,
+      SET FrontOfficeFlr1ZNSACEco = 0,    
+      IF FrontOfficeFlr1ZNSACOAFlowMass > (FrontOfficeFlr1ZNSACOADesignMass*FrontOfficeFlr1ZNSACOASch),
+      SET FrontOfficeFlr1ZNSACStg1Spd = 1.0,
+      ENDIF,                 
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACStage1 = 0, 
+      SET FrontOfficeFlr1ZNSACStage2 = 0, 
+      IF FrontOfficeFlr1ZNSACOAFlowMass > (FrontOfficeFlr1ZNSACOADesignMass*FrontOfficeFlr1ZNSACOASch),
+      SET FrontOfficeFlr1ZNSACEco = 1.0,  
+      SET FrontOfficeFlr1ZNSACVen = 0,           
+      !Calculate the expected discharge air temperature if the system runs at its low speed      
+      SET FrontOfficeFlr1ZNSACExpDAT = FrontOfficeFlr1ZNSACDATRqd-(1-FrontOfficeFlr1ZNSACVenSpeed)*FrontOfficeFlr1_ZNTemp,
+      SET FrontOfficeFlr1ZNSACExpDAT = FrontOfficeFlr1ZNSACExpDAT/FrontOfficeFlr1ZNSACVenSpeed,
+      IF OATF > FrontOfficeFlr1ZNSACExpDAT,
+      SET FrontOfficeFlr1ZNSACEcoSpeed = FrontOfficeFlr1ZNSACStg2Spd,
+      ENDIF,                 
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACEco = 0,    
+      SET FrontOfficeFlr1ZNSACVen = 1.0,  
+      ENDIF,                 
+      ENDIF,                 
+      ELSE,                  
+      SET FrontOfficeFlr1ZNSACStage1 = 1-FrontOfficeFlr1ZNSACSpeedRatio,
+      SET FrontOfficeFlr1ZNSACStage2 = FrontOfficeFlr1ZNSACSpeedRatio,
+      SET FrontOfficeFlr1ZNSACVen = 0,    
+      SET FrontOfficeFlr1ZNSACEco = 0,    
+      IF FrontOfficeFlr1ZNSACOAFlowMass > (FrontOfficeFlr1ZNSACOADesignMass*FrontOfficeFlr1ZNSACOASch),
+      SET FrontOfficeFlr1ZNSACStg1Spd = 1.0,
+      ENDIF,                 
+      ENDIF,                 
+      ENDIF,                  
+      ! For each mode, (percent time in mode)*(fanSpeer^PwrExp) is the contribution to weighted fan power over time step
+      SET FrontOfficeFlr1ZNSACFPR = FrontOfficeFlr1ZNSACVen*(FrontOfficeFlr1ZNSACVenSpeed ^ FrontOfficeFlr1ZNSACFanPwrExp),
+      SET FrontOfficeFlr1ZNSACFPR = FrontOfficeFlr1ZNSACFPR+FrontOfficeFlr1ZNSACEco*(FrontOfficeFlr1ZNSACEcoSpeed^FrontOfficeFlr1ZNSACFanPwrExp),
+      SET FrontOfficeFlr1ZNSACFPR1 = FrontOfficeFlr1ZNSACStage1*(FrontOfficeFlr1ZNSACStg1Spd^FrontOfficeFlr1ZNSACFanPwrExp),
+      SET FrontOfficeFlr1ZNSACFPR = FrontOfficeFlr1ZNSACFPR+FrontOfficeFlr1ZNSACFPR1,
+      SET FrontOfficeFlr1ZNSACFPR2 = FrontOfficeFlr1ZNSACStage2*(FrontOfficeFlr1ZNSACStg2Spd^FrontOfficeFlr1ZNSACFanPwrExp),
+      SET FrontOfficeFlr1ZNSACFPR = FrontOfficeFlr1ZNSACFPR+FrontOfficeFlr1ZNSACFPR2,
+      SET FrontOfficeFlr1ZNSACFPR3 = FrontOfficeFlr1ZNSACHeating*(FrontOfficeFlr1ZNSACHeatSpeed^FrontOfficeFlr1ZNSACFanPwrExp),
+      SET FrontOfficeFlr1ZNSACFanPwrRatio = FrontOfficeFlr1ZNSACFPR+ FrontOfficeFlr1ZNSACFPR3,
+      ! system fan power is directly proportional to static pressure, so this change linearly adjusts fan energy for speed control
+      SET FrontOfficeFlr1ZNSACFanPressure = FrontOfficeFlr1ZNSACFanDesignPressure*FrontOfficeFlr1ZNSACFanPwrRatio;
+
+    EnergyManagementSystem:Program,
+      FrontOfficeFlr1ZNSACSetNumberofStages,
+      SET FrontOfficeFlr1ZNSACNumberofStages =  2;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      FrontOfficeFlr1ZNSACSetNumberofStagesCallingManager,
+      BeginNewEnvironment,
+      FrontOfficeFlr1ZNSACSetNumberofStages;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      FrontOfficeFlr1ZNSACECOManager,    
+      InsideHVACSystemIterationLoop,  !- EnergyPlus Model Calling Point
+      FrontOfficeFlr1ZNSACEconomizerCTRLProg;  !- Program Name 1
+
+    EnergyManagementSystem:ProgramCallingManager,
+      FrontOfficeFlr1ZNSACFanParametermanager,
+      BeginNewEnvironment,
+      FrontOfficeFlr1ZNSACSetFanPar;
+
+    EnergyManagementSystem:ProgramCallingManager,
+      FrontOfficeFlr1ZNSACFanMainManager,
+      BeginTimestepBeforePredictor,
+      FrontOfficeFlr1ZNSACFanControl;
+
+    
