@@ -22,6 +22,9 @@
 ##### ORNL
 ###### FY15
 - Medium Office
+
+###### FY16
+- Hospital
 - Large Office
 - Warehouse (non-refrigerated)
 
@@ -30,15 +33,14 @@
 - Small Hotel
 - Large Hotel
 - Stand-alone Retail
-- Strip Mall
-- Mid-rise Apartment
 
 ###### FY16
+- Strip Mall
+- Mid-rise Apartment
+- High-rise Apartment
 - Outpatient Healthcare
-- Hospital
 - Quick Service Restaurant
 - Full Service Restaurant
-- High-rise Apartment
 
 #### General TODO
 - [ ] Booster Water Heaters
