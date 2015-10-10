@@ -96,7 +96,6 @@ begin
   # cols_to_skip << 'service_water_heating_schedule'
   cols_to_skip << 'exhaust_per_area'
   cols_to_skip << 'exhaust_per_unit'
-  cols_to_skip << 'exhaust_fan_power'
   cols_to_skip << 'exhaust_fan_power_per_area'
   
   # List of columns that are boolean

@@ -183,22 +183,22 @@ class OpenStudio::Model::Model
         exhaust_fan_space_types =['Banquet', 'Kitchen','Laundry']
     end
 
-    exhaust_fan_space_types.each do |space_type|
-      space_type_data = self.find_object(self.standards['space_types'], {'template'=>building_vintage, 'building_type'=>building_type, 'space_type'=>space_type})
+    exhaust_fan_space_types.each do |space_type_name|
+      space_type_data = self.find_object(self.standards['space_types'], {'template'=>building_vintage, 'building_type'=>building_type, 'space_type'=>space_type_name})
       if space_type_data == nil
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find space type #{building_vintage}-#{building_type}-#{space_type}")
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find space type #{building_vintage}-#{building_type}-#{space_type_name}")
         return false
       end
 
       exhaust_schedule = add_schedule(space_type_data['exhaust_schedule'])
       if exhaust_schedule.class.to_s == "NilClass"
-        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find Exhaust Schedule for space type #{building_vintage}-#{building_type}-#{space_type}")
+        OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Unable to find Exhaust Schedule for space type #{building_vintage}-#{building_type}-#{space_type_name}")
         return false
       end
 
       balanced_exhaust_schedule = add_schedule(space_type_data['balanced_exhaust_fraction_schedule'])
 
-      space_names = space_type_map[space_type]
+      space_names = space_type_map[space_type_name]
       space_names.each do |space_name|
         space = self.getSpaceByName(space_name).get
         thermal_zone = space.thermalZone.get
@@ -216,6 +216,22 @@ class OpenStudio::Model::Model
         end
         zone_exhaust_fan.setEndUseSubcategory("Zone Exhaust Fans")
         zone_exhaust_fan.addToThermalZone(thermal_zone)
+
+        if space_type_data['exhaust_fan_power'] != nil and space_type_data['exhaust_fan_power'].to_f != 0
+          # Create the electric equipment definition
+          exhaust_fan_equip_def = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
+          exhaust_fan_equip_def.setName("#{space_name} Electric Equipment Definition")
+          exhaust_fan_equip_def.setDesignLevel(space_type_data['exhaust_fan_power'].to_f)
+          exhaust_fan_equip_def.setFractionLatent(0)
+          exhaust_fan_equip_def.setFractionRadiant(0)
+          exhaust_fan_equip_def.setFractionLost(1)
+
+          # Create the electric equipment instance and hook it up to the space type
+          exhaust_fan_elec_equip = OpenStudio::Model::ElectricEquipment.new(exhaust_fan_equip_def)
+          exhaust_fan_elec_equip.setName("#{space_name} Exhaust Fan Equipment")
+          exhaust_fan_elec_equip.setSchedule(exhaust_schedule)
+          exhaust_fan_elec_equip.setSpaceType(space.spaceType.get)
+        end
       end
     end
 
