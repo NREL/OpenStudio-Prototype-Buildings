@@ -1059,13 +1059,16 @@ class OpenStudio::Model::Model
     # Interior surfaces constructions
     interior_surfaces = OpenStudio::Model::DefaultSurfaceConstructions.new(self)
     construction_set.setDefaultInteriorSurfaceConstructions(interior_surfaces)
-    if construction_name = data['interior_floors']
+    construction_name = data['interior_floors']
+    if construction_name != nil
       interior_surfaces.setFloorConstruction(add_construction(construction_name))
     end
-    if construction_name = data['interior_walls']
+    construction_name = data['interior_walls']
+    if construction_name != nil
       interior_surfaces.setWallConstruction(add_construction(construction_name))
     end
-    if construction_name = data['interior_ceilings']
+    construction_name = data['interior_ceilings']
+    if construction_name != nil
       interior_surfaces.setRoofCeilingConstruction(add_construction(construction_name))
     end
 
@@ -1118,7 +1121,8 @@ class OpenStudio::Model::Model
                                                                        data['exterior_door_standards_construction_type'],
                                                                        data['exterior_door_building_category']))
     end
-    if construction_name = data['exterior_glass_doors']
+    construction_name = data['exterior_glass_doors']
+    if construction_name != nil
       exterior_subsurfaces.setGlassDoorConstruction(add_construction(construction_name))
     end
     if data['exterior_overhead_door_standards_construction_type'] && data['exterior_overhead_door_building_category']

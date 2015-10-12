@@ -46,8 +46,10 @@ class OpenStudio::Model::FanConstantVolume
     elsif allowed_hp < 0.01
       allowed_hp = 0.01
     end
-    puts "brake_hp = #{self.name}  #{brake_hp}"
-    puts "allowed_hp = #{self.name} #{allowed_hp}"
+
+    # From YXC: Remove debug info
+    # puts "brake_hp = #{self.name}  #{brake_hp}"
+    # puts "allowed_hp = #{self.name} #{allowed_hp}"
     
     # Find the motor that meets these size criteria
     search_criteria = {

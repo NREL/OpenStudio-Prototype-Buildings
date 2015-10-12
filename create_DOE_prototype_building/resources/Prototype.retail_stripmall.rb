@@ -75,7 +75,6 @@ class OpenStudio::Model::Model
     # hot_water_loop = self.add_hw_loop(prototype_input, hvac_standards)
     
     system_to_space_map.each do |system|
-
       #find all zones associated with these spaces
       thermal_zones = []
       system['space_names'].each do |space_name|
@@ -94,16 +93,16 @@ class OpenStudio::Model::Model
       end
 
       case system['type']
-      when 'CAV'
-        self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
+        when 'CAV'
+          self.add_psz_ac(prototype_input, hvac_standards, system['name'], thermal_zones)
+        else
+          OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "HVAC system type (#{system['type']}) was not defined for strip mall.")
+          return false
       end
-
     end
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
-    
     return true
-    
   end #add hvac
 
   def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
