@@ -1052,7 +1052,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # For Yixing Chen in LBNL to run heavy testing
   if hostname == "cbes2"
     def test_case
-      bldg_types = ['LargeHotel']#'LargeHotel','RetailStandalone']
+      bldg_types = ['RetailStripmall']#'LargeHotel','RetailStandalone','RetailStripmall']
 
       # Run the simulations in 2 parts.
       if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")
