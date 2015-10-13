@@ -187,7 +187,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
   
   # Create a set of models, return a list of failures  
-  def compare_results(bldg_types, vintages, climate_zones)
+  def compare_results(bldg_types, vintages, climate_zones, file_ext="")
   
     #### Compare results against legacy idf results      
     acceptable_error_percentage = 10 # Max 5% error for any end use/fuel type combo
@@ -366,7 +366,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           results_total_hash[building_type][building_vintage][climate_zone] = total_percent_error
 
           # Save the results to JSON
-          File.open("#{Dir.pwd}/build/#{model_name}/comparison.json", 'w') do |file|
+          File.open("#{Dir.pwd}/build/#{model_name}/comparison#{file_ext}.json", 'w') do |file|
             file << JSON::pretty_generate(results_hash)
           end
         end
@@ -417,7 +417,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
     #######
     # results_total_hash[building_type][building_vintage][climate_zone]
-    csv_file_total = File.open("#{Dir.pwd}/build/comparison_total.csv", 'w')
+    csv_file_total = File.open("#{Dir.pwd}/build/comparison_total#{file_ext}.csv", 'w')
     # Write the header
     csv_file_total.write("building_type,building_vintage,climate_zone,")
     line2_str =",,,"
@@ -441,8 +441,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
 
     # Create a CSV to store the results
-    csv_file = File.open("#{Dir.pwd}/build/comparison.csv", 'w')
-    csv_file_simple = File.open("#{Dir.pwd}/build/comparison_simple.csv", 'w')
+    csv_file = File.open("#{Dir.pwd}/build/comparison#{file_ext}.csv", 'w')
+    csv_file_simple = File.open("#{Dir.pwd}/build/comparison_simple#{file_ext}.csv", 'w')
 
     # Write the header
     csv_file.write("building_type,building_vintage,climate_zone,")
@@ -1057,8 +1057,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       # Run the simulations in 2 parts.
       if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")
         vintages = ['DOE Ref Pre-1980', '90.1-2004','90.1-2013']
+        file_ext = "2"
       else
         vintages = ['DOE Ref 1980-2004', '90.1-2007','90.1-2010']
+        file_ext = ""
       end
 
       # Specify the climate zones you want to run.
@@ -1081,7 +1083,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       all_failures += run_models(bldg_types, vintages, climate_zones)
 
       # Compare the results to the legacy idf results
-      all_failures += compare_results(bldg_types, vintages, climate_zones)
+      all_failures += compare_results(bldg_types, vintages, climate_zones,file_ext)
 
       # Assert if there are any errors
       puts "There were #{all_failures.size} failures"
