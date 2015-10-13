@@ -530,7 +530,7 @@ class OpenStudio::Model::Model
         additional_lights_def.setFractionVisible(lights_frac_visible)
 
         # Create the lighting instance and hook it up to the space type
-        additional_lights = OpenStudio::Model::Lights.new(lights_def)
+        additional_lights = OpenStudio::Model::Lights.new(additional_lights_def)
         additional_lights.setName("#{name} Additional Lights")
         additional_lights.setSpaceType(space_type)
       end
@@ -540,9 +540,6 @@ class OpenStudio::Model::Model
       unless lighting_sch.nil?
         default_sch_set.setLightingSchedule(add_schedule(lighting_sch))
       end
-
-
-
     end
 
     # Ventilation
