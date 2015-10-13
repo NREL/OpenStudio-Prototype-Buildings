@@ -118,7 +118,7 @@ class OpenStudio::Model::Model
   end #add hvac
 
   def add_swh(building_type, building_vintage, climate_zone, prototype_input, hvac_standards, space_type_map)
-   
+    return true if building_vintage == "DOE Ref Pre-1980" or building_vintage == "DOE Ref 1980-2004"
     OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Model", "Started Adding SWH")
     # Add the main service hot water loop
     swh_space_names = ["LGstore1","SMstore1","SMstore2","SMstore3","LGstore2","SMstore5","SMstore6"]
