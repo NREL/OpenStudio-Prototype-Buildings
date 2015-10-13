@@ -486,7 +486,6 @@ class OpenStudio::Model::Model
     space_type.setDefaultScheduleSet(default_sch_set)
 
     # Lighting
-
     make_lighting = false
     lighting_per_area = data['lighting_per_area']
     lighting_per_person = data['lighting_per_person']
@@ -519,11 +518,30 @@ class OpenStudio::Model::Model
       lights.setName("#{name} Lights")
       lights.setSpaceType(space_type)
 
+      # Additional Lighting
+      additional_lighting_per_area = data['additional_lighting_per_area']
+      if additional_lighting_per_area != nil
+        # Create the lighting definition
+        additional_lights_def = OpenStudio::Model::LightsDefinition.new(self)
+        additional_lights_def.setName("#{name} Additional Lights Definition")
+        additional_lights_def.setWattsperSpaceFloorArea(OpenStudio.convert(additional_lighting_per_area, 'W/ft^2', 'W/m^2').get)
+        additional_lights_def.setReturnAirFraction(lights_frac_to_return_air)
+        additional_lights_def.setFractionRadiant(lights_frac_radiant)
+        additional_lights_def.setFractionVisible(lights_frac_visible)
+
+        # Create the lighting instance and hook it up to the space type
+        additional_lights = OpenStudio::Model::Lights.new(lights_def)
+        additional_lights.setName("#{name} Additional Lights")
+        additional_lights.setSpaceType(space_type)
+      end
+
       # Get the lighting schedule and set it as the default
       lighting_sch = data['lighting_schedule']
       unless lighting_sch.nil?
         default_sch_set.setLightingSchedule(add_schedule(lighting_sch))
       end
+
+
 
     end
 

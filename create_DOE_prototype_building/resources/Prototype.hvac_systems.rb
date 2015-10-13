@@ -821,7 +821,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_psz_ac(prototype_input, standards, sys_name, thermal_zones, fan_location = "DrawThrough", hot_water_loop = nil, chilled_water_loop = nil)
+  def add_psz_ac(prototype_input, standards, sys_name, thermal_zones, fan_location = "DrawThrough", hot_water_loop = nil, chilled_water_loop = nil, schedule_index = "")
 
     unless hot_water_loop.nil? or chilled_water_loop.nil?
       hw_temp_f = 180 #HW setpoint 180F 
@@ -842,10 +842,10 @@ class OpenStudio::Model::Model
     end
 
     # hvac operation schedule
-    hvac_op_sch = self.add_schedule(prototype_input['pszac_operation_schedule'])
+    hvac_op_sch = self.add_schedule(prototype_input["pszac_operation_schedule#{schedule_index}"])
     
     # motorized oa damper schedule
-    motorized_oa_damper_sch = self.add_schedule(prototype_input['pszac_oa_damper_schedule']) 
+    motorized_oa_damper_sch = self.add_schedule(prototype_input["pszac_oa_damper_schedule#{schedule_index}"])
       
     # Make a PSZ-AC for each zone
     thermal_zones.each do |zone|
