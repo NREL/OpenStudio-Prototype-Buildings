@@ -593,7 +593,10 @@ class OpenStudio::Model::Model
     make_infiltration = false
     infiltration_per_area_ext = data['infiltration_per_exterior_area']
     infiltration_per_area_ext_wall = data['infiltration_per_exterior_wall_area']
-    unless (infiltration_per_area_ext == 0 || infiltration_per_area_ext.nil?) &&  (infiltration_per_area_ext_wall == 0 || infiltration_per_area_ext_wall.nil?) then make_infiltration = true end
+    infiltration_ach = data['infiltration_air_changes']
+    unless (infiltration_per_area_ext == 0 || infiltration_per_area_ext.nil?) && (infiltration_per_area_ext_wall == 0 || infiltration_per_area_ext_wall.nil?) && (infiltration_ach == 0 || infiltration_ach.nil?) 
+      then make_infiltration = true
+    end
 
     if make_infiltration == true
 
@@ -606,6 +609,9 @@ class OpenStudio::Model::Model
       end
       unless infiltration_per_area_ext_wall == 0 || infiltration_per_area_ext_wall.nil?
         infiltration.setFlowperExteriorWallArea(OpenStudio.convert(infiltration_per_area_ext_wall, 'ft^3/min*ft^2', 'm^3/s*m^2').get)
+      end
+      unless infiltration_ach == 0 || infiltration_ach.nil?
+        infiltration.setAirChangesperHour(infiltration_ach)
       end
 
       # Get the infiltration schedule from the library and set as the default

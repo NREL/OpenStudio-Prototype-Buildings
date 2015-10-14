@@ -105,6 +105,8 @@ class OpenStudio::Model::Model
 
       # Get the standard building type
       # from the stub
+      puts "stub_space_type = #{stub_space_type}"
+      
       stds_building_type = nil
       if stub_space_type.standardsBuildingType.is_initialized
         stds_building_type = stub_space_type.standardsBuildingType.get
@@ -112,6 +114,7 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Space type called '#{stub_space_type.name}' has no standards building type.")
         return false
       end
+      puts "stds_building_type = #{stds_building_type}"
       
       # Get the standards space type
       # from the stub
@@ -122,6 +125,7 @@ class OpenStudio::Model::Model
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Space type called '#{stub_space_type.name}' has no standards space type.")
         return false
       end
+      puts "stds_spc_type = #{stds_spc_type}"
       new_space_type = self.add_space_type(building_vintage, 'ClimateZone 1-8', stds_building_type, stds_spc_type)
 
       # Apply the new space type to the building      
