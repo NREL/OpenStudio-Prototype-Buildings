@@ -1271,6 +1271,9 @@ class OpenStudio::Model::Space
       req_pri_ctrl = true
       
       areas = self.daylighted_areas(vintage, draw_daylight_areas_for_debugging)
+      ###################
+      puts "primary_sidelighted_area = #{areas['primary_sidelighted_area']}"
+      ###################
       
       # Sidelighting
       # Check if the primary sidelit area < 250 ft2
@@ -1283,6 +1286,9 @@ class OpenStudio::Model::Space
       else     
         # Check effective sidelighted aperture
         sidelighted_effective_aperture = self.sidelightingEffectiveAperture(areas['primary_sidelighted_area'])
+        ###################
+        puts "sidelighted_effective_aperture_pri = #{sidelighted_effective_aperture}"
+        ###################
         if sidelighted_effective_aperture < 0.1
           OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Space", "For #{vintage} #{self.name}, primary sidelighting control not required because sidelighted effective aperture < 0.1 per 9.4.1.4 Exception b.")
           req_pri_ctrl = false
@@ -1295,6 +1301,9 @@ class OpenStudio::Model::Space
         end
       end
       
+      ###################
+      puts "toplighted_area = #{areas['toplighted_area']}"
+      ###################
       # Toplighting
       # Check if the toplit area < 900 ft2
       if areas['toplighted_area'] == 0.0
@@ -1306,6 +1315,9 @@ class OpenStudio::Model::Space
       else      
         # Check effective sidelighted aperture
         sidelighted_effective_aperture = self.skylightEffectiveAperture(areas['toplighted_area'])
+        ###################
+        puts "sidelighted_effective_aperture_top = #{sidelighted_effective_aperture}"
+        ###################
         if sidelighted_effective_aperture < 0.006
           OpenStudio::logFree(OpenStudio::Info, "openstudio.model.Space", "For #{vintage} #{self.name}, toplighting control not required because skylight effective aperture < 0.006 per 9.4.1.5 Exception b.")
           req_top_ctrl = false

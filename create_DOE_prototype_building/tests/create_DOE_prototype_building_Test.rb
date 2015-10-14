@@ -881,48 +881,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
 
-    def dont_test_quick_service_restaurant
-      bldg_types = ['QuickServiceRestaurant']
-      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
-      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
-
-      all_failures = []
-
-      # Create the models
-      all_failures += create_models(bldg_types, vintages, climate_zones)
-
-      # Run the models
-      all_failures += run_models(bldg_types, vintages, climate_zones)
-
-      # Compare the results to the legacy idf results
-      all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-      # Assert if there are any errors
-      puts "There were #{all_failures.size} failures"
-      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    end
-
-    def dont_test_full_service_restaurant
-      bldg_types = ['FullServiceRestaurant']
-      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
-      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
-
-      all_failures = []
-
-      # Create the models
-      all_failures += create_models(bldg_types, vintages, climate_zones)
-
-      # Run the models
-      all_failures += run_models(bldg_types, vintages, climate_zones)
-
-      # Compare the results to the legacy idf results
-      all_failures += compare_results(bldg_types, vintages, climate_zones)
-
-      # Assert if there are any errors
-      puts "There were #{all_failures.size} failures"
-      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
-    end
-
     def dont_test_hospital
       bldg_types = ['Hospital']
       vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
@@ -991,21 +949,63 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
 
   # For Kaiyu Sun in LBNL
   if hostname == "SRG-SKY" 
-    def test_small_hotel_ptool
+    def dont_test_small_hotel_ptool
       bldg_types = ['SmallHotel']
       # vintages = ['DOE Ref 1980-2004', 'DOE Ref Pre-1980','90.1-2004'] 
-      # vintages = ['90.1-2004'] 
-      vintages = ['DOE Ref 1980-2004', 'DOE Ref Pre-1980', '90.1-2007', '90.1-2010', '90.1-2013', '90.1-2004'] 
+      vintages = ['90.1-2004'] 
+      # vintages = ['DOE Ref 1980-2004', 'DOE Ref Pre-1980', '90.1-2007', '90.1-2010', '90.1-2013', '90.1-2004'] 
        # climate_zones = ['ASHRAE 169-2006-1A', 'ASHRAE 169-2006-1B', 'ASHRAE 169-2006-2A','ASHRAE 169-2006-2B',
                         # 'ASHRAE 169-2006-3A', 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-3C', 'ASHRAE 169-2006-4A',
                         # 'ASHRAE 169-2006-4B', 'ASHRAE 169-2006-4C', 'ASHRAE 169-2006-5A', 'ASHRAE 169-2006-5B',
                         # 'ASHRAE 169-2006-5C', 'ASHRAE 169-2006-6A', 'ASHRAE 169-2006-6B', 'ASHRAE 169-2006-7A',
                         # 'ASHRAE 169-2006-8A', 'ASHRAE 169-2006-8B']
-       climate_zones = ['ASHRAE 169-2006-1A', 'ASHRAE 169-2006-2A','ASHRAE 169-2006-2B',
-                        'ASHRAE 169-2006-3A', 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-3C', 'ASHRAE 169-2006-4A',
-                        'ASHRAE 169-2006-4B', 'ASHRAE 169-2006-4C', 'ASHRAE 169-2006-5A', 'ASHRAE 169-2006-5B',
-                        'ASHRAE 169-2006-6A', 'ASHRAE 169-2006-6B', 'ASHRAE 169-2006-7A', 'ASHRAE 169-2006-8A'] 
-      # climate_zones = ['ASHRAE 169-2006-3C']  # for test
+       # climate_zones = ['ASHRAE 169-2006-1A', 'ASHRAE 169-2006-2A','ASHRAE 169-2006-2B',
+                        # 'ASHRAE 169-2006-3A', 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-3C', 'ASHRAE 169-2006-4A',
+                        # 'ASHRAE 169-2006-4B', 'ASHRAE 169-2006-4C', 'ASHRAE 169-2006-5A', 'ASHRAE 169-2006-5B',
+                        # 'ASHRAE 169-2006-6A', 'ASHRAE 169-2006-6B', 'ASHRAE 169-2006-7A', 'ASHRAE 169-2006-8A'] 
+      climate_zones = ['ASHRAE 169-2006-3C']  # for test
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      # all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      # all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+    
+    def test_quick_service_restaurant
+      bldg_types = ['QuickServiceRestaurant']
+      vintages = ['90.1-2010'] #, 'DOE Ref 1980-2004','DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
+
+      all_failures = []
+
+      # Create the models
+      all_failures += create_models(bldg_types, vintages, climate_zones)
+
+      # Run the models
+      # all_failures += run_models(bldg_types, vintages, climate_zones)
+
+      # Compare the results to the legacy idf results
+      # all_failures += compare_results(bldg_types, vintages, climate_zones)
+
+      # Assert if there are any errors
+      puts "There were #{all_failures.size} failures"
+      assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
+    end
+
+    def dont_test_full_service_restaurant
+      bldg_types = ['FullServiceRestaurant']
+      vintages = ['90.1-2010'] #'DOE Ref 1980-2004', 'DOE Ref Pre-1980', ']
+      climate_zones = ['ASHRAE 169-2006-2A']# 'ASHRAE 169-2006-3B', 'ASHRAE 169-2006-4A', 'ASHRAE 169-2006-5A']
 
       all_failures = []
 
@@ -1022,6 +1022,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       puts "There were #{all_failures.size} failures"
       assert(all_failures.size == 0, "FAILURES: #{all_failures.join("\n")}")
     end
+    
+    
   end
 
   # For Yixing Chen in LBNL
