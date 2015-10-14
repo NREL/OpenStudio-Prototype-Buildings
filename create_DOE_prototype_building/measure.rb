@@ -146,12 +146,13 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       log_msgs
       return false
     end
-    
-    OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
-    prototype_input.each do |key, value|
-      next if value.nil?
-      OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "  #{key} = #{value}")
-    end
+
+    # Output detailed information in debug only
+    # OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "Creating #{building_type}-#{building_vintage}-#{climate_zone} with these inputs:")
+    # prototype_input.each do |key, value|
+    #   next if value.nil?
+    #   OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', "  #{key} = #{value}")
+    # end
     
     # Make a directory to save the resulting models for debugging
     build_dir = "#{Dir.pwd}/build"
@@ -308,7 +309,6 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
     # Set the Day of Week for Start Day
     model.yearDescription.get.setDayofWeekforStartDay('Sunday')
 
-    
     # # raise the upper limit of surface temperature
     # heat_balance_algorithm = Openstudio::Model::getUniqueObject<HeatBalanceAlgorithm>(model)
     # heat_balance_algorithm = model.getOptionalUniqueObject<HeatBalanceAlgorithm>()

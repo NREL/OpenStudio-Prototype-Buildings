@@ -1210,6 +1210,18 @@
       ]
     },
     {
+      "name": "U 0.60 SHGC 0.25 Dbl 2.5mm air",
+      "intended_surface_type": null,
+      "standards_construction_type": null,
+      "insulation_layer": null,
+      "sort": null,
+      "materials": [
+        "Glass_2175_LayerAvg",
+        "Gap_1_W_0_0025",
+        "Glass_2022F_LayerAvg"
+      ]
+    },
+    {
       "name": "U 0.61 SHGC 0.77 Simple Glazing Skylight",
       "intended_surface_type": null,
       "standards_construction_type": null,

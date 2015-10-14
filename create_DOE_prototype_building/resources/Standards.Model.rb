@@ -486,7 +486,6 @@ class OpenStudio::Model::Model
     space_type.setDefaultScheduleSet(default_sch_set)
 
     # Lighting
-
     make_lighting = false
     lighting_per_area = data['lighting_per_area']
     lighting_per_person = data['lighting_per_person']
@@ -519,12 +518,28 @@ class OpenStudio::Model::Model
       lights.setName("#{name} Lights")
       lights.setSpaceType(space_type)
 
+      # Additional Lighting
+      additional_lighting_per_area = data['additional_lighting_per_area']
+      if additional_lighting_per_area != nil
+        # Create the lighting definition
+        additional_lights_def = OpenStudio::Model::LightsDefinition.new(self)
+        additional_lights_def.setName("#{name} Additional Lights Definition")
+        additional_lights_def.setWattsperSpaceFloorArea(OpenStudio.convert(additional_lighting_per_area, 'W/ft^2', 'W/m^2').get)
+        additional_lights_def.setReturnAirFraction(lights_frac_to_return_air)
+        additional_lights_def.setFractionRadiant(lights_frac_radiant)
+        additional_lights_def.setFractionVisible(lights_frac_visible)
+
+        # Create the lighting instance and hook it up to the space type
+        additional_lights = OpenStudio::Model::Lights.new(additional_lights_def)
+        additional_lights.setName("#{name} Additional Lights")
+        additional_lights.setSpaceType(space_type)
+      end
+
       # Get the lighting schedule and set it as the default
       lighting_sch = data['lighting_schedule']
       unless lighting_sch.nil?
         default_sch_set.setLightingSchedule(add_schedule(lighting_sch))
       end
-
     end
 
     # Ventilation
@@ -1059,13 +1074,16 @@ class OpenStudio::Model::Model
     # Interior surfaces constructions
     interior_surfaces = OpenStudio::Model::DefaultSurfaceConstructions.new(self)
     construction_set.setDefaultInteriorSurfaceConstructions(interior_surfaces)
-    if construction_name = data['interior_floors']
+    construction_name = data['interior_floors']
+    if construction_name != nil
       interior_surfaces.setFloorConstruction(add_construction(construction_name))
     end
-    if construction_name = data['interior_walls']
+    construction_name = data['interior_walls']
+    if construction_name != nil
       interior_surfaces.setWallConstruction(add_construction(construction_name))
     end
-    if construction_name = data['interior_ceilings']
+    construction_name = data['interior_ceilings']
+    if construction_name != nil
       interior_surfaces.setRoofCeilingConstruction(add_construction(construction_name))
     end
 
@@ -1118,7 +1136,8 @@ class OpenStudio::Model::Model
                                                                        data['exterior_door_standards_construction_type'],
                                                                        data['exterior_door_building_category']))
     end
-    if construction_name = data['exterior_glass_doors']
+    construction_name = data['exterior_glass_doors']
+    if construction_name != nil
       exterior_subsurfaces.setGlassDoorConstruction(add_construction(construction_name))
     end
     if data['exterior_overhead_door_standards_construction_type'] && data['exterior_overhead_door_building_category']

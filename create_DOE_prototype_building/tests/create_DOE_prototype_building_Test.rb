@@ -106,7 +106,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     bldg_types.sort.each do |building_type|
       vintages.sort.each do |building_vintage|
         climate_zones.sort.each do |climate_zone|
-
           # Load the .osm
           model = nil
           model_directory = "#{Dir.pwd}/build/#{building_type}-#{building_vintage}-#{climate_zone}"
@@ -188,7 +187,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   end
   
   # Create a set of models, return a list of failures  
-  def compare_results(bldg_types, vintages, climate_zones)
+  def compare_results(bldg_types, vintages, climate_zones, file_ext="")
   
     #### Compare results against legacy idf results      
     acceptable_error_percentage = 10 # Max 5% error for any end use/fuel type combo
@@ -232,7 +231,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           # Create a hash of hashes to store the results from each file
           results_hash = Hash.new{|h,k| h[k]=Hash.new(&h.default_proc) }
 
-
           # Get the osm values for all fuel type/end use pairs
           # and compare to the legacy idf results
           total_legacy_energy_val = 0
@@ -242,7 +240,6 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           fuel_types.each do |fuel_type|
             end_uses.each do |end_use|
               next if end_use == 'Exterior Equipment'
-
               # Get the legacy results number
               legacy_val = legacy_idf_results.dig(building_type, building_vintage, climate_zone, fuel_type, end_use)
               # Combine the exterior lighting and exterior equipment
@@ -369,7 +366,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
           results_total_hash[building_type][building_vintage][climate_zone] = total_percent_error
 
           # Save the results to JSON
-          File.open("#{Dir.pwd}/build/#{model_name}/comparison.json", 'w') do |file|
+          File.open("#{Dir.pwd}/build/#{model_name}/comparison#{file_ext}.json", 'w') do |file|
             file << JSON::pretty_generate(results_hash)
           end
         end
@@ -420,7 +417,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
     #######
     # results_total_hash[building_type][building_vintage][climate_zone]
-    csv_file_total = File.open("#{Dir.pwd}/build/comparison_total.csv", 'w')
+    csv_file_total = File.open("#{Dir.pwd}/build/comparison_total#{file_ext}.csv", 'w')
     # Write the header
     csv_file_total.write("building_type,building_vintage,climate_zone,")
     line2_str =",,,"
@@ -444,8 +441,8 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
     
 
     # Create a CSV to store the results
-    csv_file = File.open("#{Dir.pwd}/build/comparison.csv", 'w')
-    csv_file_simple = File.open("#{Dir.pwd}/build/comparison_simple.csv", 'w')
+    csv_file = File.open("#{Dir.pwd}/build/comparison#{file_ext}.csv", 'w')
+    csv_file_simple = File.open("#{Dir.pwd}/build/comparison_simple#{file_ext}.csv", 'w')
 
     # Write the header
     csv_file.write("building_type,building_vintage,climate_zone,")
@@ -729,10 +726,10 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       all_failures = []
 
       # Create the models
-      #all_failures += create_models(bldg_types, vintages, climate_zones)
+      all_failures += create_models(bldg_types, vintages, climate_zones)
 
       # Run the models
-      #all_failures += run_models(bldg_types, vintages, climate_zones)
+      all_failures += run_models(bldg_types, vintages, climate_zones)
 
       # Compare the results to the legacy idf results
       all_failures += compare_results(bldg_types, vintages, climate_zones)
@@ -1031,7 +1028,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   if hostname == "yxc_lbnl"
     def test_case
       # RetailStandalone, LargeHotel,RetailStripmall
-      bldg_types = ['LargeHotel']
+      bldg_types = ['RetailStripmall']
       vintages = ['DOE Ref 1980-2004']
       climate_zones =['ASHRAE 169-2006-2A']
 
@@ -1055,13 +1052,15 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
   # For Yixing Chen in LBNL to run heavy testing
   if hostname == "cbes2"
     def test_case
-      bldg_types = ['LargeHotel']#'LargeHotel','RetailStandalone']
+      bldg_types = ['RetailStripmall']#'LargeHotel','RetailStandalone','RetailStripmall']
 
       # Run the simulations in 2 parts.
       if File.expand_path(File.dirname(__FILE__)).include?("OpenStudio-Prototype-Buildings2")
         vintages = ['DOE Ref Pre-1980', '90.1-2004','90.1-2013']
+        file_ext = "2"
       else
         vintages = ['DOE Ref 1980-2004', '90.1-2007','90.1-2010']
+        file_ext = ""
       end
 
       # Specify the climate zones you want to run.
@@ -1084,7 +1083,7 @@ class CreateDOEPrototypeBuildingTest < Minitest::Unit::TestCase
       all_failures += run_models(bldg_types, vintages, climate_zones)
 
       # Compare the results to the legacy idf results
-      all_failures += compare_results(bldg_types, vintages, climate_zones)
+      all_failures += compare_results(bldg_types, vintages, climate_zones,file_ext)
 
       # Assert if there are any errors
       puts "There were #{all_failures.size} failures"
