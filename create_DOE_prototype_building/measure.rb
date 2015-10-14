@@ -260,7 +260,12 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       alt_search_name = 'StripMall'
     when 'QuickServiceRestaurant'
       require_relative 'resources/Prototype.quick_service_restaurant'
-      geometry_file = 'Geometry.quick_service_restaurant.osm'
+      case building_vintage
+      when 'DOE Ref Pre-1980'
+        geometry_file = 'Geometry.quick_service_restaurant_pre1980.osm'
+      when 'DOE Ref 1980-2004','90.1-2010','90.1-2007','90.1-2004','90.1-2013'
+        geometry_file = 'Geometry.quick_service_restaurant_allothers.osm'
+      end
     when 'FullServiceRestaurant'
       require_relative 'resources/Prototype.full_service_restaurant'
       geometry_file = 'Geometry.full_service_restaurant.osm'
@@ -377,6 +382,10 @@ class CreateDOEPrototypeBuilding < OpenStudio::Ruleset::ModelUserScript
       model.addDaylightingControls
     else
       model.add_daylighting_controls(building_vintage)
+    end
+    
+    if building_type == "QuickServiceRestaurant"
+      model.update_exhaust_fan_efficiency(building_vintage)
     end
    
    
