@@ -111,6 +111,8 @@ class OpenStudio::Model::Model
       end
       # Add infiltration door opening
 
+
+
     end
     
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
