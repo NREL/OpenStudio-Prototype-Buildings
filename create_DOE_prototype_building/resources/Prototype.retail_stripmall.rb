@@ -109,12 +109,36 @@ class OpenStudio::Model::Model
           OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "HVAC system type (#{system['type']}) was not defined for strip mall.")
           return false
       end
-      # Add infiltration door opening
-
-
-
     end
-    
+
+    # Add infiltration door opening
+    # Spaces names to design infiltration rates (m3/s)
+    case building_vintage
+      when '90.1-2004','90.1-2007','90.1-2010', '90.1-2013'
+        door_infiltration_map = { ['LGstore1','LGstore2'] => 0.388884328,
+                                  ['SMstore1','SMstore2', 'SMstore3', 'SMstore4','SMstore5', 'SMstore6', 'SMstore7', 'SMstore8']=>0.222287037}
+
+        door_infiltration_map.each_pair do |space_names, infiltration_design_flowrate|
+          space_names.each do |space_name|
+            space = self.getSpaceByName(space_name).get
+            # Create the infiltration object and hook it up to the space type
+            infiltration = OpenStudio::Model::SpaceInfiltrationDesignFlowRate.new(self)
+            infiltration.setName("#{space_name} Door Open Infiltration")
+            infiltration.setSpace(space)
+            infiltration.setDesignFlowRate(infiltration_design_flowrate)
+            infiltration_schedule = self.add_schedule('RetailStripmall INFIL_Door_Opening_SCH')
+            if infiltration_schedule.nil?
+              OpenStudio::logFree(OpenStudio::Error, 'openstudio.model.Model', "Can't find schedule (RetailStripmall INFIL_Door_Opening_SCH).")
+              return false
+            else
+              infiltration.setSchedule(infiltration_schedule)
+            end
+          end
+        end
+      else
+        # do nothing for the old vintage
+    end
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Finished adding HVAC')
     return true
   end #add hvac
