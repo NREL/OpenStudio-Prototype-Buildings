@@ -83,10 +83,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -171,10 +171,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -259,10 +259,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -347,10 +347,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 8.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -435,10 +435,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 8.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -523,10 +523,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 8.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -611,10 +611,10 @@
       "doas_fan_maximum_flow_rate": 4346.24464,
       "doas_oa_damper_schedule": "HotelLarge MinOA_Sched",
       "doas_economizer_control_type": "DifferentialDrybulb",
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 6.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2007",
@@ -699,10 +699,10 @@
       "doas_fan_maximum_flow_rate": 4346.24464,
       "doas_oa_damper_schedule": "HotelLarge MinOA_Sched",
       "doas_economizer_control_type": "DifferentialDrybulb",
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 6.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -787,10 +787,10 @@
       "doas_fan_maximum_flow_rate": 4346.24464,
       "doas_oa_damper_schedule": "HotelLarge MinOA_Sched",
       "doas_economizer_control_type": "DifferentialDrybulb",
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 6.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2013",
@@ -875,10 +875,10 @@
       "doas_fan_maximum_flow_rate": 4346.24464,
       "doas_oa_damper_schedule": "HotelLarge MinOA_Sched",
       "doas_economizer_control_type": "DifferentialDrybulb",
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 6.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -963,10 +963,10 @@
       "doas_fan_maximum_flow_rate": 4346.24464,
       "doas_oa_damper_schedule": "HotelLarge MinOA_Sched",
       "doas_economizer_control_type": "NoEconomizer",
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 6.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -1051,10 +1051,10 @@
       "doas_fan_maximum_flow_rate": 4346.24464,
       "doas_oa_damper_schedule": "HotelLarge MinOA_Sched",
       "doas_economizer_control_type": "NoEconomizer",
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 6.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -1139,10 +1139,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 12.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2007",
@@ -1227,10 +1227,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 12.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -1315,10 +1315,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 12.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -1403,10 +1403,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 12.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -1491,10 +1491,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Traction",
+      "number_of_elevators": 12.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -1579,10 +1579,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
-      "building_elevator_fan_power": 323.8,
-      "building_elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_24_7"
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
+      "elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_24_7"
     },
     {
       "template": "90.1-2007",
@@ -1667,10 +1667,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
-      "building_elevator_fan_power": 323.8,
-      "building_elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_24_7"
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
+      "elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_24_7"
     },
     {
       "template": "90.1-2010",
@@ -1755,10 +1755,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
-      "building_elevator_fan_power": 211.8,
-      "building_elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_ADD_DF"
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
+      "elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_ADD_DF"
     },
     {
       "template": "90.1-2013",
@@ -1843,10 +1843,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
-      "building_elevator_fan_power": 125.0,
-      "building_elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_ADD_DF"
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "OfficeMedium BLDG_ELEVATORS",
+      "elevator_fan_schedule": "OfficeMedium ELEV_LIGHT_FAN_SCH_ADD_DF"
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -1931,10 +1931,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -2019,10 +2019,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.8901098901,
-      "building_elevator_schedule": "Medium Office BLDG ELEVATORS",
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "Medium Office BLDG ELEVATORS",
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -2107,10 +2107,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 3.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -2195,10 +2195,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 3.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -2283,10 +2283,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 3.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -2371,10 +2371,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2007",
@@ -2459,10 +2459,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -2547,10 +2547,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2013",
@@ -2635,10 +2635,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -2723,10 +2723,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -2811,10 +2811,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -2899,10 +2899,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -2987,10 +2987,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -3075,10 +3075,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2013",
@@ -3163,10 +3163,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -3251,10 +3251,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2007",
@@ -3339,10 +3339,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -3427,10 +3427,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -3515,10 +3515,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -3603,10 +3603,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2013",
@@ -3691,10 +3691,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -3779,10 +3779,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2007",
@@ -3867,10 +3867,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -3955,10 +3955,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -4043,10 +4043,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -4131,10 +4131,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -4219,10 +4219,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.89,
-      "building_elevator_schedule": "SchoolSecondary BLDG_ELEVATORS",
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "SchoolSecondary BLDG_ELEVATORS",
+      "elevator_fan_schedule": "SchoolSecondary ELEV_LIGHT_FAN_SCH_24_7"
     },
     {
       "template": "90.1-2007",
@@ -4307,10 +4307,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.89,
-      "building_elevator_schedule": "SchoolSecondary BLDG_ELEVATORS",
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "SchoolSecondary BLDG_ELEVATORS",
+      "elevator_fan_schedule": "SchoolSecondary ELEV_LIGHT_FAN_SCH_24_7"
     },
     {
       "template": "90.1-2010",
@@ -4395,10 +4395,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.89,
-      "building_elevator_schedule": "SchoolSecondary BLDG_ELEVATORS",
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "SchoolSecondary BLDG_ELEVATORS",
+      "elevator_fan_schedule": "SchoolSecondary ELEV_LIGHT_FAN_SCH_ADD_DF"
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -4483,10 +4483,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.89,
-      "building_elevator_schedule": "SecondarySchool BLDG ELEVATORS",
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "SecondarySchool BLDG ELEVATORS",
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -4571,10 +4571,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": 32109.89,
-      "building_elevator_schedule": "SecondarySchool BLDG ELEVATORS",
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": "SecondarySchool BLDG ELEVATORS",
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -4659,10 +4659,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2007",
@@ -4747,10 +4747,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -4835,10 +4835,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2013",
@@ -4923,10 +4923,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -5011,10 +5011,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -5099,10 +5099,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": "Hydraulic",
+      "number_of_elevators": 2.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2004",
@@ -5187,10 +5187,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2007",
@@ -5275,10 +5275,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -5363,10 +5363,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2013",
@@ -5451,10 +5451,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -5539,10 +5539,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -5627,10 +5627,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "90.1-2010",
@@ -5715,10 +5715,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -5803,10 +5803,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -5891,10 +5891,10 @@
       "doas_fan_maximum_flow_rate": null,
       "doas_oa_damper_schedule": null,
       "doas_economizer_control_type": null,
-      "building_elevator_power": null,
-      "building_elevator_schedule": null,
-      "building_elevator_fan_power": null,
-      "building_elevator_fan_schedule": null
+      "elevator_type": null,
+      "number_of_elevators": 0.0,
+      "elevator_schedule": null,
+      "elevator_fan_schedule": null
     }
   ]
 }
