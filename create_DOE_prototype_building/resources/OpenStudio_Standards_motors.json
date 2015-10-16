@@ -7,8 +7,8 @@
       "synchronous_speed": 1800,
       "minimum_capacity": 0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.825,
-      "notes": "From 90.1-2004 Table 10.8"
+      "nominal_full_load_efficiency": 0.29,
+      "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
       "template": "DOE Ref Pre-1980",
@@ -207,8 +207,8 @@
       "synchronous_speed": 1800,
       "minimum_capacity": 0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.825,
-      "notes": "From 90.1-2004 Table 10.8"
+      "nominal_full_load_efficiency": 0.29,
+      "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
       "template": "DOE Ref 1980-2004",
@@ -407,8 +407,8 @@
       "synchronous_speed": 1800,
       "minimum_capacity": 0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.825,
-      "notes": "From 90.1-2004 Table 10.8"
+      "nominal_full_load_efficiency": 0.29,
+      "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
       "template": "90.1-2004",
@@ -607,8 +607,8 @@
       "synchronous_speed": 1800,
       "minimum_capacity": 0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.825,
-      "notes": "From 90.1-2007 Table 10.8"
+      "nominal_full_load_efficiency": 0.29,
+      "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
       "template": "90.1-2007",
@@ -807,8 +807,8 @@
       "synchronous_speed": 1800,
       "minimum_capacity": 0,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.855,
-      "notes": "From 90.1-2010 Table 10.8B"
+      "nominal_full_load_efficiency": 0.29,
+      "notes": "Motors below 1 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
     },
     {
       "template": "90.1-2010",
@@ -1066,9 +1066,19 @@
       "type": "Enclosed",
       "synchronous_speed": 1800,
       "minimum_capacity": 0,
+      "maximum_capacity": 0.08333,
+      "nominal_full_load_efficiency": 0.29,
+      "notes": "Motors below 1/12 HP assumed to be PSC, with average typical efficiency of 29% per PNNL"
+    },
+    {
+      "template": "90.1-2013",
+      "number_of_poles": 4,
+      "type": "Enclosed",
+      "synchronous_speed": 1800,
+      "minimum_capacity": 0.08334,
       "maximum_capacity": 0.999,
-      "nominal_full_load_efficiency": 0.855,
-      "notes": null
+      "nominal_full_load_efficiency": 0.7,
+      "notes": "Motors between 1/12 and 1 HP must be EC, with minimum efficiency of 70% per PNNL"
     },
     {
       "template": "90.1-2013",

@@ -237,7 +237,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": 0.83,
       "minimum_combustion_efficiency": null,
-      "efffplr": "BOILER_EFFFPLR_NECB2011",
+      "efffplr": "BOILER-EFFFPLR-NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -261,7 +261,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": 1,
       "minimum_combustion_efficiency": null,
-      "efffplr": "BOILER_EFFFPLR_NECB2011",
+      "efffplr": "BOILER-EFFFPLR-NECB2011",
       "notes": "From NECB 2011"
     },
     {
@@ -285,7 +285,7 @@
       "minimum_annual_fuel_utilization_efficiency": null,
       "minimum_thermal_efficiency": 0.834,
       "minimum_combustion_efficiency": null,
-      "efffplr": "BOILER_EFFFPLR_NECB2011",
+      "efffplr": "BOILER-EFFFPLR-NECB2011",
       "notes": "From NECB 2011"
     },
     {

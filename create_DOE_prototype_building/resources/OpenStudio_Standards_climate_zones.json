@@ -233,6 +233,42 @@
       "standard": "CEC Title24-2008",
       "representative_city": null,
       "bcl_weather_component_id": null
+    },
+    {
+      "name": "NECB-CNEB-4",
+      "standard": "NECB 2011",
+      "representative_city": null,
+      "bcl_weather_component_id": null
+    },
+    {
+      "name": "NECB-CNEB-5",
+      "standard": "NECB 2011",
+      "representative_city": null,
+      "bcl_weather_component_id": null
+    },
+    {
+      "name": "NECB-CNEB-6",
+      "standard": "NECB 2011",
+      "representative_city": null,
+      "bcl_weather_component_id": null
+    },
+    {
+      "name": "NECB-CNEB-7a",
+      "standard": "NECB 2011",
+      "representative_city": null,
+      "bcl_weather_component_id": null
+    },
+    {
+      "name": "NECB-CNEB-7b",
+      "standard": "NECB 2011",
+      "representative_city": null,
+      "bcl_weather_component_id": null
+    },
+    {
+      "name": "NECB-CNEB-8",
+      "standard": "NECB 2011",
+      "representative_city": null,
+      "bcl_weather_component_id": null
     }
   ]
 }
