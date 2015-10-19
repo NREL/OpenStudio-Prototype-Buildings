@@ -8,6 +8,7 @@ require 'fileutils'
 
 require 'json'
 require 'rubygems'
+require_relative '../../../../../../OpenStudio-Prototype-Buildings/create_DOE_prototype_building/resources/Standards.export_OpenStudio_Standards.rb'
 
 #This will run all the combinations possible with the inputs for each system.  The test will.
 #0. Save the baseline file as baseline.osm 
