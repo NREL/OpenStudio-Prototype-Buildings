@@ -40,13 +40,15 @@ class OpenStudio::Model::ChillerElectricEIR
         compressor_type = 'Rotary Screw'
       elsif  name.include?('Scroll')
         compressor_type = 'Scroll'
+      elsif name.include?('Centrifugal')
+        compressor_type = 'Centrifugal'
       end
     end
     unless condenser_type.nil?
       search_criteria['condenser_type'] = condenser_type
     end
     unless compressor_type.nil?
-      search_criteria["compressor_type"] = compressor_type
+      search_criteria['compressor_type'] = compressor_type
     end
     
     # Get the chiller capacity

@@ -1619,6 +1619,21 @@
       "eirft": "WaterCooled_Screw_EIRFT_NECB2011",
       "eirfplr": "WaterCooled_Screw_EIRFPLR_NECB2011",
       "notes": null
+    },
+    {
+      "template": "NECB 2011",
+      "cooling_type": "WaterCooled",
+      "condenser_type": null,
+      "compressor_type": "Centrifugal",
+      "absorption_type": null,
+      "minimum_capacity": 0,
+      "maximum_capacity": 9999,
+      "minimum_full_load_efficiency": 1.406,
+      "minimum_integrated_part_load_value": null,
+      "capft": "WaterCooled_Centrifugal_CAPFT_NECB2011",
+      "eirft": "WaterCooled_Centrifugal_EIRFT_NECB2011",
+      "eirfplr": "WaterCooled_Centrifugal_EIRFPLR_NECB2011",
+      "notes": null
     }
   ]
 }
