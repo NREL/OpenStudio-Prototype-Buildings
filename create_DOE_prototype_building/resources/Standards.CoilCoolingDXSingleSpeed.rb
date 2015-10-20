@@ -12,7 +12,7 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
     successfully_set_all_properties = true
   
     unitary_acs = standards['unitary_acs']
-    heat_pumps = standards['heat_pumps_cooling']
+    heat_pumps = standards['heat_pumps']
   
     # Define the criteria to find the chiller properties
     # in the hvac standards data set.
@@ -186,6 +186,24 @@ class OpenStudio::Model::CoilCoolingDXSingleSpeed
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
     end
 
+    # if specified as SEER (heat pump)
+    unless ac_props['minimum_seasonal_efficiency'].nil?
+      min_seer = ac_props['minimum_seasonal_efficiency']
+      cop = seer_to_cop(min_seer)
+      new_comp_name = "#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER"
+#      self.setName("#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_seer}SEER")
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed',  "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; SEER = #{min_seer}")
+    end
+ 
+      # If specified as EER (heat pump)
+    unless ac_props['minimum_full_load_efficiency'].nil?
+      min_eer = ac_props['minimum_full_load_efficiency']
+      cop = eer_to_cop(min_eer)
+      new_comp_name = "#{self.name} #{capacity_kbtu_per_hr.round}kBtu/hr #{min_eer}EER"
+      OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.CoilCoolingDXSingleSpeed', "For #{template}: #{self.name}: #{cooling_type} #{heating_type} #{subcategory} Capacity = #{capacity_kbtu_per_hr.round}kBtu/hr; EER = #{min_eer}")
+    end  
+    
+       
     sql_db_vars_map[new_comp_name] = self.name.to_s
     self.setName(new_comp_name)
 

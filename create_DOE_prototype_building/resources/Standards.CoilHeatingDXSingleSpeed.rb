@@ -6,7 +6,7 @@ class OpenStudio::Model::CoilHeatingDXSingleSpeed
 
     successfully_set_all_properties = true
   
-    unitary_hps = standards['unitary_hps']
+    unitary_hps = standards['heat_pumps']
     heat_pumps = standards['heat_pumps_heating']
     curve_biquadratics = standards['curve_biquadratics']
     curve_quadratics = standards['curve_quadratics']
