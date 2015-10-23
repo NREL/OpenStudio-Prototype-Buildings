@@ -15,6 +15,7 @@ class OpenStudio::Model::Model
   require_relative 'Standards.ChillerElectricEIR'
   require_relative 'Standards.CoilCoolingDXTwoSpeed'
   require_relative 'Standards.CoilCoolingDXSingleSpeed'
+  require_relative 'Standards.CoilHeatingDXSingleSpeed'
   require_relative 'Standards.BoilerHotWater'
   require_relative 'Standards.AirLoopHVAC'
   require_relative 'Standards.WaterHeaterMixed'
@@ -42,10 +43,10 @@ class OpenStudio::Model::Model
   # using the the template/standard specified in the model.
   def applyHVACEfficiencyStandard()
     
+    sql_db_vars_map = Hash.new()
+
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started applying HVAC efficiency standards.')
-    
-    #### Controls
-    
+   
     # Air Loop Controls
     self.getAirLoopHVACs.sort.each {|obj| obj.apply_standard_controls(self.template, self.climate_zone)}  
 
@@ -56,12 +57,13 @@ class OpenStudio::Model::Model
     self.getFanConstantVolumes.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanOnOffs.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
     self.getFanZoneExhausts.sort.each {|obj| obj.setStandardEfficiency(self.template, self.standards)}
-  
+
     # Unitary ACs
     self.getCoilCoolingDXTwoSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
-    self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
-    
+    self.getCoilCoolingDXSingleSpeeds.sort.each {|obj| sql_db_vars_map = obj.setStandardEfficiencyAndCurves(self.template, self.standards, sql_db_vars_map)}
+
     # Unitary HPs
+    self.getCoilHeatingDXSingleSpeeds.sort.each {|obj| sql_db_vars_map = obj.setStandardEfficiencyAndCurves(self.template, self.standards, sql_db_vars_map)}
   
     # Chillers
     self.getChillerElectricEIRs.sort.each {|obj| obj.setStandardEfficiencyAndCurves(self.template, self.standards)}
@@ -138,6 +140,7 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_curve_cubics.json'
     standards_files << 'OpenStudio_Standards_curve_quadratics.json'
     standards_files << 'OpenStudio_Standards_ground_temperatures.json'
+    standards_files << 'OpenStudio_Standards_heat_pumps_heating.json'
     standards_files << 'OpenStudio_Standards_heat_pumps.json'
     standards_files << 'OpenStudio_Standards_materials.json'
     standards_files << 'OpenStudio_Standards_motors.json'
@@ -146,6 +149,7 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_space_types.json'
     standards_files << 'OpenStudio_Standards_templates.json'
     standards_files << 'OpenStudio_Standards_unitary_acs.json'
+#    standards_files << 'OpenStudio_Standards_unitary_hps.json'
 
     # Combine the data from the JSON files into a single hash
     standards_hash = {}

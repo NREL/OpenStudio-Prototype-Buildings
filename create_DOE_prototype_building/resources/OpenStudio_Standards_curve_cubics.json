@@ -1,6 +1,16 @@
 {
   "curve_cubics": [
     {
+      "name": "BOILER-EFFFPLR-NECB2011",
+      "coeff_1": 0.2901,
+      "coeff_2": 2.6664,
+      "coeff_3": -3.764,
+      "coeff_4": 1.82,
+      "min_x": 0.0,
+      "max_x": 1.0,
+      "notes": "From NECB 2011"
+    },
+    {
       "name": "Boiler Constant Efficiency Curve",
       "coeff_1": 1.0,
       "coeff_2": 0.0,
@@ -59,6 +69,56 @@
       "min_x": -100.0,
       "max_x": 100.0,
       "notes": "From DOE Pre-1980 Reference Building"
+    },
+    {
+      "name": "DXCOOL-NECB2011-REF-COOLPLFFPLR",
+      "coeff_1": 0.0277,
+      "coeff_2": 4.9151,
+      "coeff_3": -8.184,
+      "coeff_4": 4.2702,
+      "min_x": 0.7,
+      "max_x": 1.0,
+      "notes": "From NECB, curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-CAPFFLOW",
+      "coeff_1": 0.84,
+      "coeff_2": 0.16,
+      "coeff_3": 0.0,
+      "coeff_4": 0.0,
+      "min_x": 0.5,
+      "max_x": 1.5,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-CAPFT",
+      "coeff_1": 0.729,
+      "coeff_2": 0.0319,
+      "coeff_3": 0.000136,
+      "coeff_4": -8.75e-06,
+      "min_x": -20.0,
+      "max_x": 20.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-EIRFT",
+      "coeff_1": 1.2183,
+      "coeff_2": -0.03612,
+      "coeff_3": 0.00142,
+      "coeff_4": -2.68e-05,
+      "min_x": -20.0,
+      "max_x": 20.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXHEAT-NECB2011-REF-PLFFPLR",
+      "coeff_1": 0.3696,
+      "coeff_2": 2.3362,
+      "coeff_3": -2.9577,
+      "coeff_4": 1.2596,
+      "min_x": 0.7,
+      "max_x": 1.0,
+      "notes": "From NECB 2011"
     },
     {
       "name": "HPACHeatCapFFF",
@@ -221,7 +281,17 @@
       "notes": "From Prototype Buildings"
     },
     {
-      "name": "Single Shelf Horizontal Latent Energy Multiplier",
+      "name": "Single Shelf Horizontal Latent Energy Multiplier_After2004",
+      "coeff_1": 0.0236,
+      "coeff_2": 0.0006,
+      "coeff_3": 0.0,
+      "coeff_4": 0.0,
+      "min_x": -35.0,
+      "max_x": 20.0,
+      "notes": "From Reference Buildings"
+    },
+    {
+      "name": "Single Shelf Horizontal Latent Energy Multiplier_Pre2004",
       "coeff_1": 0.020376,
       "coeff_2": 0.00024378,
       "coeff_3": 1.14e-05,

@@ -367,7 +367,7 @@ class OpenStudio::Model::Model
     
     # add internal mass
     unless (building_type == 'SmallHotel') &&
-      (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
+        (building_vintage == '90.1-2004' or building_vintage == '90.1-2007' or building_vintage == '90.1-2010' or building_vintage == '90.1-2013')
       internal_mass_def = OpenStudio::Model::InternalMassDefinition.new(self)
       internal_mass_def.setSurfaceAreaperSpaceFloorArea(2.0)
       internal_mass_def.setConstruction(construction)
@@ -417,10 +417,10 @@ class OpenStudio::Model::Model
 
     # This map define the multipliers for spaces with multipliers not equals to 1
     case building_type
-      when 'LargeHotel'
-        space_multiplier_map = define_space_multiplier
-      else
-        space_multiplier_map ={}
+    when 'LargeHotel'
+      space_multiplier_map = define_space_multiplier
+    else
+      space_multiplier_map ={}
     end
 
     # Create a thermal zone for each space in the self
@@ -461,7 +461,7 @@ class OpenStudio::Model::Model
   def add_occupancy_sensors(building_type, building_vintage, climate_zone)
    
     # Only add occupancy sensors for 90.1-2010
-     return true unless building_vintage == '90.1-2010'
+    return true unless building_vintage == '90.1-2010'
    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.Model', 'Started Adding Occupancy Sensors')
 
@@ -525,7 +525,7 @@ class OpenStudio::Model::Model
           # Create new values by using the multiplier on the original values
           new_values = []
           for i in 0..(values.length - 1)
-              new_values << values[i] * multiplier
+            new_values << values[i] * multiplier
           end
           
           # Add the revised time/value pairs to the schedule
@@ -746,18 +746,27 @@ class OpenStudio::Model::Model
     ##### Apply equipment efficiencies
     
     # Fans
-    self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise}
+    self.getFanConstantVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_vintage)}
     self.getFanVariableVolumes.sort.each {|obj| obj.setPrototypeFanPressureRise(building_type, building_vintage, climate_zone)}
     self.getFanOnOffs.sort.each {|obj| obj.setPrototypeFanPressureRise}
     self.getFanZoneExhausts.sort.each {|obj| obj.setPrototypeFanPressureRise}
 
     ##### Add Economizers
-    # Create an economizer maximum OA fraction of 70%
-    # to reflect damper leakage per PNNL
-    econ_max_70_pct_oa_sch = OpenStudio::Model::ScheduleRuleset.new(self)
-    econ_max_70_pct_oa_sch.setName("Economizer Max OA Fraction 70 pct")
-    econ_max_70_pct_oa_sch.defaultDaySchedule.setName("Economizer Max OA Fraction 70 pct Default")
-    econ_max_70_pct_oa_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.7)   
+    
+    if (building_vintage != 'NECB 2011') then
+      # Create an economizer maximum OA fraction of 70%
+      # to reflect damper leakage per PNNL        
+      econ_max_70_pct_oa_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      econ_max_70_pct_oa_sch.setName("Economizer Max OA Fraction 70 pct")
+      econ_max_70_pct_oa_sch.defaultDaySchedule.setName("Economizer Max OA Fraction 70 pct Default")
+      econ_max_70_pct_oa_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 0.7)   
+    else
+      # NECB 2011 prescribes ability to provide 100% OA (5.2.2.7-5.2.2.9)  
+      econ_max_100_pct_oa_sch = OpenStudio::Model::ScheduleRuleset.new(self)
+      econ_max_100_pct_oa_sch.setName("Economizer Max OA Fraction 100 pct")
+      econ_max_100_pct_oa_sch.defaultDaySchedule.setName("Economizer Max OA Fraction 100 pct Default")
+      econ_max_100_pct_oa_sch.defaultDaySchedule.addValue(OpenStudio::Time.new(0,24,0,0), 1.0)         
+    end  
     
     # Check each airloop
     self.getAirLoopHVACs.each do |air_loop|
@@ -771,13 +780,18 @@ class OpenStudio::Model::Model
         when '90.1-2010', '90.1-2013'
           case climate_zone
           when 'ASHRAE 169-2006-1A',
-            'ASHRAE 169-2006-2A',
-            'ASHRAE 169-2006-3A',
-            'ASHRAE 169-2006-4A'
+              'ASHRAE 169-2006-2A',
+              'ASHRAE 169-2006-3A',
+              'ASHRAE 169-2006-4A'
             economizer_type = 'DifferentialEnthalpy'
           else
             economizer_type = 'DifferentialDryBulb'
           end
+        when 'NECB 2011'
+          # NECB 5.2.2.8 states that economizer can be controlled based on difference betweeen
+          # return air temperature and outside air temperature OR return air enthalpy
+          # and outside air enthalphy; latter chosen to be consistent with MNECB and CAN-QUEST implementation
+          economizer_type = 'DifferentialEnthalpy'
         end
 
         # Set the economizer type
@@ -791,7 +805,15 @@ class OpenStudio::Model::Model
         end
         oa_control = oa_sys.getControllerOutdoorAir
         oa_control.setEconomizerControlType(economizer_type)
-        #oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
+        if (building_vintage != 'NECB 2011') then
+          oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_70_pct_oa_sch)
+        else
+          #oa_control.setMaximumFractionofOutdoorAirSchedule(econ_max_100_pct_oa_sch)     
+        end  
+        
+       
+        
+              
       end
     end
 
@@ -920,10 +942,10 @@ class OpenStudio::Model::Model
       run_manager_db_path = OpenStudio::Path.new("#{run_dir}/run.db")
       run_manager = OpenStudio::Runmanager::RunManager.new(run_manager_db_path, true, false, false, false)
       job = OpenStudio::Runmanager::JobFactory::createEnergyPlusJob(ep_tool,
-                                                                   idd_path,
-                                                                   idf_path,
-                                                                   epw_path,
-                                                                   output_path)
+        idd_path,
+        idf_path,
+        epw_path,
+        output_path)
       
       run_manager.enqueue(job, true)
 

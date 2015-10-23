@@ -1,0 +1,39 @@
+$LIBRARY-NAME usrlib.dat
+$UNITS ENGLISH
+
+$LIBRARY-ENTRY Door Cons Lib Name              CONSTRUCTION    New Cons Categ
+$Decsrip 1                                                                       
+   TYPE             = LAYERS
+   LAYERS           = "Lay Door"
+   ..
+$LIBRARY-ENTRY Lib Door Name                   DOOR            New Categ
+$Description line #1                                                             
+$and line #2                                                                     
+   CONSTRUCTION     = "Cons Door"
+   X                = 8
+   Y                = 0
+   HEIGHT           = 8
+   WIDTH            = 3
+   ..
+$LIBRARY-ENTRY Always On Day                   DAY-SCHEDULE-PD 
+   TYPE             = ON/OFF
+   VALUES           = ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         1, 1, 1, 1, 1, 1 )
+   ..
+$LIBRARY-ENTRY Always On Week                  WEEK-SCHEDULE-PD
+   TYPE             = ON/OFF
+   DAY-SCHEDULES    = ( "Always On Day", "Always On Day" )
+   ..
+$LIBRARY-ENTRY Always On Sched                 SCHEDULE-PD     
+   TYPE             = ON/OFF
+   GROUP            = ZONE-LOADS
+   MONTH            = ( 12 )
+   DAY              = ( 31 )
+   WEEK-SCHEDULES   = ( "Always On Week" )
+   ..
+$LIBRARY-ENTRY Test Lib Window                 WINDOW          
+$Descrip 2 only                                                                  
+   X                = 11
+   HEIGHT           = 7.5
+   WIDTH            = 4.5
+   ..

@@ -1,0 +1,2083 @@
+$LIST ECHO COMMENTS ..
+$  =======================================================
+$  BEGIN ===   DOE-2.2 BDL Default Library Expression Code
+$  =======================================================
+$               VERSION:   041  date  4/18/2002
+$  Authors:     S.D. Gates, J.J. Hirsch, S.A. Criswell
+$               James J. Hirsch & Associates
+$               (Gates Engineering and SAC Software Solutions, Inc.)
+$
+$ Copyright (c) 1997-2002 by James J. Hirsch. All Rights Reserved.
+$ Unpublished rights reserved under the Copyright Laws of the United States.
+$ RESTRICTED RIGHTS NOTICE: Government use, reproduction or disclosure 
+$ is subject to restrictions as set forth in Rights in Data (g)(3) in 
+$ UC/LBL purchase order 4607010 with J.J. Hirsch & Associates.
+$
+
+$ start -------> defaults for DOE-2 batch version only <--------
+$ SET-DEFAULT FOR FLOOR SHAPE NO-SHAPE FLOOR-HEIGHT {no_def} ..
+$ SET-DEFAULT FOR SPACE SHAPE NO-SHAPE ..
+$ end   -------> defaults for DOE-2 batch version only <--------
+
+$ start -------> defaults for DOE-2 interactive version only <--------
+SET-DEFAULT FOR WINDOW
+  C-SHGC = {unused}
+  C-FEN-SPEC-METH = {unused}
+  C-WELL-DEPTH = {unused}
+  C-WELL-HEIGHT = {unused}
+  C-WELL-WIDTH = {unused}
+  C-WELL-WALL-REFL = {unused}
+  C-WELL-TOP-REFL = {unused}
+  C-USE-GTC
+{ if(#L("WIN-SPEC-METHOD")==#SI("GLASS-TYPE-INPUT","WINDOW","WIN-SPEC-METHOD"))
+  then
+    if(#LR("GLASS-TYPE","TYPE")==#SI("GLASS-TYPE-CODE","GLASS-TYPE","TYPE"))
+    then 1 else unused endif
+  else unused endif}
+..
+SET-DEFAULT FOR HEAT-REJECTION TYPE OPEN-TWR
+  C-NUM-OF-UNITS = {unused}
+  ..
+SET-DEFAULT FOR HEAT-REJECTION TYPE OPEN-TWR&HX 
+  C-NUM-OF-UNITS = {unused}
+  ..
+SET-DEFAULT FOR HEAT-REJECTION TYPE FLUID-COOLER
+  C-NUM-OF-UNITS = {unused}
+  ..
+SET-DEFAULT FOR HEAT-REJECTION TYPE DRYCOOLER
+  C-NUM-OF-UNITS = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE ELEC-OPEN-CENT
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE ELEC-OPEN-REC
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE ELEC-HERM-CENT
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  .. 
+SET-DEFAULT FOR CHILLER TYPE ELEC-HERM-REC 
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  .. 
+SET-DEFAULT FOR CHILLER TYPE ELEC-SCREW
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  .. 
+SET-DEFAULT FOR CHILLER TYPE ELEC-HTREC
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  .. 
+SET-DEFAULT FOR CHILLER TYPE ABSOR-1
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  .. 
+SET-DEFAULT FOR CHILLER TYPE ABSOR-2
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE GAS-ABSOR
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE ENGINE 
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE HEAT-PUMP    
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE LOOP-TO-LOOP-HP 
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CHILLER TYPE WATER-ECONOMIZER
+  C-COP = {unused}
+  C-IPLV = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR BOILER TYPE HW-BOILER
+  C-NUM-OF-UNITS = {unused}
+  C-THERM-EFF-MAX = {unused}
+  C-AFUE = {unused}
+  .. 
+SET-DEFAULT FOR BOILER TYPE HW-BOILER-W/DRAFT
+  C-NUM-OF-UNITS = {unused}
+  C-THERM-EFF-MAX = {unused}
+  C-AFUE = {unused}
+  ..
+SET-DEFAULT FOR BOILER TYPE ELEC-HW-BOILER
+  C-NUM-OF-UNITS = {unused}
+  C-THERM-EFF-MAX = {unused}
+  C-AFUE = {unused}
+  ..
+SET-DEFAULT FOR BOILER TYPE STM-BOILER  
+  C-NUM-OF-UNITS = {unused}
+  C-THERM-EFF-MAX = {unused}
+  C-AFUE = {unused}
+  ..
+SET-DEFAULT FOR BOILER TYPE STM-BOILER-W/DRAFT
+  C-NUM-OF-UNITS = {unused}
+  C-THERM-EFF-MAX = {unused}
+  C-AFUE = {unused}
+  ..
+SET-DEFAULT FOR BOILER TYPE ELEC-STM-BOILER
+  C-NUM-OF-UNITS = {unused}
+  C-THERM-EFF-MAX = {unused}
+  C-AFUE = {unused}
+  ..
+SET-DEFAULT FOR CIRCULATION-LOOP TYPE CHW
+  C-DHW-TANK-VOL = {unused}
+  C-NUM-DHW-HTRS = {unused}
+  C-TANK-INS-RVAL = {unused}
+  C-TWR-PIPE-SIZE = {unused}
+  C-TOT-DHW-CAP= {unused}
+  C-RES-DHW-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CIRCULATION-LOOP TYPE PIPE2
+  C-DHW-TANK-VOL = {unused}
+  C-NUM-DHW-HTRS = {unused}
+  C-TANK-INS-RVAL = {unused}
+  C-TWR-PIPE-SIZE = {unused}
+  C-TOT-DHW-CAP= {unused}
+  C-RES-DHW-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CIRCULATION-LOOP TYPE HW 
+  C-DHW-TANK-VOL = {unused}
+  C-NUM-DHW-HTRS = {unused}
+  C-TANK-INS-RVAL = {unused}
+  C-TWR-PIPE-SIZE = {unused}
+  C-TOT-DHW-CAP= {unused}
+  C-RES-DHW-TYPE = {unused}
+  ..
+SET-DEFAULT FOR CIRCULATION-LOOP TYPE LAKE/WELL 
+  C-DHW-TANK-VOL = {unused}
+  C-NUM-DHW-HTRS = {unused}
+  C-TANK-INS-RVAL = {unused}
+  C-TWR-PIPE-SIZE = {unused}
+  C-TOT-DHW-CAP= {unused}
+  C-RES-DHW-TYPE = {unused}
+  ..  
+SET-DEFAULT FOR CIRCULATION-LOOP TYPE WLHP 
+  C-DHW-TANK-VOL = {unused}
+  C-NUM-DHW-HTRS = {unused}
+  C-TANK-INS-RVAL = {unused}
+  C-TWR-PIPE-SIZE = {unused}
+  C-TOT-DHW-CAP= {unused}
+  C-RES-DHW-TYPE = {unused}
+  .. 
+SET-DEFAULT FOR CIRCULATION-LOOP TYPE DHW 
+  C-DHW-TANK-VOL = {unused}
+  C-NUM-DHW-HTRS = {unused}
+  C-TANK-INS-RVAL = {unused}
+  C-TWR-PIPE-SIZE = {unused}
+  C-TOT-DHW-CAP= {unused}
+  C-RES-DHW-TYPE = {unused}
+  ..
+SET-DEFAULT FOR PUMP
+  C-BHP = {unused}
+  C-DRIVE-EFF = {unused}
+  C-MOTOR-SPEED = {unused}
+  C-MOTOR-TYPE = {unused}
+  C-NOM-HP = {unused}
+  C-MTR-ENCL-TYPE = {unused}
+  ..
+SET-DEFAULT FOR DW-HEATER TYPE GAS 
+  C-CATEGORY = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-RECOV-EFF = {unused}
+  C-ENERGY-FACTOR = {unused}
+  C-PILOT-BTUH= {unused}
+  C-STBY-LOSS-FRAC= {unused}
+  C-TANK-EXT-RVAL = {unused}
+  C-TANK-INT-RVAL= {unused}
+  C-TYPE = {unused}
+  ..
+SET-DEFAULT FOR DW-HEATER TYPE ELEC 
+  C-CATEGORY = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-RECOV-EFF = {unused}
+  C-ENERGY-FACTOR = {unused}
+  C-PILOT-BTUH= {unused}
+  C-STBY-LOSS-FRAC= {unused}
+  C-TANK-EXT-RVAL = {unused}
+  C-TANK-INT-RVAL= {unused}
+  C-TYPE = {unused}
+  ..   
+SET-DEFAULT FOR DW-HEATER TYPE HEAT-PUMP  
+  C-CATEGORY = {unused}
+  C-NUM-OF-UNITS = {unused}
+  C-RECOV-EFF = {unused}
+  C-ENERGY-FACTOR = {unused}
+  C-PILOT-BTUH= {unused}
+  C-STBY-LOSS-FRAC= {unused}
+  C-TANK-EXT-RVAL = {unused}
+  C-TANK-INT-RVAL= {unused}
+  C-TYPE = {unused}
+  ..  
+SET-DEFAULT FOR SITE-PARAMETERS
+  C-STATE = {unused}
+  DAYLIGHT-SAVINGS = {unused}
+  ..
+SET-DEFAULT FOR ZONE TYPE UNCONDITIONED
+  C-EXH-FAN-BHP = {unused}
+  C-EXH-FAN-NOM-HP = {unused}
+  C-EF-DRIVE-EFF= {unused}
+  C-EF-MOTOR-EFF= {unused}
+  C-HTG-SETBACK= {unused}
+  .. 
+SET-DEFAULT FOR ZONE TYPE CONDITIONED
+  C-EXH-FAN-BHP = {unused}
+  C-EXH-FAN-NOM-HP = {unused}
+  C-EF-DRIVE-EFF= {unused}
+  C-EF-MOTOR-EFF= {unused}
+  C-HTG-SETBACK= {unused}
+  THROTTLING-RANGE = 1.8
+  ..  
+SET-DEFAULT FOR ZONE TYPE PLENUM 
+  C-EXH-FAN-BHP = {unused}
+  C-EXH-FAN-NOM-HP = {unused}
+  C-EF-DRIVE-EFF= {unused}
+  C-EF-MOTOR-EFF= {unused}
+  C-HTG-SETBACK= {unused}
+  THROTTLING-RANGE = 1.8
+  ..
+SET-DEFAULT FOR SPACE
+  C-LTG-CNTRL-CRED = {unused}
+  C-NUM-CCTRL-RCDS = {unused}
+  C-NUM-MCTRL-RCDS = {unused}
+  C-TLD-LTG-W/AREA = {unused}
+  C-TLD-VENT-CFM/A = {unused}
+  C-DAYLIT-AREA = {unused}
+  C-DAYLIT-KW = {unused}
+  C-DAYLIGHT-CTRL = {unused}
+  ..
+SET-DEFAULT FOR COMPLIANCE 
+  C-RES-DHW-INCL = {unused}
+  C-OPTION-10 = 1
+  ..    
+SET-DEFAULT FOR CONSTRUCTION TYPE U-VALUE
+  C-USER-INP-ABS = {unused}
+  C-WALL-TYPE = {unused}
+  C-ROW = {unused}
+  ..    
+SET-DEFAULT FOR CONSTRUCTION TYPE                          LAYERS
+  C-USER-INP-ABS = {unused}
+  C-WALL-TYPE = {unused}
+  C-ROW = {unused}
+  C-TABLE
+{if(#L("C-USE-TABLE")==1) then 11 else unused endif}
+   C-ROW
+{if(#RV(#L("C-TABLE"))!=0) then unused else
+ switch(#L("C-TABLE"))
+   case  1: 2
+   case  2: 2
+   case  3: 203
+   case  4: 101
+   case  5: 102
+   case  6: 303
+   case  7: 1401
+   case  8: 401
+   case  9: 2
+   case 10: 201
+   case 11: 102
+   case 12: 503
+   case 13: 503
+   case 14: 606
+   case 15: 701
+   case 16: 801
+   case 17: 900
+   case 18: 1000
+   case 20: 2
+   case 21: 2
+   case 22: 1201
+   case 23: 102
+   case 24: 102
+   case 25: 1301
+   default: unused
+ endswitch endif}
+   C-COLUMN
+{if(#RV(#L("C-TABLE"))!=0) then unused else
+ if(#L("C-TABLE")==12) then 1 else unused endif endif}
+   C-THICKNESS
+{if(#RV(#L("C-TABLE"))!=0) then unused else
+if(#L("C-TABLE")==6) then
+  if (#RV(#L("C-ROW"))!=0) then unused else
+  switch(#L("C-ROW"))
+    case 301: 0
+    case 302: 4
+    case 303: 0
+    case 304: 4
+    default: unused
+  endswitch endif else
+  if(#L("C-TABLE")==12) then 6 else
+  if(#L("C-TABLE")==13) then 4 else
+unused endif endif endif endif}
+   C-INS-THICKNESS
+{if(#RV(#L("C-TABLE"))!=0) then unused else
+if(#L("C-TABLE")==14) then 1 else unused endif endif}
+   C-INS-RVALUE
+{if(#RV(#L("C-ROW"))!=0) then unused else
+ if(#L("C-ROW")==2 .OR. #L("C-ROW")==12 .OR. #L("C-ROW")==102 .OR.
+    #L("C-ROW")==112 .OR. #L("C-ROW")==401 .OR.
+    #L("C-ROW")==701 .OR. #L("C-ROW")==702 .OR. #L("C-ROW")==703 .OR.
+    #L("C-ROW")==711 .OR. #L("C-ROW")==712 .OR. #L("C-ROW")==713 .OR.
+    #L("C-ROW")==721 .OR. #L("C-ROW")==722 .OR. #L("C-ROW")==723 .OR.
+    #L("C-ROW")==731 .OR. #L("C-ROW")==732 .OR. #L("C-ROW")==733 .OR.
+    #L("C-ROW")==1301 .OR. #L("C-ROW")==1302 .OR. #L("C-ROW")==1303)
+    then 0 else if(#RV(#L("C-TABLE"))!=0) then unused else
+    switch(#L("C-TABLE"))
+     case  1: 11
+     case  2: 11
+     case  3: 14
+     case  4: 11
+     case  5: 11
+     case  8: 7
+     case  9: 11
+     case 10: 14
+     case 11: 11
+     case 20: 11
+     case 21: 11
+     case 22: 14
+     case 23: 11
+     case 24: 11
+     default: unused
+   endswitch endif endif endif}
+   C-RIGID-INS-RVAL = {if(#RV(#L("C-TABLE"))!=0) then unused else 0 endif}
+   C-FURRING
+{if(#RV(#L("C-TABLE"))!=0) then unused else
+if(#L("C-TABLE")==12 .OR. #L("C-TABLE")==13 .OR.
+   #L("C-TABLE")==14) then 1199 else unused endif endif}
+   C-FURRING-RVAL
+{if(#RV(#L("C-FURRING"))!=0) then unused else
+if(#L("C-FURRING")==1199) then unused else 0 endif endif}
+   ..
+
+$ ======================================================== SYSTEM (2) =========
+SET-DEFAULT FOR SYSTEM TYPE                                SZRH                
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused}  
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+
+$ -------------------------------------------------------- SYSTEM (3) --------- 
+SET-DEFAULT FOR SYSTEM TYPE                                MZS                  
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+
+$ -------------------------------------------------------- SYSTEM (4) --------- 
+SET-DEFAULT FOR SYSTEM TYPE                                DDS                  
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+
+$ -------------------------------------------------------- SYSTEM (5) --------- 
+SET-DEFAULT FOR SYSTEM TYPE                                SZCI                 
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (6) --------- 
+SET-DEFAULT FOR SYSTEM TYPE                                UVT                  
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (7) --------- 
+SET-DEFAULT FOR SYSTEM TYPE                                UHT                  
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 3 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (8) --------- 
+SET-DEFAULT FOR SYSTEM TYPE                                FPH                  
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (9) --------- 
+SET-DEFAULT FOR SYSTEM TYPE                                FC                   
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (11) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                IU                   
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (13) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                VAVS                 
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (14) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                RHFS                 
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (15) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                HP                   
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (16) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                HVSYS                
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (17) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                RESYS                
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (18) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                CBVAV                
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-NUM-ISO-ZONES = {unused}
+   C-NUM-OF-UNITS = {unused}
+   C-OSA-DMPR-CTRL = {unused}
+   C-RET-FAN-QTY = {unused}
+   C-RET-FAN-TYPE = {unused}
+   C-SF-DRIVE-EFF = {unused}
+   C-SF-FILTRATION = {unused}
+   C-SF-FILT-SP = {unused}
+   C-SF-MOTOR-EFF = {unused}
+   C-SF-MTR-SNC-SPD = {unused}
+   C-SF-MTR-TYPE = {unused}
+   C-SF-TOT-BHP = {unused}
+   C-SF-TOT-SP = {unused}
+   C-SUP-FAN-QTY = {unused}
+   C-SUPP-FAN-TYPE = {unused}
+   C-SYS-ZONE-TYPE = {unused}
+   C-ELEC-PHASE = {unused}
+   C-HAS-HTG-CLG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   C-AC-CONFIG = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-TXV-CERT = {unused}
+   C-AIR-CERT = {unused}
+   C-TIME-CONTROL = {unused}
+   C-RF-MTR-TYPE = {unused}
+   C-RF-MTR-SNC-SPD = {unused}
+   C-RF-MTR-ENCL = {unused}
+   C-RF-TOT-NOM-HP = {unused}
+   C-RF-TOT-BHP = {unused}
+   C-RF-MOTOR-EFF = {unused}
+   C-RF-DRIVE-EFF = {unused}
+   C-RF-FILTRATION = {unused}
+   C-RF-FILT-SP = {unused}
+   C-RF-TOT-SP = {unused}
+   C-TOT-RET-FLOW = {unused}
+   C-HFAN-QTY = {unused}
+   C-HFAN-TYPE = {unused}
+   C-HFAN-MTR-TYPE = {unused}
+   C-HFAN-MTR-SPD = {unused}
+   C-HFAB-MTR-ENCL = {unused}
+   C-HFAN-TOT-NM-HP = {unused}
+   C-HFAN-TOT-BHP = {unused}
+   C-HFAN-MTR-EFF = {unused}
+   C-HFAN-DRIVE-EFF = {unused}
+   C-HF-FILTRATION = {unused}
+   C-HF-FILT-SP = {unused}
+   C-HF-TOT-SP = {unused}
+   C-TOTAL-CLG-CAP = {unused}
+   C-SEER = {unused}
+   C-IPLV = {unused}
+   C-EER95 = {unused}
+   C-EER82 = {unused}
+   C-EER85EWT = {unused}
+   C-EER75EWT = {unused}
+   C-EER70EWT = {unused}
+   C-EER50EWT = {unused}
+   C-TOTAL-HTG-CAP = {unused}
+   C-USER-INPUT-HIR = {unused}
+   C-AFUE = {unused}
+   C-THERM-EFF-MAX = {unused}
+   C-THERM-EFF-MIN = {unused}
+   C-HSPF = {unused}
+   C-COP47 = {unused}
+   C-COP17 = {unused}
+   C-COP70EWT = {unused}
+   C-COP50EWT = {unused}
+   C-DUCT-TAPE-OK = {unused}
+   C-DUCT-SEALING = {unused}
+   C-DUCT-LOSS-METH = {unused}
+   C-DUCT-LEAK-FRAC = {unused}
+   C-SUP-DUCT-RVAL = {unused}
+   C-RET-DUCT-RVAL = {unused}
+   C-DUCT-SERVICES = {unused}
+   C-DUCT-AREA-METH = {unused}
+   C-DUCT-SUP-AREA = {unused}
+   C-DUCT-RET-AREA = {unused}
+   C-DUCT-OA-FRAC = {unused} 
+   C-FURN-CONFIG    = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 5 else unused endif endif}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (19) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                PSZ                  
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+
+  PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then unused else no_default endif
+else unused endif
+   }
+   PERFORM-DATA-HP  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then no_default else unused endif
+else unused endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (20) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                PMZS                 
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+
+
+  PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then unused else no_default endif
+else unused endif
+   }
+   PERFORM-DATA-HP  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then no_default else unused endif
+else unused endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (21) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                PVAVS                
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+
+
+  PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then unused else no_default endif
+else unused endif
+   }
+   PERFORM-DATA-HP  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then no_default else unused endif
+else unused endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (22) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                PTAC                 
+   C-AC-CONFIG = 2
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 2 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then 4 else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+
+
+  PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then unused else no_default endif
+else unused endif
+   }
+   PERFORM-DATA-HP  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then no_default else unused endif
+else unused endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (23) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                PIU                  
+   C-AC-CONFIG =
+{if(#sv(#l("COOL-SOURCE"))==2) then 0 else unused endif}
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+
+
+  PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then unused else no_default endif
+else unused endif
+   }
+   PERFORM-DATA-HP  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then no_default else unused endif
+else unused endif}   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (24) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                FNSYS1               
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-FURN-CONFIG = {unused}
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (25) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                PTGSD                
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (26) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                EVAP-COOL            
+   C-AC-CONFIG = {unused}
+   C-HP-CONFIG = {unused}
+   C-FURN-CONFIG = 5
+   C-SUPP-HEAT = {unused}
+   C-CONDENSER-TYPE = {unused}
+   C-HT-PUMP-TSTAT = {unused}
+   ..						 
+                                                                                
+$ -------------------------------------------------------- SYSTEM (27) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                RESVVT               
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (28) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                PVVT                 
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+
+
+  PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then unused else no_default endif
+else unused endif
+   }
+   PERFORM-DATA-HP  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then no_default else unused endif
+else unused endif}
+   ..
+                                                                                
+$ -------------------------------------------------------- SYSTEM (29) -------- 
+SET-DEFAULT FOR SYSTEM TYPE                                RESYS2               
+   C-AC-CONFIG = 0
+   C-HP-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then 0 else unused endif endif}
+   C-FURN-CONFIG = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==2) then
+  if(#rv(#l("C-AC-CONFIG"))!=0) then unused else
+  switch(#l("C-AC-CONFIG"))
+    case  0: 4
+    case  1: 1
+    case  2: 4
+    case  3: 4
+    case  4: 4
+    case  5: 5
+    default: 4
+  endswitch endif
+else unused endif endif}
+   C-SUPP-HEAT      = 
+{if(#rv(#l("HEAT-SOURCE"))!=0) then unused else
+if(#sv(#l("HEAT-SOURCE"))==4) then
+  if(#rv(#l("HP-SUPP-SOURCE"))!=0) then 0 else
+  if(#sv(#l("HP-SUPP-SOURCE"))==0) then 0 else 1 endif endif
+else unused endif endif}
+   C-CONDENSER-TYPE = 
+{if(#rv(#l("CONDENSER-TYPE"))!=0) then unused else
+if(#sv(#l("CONDENSER-TYPE"))==1) then 1 else 0 endif endif}
+   C-HT-PUMP-TSTAT  = {if(#rv(#l("C-SUPP-HEAT"))!=0) then unused else 1 endif}
+
+
+  PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then unused else no_default endif
+else unused endif
+   }
+   PERFORM-DATA-HP  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","SYSTEM","CONDENSER-TYPE")) then
+  if(#L("HEAT-SOURCE") == #SI("HEAT-PUMP","SYSTEM","HEAT-SOURCE"))
+  then no_default else unused endif
+else unused endif}
+   ..
+
+
+SET-DEFAULT FOR CHILLER         
+   TYPE = ELEC-OPEN-CENT
+   PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   PERFORM-DATA-WC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("WATER-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   ..
+SET-DEFAULT FOR CHILLER         
+   TYPE = ELEC-OPEN-REC
+   PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   PERFORM-DATA-WC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("WATER-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   ..
+SET-DEFAULT FOR CHILLER         
+   TYPE = ELEC-HERM-CENT
+   PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   PERFORM-DATA-WC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("WATER-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   ..
+SET-DEFAULT FOR CHILLER         
+   TYPE = ELEC-HERM-REC
+   PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   PERFORM-DATA-WC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("WATER-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   ..
+SET-DEFAULT FOR CHILLER         
+   TYPE = ELEC-SCREW
+   PERFORM-DATA-AC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("AIR-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   PERFORM-DATA-WC  = 
+{if (#L("CONDENSER-TYPE") ==
+    #SI("WATER-COOLED","CHILLER","CONDENSER-TYPE"))
+    then no_default else unused  endif}
+   ..
+
+$ end   -------> defaults for DOE-2 interactive version only <--------
+
+END ..

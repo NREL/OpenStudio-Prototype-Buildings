@@ -5,8 +5,13 @@ class OpenStudio::Model::FanConstantVolume
   # Sets the fan pressure rise based on the Prototype buildings inputs
   # which are governed by the flow rate coming through the fan
   # and whether the fan lives inside a unit heater, PTAC, etc.
-  def setPrototypeFanPressureRise
+  def setPrototypeFanPressureRise(building_vintage)
+    
     return true if self.name.to_s.include?("UnitHeater Fan")
+    if building_vintage == 'NECB 2011' then
+      pressure_rise_pa = 640.0
+      self.setPressureRise(pressure_rise_pa)
+    else
     # Get the max flow rate from the fan.
     maximum_flow_rate_m3_per_s = nil
     if self.maximumFlowRate.is_initialized
@@ -56,10 +61,12 @@ class OpenStudio::Model::FanConstantVolume
     
     # Set the fan pressure rise
     pressure_rise_pa = OpenStudio.convert(pressure_rise_in_h2o, 'inH_{2}O','Pa').get
+    
+     
     self.setPressureRise(pressure_rise_pa)  
-    
     OpenStudio::logFree(OpenStudio::Info, 'openstudio.model.FanConstantVolume', "For Prototype: #{self.name}: #{maximum_flow_rate_cfm.round}cfm; Pressure Rise = #{pressure_rise_in_h2o}in w.c.")
-    
+   
+    end 
     return true
     
   end

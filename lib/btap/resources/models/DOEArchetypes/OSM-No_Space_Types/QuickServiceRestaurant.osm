@@ -1,0 +1,2345 @@
+
+OS:Version,
+  {e1661306-a2f7-4ac8-83c1-f5d4e6c5d82e}, !- Handle
+  1.3.0;                                  !- Version Identifier
+
+OS:Site,
+  {7b2e1cbd-5cf6-4fce-b925-28b7d5b1909d}, !- Handle
+  USA IL-CHICAGO-OHARE,                   !- Name
+  41.77,                                  !- Latitude {deg}
+  -87.75,                                 !- Longitude {deg}
+  -6,                                     !- Time Zone {hr}
+  190,                                    !- Elevation {m}
+  City;                                   !- Terrain
+
+OS:SimulationControl,
+  {95d076ec-8990-484a-b00e-181579d4a639}, !- Handle
+  Yes,                                    !- Do Zone Sizing Calculation
+  Yes,                                    !- Do System Sizing Calculation
+  Yes,                                    !- Do Plant Sizing Calculation
+  No,                                     !- Run Simulation for Sizing Periods
+  Yes,                                    !- Run Simulation for Weather File Run Periods
+  0.04,                                   !- Loads Convergence Tolerance Value
+  0.2,                                    !- Temperature Convergence Tolerance Value {deltaC}
+  FullInteriorAndExterior,                !- Solar Distribution
+  25,                                     !- Maximum Number of Warmup Days
+  6;                                      !- Minimum Number of Warmup Days
+
+OS:Meter,
+  {a18ddbd3-a453-4fd8-88da-ef9b19a5f35c}, !- Handle
+  Heating:Electricity,                    !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Schedule:Compact,
+  {79aebdad-7130-4b95-bd3c-ac392707ed4b}, !- Handle
+  Kitchen_Case:1_WALKINFREEZER_CaseDefrost2aDaySched, !- Name
+  {eca05e90-11a2-40a8-9f13-7e519fcd3032}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For:AllDays,                            !- Field 2
+  Interpolate:Yes,                        !- Field 3
+  Until: 11:00,                           !- Field 4
+  0,                                      !- Field 5
+  Until: 11:20,                           !- Field 6
+  1,                                      !- Field 7
+  Until: 23:00,                           !- Field 8
+  0,                                      !- Field 9
+  Until: 23:20,                           !- Field 10
+  1,                                      !- Field 11
+  Until: 24:00,                           !- Field 12
+  0;                                      !- Field 13
+
+OS:ScheduleTypeLimits,
+  {eca05e90-11a2-40a8-9f13-7e519fcd3032}, !- Handle
+  On/Off,                                 !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  DISCRETE,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Surface,
+  {1810c396-52a5-4c17-b9d2-94f0c813133c}, !- Handle
+  Kitchen_Wall_North,                     !- Name
+  Wall,                                   !- Surface Type
+  {c5ea4808-a8f6-4697-9c7d-4efe49ec9af8}, !- Construction Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 15.2428, 3.0488,               !- X,Y,Z Vertex 1 {m}
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 2 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 3 {m}
+  0, 15.2428, 3.0488;                     !- X,Y,Z Vertex 4 {m}
+
+OS:Construction,
+  {c5ea4808-a8f6-4697-9c7d-4efe49ec9af8}, !- Handle
+  Wood Frame Non-res Ext Wall,            !- Name
+  ,                                       !- Surface Rendering Name
+  {3eaf8b4e-00de-4a94-a40a-96d73000d91c}, !- Layer 1
+  {c0a01ad6-81b3-41f6-b798-9bf31fd23e1e}, !- Layer 2
+  {9d941166-5f06-4f4c-b4db-3e3a712d41ed}; !- Layer 3
+
+OS:Material,
+  {3eaf8b4e-00de-4a94-a40a-96d73000d91c}, !- Handle
+  Wood Siding,                            !- Name
+  MediumSmooth,                           !- Roughness
+  0.01,                                   !- Thickness {m}
+  0.11,                                   !- Conductivity {W/m-K}
+  544.62,                                 !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.78,                                   !- Solar Absorptance
+  0.78;                                   !- Visible Absorptance
+
+OS:Material,
+  {c0a01ad6-81b3-41f6-b798-9bf31fd23e1e}, !- Handle
+  Wood Frame NonRes Wall Insulation,      !- Name
+  MediumRough,                            !- Roughness
+  0.0812847864409827,                     !- Thickness {m}
+  0.049,                                  !- Conductivity {W/m-K}
+  265,                                    !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:Material,
+  {9d941166-5f06-4f4c-b4db-3e3a712d41ed}, !- Handle
+  1/2IN Gypsum,                           !- Name
+  Smooth,                                 !- Roughness
+  0.0127,                                 !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  784.9,                                  !- Density {kg/m3}
+  830,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.92,                                   !- Solar Absorptance
+  0.92;                                   !- Visible Absorptance
+
+OS:ThermalZone,
+  {5f88d14f-7b8c-4dda-8513-56611abc3f38}, !- Handle
+  Kitchen Thermal Zone,                   !- Name
+  1,                                      !- Multiplier
+  ,                                       !- Ceiling Height {m}
+  ,                                       !- Volume {m3}
+  ,                                       !- Floor Area {m2}
+  ,                                       !- Zone Inside Convection Algorithm
+  ,                                       !- Zone Outside Convection Algorithm
+  ,                                       !- Zone Conditioning Equipment List Name
+  {acaafc83-1ba8-4738-868e-7cf4db947da8}, !- Zone Air Inlet Port List
+  {ef858fc0-f2da-4699-9ac4-8df91b869d21}, !- Zone Air Exhaust Port List
+  {c71ac0e9-618e-4e1a-b59e-476b20429fa0}, !- Zone Air Node Name
+  ,                                       !- Zone Return Air Node Name
+  ,                                       !- Primary Daylighting Control Name
+  ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
+  ,                                       !- Secondary Daylighting Control Name
+  ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
+  ,                                       !- Illuminance Map Name
+  ,                                       !- Group Rendering Name
+  {8efe2106-f1b2-43d1-9c13-7713be8db3da}, !- Thermostat Name
+  No;                                     !- Use Ideal Air Loads
+
+OS:Node,
+  {d593685a-ee20-4d70-841d-f755ddf94599}, !- Handle
+  {f774857e-d2f2-4799-81a4-1bdc3a4db249}, !- Name
+  {c71ac0e9-618e-4e1a-b59e-476b20429fa0}, !- Inlet Port
+  ;                                       !- Outlet Port
+
+OS:Connection,
+  {c71ac0e9-618e-4e1a-b59e-476b20429fa0}, !- Handle
+  {517217c6-9c66-4550-aade-961f07889014}, !- Name
+  {5f88d14f-7b8c-4dda-8513-56611abc3f38}, !- Source Object
+  11,                                     !- Outlet Port
+  {d593685a-ee20-4d70-841d-f755ddf94599}, !- Target Object
+  2;                                      !- Inlet Port
+
+OS:PortList,
+  {acaafc83-1ba8-4738-868e-7cf4db947da8}, !- Handle
+  {5ec42129-1647-4c99-8a8c-4b41dc617f6e}, !- Name
+  {5f88d14f-7b8c-4dda-8513-56611abc3f38}; !- HVAC Component
+
+OS:PortList,
+  {ef858fc0-f2da-4699-9ac4-8df91b869d21}, !- Handle
+  {f8c2c3cf-5431-4a78-badc-b3e49a2f11f8}, !- Name
+  {5f88d14f-7b8c-4dda-8513-56611abc3f38}; !- HVAC Component
+
+OS:Sizing:Zone,
+  {f0fe2086-ab95-43f7-b903-36bb13648dac}, !- Handle
+  {5f88d14f-7b8c-4dda-8513-56611abc3f38}, !- Zone or ZoneList Name
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+
+OS:ZoneHVAC:EquipmentList,
+  {1a57dac1-50df-4592-8a33-0402a798a229}, !- Handle
+  {12828714-95ba-4413-b8b0-64ff6d9b776b}, !- Name
+  {5f88d14f-7b8c-4dda-8513-56611abc3f38}; !- Thermal Zone
+
+OS:Space,
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Handle
+  Kitchen,                                !- Name
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  0,                                      !- Direction of Relative North {deg}
+  0,                                      !- X Origin {m}
+  0,                                      !- Y Origin {m}
+  0,                                      !- Z Origin {m}
+  ,                                       !- Building Story Name
+  {5f88d14f-7b8c-4dda-8513-56611abc3f38}, !- Thermal Zone Name
+  Yes;                                    !- Part of Total Floor Area
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {8efe2106-f1b2-43d1-9c13-7713be8db3da}, !- Handle
+  {bde964a4-2f61-412e-94fa-9a24f67f715b}, !- Name
+  {bf6e6338-a2d2-40ce-9450-90930602452a}, !- Heating Setpoint Temperature Schedule Name
+  {a8c77e10-8b0d-4ef6-a465-9e89c9abe873}; !- Cooling Setpoint Temperature Schedule Name
+
+OS:Schedule:Compact,
+  {bf6e6338-a2d2-40ce-9450-90930602452a}, !- Handle
+  HTGSETP_KITCHEN_SCH,                    !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: SummerDesignDay,                   !- Field 2
+  Until: 24:00,                           !- Field 3
+  15.6,                                   !- Field 4
+  For: WinterDesignDay,                   !- Field 5
+  Until: 24:00,                           !- Field 6
+  19,                                     !- Field 7
+  For: AllOtherDays,                      !- Field 8
+  Until: 01:00,                           !- Field 9
+  19,                                     !- Field 10
+  Until: 05:00,                           !- Field 11
+  15.6,                                   !- Field 12
+  Until: 24:00,                           !- Field 13
+  19;                                     !- Field 14
+
+OS:ScheduleTypeLimits,
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Handle
+  Temperature,                            !- Name
+  -60,                                    !- Lower Limit Value {BasedOnField A4}
+  200,                                    !- Upper Limit Value {BasedOnField A4}
+  CONTINUOUS,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Compact,
+  {a8c77e10-8b0d-4ef6-a465-9e89c9abe873}, !- Handle
+  CLGSETP_KITCHEN_SCH,                    !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: WinterDesignDay,                   !- Field 2
+  Until: 24:00,                           !- Field 3
+  30,                                     !- Field 4
+  For: AllOtherDays,                      !- Field 5
+  Until: 01:00,                           !- Field 6
+  26,                                     !- Field 7
+  Until: 05:00,                           !- Field 8
+  30,                                     !- Field 9
+  Until: 24:00,                           !- Field 10
+  26;                                     !- Field 11
+
+OS:ScheduleTypeLimits,
+  {4bde9c63-1a41-4143-9614-366067609c40}, !- Handle
+  Control Type,                           !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  4,                                      !- Upper Limit Value {BasedOnField A4}
+  DISCRETE,                               !- Numeric Type
+  ControlMode;                            !- Unit Type
+
+OS:Surface,
+  {1ab97f51-9583-454b-ba6a-21c8c366ae37}, !- Handle
+  Dining_Wall_West,                       !- Name
+  Wall,                                   !- Surface Type
+  {c5ea4808-a8f6-4697-9c7d-4efe49ec9af8}, !- Construction Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 7.6214, 3.0488,                      !- X,Y,Z Vertex 1 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 0, 3.0488;                           !- X,Y,Z Vertex 4 {m}
+
+OS:ThermalZone,
+  {9d6170ba-36dc-41bb-973b-95676bbd055c}, !- Handle
+  Dining Thermal Zone,                    !- Name
+  1,                                      !- Multiplier
+  ,                                       !- Ceiling Height {m}
+  ,                                       !- Volume {m3}
+  ,                                       !- Floor Area {m2}
+  ,                                       !- Zone Inside Convection Algorithm
+  ,                                       !- Zone Outside Convection Algorithm
+  ,                                       !- Zone Conditioning Equipment List Name
+  {2436b4f1-1b20-4d99-bba7-ab69a320bbb2}, !- Zone Air Inlet Port List
+  {ae458477-9045-4c72-9ff0-961096fea3ed}, !- Zone Air Exhaust Port List
+  {a513087c-02f4-4cc3-9b3a-e5c121661d6e}, !- Zone Air Node Name
+  ,                                       !- Zone Return Air Node Name
+  ,                                       !- Primary Daylighting Control Name
+  ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
+  ,                                       !- Secondary Daylighting Control Name
+  ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
+  ,                                       !- Illuminance Map Name
+  ,                                       !- Group Rendering Name
+  {df87dee3-8740-4670-b3b4-4ee1d463d303}, !- Thermostat Name
+  No;                                     !- Use Ideal Air Loads
+
+OS:Node,
+  {488c755b-f767-412e-a2af-45197565398b}, !- Handle
+  {8beefa99-8db3-471b-8cbd-28af21a5c73a}, !- Name
+  {a513087c-02f4-4cc3-9b3a-e5c121661d6e}, !- Inlet Port
+  ;                                       !- Outlet Port
+
+OS:Connection,
+  {a513087c-02f4-4cc3-9b3a-e5c121661d6e}, !- Handle
+  {3cae2dd0-1094-43c3-bc39-b6f373280e0b}, !- Name
+  {9d6170ba-36dc-41bb-973b-95676bbd055c}, !- Source Object
+  11,                                     !- Outlet Port
+  {488c755b-f767-412e-a2af-45197565398b}, !- Target Object
+  2;                                      !- Inlet Port
+
+OS:PortList,
+  {2436b4f1-1b20-4d99-bba7-ab69a320bbb2}, !- Handle
+  {940cf626-683e-400c-a339-6d2c0045c948}, !- Name
+  {9d6170ba-36dc-41bb-973b-95676bbd055c}; !- HVAC Component
+
+OS:PortList,
+  {ae458477-9045-4c72-9ff0-961096fea3ed}, !- Handle
+  {d48fd56e-aac4-4832-96bc-f3d2b33f8e1b}, !- Name
+  {9d6170ba-36dc-41bb-973b-95676bbd055c}; !- HVAC Component
+
+OS:Sizing:Zone,
+  {46868b9a-abbf-4af7-a80a-a9ab5308be45}, !- Handle
+  {9d6170ba-36dc-41bb-973b-95676bbd055c}, !- Zone or ZoneList Name
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+
+OS:ZoneHVAC:EquipmentList,
+  {6accfc16-d189-4cb4-b094-fc7af8841ec8}, !- Handle
+  {eaae147b-2029-4b38-8c5a-6fea1e6ddf2b}, !- Name
+  {9d6170ba-36dc-41bb-973b-95676bbd055c}; !- Thermal Zone
+
+OS:Space,
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Handle
+  Dining,                                 !- Name
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  0,                                      !- Direction of Relative North {deg}
+  0,                                      !- X Origin {m}
+  0,                                      !- Y Origin {m}
+  0,                                      !- Z Origin {m}
+  ,                                       !- Building Story Name
+  {9d6170ba-36dc-41bb-973b-95676bbd055c}, !- Thermal Zone Name
+  Yes;                                    !- Part of Total Floor Area
+
+OS:ThermostatSetpoint:DualSetpoint,
+  {df87dee3-8740-4670-b3b4-4ee1d463d303}, !- Handle
+  {23408453-d13c-4d3f-9951-4f1c8d63ce9d}, !- Name
+  {eca42ecd-c8db-46d0-b8a4-8b64e7d3d2d1}, !- Heating Setpoint Temperature Schedule Name
+  {09c21cc8-3468-4c55-86de-3b926efb95dc}; !- Cooling Setpoint Temperature Schedule Name
+
+OS:Schedule:Compact,
+  {eca42ecd-c8db-46d0-b8a4-8b64e7d3d2d1}, !- Handle
+  HTGSETP_SCH,                            !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: SummerDesignDay,                   !- Field 2
+  Until: 24:00,                           !- Field 3
+  15.6,                                   !- Field 4
+  For: WinterDesignDay,                   !- Field 5
+  Until: 24:00,                           !- Field 6
+  21,                                     !- Field 7
+  For: AllOtherDays,                      !- Field 8
+  Until: 01:00,                           !- Field 9
+  21,                                     !- Field 10
+  Until: 05:00,                           !- Field 11
+  15.6,                                   !- Field 12
+  Until: 24:00,                           !- Field 13
+  21;                                     !- Field 14
+
+OS:Schedule:Compact,
+  {09c21cc8-3468-4c55-86de-3b926efb95dc}, !- Handle
+  CLGSETP_SCH,                            !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: WinterDesignDay,                   !- Field 2
+  Until: 24:00,                           !- Field 3
+  30,                                     !- Field 4
+  For: AllOtherDays,                      !- Field 5
+  Until: 01:00,                           !- Field 6
+  24,                                     !- Field 7
+  Until: 05:00,                           !- Field 8
+  30,                                     !- Field 9
+  Until: 24:00,                           !- Field 10
+  24;                                     !- Field 11
+
+OS:Meter,
+  {8534d892-62b6-4787-bfb3-1821d02b5d83}, !- Handle
+  HeatRejection:Electricity,              !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Surface,
+  {63b75880-5bce-4fd6-a6f4-829c0c6e774c}, !- Handle
+  Dining_Wall_South,                      !- Name
+  Wall,                                   !- Surface Type
+  {c5ea4808-a8f6-4697-9c7d-4efe49ec9af8}, !- Construction Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 0, 3.0488,                           !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 3 {m}
+  15.2428, 0, 3.0488;                     !- X,Y,Z Vertex 4 {m}
+
+OS:Construction,
+  {ff69aeae-ab17-4910-b305-d997b7ed68fb}, !- Handle
+  Window Non-res Fixed,                   !- Name
+  ,                                       !- Surface Rendering Name
+  {a0c9c3b0-0680-49df-b0de-e8e491565b48}; !- Layer 1
+
+OS:WindowMaterial:SimpleGlazingSystem,
+  {a0c9c3b0-0680-49df-b0de-e8e491565b48}, !- Handle
+  NonRes Fixed Assembly Window,           !- Name
+  3.23646,                                !- U-Factor {W/m2-K}
+  0.39;                                   !- Solar Heat Gain Coefficient
+
+OS:SizingPeriod:DesignDay,
+  {6568ec0a-4cd8-4c02-a9be-fb57454280d0}, !- Handle
+  CHICAGO Ann Htg 99.6% Condns DB,        !- Name
+  -20.6,                                  !- Maximum Dry-Bulb Temperature {C}
+  0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
+  -20.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  99063,                                  !- Barometric Pressure {Pa}
+  4.9,                                    !- Wind Speed {m/s}
+  270,                                    !- Wind Direction {deg}
+  0,                                      !- Sky Clearness
+  0,                                      !- Rain Indicator
+  0,                                      !- Snow Indicator
+  21,                                     !- Day of Month
+  1,                                      !- Month
+  WinterDesignDay,                        !- Day Type
+  0,                                      !- Daylight Saving Time Indicator
+  Wetbulb,                                !- Humidity Indicating Type
+  ,                                       !- Humidity Indicating Day Schedule Name
+  ,                                       !- Dry-Bulb Temperature Range Modifier Type
+  ,                                       !- Dry-Bulb Temperature Range Modifier Schedule Name
+  ASHRAEClearSky;                         !- Solar Model Indicator
+
+OS:Surface,
+  {8c1e07ae-c427-425b-be39-2bd0e0e2c62a}, !- Handle
+  attic-floor-dining,                     !- Name
+  Floor,                                  !- Surface Type
+  {f71e147a-fcb3-4068-a6d4-861246b7c829}, !- Construction Name
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {627a7705-d5f3-457d-9036-2cda7232af5c}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 0;                           !- X,Y,Z Vertex 4 {m}
+
+OS:Construction,
+  {f71e147a-fcb3-4068-a6d4-861246b7c829}, !- Handle
+  Attic Non-res Floor,                    !- Name
+  ,                                       !- Surface Rendering Name
+  {9d941166-5f06-4f4c-b4db-3e3a712d41ed}, !- Layer 1
+  {2e31f5a7-f8b1-48c9-85a0-3f327b2eccb6}, !- Layer 2
+  {9d941166-5f06-4f4c-b4db-3e3a712d41ed}; !- Layer 3
+
+OS:Material,
+  {2e31f5a7-f8b1-48c9-85a0-3f327b2eccb6}, !- Handle
+  AtticFloor NonRes Insulation,           !- Name
+  MediumRough,                            !- Roughness
+  0.236804989096202,                      !- Thickness {m}
+  0.049,                                  !- Conductivity {W/m-K}
+  265,                                    !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:ThermalZone,
+  {6205cd97-30c8-4df7-b2d0-d34fcc55069e}, !- Handle
+  attic Thermal Zone,                     !- Name
+  1,                                      !- Multiplier
+  ,                                       !- Ceiling Height {m}
+  ,                                       !- Volume {m3}
+  ,                                       !- Floor Area {m2}
+  ,                                       !- Zone Inside Convection Algorithm
+  ,                                       !- Zone Outside Convection Algorithm
+  ,                                       !- Zone Conditioning Equipment List Name
+  {01f4684e-9ed0-49d4-95fe-270953553027}, !- Zone Air Inlet Port List
+  {178d822d-351b-4bd2-82c0-17d6c858f1db}, !- Zone Air Exhaust Port List
+  {a690bffc-35b6-45ef-a1b2-4880ba72ddad}, !- Zone Air Node Name
+  ,                                       !- Zone Return Air Node Name
+  ,                                       !- Primary Daylighting Control Name
+  ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
+  ,                                       !- Secondary Daylighting Control Name
+  ,                                       !- Fraction of Zone Controlled by Secondary Daylighting Control
+  ,                                       !- Illuminance Map Name
+  ,                                       !- Group Rendering Name
+  ,                                       !- Thermostat Name
+  No;                                     !- Use Ideal Air Loads
+
+OS:Node,
+  {b836fb6b-02fe-422f-bf41-3267967515bb}, !- Handle
+  {61019b1b-eb1f-4e79-bcd8-33c9653c7f36}, !- Name
+  {a690bffc-35b6-45ef-a1b2-4880ba72ddad}, !- Inlet Port
+  ;                                       !- Outlet Port
+
+OS:Connection,
+  {a690bffc-35b6-45ef-a1b2-4880ba72ddad}, !- Handle
+  {7968e895-ea6c-4a2f-8d88-a39fc686cea5}, !- Name
+  {6205cd97-30c8-4df7-b2d0-d34fcc55069e}, !- Source Object
+  11,                                     !- Outlet Port
+  {b836fb6b-02fe-422f-bf41-3267967515bb}, !- Target Object
+  2;                                      !- Inlet Port
+
+OS:PortList,
+  {01f4684e-9ed0-49d4-95fe-270953553027}, !- Handle
+  {4ea91dac-9c9c-4611-bf97-71b08d493ca7}, !- Name
+  {6205cd97-30c8-4df7-b2d0-d34fcc55069e}; !- HVAC Component
+
+OS:PortList,
+  {178d822d-351b-4bd2-82c0-17d6c858f1db}, !- Handle
+  {a36c04f6-cd5e-4883-9079-fb7e23c3f9fc}, !- Name
+  {6205cd97-30c8-4df7-b2d0-d34fcc55069e}; !- HVAC Component
+
+OS:Sizing:Zone,
+  {b3483fb2-acd2-4a38-af2b-dabc6807e55e}, !- Handle
+  {6205cd97-30c8-4df7-b2d0-d34fcc55069e}, !- Zone or ZoneList Name
+  14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       !- Zone Heating Sizing Factor
+  ,                                       !- Zone Cooling Sizing Factor
+  DesignDay,                              !- Cooling Design Air Flow Method
+  ,                                       !- Cooling Design Air Flow Rate {m3/s}
+  ,                                       !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Cooling Minimum Air Flow {m3/s}
+  ,                                       !- Cooling Minimum Air Flow Fraction
+  DesignDay,                              !- Heating Design Air Flow Method
+  ,                                       !- Heating Design Air Flow Rate {m3/s}
+  ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                                       !- Heating Maximum Air Flow {m3/s}
+  ,                                       !- Heating Maximum Air Flow Fraction
+  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+
+OS:ZoneHVAC:EquipmentList,
+  {1d7f17a6-9061-42b0-b426-da7f26bec20f}, !- Handle
+  {b648d856-7dfb-4713-b4d9-2c45bfb4a21b}, !- Name
+  {6205cd97-30c8-4df7-b2d0-d34fcc55069e}; !- Thermal Zone
+
+OS:Space,
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Handle
+  attic,                                  !- Name
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  0,                                      !- Direction of Relative North {deg}
+  0,                                      !- X Origin {m}
+  0,                                      !- Y Origin {m}
+  3.0488,                                 !- Z Origin {m}
+  ,                                       !- Building Story Name
+  {6205cd97-30c8-4df7-b2d0-d34fcc55069e}, !- Thermal Zone Name
+  No;                                     !- Part of Total Floor Area
+
+OS:Surface,
+  {836b69dd-6364-4017-b837-44f122396d2f}, !- Handle
+  east-roof,                              !- Name
+  RoofCeiling,                            !- Surface Type
+  {367e3135-4984-4790-b812-46e3ce8a3342}, !- Construction Name
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  12.7023, 7.6214, 2.5405,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  15.2428, 15.2428, 0;                    !- X,Y,Z Vertex 3 {m}
+
+OS:Construction,
+  {367e3135-4984-4790-b812-46e3ce8a3342}, !- Handle
+  Attic Non-res Roof,                     !- Name
+  ,                                       !- Surface Rendering Name
+  {07e95575-2795-4812-a1a3-75eac49799bb}, !- Layer 1
+  {c887e8da-f87a-494b-999c-0f38181ab947}; !- Layer 2
+
+OS:Material,
+  {07e95575-2795-4812-a1a3-75eac49799bb}, !- Handle
+  Roof Membrane,                          !- Name
+  VeryRough,                              !- Roughness
+  0.0095,                                 !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  1121.29,                                !- Density {kg/m3}
+  1460,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:Material,
+  {c887e8da-f87a-494b-999c-0f38181ab947}, !- Handle
+  Metal Decking,                          !- Name
+  MediumSmooth,                           !- Roughness
+  0.0015,                                 !- Thickness {m}
+  45.006,                                 !- Conductivity {W/m-K}
+  7680,                                   !- Density {kg/m3}
+  418.4,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.3;                                    !- Visible Absorptance
+
+OS:ElectricEquipment:Definition,
+  {a42c0049-a5f8-4a80-90c1-8a33dd3a14f4}, !- Handle
+  Kitchen_MiscElec_Equip Definition,      !- Name
+  EquipmentLevel,                         !- Design Level Calculation Method
+  35000,                                  !- Design Level {W}
+  ,                                       !- Watts per Space Floor Area {W/m2}
+  ,                                       !- Watts per Person {W/person}
+  0.25,                                   !- Fraction Latent
+  0.3,                                    !- Fraction Radiant
+  0.3;                                    !- Fraction Lost
+
+OS:ElectricEquipment,
+  {92ea6238-fd63-4cc2-9275-29bfd8937cab}, !- Handle
+  Kitchen_MiscElec_Equip,                 !- Name
+  {a42c0049-a5f8-4a80-90c1-8a33dd3a14f4}, !- Electric Equipment Definition Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space or SpaceType Name
+  {5185e5b6-970e-4448-9059-84ded3bde494}, !- Schedule Name
+  ,                                       !- Multiplier
+  MiscElec;                               !- End-Use Subcategory
+
+OS:Schedule:Compact,
+  {5185e5b6-970e-4448-9059-84ded3bde494}, !- Handle
+  BLDG_EQUIP_SCH,                         !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: Weekday,                           !- Field 2
+  Until: 06:00,                           !- Field 3
+  0.10,                                   !- Field 4
+  Until: 08:00,                           !- Field 5
+  0.35,                                   !- Field 6
+  Until: 10:00,                           !- Field 7
+  0.25,                                   !- Field 8
+  Until: 14:00,                           !- Field 9
+  0.35,                                   !- Field 10
+  Until: 17:00,                           !- Field 11
+  0.25,                                   !- Field 12
+  Until: 20:00,                           !- Field 13
+  0.35,                                   !- Field 14
+  Until: 24:00,                           !- Field 15
+  0.25,                                   !- Field 16
+  For: Saturday,                          !- Field 17
+  Until: 06:00,                           !- Field 18
+  0.10,                                   !- Field 19
+  Until: 08:00,                           !- Field 20
+  0.35,                                   !- Field 21
+  Until: 10:00,                           !- Field 22
+  0.25,                                   !- Field 23
+  Until: 14:00,                           !- Field 24
+  0.35,                                   !- Field 25
+  Until: 17:00,                           !- Field 26
+  0.25,                                   !- Field 27
+  Until: 20:00,                           !- Field 28
+  0.35,                                   !- Field 29
+  Until: 24:00,                           !- Field 30
+  0.25,                                   !- Field 31
+  For: SummerDesignDay,                   !- Field 32
+  Until: 24:00,                           !- Field 33
+  0.35,                                   !- Field 34
+  For: WinterDesignDay,                   !- Field 35
+  Until: 24:00,                           !- Field 36
+  0.0,                                    !- Field 37
+  For: Sunday Holidays AllOtherDays,      !- Field 38
+  Until: 06:00,                           !- Field 39
+  0.10,                                   !- Field 40
+  Until: 08:00,                           !- Field 41
+  0.35,                                   !- Field 42
+  Until: 10:00,                           !- Field 43
+  0.25,                                   !- Field 44
+  Until: 14:00,                           !- Field 45
+  0.35,                                   !- Field 46
+  Until: 17:00,                           !- Field 47
+  0.25,                                   !- Field 48
+  Until: 20:00,                           !- Field 49
+  0.35,                                   !- Field 50
+  Until: 24:00,                           !- Field 51
+  0.25;                                   !- Field 52
+
+OS:ScheduleTypeLimits,
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Handle
+  Fraction,                               !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  CONTINUOUS;                             !- Numeric Type
+
+OS:Schedule:Compact,
+  {4e68467a-f5f6-4fa0-b0b8-30e95f8fb853}, !- Handle
+  SWHSys1-Loop-Temp-Schedule,             !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  60.0;                                   !- Field 4
+
+OS:Meter,
+  {05f849b1-9415-4bf8-9fe3-2bf9bdfe98e3}, !- Handle
+  InteriorLights:Electricity,             !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Surface,
+  {b72b4ea1-0b11-491c-82d1-826b1fbaa003}, !- Handle
+  attic-floor-kitchen,                    !- Name
+  Floor,                                  !- Surface Type
+  {f71e147a-fcb3-4068-a6d4-861246b7c829}, !- Construction Name
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {839c7411-2d9c-49c7-a3a5-fcca1ad15379}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 15.2428, 0;                          !- X,Y,Z Vertex 4 {m}
+
+OS:Meter,
+  {08b08434-c3fa-40aa-82fd-6d012e08707d}, !- Handle
+  Gas:Facility,                           !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Schedule:Compact,
+  {e9e2864f-db32-4fcd-8922-d2f38f8e6398}, !- Handle
+  SWHSys1 Water Heater Ambient Temperature Schedule Name, !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  22.0;                                   !- Field 4
+
+OS:Schedule:Compact,
+  {417bd872-2c49-435b-8a92-b01550bdb82b}, !- Handle
+  BLDG_OCC_SCH,                           !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: Weekdays,                          !- Field 2
+  Until: 01:00,                           !- Field 3
+  0.05,                                   !- Field 4
+  Until: 05:00,                           !- Field 5
+  0.0,                                    !- Field 6
+  Until: 06:00,                           !- Field 7
+  0.05,                                   !- Field 8
+  Until: 07:00,                           !- Field 9
+  0.1,                                    !- Field 10
+  Until: 09:00,                           !- Field 11
+  0.4,                                    !- Field 12
+  Until: 10:00,                           !- Field 13
+  0.3,                                    !- Field 14
+  Until: 11:00,                           !- Field 15
+  0.2,                                    !- Field 16
+  Until: 12:00,                           !- Field 17
+  0.5,                                    !- Field 18
+  Until: 13:00,                           !- Field 19
+  0.8,                                    !- Field 20
+  Until: 14:00,                           !- Field 21
+  0.7,                                    !- Field 22
+  Until: 15:00,                           !- Field 23
+  0.4,                                    !- Field 24
+  Until: 16:00,                           !- Field 25
+  0.2,                                    !- Field 26
+  Until: 17:00,                           !- Field 27
+  0.25,                                   !- Field 28
+  Until: 18:00,                           !- Field 29
+  0.5,                                    !- Field 30
+  Until: 21:00,                           !- Field 31
+  0.55,                                   !- Field 32
+  Until: 22:00,                           !- Field 33
+  0.5,                                    !- Field 34
+  Until: 23:00,                           !- Field 35
+  0.35,                                   !- Field 36
+  Until: 24:00,                           !- Field 37
+  0.2,                                    !- Field 38
+  For: SummerDesignDay,                   !- Field 39
+  Until: 24:00,                           !- Field 40
+  1.0,                                    !- Field 41
+  For: WinterDesignDay,                   !- Field 42
+  Until: 24:00,                           !- Field 43
+  0.0,                                    !- Field 44
+  For: Saturday Sunday Holidays AllOtherDays, !- Field 45
+  Until: 01:00,                           !- Field 46
+  0.05,                                   !- Field 47
+  Until: 05:00,                           !- Field 48
+  0.0,                                    !- Field 49
+  Until: 07:00,                           !- Field 50
+  0.05,                                   !- Field 51
+  Until: 10:00,                           !- Field 52
+  0.3,                                    !- Field 53
+  Until: 11:00,                           !- Field 54
+  0.2,                                    !- Field 55
+  Until: 12:00,                           !- Field 56
+  0.45,                                   !- Field 57
+  Until: 13:00,                           !- Field 58
+  0.6,                                    !- Field 59
+  Until:14:00,                            !- Field 60
+  0.5,                                    !- Field 61
+  Until: 15:00,                           !- Field 62
+  0.35,                                   !- Field 63
+  Until: 18:00,                           !- Field 64
+  0.3,                                    !- Field 65
+  Until: 21:00,                           !- Field 66
+  0.55,                                   !- Field 67
+  Until: 22:00,                           !- Field 68
+  0.5,                                    !- Field 69
+  Until: 23:00,                           !- Field 70
+  0.35,                                   !- Field 71
+  Until: 24:00,                           !- Field 72
+  0.2;                                    !- Field 73
+
+OS:DesignSpecification:OutdoorAir,
+  {5f71c608-9ee3-4d28-8827-3256cac317e9}, !- Handle
+  SZ DSOA Dining,                         !- Name
+  ,                                       !- Outdoor Air Method
+  0.01,                                   !- Outdoor Air Flow per Person {m3/s-person}
+  ,                                       !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  ,                                       !- Outdoor Air Flow Rate {m3/s}
+  ,                                       !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:Meter,
+  {087df060-9412-40a8-9d49-fcd54afd347c}, !- Handle
+  Fans:Electricity,                       !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Curve:Biquadratic,
+  {5e659fa2-a442-4b7d-953e-fc3a284e14b0}, !- Handle
+  Cool-EIR-fT,                            !- Name
+  0.28687133,                             !- Coefficient1 Constant
+  0.023902164,                            !- Coefficient2 x
+  -0.000810648,                           !- Coefficient3 x**2
+  0.013458546,                            !- Coefficient4 y
+  0.0003389364,                           !- Coefficient5 y**2
+  -0.0004870044,                          !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x {BasedOnField A2}
+  100,                                    !- Maximum Value of x {BasedOnField A2}
+  -100,                                   !- Minimum Value of y {BasedOnField A3}
+  100;                                    !- Maximum Value of y {BasedOnField A3}
+
+OS:Schedule:Compact,
+  {cf32d338-39ca-4507-9672-8062b4a50343}, !- Handle
+  Kitchen Water Equipment Hot Supply Temp Sched, !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  49.0;                                   !- Field 4
+
+OS:InternalMass:Definition,
+  {2b70463c-138b-4292-b013-bc812f97bed1}, !- Handle
+  Kitchen Internal Mass Definition,       !- Name
+  {c408c437-1410-4ed9-9f6b-90a3be577328}, !- Construction Name
+  SurfaceArea,                            !- Design Level Calculation Method
+  232.343,                                !- Surface Area {m2}
+  ,                                       !- Surface Area per Space Floor Area {dimensionless}
+  ;                                       !- Surface Area per Person {m2/person}
+
+OS:Construction,
+  {c408c437-1410-4ed9-9f6b-90a3be577328}, !- Handle
+  InteriorFurnishings,                    !- Name
+  ,                                       !- Surface Rendering Name
+  {1115d7a9-3710-46bf-b7c7-4d7374410d58}; !- Layer 1
+
+OS:Material,
+  {1115d7a9-3710-46bf-b7c7-4d7374410d58}, !- Handle
+  Std Wood 6inch,                         !- Name
+  MediumSmooth,                           !- Roughness
+  0.15,                                   !- Thickness {m}
+  0.12,                                   !- Conductivity {W/m-K}
+  540,                                    !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:InternalMass,
+  {9f836432-cb04-4b5a-80ff-06ed0f5f72d5}, !- Handle
+  Kitchen Internal Mass,                  !- Name
+  {2b70463c-138b-4292-b013-bc812f97bed1}, !- Internal Mass Definition Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}; !- Space or SpaceType Name
+
+OS:SubSurface,
+  {2a9d3ce0-478b-4820-b768-2ba51f9e30ae}, !- Handle
+  Dining_Wall_East_Window,                !- Name
+  FixedWindow,                            !- Sub Surface Type
+  {ff69aeae-ab17-4910-b305-d997b7ed68fb}, !- Construction Name
+  {f7391340-4373-4b13-b22b-74f06707d9c2}, !- Surface Name
+  ,                                       !- Outside Boundary Condition Object
+  ,                                       !- View Factor to Ground
+  ,                                       !- Shading Control Name
+  ,                                       !- Frame and Divider Name
+  1,                                      !- Multiplier
+  ,                                       !- Number of Vertices
+  15.2428, 0.254, 1.9817,                 !- X,Y,Z Vertex 1 {m}
+  15.2428, 0.254, 1.0671,                 !- X,Y,Z Vertex 2 {m}
+  15.2428, 7.3673, 1.0671,                !- X,Y,Z Vertex 3 {m}
+  15.2428, 7.3673, 1.9817;                !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {f7391340-4373-4b13-b22b-74f06707d9c2}, !- Handle
+  Dining_Wall_East,                       !- Name
+  Wall,                                   !- Surface Type
+  {c5ea4808-a8f6-4697-9c7d-4efe49ec9af8}, !- Construction Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 0, 3.0488,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 3 {m}
+  15.2428, 7.6214, 3.0488;                !- X,Y,Z Vertex 4 {m}
+
+OS:ScheduleTypeLimits,
+  {ecfefa97-9091-49fc-aea5-e4710ef1fa0e}, !- Handle
+  Humidity,                               !- Name
+  10,                                     !- Lower Limit Value {BasedOnField A4}
+  90,                                     !- Upper Limit Value {BasedOnField A4}
+  CONTINUOUS;                             !- Numeric Type
+
+OS:HeatBalanceAlgorithm,
+  {a05a5141-3651-4f54-87c5-4a263bb247e6}, !- Handle
+  ConductionTransferFunction,             !- Algorithm
+  200;                                    !- Surface Temperature Upper Limit {F}
+
+OS:Meter,
+  {e11e7976-3285-46ef-b537-42757302552a}, !- Handle
+  Cooling:Electricity,                    !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Meter,
+  {ec87bccf-975b-4fd4-8951-cbf6e33c73c9}, !- Handle
+  Humidifier:Electricity,                 !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Schedule:Compact,
+  {9568be6f-4262-4520-a94a-9d1f3b07d8e3}, !- Handle
+  Kitchen Water Equipment Sensible fract sched, !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  0.2;                                    !- Field 4
+
+OS:Curve:Quadratic,
+  {746fe292-9083-46ce-a015-ef1cd1ddc94e}, !- Handle
+  No_PLR_Degredation,                     !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:GasEquipment:Definition,
+  {3d94a6f4-b4bb-4269-ab98-2410fd11414e}, !- Handle
+  Kitchen_MiscGas_Equip Definition,       !- Name
+  EquipmentLevel,                         !- Design Level Calculation Method
+  150055,                                 !- Design Level {W}
+  ,                                       !- Watts per Space Floor Area {W/m2}
+  ,                                       !- Watts per Person {W/Person}
+  0.1,                                    !- Fraction Latent
+  0.2,                                    !- Fraction Radiant
+  0.7;                                    !- Fraction Lost
+
+OS:GasEquipment,
+  {2257fbd3-824a-40ad-b9a1-8576494b56fd}, !- Handle
+  Kitchen_MiscGas_Equip,                  !- Name
+  {3d94a6f4-b4bb-4269-ab98-2410fd11414e}, !- Gas Equipment Definition Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space or SpaceType Name
+  {2f5b9d24-4e50-4e48-8f71-968aa657626b}, !- Schedule Name
+  ,                                       !- Multiplier
+  MiscGas;                                !- End-Use Subcategory
+
+OS:Schedule:Compact,
+  {2f5b9d24-4e50-4e48-8f71-968aa657626b}, !- Handle
+  GAS_EQUIP_SCH,                          !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: SummerDesignDay,                   !- Field 2
+  Until: 24:00,                           !- Field 3
+  0.25,                                   !- Field 4
+  For: WinterDesignDay,                   !- Field 5
+  Until: 24:00,                           !- Field 6
+  0.0,                                    !- Field 7
+  For: AllOtherDays,                      !- Field 8
+  Until: 05:00,                           !- Field 9
+  0.02,                                   !- Field 10
+  Until: 06:00,                           !- Field 11
+  0.03,                                   !- Field 12
+  Until: 07:00,                           !- Field 13
+  0.09,                                   !- Field 14
+  Until: 08:00,                           !- Field 15
+  0.14,                                   !- Field 16
+  Until: 10:00,                           !- Field 17
+  0.10,                                   !- Field 18
+  Until: 11:00,                           !- Field 19
+  0.22,                                   !- Field 20
+  Until: 12:00,                           !- Field 21
+  0.27,                                   !- Field 22
+  Until: 13:00,                           !- Field 23
+  0.24,                                   !- Field 24
+  Until: 14:00,                           !- Field 25
+  0.21,                                   !- Field 26
+  Until: 15:00,                           !- Field 27
+  0.14,                                   !- Field 28
+  Until:16:00,                            !- Field 29
+  0.13,                                   !- Field 30
+  Until:17:00,                            !- Field 31
+  0.15,                                   !- Field 32
+  Until: 20:00,                           !- Field 33
+  0.17,                                   !- Field 34
+  Until: 21:00,                           !- Field 35
+  0.15,                                   !- Field 36
+  Until: 22:00,                           !- Field 37
+  0.14,                                   !- Field 38
+  Until: 23:00,                           !- Field 39
+  0.12,                                   !- Field 40
+  Until: 24:00,                           !- Field 41
+  0.02;                                   !- Field 42
+
+OS:Curve:Quadratic,
+  {881c5625-eb18-40d9-9ede-66eaf39fd8b4}, !- Handle
+  Measured_CoolCStandard10Ton_EIRFFF,     !- Name
+  1.192,                                  !- Coefficient1 Constant
+  -0.1917,                                !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.776,                                  !- Minimum Value of x {BasedOnField A2}
+  1.197;                                  !- Maximum Value of x {BasedOnField A2}
+
+OS:Schedule:Compact,
+  {8e63f7db-1de6-4c99-a269-e4d982a7efd3}, !- Handle
+  PlantOnSched,                           !- Name
+  {eca05e90-11a2-40a8-9f13-7e519fcd3032}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  1.0;                                    !- Field 4
+
+OS:Curve:Quadratic,
+  {8498442e-d867-4786-80a6-30f77b365fd7}, !- Handle
+  Measured_CoolCStandard10Ton_CapFF,      !- Name
+  0.7685,                                 !- Coefficient1 Constant
+  0.2315,                                 !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.776,                                  !- Minimum Value of x {BasedOnField A2}
+  1.197;                                  !- Maximum Value of x {BasedOnField A2}
+
+OS:ScheduleTypeLimits,
+  {5629f870-22b8-4bfb-8d65-4948a2ef7f9f}, !- Handle
+  {08de0cc3-d56a-42f8-ac19-12493327f402}; !- Name
+
+OS:Sizing:Parameters,
+  {b8c78e3a-aff6-43a0-963e-4521b8312887}, !- Handle
+  1.2,                                    !- Heating Sizing Factor
+  1.2,                                    !- Cooling Sizing Factor
+  4;                                      !- Timesteps in Averaging Window
+
+OS:SubSurface,
+  {e884ee0a-a3f9-4bf7-b338-b44839d4244c}, !- Handle
+  Dining_Wall_South_Window,               !- Name
+  FixedWindow,                            !- Sub Surface Type
+  {ff69aeae-ab17-4910-b305-d997b7ed68fb}, !- Construction Name
+  {63b75880-5bce-4fd6-a6f4-829c0c6e774c}, !- Surface Name
+  ,                                       !- Outside Boundary Condition Object
+  ,                                       !- View Factor to Ground
+  ,                                       !- Shading Control Name
+  ,                                       !- Frame and Divider Name
+  1,                                      !- Multiplier
+  ,                                       !- Number of Vertices
+  0.508, 0, 1.9817,                       !- X,Y,Z Vertex 1 {m}
+  0.508, 0, 1.0671,                       !- X,Y,Z Vertex 2 {m}
+  14.735, 0, 1.0671,                      !- X,Y,Z Vertex 3 {m}
+  14.735, 0, 1.9817;                      !- X,Y,Z Vertex 4 {m}
+
+OS:Meter,
+  {fcdf1c95-9401-4df7-b414-d76e8757b828}, !- Handle
+  Refrigeration:Electricity,              !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Curve:Biquadratic,
+  {91a5b195-26a7-4dac-94f3-38f16747ac08}, !- Handle
+  Measured_LowSpeedCoolCapLSFT,           !- Name
+  0.4136,                                 !- Coefficient1 Constant
+  0.03105,                                !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.006952,                               !- Coefficient4 y
+  -0.0002128,                             !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  11.1,                                   !- Minimum Value of x {BasedOnField A2}
+  29.4,                                   !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  50.3;                                   !- Maximum Value of y {BasedOnField A3}
+
+OS:ShadowCalculation,
+  {9e3dc22d-3f3e-4503-b5c1-7df97c71ded4}, !- Handle
+  15000,                                  !- Calculation Frequency
+  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+OS:Curve:Quadratic,
+  {22db70e5-06a7-4a67-9f63-b162760a6dfa}, !- Handle
+  RACK1_RackCondFanCurve2,                !- Name
+  0,                                      !- Coefficient1 Constant
+  0.0286,                                 !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  35;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Surface,
+  {2f6e5cd9-b63c-4ee3-82b4-e6ae34384510}, !- Handle
+  Kitchen_Wall_East,                      !- Name
+  Wall,                                   !- Surface Type
+  {c5ea4808-a8f6-4697-9c7d-4efe49ec9af8}, !- Construction Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 3 {m}
+  15.2428, 15.2428, 3.0488;               !- X,Y,Z Vertex 4 {m}
+
+OS:SpaceInfiltration:DesignFlowRate,
+  {6162b484-dcb8-46df-8d22-2a159d5b5063}, !- Handle
+  attic_Infiltration,                     !- Name
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Space or SpaceType Name
+  {828b6af9-60a8-4666-a3a2-33a994bf8637}, !- Schedule Name
+  AirChanges/Hour,                        !- Design Flow Rate Calculation Method
+  ,                                       !- Design Flow Rate {m3/s}
+  ,                                       !- Flow per Space Floor Area {m3/s-m2}
+  ,                                       !- Flow per Exterior Surface Area {m3/s-m2}
+  1,                                      !- Air Changes per Hour {1/hr}
+  1,                                      !- Constant Term Coefficient
+  0,                                      !- Temperature Term Coefficient
+  0,                                      !- Velocity Term Coefficient
+  0;                                      !- Velocity Squared Term Coefficient
+
+OS:Schedule:Compact,
+  {828b6af9-60a8-4666-a3a2-33a994bf8637}, !- Handle
+  ALWAYS_ON,                              !- Name
+  {eca05e90-11a2-40a8-9f13-7e519fcd3032}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  1;                                      !- Field 4
+
+OS:SubSurface,
+  {3e6d57f9-5300-4a8f-b22a-422744d471d0}, !- Handle
+  Dining_Wall_West_Window,                !- Name
+  FixedWindow,                            !- Sub Surface Type
+  {ff69aeae-ab17-4910-b305-d997b7ed68fb}, !- Construction Name
+  {1ab97f51-9583-454b-ba6a-21c8c366ae37}, !- Surface Name
+  ,                                       !- Outside Boundary Condition Object
+  ,                                       !- View Factor to Ground
+  ,                                       !- Shading Control Name
+  ,                                       !- Frame and Divider Name
+  1,                                      !- Multiplier
+  ,                                       !- Number of Vertices
+  0, 7.3673, 1.9817,                      !- X,Y,Z Vertex 1 {m}
+  0, 7.3673, 1.0671,                      !- X,Y,Z Vertex 2 {m}
+  0, 0.254, 1.0671,                       !- X,Y,Z Vertex 3 {m}
+  0, 0.254, 1.9817;                       !- X,Y,Z Vertex 4 {m}
+
+OS:Lights:Definition,
+  {545cf9c2-0a05-44ed-a8cd-dc1e08bba1a7}, !- Handle
+  Dining_Lights Definition,               !- Name
+  Watts/Area,                             !- Design Level Calculation Method
+  ,                                       !- Lighting Level {W}
+  22.6,                                   !- Watts per Space Floor Area {W/m2}
+  ,                                       !- Watts per Person {W/person}
+  0.7,                                    !- Fraction Radiant
+  0.2,                                    !- Fraction Visible
+  0,                                      !- Return Air Fraction
+  No;                                     !- Return Air Fraction Calculated from Plenum Temperature
+
+OS:Lights,
+  {62124c1a-d187-41fb-8c70-e9ac7afcb4c8}, !- Handle
+  Dining_Lights,                          !- Name
+  {545cf9c2-0a05-44ed-a8cd-dc1e08bba1a7}, !- Lights Definition Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space or SpaceType Name
+  {af35bac3-9d9f-46ea-a7f9-9d5c2384a950}, !- Schedule Name
+  1,                                      !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
+
+OS:Schedule:Compact,
+  {af35bac3-9d9f-46ea-a7f9-9d5c2384a950}, !- Handle
+  BLDG_LIGHT_SCH,                         !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: SummerDesignDay,                   !- Field 2
+  Until: 24:00,                           !- Field 3
+  1.0,                                    !- Field 4
+  For: WinterDesignDay,                   !- Field 5
+  Until: 24:00,                           !- Field 6
+  0.0,                                    !- Field 7
+  For: Weekday Saturday Sunday Holidays AllOtherDays, !- Field 8
+  Until: 01:00,                           !- Field 9
+  0.45,                                   !- Field 10
+  Until: 05:00,                           !- Field 11
+  0.15,                                   !- Field 12
+  Until: 06:00,                           !- Field 13
+  0.45,                                   !- Field 14
+  Until: 24:00,                           !- Field 15
+  0.90;                                   !- Field 16
+
+OS:Schedule:Compact,
+  {72d92011-1810-4c55-b6fd-531136411fe3}, !- Handle
+  INFIL_HALF_ON_SCH,                      !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: Weekdays SummerDesignDay,          !- Field 2
+  Until: 05:00,                           !- Field 3
+  1.0,                                    !- Field 4
+  Until: 24:00,                           !- Field 5
+  0.5,                                    !- Field 6
+  For: Saturday WinterDesignDay,          !- Field 7
+  Until: 05:00,                           !- Field 8
+  1.0,                                    !- Field 9
+  Until: 24:00,                           !- Field 10
+  0.5,                                    !- Field 11
+  For: Sunday Holidays AllOtherDays,      !- Field 12
+  Until: 05:00,                           !- Field 13
+  1.0,                                    !- Field 14
+  Until: 24:00,                           !- Field 15
+  0.5;                                    !- Field 16
+
+OS:Construction,
+  {6974217f-a53c-4ceb-9fc1-1196afbf3e26}, !- Handle
+  AIR-WALL,                               !- Name
+  ,                                       !- Surface Rendering Name
+  {a1569691-5bba-4872-9be3-13f7facd3ba3}; !- Layer 1
+
+OS:Material:NoMass,
+  {a1569691-5bba-4872-9be3-13f7facd3ba3}, !- Handle
+  MAT-AIR-WALL,                           !- Name
+  Rough,                                  !- Roughness
+  0.2079491,                              !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7;                                    !- Solar Absorptance
+
+OS:Meter,
+  {2b0af093-8061-4762-9bc1-009fcfb62061}, !- Handle
+  ExteriorLights:Electricity,             !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:People:Definition,
+  {fcd36c53-4fde-49d7-9937-7c8841c1cec1}, !- Handle
+  Kitchen People Definition,              !- Name
+  People,                                 !- Number of People Calculation Method
+  6.25,                                   !- Number of People {people}
+  ,                                       !- People per Space Floor Area {person/m2}
+  ,                                       !- Space Floor Area per Person {m2/person}
+  0.3,                                    !- Fraction Radiant
+  ,                                       !- Sensible Heat Fraction
+  ,                                       !- Carbon Dioxide Generation Rate {m3/s-W}
+  No,                                     !- Enable ASHRAE 55 Comfort Warnings
+  ZoneAveraged,                           !- Mean Radiant Temperature Calculation Type
+  FANGER;                                 !- Thermal Comfort Model Type 1
+
+OS:People,
+  {77d03c29-a219-445b-bd08-dc62c137e1e9}, !- Handle
+  Kitchen People,                         !- Name
+  {fcd36c53-4fde-49d7-9937-7c8841c1cec1}, !- People Definition Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space or SpaceType Name
+  {417bd872-2c49-435b-8a92-b01550bdb82b}, !- Number of People Schedule Name
+  {50c5d44b-89c4-4632-96ee-423c55b911d5}, !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  {e8c35c71-8005-4c35-9c8f-f703bdf6bb0c}, !- Work Efficiency Schedule Name
+  {f5fad648-557f-41d0-9906-462ee0b5f3e7}, !- Clothing Insulation Schedule Name
+  {e4f1c85f-c7e0-4cc7-8351-dd1ed308b312}; !- Air Velocity Schedule Name
+
+OS:Schedule:Compact,
+  {50c5d44b-89c4-4632-96ee-423c55b911d5}, !- Handle
+  ACTIVITY_SCH,                           !- Name
+  {67b4b2f5-2f4b-4cd2-b223-9a743dc7bdd9}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  120.;                                   !- Field 4
+
+OS:ScheduleTypeLimits,
+  {1780066e-6211-49c6-8e29-56ccf2845110}, !- Handle
+  {dd4fad2e-d407-437d-890c-c348b5f9800f}; !- Name
+
+OS:ScheduleTypeLimits,
+  {67b4b2f5-2f4b-4cd2-b223-9a743dc7bdd9}, !- Handle
+  ActivityLevel,                          !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  ActivityLevel;                          !- Unit Type
+
+OS:Schedule:Compact,
+  {e8c35c71-8005-4c35-9c8f-f703bdf6bb0c}, !- Handle
+  WORK_EFF_SCH,                           !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  0.0;                                    !- Field 4
+
+OS:Schedule:Compact,
+  {f5fad648-557f-41d0-9906-462ee0b5f3e7}, !- Handle
+  CLOTHING_SCH,                           !- Name
+  {26fb5154-289d-4fb3-b9de-97d43f44d308}, !- Schedule Type Limits Name
+  Through: 04/30,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  1.0,                                    !- Field 4
+  Through: 09/30,                         !- Field 5
+  For: AllDays,                           !- Field 6
+  Until: 24:00,                           !- Field 7
+  0.5,                                    !- Field 8
+  Through: 12/31,                         !- Field 9
+  For: AllDays,                           !- Field 10
+  Until: 24:00,                           !- Field 11
+  1.0;                                    !- Field 12
+
+OS:ScheduleTypeLimits,
+  {89b80e1b-71c2-411b-992f-602d2781302d}, !- Handle
+  {97eb415e-c017-4939-80bf-002946c16aba}; !- Name
+
+OS:ScheduleTypeLimits,
+  {26fb5154-289d-4fb3-b9de-97d43f44d308}, !- Handle
+  ClothingInsulation,                     !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  ClothingInsulation;                     !- Unit Type
+
+OS:Schedule:Compact,
+  {e4f1c85f-c7e0-4cc7-8351-dd1ed308b312}, !- Handle
+  AIR_VELO_SCH,                           !- Name
+  {ac55e6c9-c765-4767-a10b-249d5ab18621}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  0.2;                                    !- Field 4
+
+OS:ScheduleTypeLimits,
+  {564b9fe4-2143-434b-906d-8e063e911dc7}, !- Handle
+  {7693d643-200f-4a57-b9bb-b6f2cbeb6efd}; !- Name
+
+OS:ScheduleTypeLimits,
+  {ac55e6c9-c765-4767-a10b-249d5ab18621}, !- Handle
+  Velocity,                               !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Velocity;                               !- Unit Type
+
+OS:Schedule:Compact,
+  {4e7038bb-a22c-4085-82ae-ed790b63d03c}, !- Handle
+  Kitchen_Exhaust_SCH,                    !- Name
+  {eca05e90-11a2-40a8-9f13-7e519fcd3032}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 01:00,                           !- Field 3
+  1.0,                                    !- Field 4
+  Until: 05:00,                           !- Field 5
+  0.0,                                    !- Field 6
+  Until: 24:00,                           !- Field 7
+  1.0;                                    !- Field 8
+
+OS:Surface,
+  {839c7411-2d9c-49c7-a3a5-fcca1ad15379}, !- Handle
+  Kitchen_Ceiling,                        !- Name
+  RoofCeiling,                            !- Surface Type
+  {f71e147a-fcb3-4068-a6d4-861246b7c829}, !- Construction Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {b72b4ea1-0b11-491c-82d1-826b1fbaa003}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 15.2428, 3.0488,               !- X,Y,Z Vertex 2 {m}
+  0, 15.2428, 3.0488,                     !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 3.0488;                      !- X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  {d96fea19-60c9-47fa-8941-bd0e6c56ef6b}, !- Handle
+  Dining_Wall_North-PPAutoCreateOther,    !- Name
+  Wall,                                   !- Surface Type
+  {12ac1b61-9115-45f5-a409-e4d00910dcca}, !- Construction Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {5a550225-b1f8-46a4-9293-a3bcf172575c}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 7.6214, 3.0488,                      !- X,Y,Z Vertex 1 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 2 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 3 {m}
+  15.2428, 7.6214, 3.0488;                !- X,Y,Z Vertex 4 {m}
+
+OS:Construction,
+  {12ac1b61-9115-45f5-a409-e4d00910dcca}, !- Handle
+  int-walls,                              !- Name
+  ,                                       !- Surface Rendering Name
+  {9d941166-5f06-4f4c-b4db-3e3a712d41ed}, !- Layer 1
+  {9d941166-5f06-4f4c-b4db-3e3a712d41ed}; !- Layer 2
+
+OS:Meter,
+  {5322caf3-3bdd-4705-b1c9-c812e96c956c}, !- Handle
+  WaterSystems:Gas,                       !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Schedule:Compact,
+  {5dbe9c58-89a0-4834-8b4e-fed9bc643a16}, !- Handle
+  Kitchen_Case:1_WALKINFREEZER_WalkInStockingSched, !- Name
+  ,                                       !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: Tuesday Friday,                    !- Field 2
+  Until: 4:00,                            !- Field 3
+  0.0,                                    !- Field 4
+  Until: 5:00,                            !- Field 5
+  725.0,                                  !- Field 6
+  Until: 6:00,                            !- Field 7
+  417.0,                                  !- Field 8
+  Until: 7:00,                            !- Field 9
+  290.0,                                  !- Field 10
+  Until: 24:00,                           !- Field 11
+  0.0,                                    !- Field 12
+  For: AllOtherDays,                      !- Field 13
+  Until: 4:00,                            !- Field 14
+  0.0,                                    !- Field 15
+  Until: 5:00,                            !- Field 16
+  125.0,                                  !- Field 17
+  Until: 6:00,                            !- Field 18
+  117.0,                                  !- Field 19
+  Until: 7:00,                            !- Field 20
+  90.0,                                   !- Field 21
+  Until: 19:00,                           !- Field 22
+  0.0,                                    !- Field 23
+  Until: 20:00,                           !- Field 24
+  125.0,                                  !- Field 25
+  Until: 21:00,                           !- Field 26
+  117.0,                                  !- Field 27
+  Until: 22:00,                           !- Field 28
+  90.0,                                   !- Field 29
+  Until: 24:00,                           !- Field 30
+  0.0;                                    !- Field 31
+
+OS:ScheduleTypeLimits,
+  {bec99745-952b-44c8-ac25-a55e74c2ed78}, !- Handle
+  {d8b9d094-181c-41b7-ac1a-2986d6fa6e0e}; !- Name
+
+OS:Material,
+  {ffd99e27-51c9-4df8-b2cb-908abe642ab6}, !- Handle
+  MAT-CC05 4 HW CONCRETE,                 !- Name
+  Rough,                                  !- Roughness
+  0.1016,                                 !- Thickness {m}
+  1.311,                                  !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:Meter,
+  {69a9b88e-3efe-493e-8099-8f84fdbfcdd6}, !- Handle
+  Heating:Gas,                            !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:ElectricEquipment:Definition,
+  {6d677342-5aa4-4d00-85f9-e93903e96210}, !- Handle
+  Kitchen_ExhFan_Equip Definition,        !- Name
+  EquipmentLevel,                         !- Design Level Calculation Method
+  577,                                    !- Design Level {W}
+  ,                                       !- Watts per Space Floor Area {W/m2}
+  ,                                       !- Watts per Person {W/person}
+  0,                                      !- Fraction Latent
+  0,                                      !- Fraction Radiant
+  1;                                      !- Fraction Lost
+
+OS:ElectricEquipment,
+  {ae0a2e35-bf9e-43ae-a12d-81854e9c5b75}, !- Handle
+  Kitchen_ExhFan_Equip,                   !- Name
+  {6d677342-5aa4-4d00-85f9-e93903e96210}, !- Electric Equipment Definition Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space or SpaceType Name
+  {4e7038bb-a22c-4085-82ae-ed790b63d03c}, !- Schedule Name
+  ,                                       !- Multiplier
+  KitchenExhFan;                          !- End-Use Subcategory
+
+OS:Building,
+  {664e28dc-f145-4a59-95c6-d1d96660eaeb}, !- Handle
+  Ref Bldg Quick Service Restaurant New2004_v1.3_5.0, !- Name
+  ,                                       !- Building Sector Type
+  0,                                      !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+
+OS:Surface,
+  {627a7705-d5f3-457d-9036-2cda7232af5c}, !- Handle
+  Dining_Ceiling,                         !- Name
+  RoofCeiling,                            !- Surface Type
+  {f71e147a-fcb3-4068-a6d4-861246b7c829}, !- Construction Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {8c1e07ae-c427-425b-be39-2bd0e0e2c62a}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 0, 3.0488,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 3.0488,                      !- X,Y,Z Vertex 3 {m}
+  0, 0, 3.0488;                           !- X,Y,Z Vertex 4 {m}
+
+OS:Material,
+  {9f3b0e2a-0a60-4a78-8ec1-eae128af03ca}, !- Handle
+  Std AC02,                               !- Name
+  MediumSmooth,                           !- Roughness
+  0.0127,                                 !- Thickness {m}
+  0.057,                                  !- Conductivity {W/m-K}
+  288,                                    !- Density {kg/m3}
+  1339,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.2;                                    !- Visible Absorptance
+
+OS:Meter,
+  {8f0abfec-c359-4669-bcf8-4d527a927aa2}, !- Handle
+  Electricity:Facility,                   !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Surface,
+  {ad3a2666-6636-47be-bbd4-8232ed80b8d7}, !- Handle
+  south-roof,                             !- Name
+  RoofCeiling,                            !- Surface Type
+  {367e3135-4984-4790-b812-46e3ce8a3342}, !- Construction Name
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  2.5405, 7.6214, 2.5405,                 !- X,Y,Z Vertex 1 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 2 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 3 {m}
+  12.7023, 7.6214, 2.5405;                !- X,Y,Z Vertex 4 {m}
+
+OS:Curve:Biquadratic,
+  {4e7baeef-1480-4c7a-badd-72fd2b2dfae9}, !- Handle
+  Measured_CoolCStandard10Ton_CapFT,      !- Name
+  0.52357,                                !- Coefficient1 Constant
+  0.03478,                                !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  -0.001915,                              !- Coefficient4 y
+  -0.00010838,                            !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  11.1,                                   !- Minimum Value of x {BasedOnField A2}
+  29.4,                                   !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  50.3;                                   !- Maximum Value of y {BasedOnField A3}
+
+OS:Meter,
+  {76648c16-ada5-4c1d-944c-5ca0527465f2}, !- Handle
+  WaterSystems:Electricity,               !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Curve:Cubic,
+  {0cb0e22b-45ef-4e46-bf5d-8f8a79c43011}, !- Handle
+  Kitchen_Case:2_SELFCONTAINEDDISPLAYCASEMultiShelfVertical_LatentEnergyMult, !- Name
+  0.026526281,                            !- Coefficient1 Constant
+  0.001078032,                            !- Coefficient2 x
+  -6.02558e-005,                          !- Coefficient3 x**2
+  1.23732e-006,                           !- Coefficient4 x**3
+  -35,                                    !- Minimum Value of x {BasedOnField A2}
+  20;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Meter,
+  {9490873e-d72f-484e-9caf-b2e30d873d75}, !- Handle
+  InteriorEquipment:Electricity,          !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Curve:Cubic,
+  {e22b6b3f-a691-4581-b436-0a1ef6da2e9c}, !- Handle
+  ConstantCubic,                          !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  -100,                                   !- Minimum Value of x {BasedOnField A2}
+  100;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:ScheduleTypeLimits,
+  {aaa2b3cd-ac67-468b-9ffc-3010782d5890}, !- Handle
+  {a4e878ac-6687-47cc-974f-55e384576056}; !- Name
+
+OS:Material,
+  {6adbf858-9d3c-468d-a320-cf0fd072b06f}, !- Handle
+  1IN Stucco,                             !- Name
+  Smooth,                                 !- Roughness
+  0.0253,                                 !- Thickness {m}
+  0.6918,                                 !- Conductivity {W/m-K}
+  1858,                                   !- Density {kg/m3}
+  837,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.92,                                   !- Solar Absorptance
+  0.92;                                   !- Visible Absorptance
+
+OS:Material,
+  {5d4382ce-c1ff-4398-922f-4932aca1f58e}, !- Handle
+  Metal Roofing,                          !- Name
+  MediumSmooth,                           !- Roughness
+  0.0015,                                 !- Thickness {m}
+  45.006,                                 !- Conductivity {W/m-K}
+  7680,                                   !- Density {kg/m3}
+  418.4,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.3;                                    !- Visible Absorptance
+
+OS:Meter,
+  {4504815a-6ea2-473f-8e91-233685c28741}, !- Handle
+  Pumps:Electricity,                      !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Material:NoMass,
+  {7428a231-a128-4f8e-8fb7-b41625a9d4a7}, !- Handle
+  CP02 CARPET PAD,                        !- Name
+  VeryRough,                              !- Roughness
+  0.2165,                                 !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.8;                                    !- Visible Absorptance
+
+OS:Construction,
+  {2df12d0e-090f-47ef-bc9b-b9d08f37e4bf}, !- Handle
+  DropCeiling,                            !- Name
+  ,                                       !- Surface Rendering Name
+  {9f3b0e2a-0a60-4a78-8ec1-eae128af03ca}; !- Layer 1
+
+OS:Material,
+  {aafb17a1-2637-4ded-b398-d8aea63f916c}, !- Handle
+  Metal Siding,                           !- Name
+  Smooth,                                 !- Roughness
+  0.0015,                                 !- Thickness {m}
+  44.96,                                  !- Conductivity {W/m-K}
+  7688.86,                                !- Density {kg/m3}
+  410,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.2,                                    !- Solar Absorptance
+  0.2;                                    !- Visible Absorptance
+
+OS:Curve:Quadratic,
+  {5ed2ce34-a26e-43ed-a084-153dffebc939}, !- Handle
+  Cool-PLF-fPLR,                          !- Name
+  0.90949556,                             !- Coefficient1 Constant
+  0.09864773,                             !- Coefficient2 x
+  -0.00819488,                            !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  0.7,                                    !- Minimum Curve Output {BasedOnField A3}
+  1;                                      !- Maximum Curve Output {BasedOnField A3}
+
+OS:InternalMass:Definition,
+  {6f724c7b-16f6-4fc5-9c8f-535518ca4182}, !- Handle
+  Dining Internal Mass Definition,        !- Name
+  {c408c437-1410-4ed9-9f6b-90a3be577328}, !- Construction Name
+  SurfaceArea,                            !- Design Level Calculation Method
+  232.343,                                !- Surface Area {m2}
+  ,                                       !- Surface Area per Space Floor Area {dimensionless}
+  ;                                       !- Surface Area per Person {m2/person}
+
+OS:InternalMass,
+  {48022b52-9f7e-4c44-81a8-bb83b2c79eef}, !- Handle
+  Dining Internal Mass,                   !- Name
+  {6f724c7b-16f6-4fc5-9c8f-535518ca4182}, !- Internal Mass Definition Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}; !- Space or SpaceType Name
+
+OS:RunPeriod,
+  {aad006e2-86f0-4232-a85a-2aca8d8e6e39}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  No,                                     !- Use Weather File Holidays and Special Days
+  No,                                     !- Use Weather File Daylight Saving Period
+  No,                                     !- Apply Weekend Holiday Rule
+  Yes,                                    !- Use Weather File Rain Indicators
+  Yes,                                    !- Use Weather File Snow Indicators
+  1;                                      !- Number of Times Runperiod to be Repeated
+
+OS:YearDescription,
+  {1339028a-a1e2-4fcd-8a64-d6a3c7e14bb1}, !- Handle
+  ,                                       !- Calendar Year
+  Sunday;                                 !- Day of Week for Start Day
+
+OS:Material,
+  {d7560f1c-cfea-4af7-bd27-f46b46066f64}, !- Handle
+  8IN CONCRETE HW,                        !- Name
+  Rough,                                  !- Roughness
+  0.2032,                                 !- Thickness {m}
+  1.311,                                  !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:ConvergenceLimits,
+  {5be5b750-3c57-419c-8a1a-a2becd5c0359}, !- Handle
+  2,                                      !- Minimum System Timestep {minutes}
+  25;                                     !- Maximum HVAC Iterations
+
+OS:Surface,
+  {9ca3a217-3220-4472-b7c2-0eeb9728133c}, !- Handle
+  Kitchen_Wall_West,                      !- Name
+  Wall,                                   !- Surface Type
+  {c5ea4808-a8f6-4697-9c7d-4efe49ec9af8}, !- Construction Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  0, 15.2428, 3.0488,                     !- X,Y,Z Vertex 1 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 3.0488;                      !- X,Y,Z Vertex 4 {m}
+
+OS:Curve:Biquadratic,
+  {5b2f4cc0-aadf-48df-8d67-957b8e84bb67}, !- Handle
+  Measured_CoolCStandard10Ton_EIRFT,      !- Name
+  0.9847,                                 !- Coefficient1 Constant
+  -0.04285,                               !- Coefficient2 x
+  0.0013562,                              !- Coefficient3 x**2
+  0.009934,                               !- Coefficient4 y
+  0.0006398,                              !- Coefficient5 y**2
+  -0.001169,                              !- Coefficient6 x*y
+  11.1,                                   !- Minimum Value of x {BasedOnField A2}
+  29.4,                                   !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  50.3;                                   !- Maximum Value of y {BasedOnField A3}
+
+OS:Construction,
+  {042aeca5-00a9-4298-a92f-115630ed64f7}, !- Handle
+  ext-slab,                               !- Name
+  ,                                       !- Surface Rendering Name
+  {01ff7726-d2e9-4c68-9129-410f78ea905a}; !- Layer 1
+
+OS:Material,
+  {01ff7726-d2e9-4c68-9129-410f78ea905a}, !- Handle
+  HW CONCRETE,                            !- Name
+  Rough,                                  !- Roughness
+  0.1016,                                 !- Thickness {m}
+  1.311,                                  !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+OS:Meter,
+  {5559655c-1370-4076-b444-d9eff488fbb4}, !- Handle
+  InteriorEquipment:Gas,                  !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:SpaceInfiltration:DesignFlowRate,
+  {ec286894-73f8-4f31-bdc3-d6ed1ea84f35}, !- Handle
+  Dining_Infiltration,                    !- Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space or SpaceType Name
+  {72d92011-1810-4c55-b6fd-531136411fe3}, !- Schedule Name
+  Flow/ExteriorArea,                      !- Design Flow Rate Calculation Method
+  ,                                       !- Design Flow Rate {m3/s}
+  ,                                       !- Flow per Space Floor Area {m3/s-m2}
+  0.000302,                               !- Flow per Exterior Surface Area {m3/s-m2}
+  ,                                       !- Air Changes per Hour {1/hr}
+  1,                                      !- Constant Term Coefficient
+  0,                                      !- Temperature Term Coefficient
+  0,                                      !- Velocity Term Coefficient
+  0;                                      !- Velocity Squared Term Coefficient
+
+OS:Curve:Biquadratic,
+  {e8636956-486c-4ae2-99f3-a5e046511880}, !- Handle
+  Measured_LowSpeedCoolEIRLSFT,           !- Name
+  1.1389,                                 !- Coefficient1 Constant
+  -0.04518,                               !- Coefficient2 x
+  0.0014298,                              !- Coefficient3 x**2
+  0.006044,                               !- Coefficient4 y
+  0.0006745,                              !- Coefficient5 y**2
+  -0.0012325,                             !- Coefficient6 x*y
+  11.1,                                   !- Minimum Value of x {BasedOnField A2}
+  29.4,                                   !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  50.3;                                   !- Maximum Value of y {BasedOnField A3}
+
+OS:Schedule:Compact,
+  {3d5efca5-b9a9-497a-aae4-b90009f86e04}, !- Handle
+  HVACOperationSchd,                      !- Name
+  {eca05e90-11a2-40a8-9f13-7e519fcd3032}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 01:00,                           !- Field 3
+  1.0,                                    !- Field 4
+  Until: 05:00,                           !- Field 5
+  0.0,                                    !- Field 6
+  Until: 24:00,                           !- Field 7
+  1.0;                                    !- Field 8
+
+OS:People:Definition,
+  {a5f70c0b-e926-4186-8212-cef77a1984d9}, !- Handle
+  Dining People Definition,               !- Name
+  Area/Person,                            !- Number of People Calculation Method
+  ,                                       !- Number of People {people}
+  ,                                       !- People per Space Floor Area {person/m2}
+  1.39,                                   !- Space Floor Area per Person {m2/person}
+  0.3,                                    !- Fraction Radiant
+  ,                                       !- Sensible Heat Fraction
+  ,                                       !- Carbon Dioxide Generation Rate {m3/s-W}
+  No,                                     !- Enable ASHRAE 55 Comfort Warnings
+  ZoneAveraged,                           !- Mean Radiant Temperature Calculation Type
+  FANGER;                                 !- Thermal Comfort Model Type 1
+
+OS:People,
+  {c46eb010-0eaf-4caa-b2aa-67c7a12ef075}, !- Handle
+  Dining People,                          !- Name
+  {a5f70c0b-e926-4186-8212-cef77a1984d9}, !- People Definition Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space or SpaceType Name
+  {417bd872-2c49-435b-8a92-b01550bdb82b}, !- Number of People Schedule Name
+  {50c5d44b-89c4-4632-96ee-423c55b911d5}, !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  {e8c35c71-8005-4c35-9c8f-f703bdf6bb0c}, !- Work Efficiency Schedule Name
+  {f5fad648-557f-41d0-9906-462ee0b5f3e7}, !- Clothing Insulation Schedule Name
+  {e4f1c85f-c7e0-4cc7-8351-dd1ed308b312}; !- Air Velocity Schedule Name
+
+OS:Schedule:Compact,
+  {cf88002c-4ea5-49b9-9101-5a6e5844ed46}, !- Handle
+  MinOA_Sched,                            !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 01:00,                           !- Field 3
+  1.0,                                    !- Field 4
+  Until: 05:00,                           !- Field 5
+  0.0,                                    !- Field 6
+  Until: 24:00,                           !- Field 7
+  1.0;                                    !- Field 8
+
+OS:Curve:Biquadratic,
+  {3777c72e-f830-4e06-8848-1d99d3bfe2f0}, !- Handle
+  Cool-Cap-fT,                            !- Name
+  0.9712123,                              !- Coefficient1 Constant
+  -0.015275502,                           !- Coefficient2 x
+  0.0014434524,                           !- Coefficient3 x**2
+  -0.00039321,                            !- Coefficient4 y
+  -6.8364e-006,                           !- Coefficient5 y**2
+  -0.0002905956,                          !- Coefficient6 x*y
+  -100,                                   !- Minimum Value of x {BasedOnField A2}
+  100,                                    !- Maximum Value of x {BasedOnField A2}
+  -100,                                   !- Minimum Value of y {BasedOnField A3}
+  100;                                    !- Maximum Value of y {BasedOnField A3}
+
+OS:Schedule:Compact,
+  {f92569b9-86ff-4198-9b66-f84aefdad489}, !- Handle
+  Kitchen Water Equipment Latent fract sched, !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  0.05;                                   !- Field 4
+
+OS:Surface,
+  {29515773-1597-4a3e-8cc4-ecd5e00cd084}, !- Handle
+  Dining_Floor,                           !- Name
+  Floor,                                  !- Surface Type
+  {042aeca5-00a9-4298-a92f-115630ed64f7}, !- Construction Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space Name
+  Ground,                                 !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 1 {m}
+  15.2428, 0, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 0, 0,                                !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 0;                           !- X,Y,Z Vertex 4 {m}
+
+OS:Schedule:Compact,
+  {276bdc1b-9667-474b-88eb-f35b6ab4d3fe}, !- Handle
+  BLDG_SWH_SCH,                           !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: Weekdays SummerDesignDay,          !- Field 2
+  Until: 01:00,                           !- Field 3
+  0.2,                                    !- Field 4
+  Until: 06:00,                           !- Field 5
+  0.0,                                    !- Field 6
+  Until: 07:00,                           !- Field 7
+  0.15,                                   !- Field 8
+  Until: 08:00,                           !- Field 9
+  0.6,                                    !- Field 10
+  Until: 09:00,                           !- Field 11
+  0.55,                                   !- Field 12
+  Until: 10:00,                           !- Field 13
+  0.45,                                   !- Field 14
+  Until: 11:00,                           !- Field 15
+  0.4,                                    !- Field 16
+  Until: 12:00,                           !- Field 17
+  0.45,                                   !- Field 18
+  Until: 13:00,                           !- Field 19
+  0.4,                                    !- Field 20
+  Until: 14:00,                           !- Field 21
+  0.35,                                   !- Field 22
+  Until: 17:00,                           !- Field 23
+  0.3,                                    !- Field 24
+  Until: 18:00,                           !- Field 25
+  0.4,                                    !- Field 26
+  Until: 19:00,                           !- Field 27
+  0.55,                                   !- Field 28
+  Until: 20:00,                           !- Field 29
+  0.6,                                    !- Field 30
+  Until: 21:00,                           !- Field 31
+  0.5,                                    !- Field 32
+  Until: 22:00,                           !- Field 33
+  0.55,                                   !- Field 34
+  Until: 23:00,                           !- Field 35
+  0.45,                                   !- Field 36
+  Until: 24:00,                           !- Field 37
+  0.25,                                   !- Field 38
+  For: Saturday WinterDesignDay,          !- Field 39
+  Until: 01:00,                           !- Field 40
+  0.2,                                    !- Field 41
+  Until: 06:00,                           !- Field 42
+  0.0,                                    !- Field 43
+  Until: 09:00,                           !- Field 44
+  0.15,                                   !- Field 45
+  Until: 10:00,                           !- Field 46
+  0.5,                                    !- Field 47
+  Until: 11:00,                           !- Field 48
+  0.45,                                   !- Field 49
+  Until: 13:00,                           !- Field 50
+  0.5,                                    !- Field 51
+  Until: 14:00,                           !- Field 52
+  0.45,                                   !- Field 53
+  Until: 16:00,                           !- Field 54
+  0.4,                                    !- Field 55
+  Until: 17:00,                           !- Field 56
+  0.35,                                   !- Field 57
+  Until: 18:00,                           !- Field 58
+  0.4,                                    !- Field 59
+  Until: 20:00,                           !- Field 60
+  0.55,                                   !- Field 61
+  Until: 21:00,                           !- Field 62
+  0.5,                                    !- Field 63
+  Until: 22:00,                           !- Field 64
+  0.55,                                   !- Field 65
+  Until: 23:00,                           !- Field 66
+  0.4,                                    !- Field 67
+  Until: 24:00,                           !- Field 68
+  0.3,                                    !- Field 69
+  For: Sunday Holidays AllOtherDays,      !- Field 70
+  Until: 01:00,                           !- Field 71
+  0.25,                                   !- Field 72
+  Until: 06:00,                           !- Field 73
+  0.0,                                    !- Field 74
+  Until: 10:00,                           !- Field 75
+  0.15,                                   !- Field 76
+  Until: 12:00,                           !- Field 77
+  0.5,                                    !- Field 78
+  Until: 14:00,                           !- Field 79
+  0.4,                                    !- Field 80
+  Until: 17:00,                           !- Field 81
+  0.3,                                    !- Field 82
+  Until: 18:00,                           !- Field 83
+  0.4,                                    !- Field 84
+  Until: 20:00,                           !- Field 85
+  0.5,                                    !- Field 86
+  Until: 21:00,                           !- Field 87
+  0.4,                                    !- Field 88
+  Until: 22:00,                           !- Field 89
+  0.5,                                    !- Field 90
+  Until: 23:00,                           !- Field 91
+  0.4,                                    !- Field 92
+  Until: 24:00,                           !- Field 93
+  0.2;                                    !- Field 94
+
+OS:Timestep,
+  {37eb006f-5b0a-480a-a398-64bd89319db6}, !- Handle
+  4;                                      !- Number of Timesteps per Hour
+
+OS:SizingPeriod:DesignDay,
+  {62d87203-0658-470b-a47d-adfd24abf684}, !- Handle
+  CHICAGO Ann Clg .4% Condns WB=>MDB,     !- Name
+  31.2,                                   !- Maximum Dry-Bulb Temperature {C}
+  10.7,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
+  25.5,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  99063,                                  !- Barometric Pressure {Pa}
+  5.3,                                    !- Wind Speed {m/s}
+  230,                                    !- Wind Direction {deg}
+  1,                                      !- Sky Clearness
+  0,                                      !- Rain Indicator
+  0,                                      !- Snow Indicator
+  21,                                     !- Day of Month
+  7,                                      !- Month
+  SummerDesignDay,                        !- Day Type
+  0,                                      !- Daylight Saving Time Indicator
+  Wetbulb,                                !- Humidity Indicating Type
+  ,                                       !- Humidity Indicating Day Schedule Name
+  ,                                       !- Dry-Bulb Temperature Range Modifier Type
+  ,                                       !- Dry-Bulb Temperature Range Modifier Schedule Name
+  ASHRAEClearSky;                         !- Solar Model Indicator
+
+OS:Surface,
+  {82076489-b542-4ed7-be1e-c5b51776d874}, !- Handle
+  Kitchen_Floor,                          !- Name
+  Floor,                                  !- Surface Type
+  {042aeca5-00a9-4298-a92f-115630ed64f7}, !- Construction Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space Name
+  Ground,                                 !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 15.2428, 0;                          !- X,Y,Z Vertex 4 {m}
+
+OS:Curve:Quadratic,
+  {1202120f-1b37-40c6-af44-8999f01d7287}, !- Handle
+  RACK2_RackCOPfTCurve,                   !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  50;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {73f0241b-f91d-4114-868f-190dc85ed52c}, !- Handle
+  RACK1_RackCOPfTCurve,                   !- Name
+  1.7603,                                 !- Coefficient1 Constant
+  -0.0377,                                !- Coefficient2 x
+  0.0004,                                 !- Coefficient3 x**2
+  10,                                     !- Minimum Value of x {BasedOnField A2}
+  35;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Schedule:Compact,
+  {98869dac-8f5a-45bd-a66b-627919ed06c7}, !- Handle
+  Dual Zone Control Type Sched,           !- Name
+  {4bde9c63-1a41-4143-9614-366067609c40}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  4;                                      !- Field 4
+
+OS:Lights:Definition,
+  {36f03f78-e640-47f6-94a7-ec143ddc620c}, !- Handle
+  Kitchen_Lights Definition,              !- Name
+  Watts/Area,                             !- Design Level Calculation Method
+  ,                                       !- Lighting Level {W}
+  12.9,                                   !- Watts per Space Floor Area {W/m2}
+  ,                                       !- Watts per Person {W/person}
+  0.7,                                    !- Fraction Radiant
+  0.2,                                    !- Fraction Visible
+  0,                                      !- Return Air Fraction
+  No;                                     !- Return Air Fraction Calculated from Plenum Temperature
+
+OS:Lights,
+  {32feec59-8cff-4fbb-81a3-276304846baf}, !- Handle
+  Kitchen_Lights,                         !- Name
+  {36f03f78-e640-47f6-94a7-ec143ddc620c}, !- Lights Definition Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space or SpaceType Name
+  {af35bac3-9d9f-46ea-a7f9-9d5c2384a950}, !- Schedule Name
+  1,                                      !- Fraction Replaceable
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
+
+OS:Meter,
+  {cb403f9a-5c6e-455a-ac95-eab9318b4416}, !- Handle
+  ExteriorEquipment:Electricity,          !- Name
+  hourly,                                 !- Reporting Frequency
+  False,                                  !- Meter File Only
+  False;                                  !- Cumulative
+
+OS:Surface,
+  {ec9c57ce-5a65-4d9a-9057-9ec4cdbdb8fa}, !- Handle
+  west-roof,                              !- Name
+  RoofCeiling,                            !- Surface Type
+  {367e3135-4984-4790-b812-46e3ce8a3342}, !- Construction Name
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  2.5405, 7.6214, 2.5405,                 !- X,Y,Z Vertex 1 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 2 {m}
+  0, 0, 0;                                !- X,Y,Z Vertex 3 {m}
+
+OS:Schedule:Compact,
+  {e795015f-432d-431d-b17a-6f3c55b4cfe8}, !- Handle
+  Kitchen Water Equipment Temp Sched,     !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  49.0;                                   !- Field 4
+
+OS:Curve:Cubic,
+  {bb1fc54d-3d2e-487f-b655-27a5e1e46b02}, !- Handle
+  Kitchen_Case:1_WALKINFREEZERSingleShelfHorizontal_LatentEnergyMult, !- Name
+  0.020376,                               !- Coefficient1 Constant
+  0.00024378,                             !- Coefficient2 x
+  1.14e-005,                              !- Coefficient3 x**2
+  1.811e-007,                             !- Coefficient4 x**3
+  -35,                                    !- Minimum Value of x {BasedOnField A2}
+  20;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Schedule:Compact,
+  {26cdec06-ec8c-41f9-a2ac-8ca9fd990d21}, !- Handle
+  Kitchen_Case:1_WALKINFREEZER_CaseDripDown2aDaySched, !- Name
+  {eca05e90-11a2-40a8-9f13-7e519fcd3032}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For:AllDays,                            !- Field 2
+  Interpolate:Yes,                        !- Field 3
+  Until: 11:00,                           !- Field 4
+  0,                                      !- Field 5
+  Until: 11:30,                           !- Field 6
+  1,                                      !- Field 7
+  Until: 23:00,                           !- Field 8
+  0,                                      !- Field 9
+  Until: 23:30,                           !- Field 10
+  1,                                      !- Field 11
+  Until: 24:00,                           !- Field 12
+  0;                                      !- Field 13
+
+OS:Schedule:Compact,
+  {0357e71b-fcdd-49cd-b940-c40d829ced92}, !- Handle
+  SWHSys1 Water Heater Setpoint Temperature Schedule Name, !- Name
+  {084f6721-d1fe-4ad4-8207-0197ab799530}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For: AllDays,                           !- Field 2
+  Until: 24:00,                           !- Field 3
+  60.0;                                   !- Field 4
+
+OS:Schedule:Compact,
+  {c484fff1-06e3-4dec-9635-a0876fb03925}, !- Handle
+  Kitchen_Case:1_WALKINFREEZER_CaseCreditReduxSched, !- Name
+  {522797c6-026d-46d8-bcb9-576738331b9d}, !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For:AllDays,                            !- Field 2
+  Interpolate:No,                         !- Field 3
+  Until: 7:00,                            !- Field 4
+  0.2,                                    !- Field 5
+  Until: 21:00,                           !- Field 6
+  0.4,                                    !- Field 7
+  Until: 24:00,                           !- Field 8
+  0.2;                                    !- Field 9
+
+OS:Surface,
+  {7db8cb1c-1ab2-4c19-b5f6-d1607c786d6b}, !- Handle
+  north-roof,                             !- Name
+  RoofCeiling,                            !- Surface Type
+  {367e3135-4984-4790-b812-46e3ce8a3342}, !- Construction Name
+  {a0016aa2-c35e-4eb5-b726-1f14fe10794e}, !- Space Name
+  Outdoors,                               !- Outside Boundary Condition
+  ,                                       !- Outside Boundary Condition Object
+  SunExposed,                             !- Sun Exposure
+  WindExposed,                            !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  12.7023, 7.6214, 2.5405,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 15.2428, 0,                    !- X,Y,Z Vertex 2 {m}
+  0, 15.2428, 0,                          !- X,Y,Z Vertex 3 {m}
+  2.5405, 7.6214, 2.5405;                 !- X,Y,Z Vertex 4 {m}
+
+OS:Schedule:Compact,
+  {742d8ce6-d335-4251-9684-9cc64f7dc620}, !- Handle
+  Kitchen_Case:2_SELFCONTAINEDDISPLAYCASE_CaseStockingSched, !- Name
+  ,                                       !- Schedule Type Limits Name
+  Through: 12/31,                         !- Field 1
+  For:AllDays,                            !- Field 2
+  Until: 6:00,                            !- Field 3
+  0.0,                                    !- Field 4
+  Until: 7:00,                            !- Field 5
+  50.0,                                   !- Field 6
+  Until: 9:00,                            !- Field 7
+  70.0,                                   !- Field 8
+  Until: 10:00,                           !- Field 9
+  80.0,                                   !- Field 10
+  Until: 11:00,                           !- Field 11
+  70.0,                                   !- Field 12
+  Until: 13:00,                           !- Field 13
+  50.0,                                   !- Field 14
+  Until: 14:00,                           !- Field 15
+  80.0,                                   !- Field 16
+  Until: 15:00,                           !- Field 17
+  90.0,                                   !- Field 18
+  Until: 16:00,                           !- Field 19
+  80.0,                                   !- Field 20
+  Until: 24:00,                           !- Field 21
+  0.0;                                    !- Field 22
+
+OS:ScheduleTypeLimits,
+  {f4086d6d-22a9-4b4d-b9bd-c26d6d759e9a}, !- Handle
+  {3fc28154-7a25-43bb-b612-cc7fd00d5beb}; !- Name
+
+OS:SpaceInfiltration:DesignFlowRate,
+  {0cfc49ac-723e-49a9-9633-d0fa20b561d6}, !- Handle
+  Kitchen_Infiltration,                   !- Name
+  {ab7964c8-ce90-4863-8b0a-e293cb28a162}, !- Space or SpaceType Name
+  {72d92011-1810-4c55-b6fd-531136411fe3}, !- Schedule Name
+  Flow/ExteriorArea,                      !- Design Flow Rate Calculation Method
+  ,                                       !- Design Flow Rate {m3/s}
+  ,                                       !- Flow per Space Floor Area {m3/s-m2}
+  0.000302,                               !- Flow per Exterior Surface Area {m3/s-m2}
+  ,                                       !- Air Changes per Hour {1/hr}
+  1,                                      !- Constant Term Coefficient
+  0,                                      !- Temperature Term Coefficient
+  0,                                      !- Velocity Term Coefficient
+  0;                                      !- Velocity Squared Term Coefficient
+
+OS:Surface,
+  {5a550225-b1f8-46a4-9293-a3bcf172575c}, !- Handle
+  Dining_Wall_North,                      !- Name
+  Wall,                                   !- Surface Type
+  {12ac1b61-9115-45f5-a409-e4d00910dcca}, !- Construction Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space Name
+  Surface,                                !- Outside Boundary Condition
+  {d96fea19-60c9-47fa-8941-bd0e6c56ef6b}, !- Outside Boundary Condition Object
+  NoSun,                                  !- Sun Exposure
+  NoWind,                                 !- Wind Exposure
+  ,                                       !- View Factor to Ground
+  ,                                       !- Number of Vertices
+  15.2428, 7.6214, 3.0488,                !- X,Y,Z Vertex 1 {m}
+  15.2428, 7.6214, 0,                     !- X,Y,Z Vertex 2 {m}
+  0, 7.6214, 0,                           !- X,Y,Z Vertex 3 {m}
+  0, 7.6214, 3.0488;                      !- X,Y,Z Vertex 4 {m}
+
+OS:DesignSpecification:OutdoorAir,
+  {869aa110-38a6-4fb4-841c-b33c73e83231}, !- Handle
+  SZ DSOA Kitchen,                        !- Name
+  ,                                       !- Outdoor Air Method
+  ,                                       !- Outdoor Air Flow per Person {m3/s-person}
+  ,                                       !- Outdoor Air Flow per Floor Area {m3/s-m2}
+  0.72246762589928,                       !- Outdoor Air Flow Rate {m3/s}
+  ,                                       !- Outdoor Air Flow Air Changes per Hour {1/hr}
+  ;                                       !- Outdoor Air Flow Rate Fraction Schedule Name
+
+OS:ElectricEquipment:Definition,
+  {d4982128-be61-4059-8256-00f2bab02297}, !- Handle
+  Dining_MiscElec_Equip Definition,       !- Name
+  EquipmentLevel,                         !- Design Level Calculation Method
+  15000,                                  !- Design Level {W}
+  ,                                       !- Watts per Space Floor Area {W/m2}
+  ,                                       !- Watts per Person {W/person}
+  0.25,                                   !- Fraction Latent
+  0.3,                                    !- Fraction Radiant
+  0;                                      !- Fraction Lost
+
+OS:ElectricEquipment,
+  {8f425106-24e5-4b8b-aabb-baee48d8f2dd}, !- Handle
+  Dining_MiscElec_Equip,                  !- Name
+  {d4982128-be61-4059-8256-00f2bab02297}, !- Electric Equipment Definition Name
+  {c2294a06-801d-472d-bfe8-b0d133556a9b}, !- Space or SpaceType Name
+  {5185e5b6-970e-4448-9059-84ded3bde494}, !- Schedule Name
+  ,                                       !- Multiplier
+  MiscElec;                               !- End-Use Subcategory
+

@@ -113,6 +113,34 @@
       "notes": "From DOE Pre-1980 Reference Building"
     },
     {
+      "name": "DXCOOL-NECB2011-REF-CAPFT",
+      "coeff_1": 0.867905,
+      "coeff_2": 0.0142459,
+      "coeff_3": 0.00055436,
+      "coeff_4": -0.0075575,
+      "coeff_5": 3.3e-05,
+      "coeff_6": -0.0001918,
+      "min_x": 13.0,
+      "max_x": 24.0,
+      "min_y": 24.0,
+      "max_y": 46.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "DXCOOL-NECB2011-REF-COOLEIRFT",
+      "coeff_1": 0.116936,
+      "coeff_2": 0.0284933,
+      "coeff_3": -0.0004112,
+      "coeff_4": 0.0214108,
+      "coeff_5": 0.00016103,
+      "coeff_6": -0.0006791,
+      "min_x": 13.0,
+      "max_x": 24.0,
+      "min_y": 24.0,
+      "max_y": 46.0,
+      "notes": "From NECB 2011"
+    },
+    {
       "name": "FURNACE_PACU_VAV_CoolCCarrier48TM014_12tons_EIRFT",
       "coeff_1": -0.536161,
       "coeff_2": 0.105138,
@@ -295,6 +323,20 @@
       "notes": "From PNNL Prototype OfficeLarge"
     },
     {
+      "name": "WaterCooled_Centrifugal_CAPFT_NECB2011",
+      "coeff_1": 0.707908,
+      "coeff_2": -0.0020066,
+      "coeff_3": -0.0025961,
+      "coeff_4": 0.0300588,
+      "coeff_5": -0.0010564,
+      "coeff_6": 0.0020457,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
+    },
+    {
       "name": "WaterCooled_Centrifugal_Chiller_2010_PathA_CAPFT",
       "coeff_1": 0.7600172,
       "coeff_2": 0.0147432,
@@ -407,6 +449,20 @@
       "notes": "Based on Dick Lord's study dated January 17, 2010."
     },
     {
+      "name": "WaterCooled_Centrifugal_EIRFT_NECB2011",
+      "coeff_1": 0.561,
+      "coeff_2": -0.0138,
+      "coeff_3": 6.56e-05,
+      "coeff_4": 0.0132,
+      "coeff_5": 0.000269,
+      "coeff_6": -0.000501,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
+    },
+    {
       "name": "WaterCooled_PositiveDisplacement_Chiller_2004_CAPFT",
       "coeff_1": 0.906115,
       "coeff_2": 0.029227,
@@ -517,6 +573,90 @@
       "min_y": 17.78,
       "max_y": 46.11,
       "notes": "Based on Dick Lord's study dated January 17, 2010."
+    },
+    {
+      "name": "WaterCooled_Reciprocating_CAPFT_NECB2011",
+      "coeff_1": 1.03031,
+      "coeff_2": 0.0334698,
+      "coeff_3": 0.00023639,
+      "coeff_4": -0.0072959,
+      "coeff_5": -2.317e-05,
+      "coeff_6": -0.0001489,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Reciprocating_EIRFT_NECB2011",
+      "coeff_1": 0.5,
+      "coeff_2": -0.0131,
+      "coeff_3": 0.000266,
+      "coeff_4": 0.0166,
+      "coeff_5": 0.000185,
+      "coeff_6": -0.000376,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Screw_CAPFT_NECB2011",
+      "coeff_1": 0.812998,
+      "coeff_2": -0.0142532,
+      "coeff_3": -0.001618,
+      "coeff_4": 0.0263844,
+      "coeff_5": -0.0009154,
+      "coeff_6": 0.00169601,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Screw_EIRFT_NECB2011",
+      "coeff_1": 0.638,
+      "coeff_2": 0.0063,
+      "coeff_3": 0.000923,
+      "coeff_4": -0.00455,
+      "coeff_5": 0.000826,
+      "coeff_6": -0.00156,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Scroll_CAPFT_NECB2011",
+      "coeff_1": 0.94418,
+      "coeff_2": 0.0337102,
+      "coeff_3": 9.7556e-05,
+      "coeff_4": -0.0032211,
+      "coeff_5": -4.918e-05,
+      "coeff_6": -0.0001776,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
+    },
+    {
+      "name": "WaterCooled_Scroll_EIRFT_NECB2011",
+      "coeff_1": 0.727,
+      "coeff_2": -0.0119,
+      "coeff_3": 0.000541,
+      "coeff_4": 0.00188,
+      "coeff_5": 0.000473,
+      "coeff_6": -0.000711,
+      "min_x": 5.0,
+      "max_x": 10.0,
+      "min_y": 24.0,
+      "max_y": 35.0,
+      "notes": "From NECB 2011"
     }
   ]
 }

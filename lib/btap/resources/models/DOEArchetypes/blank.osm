@@ -1,0 +1,101 @@
+
+OS:Version,
+  {ef2a63a7-298e-4e20-a1e1-8303fc7f1794}, !- Handle
+  1.2.0;                                  !- Version Identifier
+
+OS:YearDescription,
+  {d075b6c6-04a2-45de-9bd1-db2bb83b1e08}; !- Handle
+
+OS:RadianceParameters,
+  {6a90bac4-0b59-4a7f-b946-fda28e3661ea}, !- Handle
+  1,                                      !- Accumulated Rays per Record
+  0,                                      !- Direct Threshold
+  1,                                      !- Direct Certainty
+  1,                                      !- Direct Jitter
+  1,                                      !- Direct Pretest
+  6,                                      !- Ambient Bounces VMX
+  2,                                      !- Ambient Bounces DMX
+  4050,                                   !- Ambient Divisions VMX
+  512,                                    !- Ambient Divisions DMX
+  256,                                    !- Ambient Supersamples
+  0.001,                                  !- Limit Weight VMX
+  0.001,                                  !- Limit Weight DMX
+  500,                                    !- Klems Sampling Density
+  146;                                    !- Sky Discretization Resolution
+
+OS:SimulationControl,
+  {0debd769-e3e7-45e3-af13-fe9e12770e58}; !- Handle
+
+OS:Sizing:Parameters,
+  {88ef5524-5358-4044-8ab9-f6821ba064c5}, !- Handle
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
+
+OS:ProgramControl,
+  {3307444d-57ed-4f52-8d74-36a337c569b3}; !- Handle
+
+OS:Timestep,
+  {87eb8d68-7c5e-4e05-b56e-81af3f945ee8}, !- Handle
+  6;                                      !- Number of Timesteps per Hour
+
+OS:OutputControl:ReportingTolerances,
+  {140009b9-76f7-4dce-8163-bd96a9ecbf11}; !- Handle
+
+OS:ConvergenceLimits,
+  {164daac1-0b6d-4055-bb3e-425e6800bf7a}; !- Handle
+
+OS:ShadowCalculation,
+  {0c6e632b-d7d2-4bab-b0e0-0f4dd67f2192}, !- Handle
+  7,                                      !- Calculation Frequency
+  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+OS:SurfaceConvectionAlgorithm:Inside,
+  {f89d9b22-de4b-458f-b6fd-345a6bff2376}, !- Handle
+  TARP;                                   !- Algorithm
+
+OS:SurfaceConvectionAlgorithm:Outside,
+  {da79d0b9-b00b-41be-b831-4af34faa4fc5}, !- Handle
+  DOE-2;                                  !- Algorithm
+
+OS:HeatBalanceAlgorithm,
+  {b303929d-9106-4bae-976c-d961cce207eb}, !- Handle
+  ConductionTransferFunction,             !- Algorithm
+  200;                                    !- Surface Temperature Upper Limit {F}
+
+OS:ZoneAirHeatBalanceAlgorithm,
+  {65fe3659-bd16-4605-9fc0-4bec99bcd2cc}, !- Handle
+  AnalyticalSolution;                     !- Algorithm
+
+OS:ZoneAirContaminantBalance,
+  {522bb908-6099-43d0-adfe-b4e8ae75f01e}; !- Handle
+
+OS:ZoneCapacitanceMultiplier:ResearchSpecial,
+  {6137c768-d164-4efd-baab-7029529021cd}, !- Handle
+  ,                                       !- Temperature Capacity Multiplier
+  ,                                       !- Humidity Capacity Multiplier
+  ;                                       !- Carbon Dioxide Capacity Multiplier
+
+OS:RunPeriod,
+  {fc481b1c-8ae2-4d82-99a9-4072b85a408b}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+
+OS:Building,
+  {a633add0-f97b-45de-941a-7097636faa67}, !- Handle
+  Building 1,                             !- Name
+  ,                                       !- Building Type
+  ,                                       !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+

@@ -97,7 +97,7 @@ class OpenStudio::Model::AirLoopHVAC
   # @todo Determine the presence of MERV filters and other stuff in Table 6.5.3.1.1B.  May need to extend AirLoopHVAC data model
   def fan_power_limitation_pressure_drop_adjustment_brake_horsepower(template = "ASHRAE 90.1-2007")
   
-   # Get design supply air flow rate (whether autosized or hard-sized)
+    # Get design supply air flow rate (whether autosized or hard-sized)
     dsn_air_flow_m3_per_s = 0
     dsn_air_flow_cfm = 0
     if self.autosizedDesignSupplyAirFlowRate.is_initialized
@@ -142,7 +142,7 @@ class OpenStudio::Model::AirLoopHVAC
   #   units = horsepower
   def allowable_system_brake_horsepower(template = "ASHRAE 90.1-2007")
   
-   # Get design supply air flow rate (whether autosized or hard-sized)
+    # Get design supply air flow rate (whether autosized or hard-sized)
     dsn_air_flow_m3_per_s = 0
     dsn_air_flow_cfm = 0
     if self.autosizedDesignSupplyAirFlowRate.is_initialized
@@ -398,7 +398,7 @@ class OpenStudio::Model::AirLoopHVAC
         else
           OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "For #{self.name} capacity of #{coil.name} is not available, total cooling capacity of air loop will be incorrect when applying standard.")
         end
-      # CoilCoolingDXTwoSpeed
+        # CoilCoolingDXTwoSpeed
       elsif sc.to_CoilCoolingDXTwoSpeed.is_initialized  
         coil = sc.to_CoilCoolingDXTwoSpeed.get
         if coil.ratedHighSpeedTotalCoolingCapacity.is_initialized
@@ -408,7 +408,7 @@ class OpenStudio::Model::AirLoopHVAC
         else
           OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "For #{self.name} capacity of #{coil.name} is not available, total cooling capacity of air loop will be incorrect when applying standard.")
         end
-      # CoilCoolingWater
+        # CoilCoolingWater
       elsif sc.to_CoilCoolingWater.is_initialized
         coil = sc.to_CoilCoolingWater.get
         if coil.autosizedDesignCoilLoad.is_initialized # TODO Change to pull water coil nominal capacity instead of design load
@@ -416,14 +416,23 @@ class OpenStudio::Model::AirLoopHVAC
         else
           OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "For #{self.name} capacity of #{coil.name} is not available, total cooling capacity of air loop will be incorrect when applying standard.")
         end
-      # TODO Handle all cooling coil types for economizer determination
+        # TODO Handle all cooling coil types for economizer determination
+      elsif sc.to_AirLoopHVACUnitaryHeatPumpAirToAir.is_initialized
+        coil = sc.to_AirLoopHVACUnitaryHeatPumpAirToAir.get.coolingCoil
+        dxcoil = coil.to_CoilCoolingDXSingleSpeed.get
+        if dxcoil.ratedTotalCoolingCapacity.is_initialized
+          total_cooling_capacity_w += dxcoil.ratedTotalCoolingCapacity.get
+        elsif dxcoil.autosizedRatedTotalCoolingCapacity.is_initialized
+          total_cooling_capacity_w += dxcoil.autosizedRatedTotalCoolingCapacity.get
+        else
+          OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "For #{self.name} capacity of #{coil.name} is not available, total cooling capacity of air loop will be incorrect when applying standard.")
+        end
       elsif sc.to_CoilCoolingDXMultiSpeed.is_initialized ||
-            sc.to_CoilCoolingCooledBeam.is_initialized ||
-            sc.to_CoilCoolingWaterToAirHeatPumpEquationFit.is_initialized ||
-            sc.to_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.is_initialized ||
-            sc.to_AirLoopHVACUnitaryHeatPumpAirToAir.is_initialized ||
-            sc.to_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.is_initialized ||
-            sc.to_AirLoopHVACUnitarySystem.is_initialized
+          sc.to_CoilCoolingCooledBeam.is_initialized ||
+          sc.to_CoilCoolingWaterToAirHeatPumpEquationFit.is_initialized ||
+          sc.to_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.is_initialized ||
+          sc.to_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.is_initialized ||
+          sc.to_AirLoopHVACUnitarySystem.is_initialized
         OpenStudio::logFree(OpenStudio::Warn, 'openstudio.standards.AirLoopHVAC', "#{self.name} has a cooling coil named #{sc.name}, whose type is not yet covered by economizer checks.")
         # CoilCoolingDXMultiSpeed
         # CoilCoolingCooledBeam
@@ -434,7 +443,7 @@ class OpenStudio::Model::AirLoopHVAC
         # AirLoopHVACUnitarySystem
       end
     end
-    
+
     return total_cooling_capacity_w
   
   end
@@ -461,52 +470,54 @@ class OpenStudio::Model::AirLoopHVAC
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007'
       case climate_zone
       when 'ASHRAE 169-2006-1A',
-        'ASHRAE 169-2006-1B',
-        'ASHRAE 169-2006-2A',
-        'ASHRAE 169-2006-3A',
-        'ASHRAE 169-2006-4A'
+          'ASHRAE 169-2006-1B',
+          'ASHRAE 169-2006-2A',
+          'ASHRAE 169-2006-3A',
+          'ASHRAE 169-2006-4A'
         minimum_capacity_btu_per_hr = infinity_btu_per_hr # No requirement
       when 'ASHRAE 169-2006-2B',
-        'ASHRAE 169-2006-5A',
-        'ASHRAE 169-2006-6A',
-        'ASHRAE 169-2006-7A',
-        'ASHRAE 169-2006-7B',
-        'ASHRAE 169-2006-8A',
-        'ASHRAE 169-2006-8B'
+          'ASHRAE 169-2006-5A',
+          'ASHRAE 169-2006-6A',
+          'ASHRAE 169-2006-7A',
+          'ASHRAE 169-2006-7B',
+          'ASHRAE 169-2006-8A',
+          'ASHRAE 169-2006-8B'
         minimum_capacity_btu_per_hr = 35000
       when 'ASHRAE 169-2006-3B',
-        'ASHRAE 169-2006-3C',
-        'ASHRAE 169-2006-4B',
-        'ASHRAE 169-2006-4C',
-        'ASHRAE 169-2006-5B',
-        'ASHRAE 169-2006-5C',
-        'ASHRAE 169-2006-6B'
+          'ASHRAE 169-2006-3C',
+          'ASHRAE 169-2006-4B',
+          'ASHRAE 169-2006-4C',
+          'ASHRAE 169-2006-5B',
+          'ASHRAE 169-2006-5C',
+          'ASHRAE 169-2006-6B'
         minimum_capacity_btu_per_hr = 65000
       end
     when '90.1-2010', '90.1-2013'
       case climate_zone
       when 'ASHRAE 169-2006-1A',
-        'ASHRAE 169-2006-1B'
+          'ASHRAE 169-2006-1B'
         minimum_capacity_btu_per_hr = infinity_btu_per_hr # No requirement
       when 'ASHRAE 169-2006-2A',
-        'ASHRAE 169-2006-3A',
-        'ASHRAE 169-2006-4A',
-        'ASHRAE 169-2006-2B',
-        'ASHRAE 169-2006-5A',
-        'ASHRAE 169-2006-6A',
-        'ASHRAE 169-2006-7A',
-        'ASHRAE 169-2006-7B',
-        'ASHRAE 169-2006-8A',
-        'ASHRAE 169-2006-8B',
-        'ASHRAE 169-2006-3B',
-        'ASHRAE 169-2006-3C',
-        'ASHRAE 169-2006-4B',
-        'ASHRAE 169-2006-4C',
-        'ASHRAE 169-2006-5B',
-        'ASHRAE 169-2006-5C',
-        'ASHRAE 169-2006-6B'
+          'ASHRAE 169-2006-3A',
+          'ASHRAE 169-2006-4A',
+          'ASHRAE 169-2006-2B',
+          'ASHRAE 169-2006-5A',
+          'ASHRAE 169-2006-6A',
+          'ASHRAE 169-2006-7A',
+          'ASHRAE 169-2006-7B',
+          'ASHRAE 169-2006-8A',
+          'ASHRAE 169-2006-8B',
+          'ASHRAE 169-2006-3B',
+          'ASHRAE 169-2006-3C',
+          'ASHRAE 169-2006-4B',
+          'ASHRAE 169-2006-4C',
+          'ASHRAE 169-2006-5B',
+          'ASHRAE 169-2006-5C',
+          'ASHRAE 169-2006-6B'
         minimum_capacity_btu_per_hr = 54000
       end
+    when 'NECB 2011'
+      minimum_capacity_btu_per_hr =  68243      # NECB requires economizer for cooling cap > 20 kW
     end
   
     # Check whether the system requires an economizer by comparing
@@ -562,26 +573,26 @@ class OpenStudio::Model::AirLoopHVAC
       when 'FixedDryBulb'
         case climate_zone
         when 'ASHRAE 169-2006-1B',
-          'ASHRAE 169-2006-2B',
-          'ASHRAE 169-2006-3B',
-          'ASHRAE 169-2006-3C',
-          'ASHRAE 169-2006-4B',
-          'ASHRAE 169-2006-4C',
-          'ASHRAE 169-2006-5B',
-          'ASHRAE 169-2006-5C',
-          'ASHRAE 169-2006-6B',
-          'ASHRAE 169-2006-7B',
-          'ASHRAE 169-2006-8A',
-          'ASHRAE 169-2006-8B'
+            'ASHRAE 169-2006-2B',
+            'ASHRAE 169-2006-3B',
+            'ASHRAE 169-2006-3C',
+            'ASHRAE 169-2006-4B',
+            'ASHRAE 169-2006-4C',
+            'ASHRAE 169-2006-5B',
+            'ASHRAE 169-2006-5C',
+            'ASHRAE 169-2006-6B',
+            'ASHRAE 169-2006-7B',
+            'ASHRAE 169-2006-8A',
+            'ASHRAE 169-2006-8B'
           drybulb_limit_f = 75
         when 'ASHRAE 169-2006-5A',
-          'ASHRAE 169-2006-6A',
-          'ASHRAE 169-2006-7A'
+            'ASHRAE 169-2006-6A',
+            'ASHRAE 169-2006-7A'
           drybulb_limit_f = 70
         when 'ASHRAE 169-2006-1A',
-          'ASHRAE 169-2006-2A',
-          'ASHRAE 169-2006-3A',
-          'ASHRAE 169-2006-4A'
+            'ASHRAE 169-2006-2A',
+            'ASHRAE 169-2006-3A',
+            'ASHRAE 169-2006-4A'
           drybulb_limit_f = 65
         end
       when 'FixedEnthalpy'
@@ -595,21 +606,21 @@ class OpenStudio::Model::AirLoopHVAC
       when 'FixedDryBulb'
         case climate_zone
         when 'ASHRAE 169-2006-1B',
-          'ASHRAE 169-2006-2B',
-          'ASHRAE 169-2006-3B',
-          'ASHRAE 169-2006-3C',
-          'ASHRAE 169-2006-4B',
-          'ASHRAE 169-2006-4C',
-          'ASHRAE 169-2006-5B',
-          'ASHRAE 169-2006-5C',
-          'ASHRAE 169-2006-6B',
-          'ASHRAE 169-2006-7A',
-          'ASHRAE 169-2006-7B',
-          'ASHRAE 169-2006-8A',
-          'ASHRAE 169-2006-8B'
+            'ASHRAE 169-2006-2B',
+            'ASHRAE 169-2006-3B',
+            'ASHRAE 169-2006-3C',
+            'ASHRAE 169-2006-4B',
+            'ASHRAE 169-2006-4C',
+            'ASHRAE 169-2006-5B',
+            'ASHRAE 169-2006-5C',
+            'ASHRAE 169-2006-6B',
+            'ASHRAE 169-2006-7A',
+            'ASHRAE 169-2006-7B',
+            'ASHRAE 169-2006-8A',
+            'ASHRAE 169-2006-8B'
           drybulb_limit_f = 75
         when 'ASHRAE 169-2006-5A',
-          'ASHRAE 169-2006-6A'
+            'ASHRAE 169-2006-6A'
           drybulb_limit_f = 70
         end
       when 'FixedEnthalpy'
@@ -696,7 +707,7 @@ class OpenStudio::Model::AirLoopHVAC
       if is_vav == true && num_zones_served > 1
         integrated_economizer_required = false
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{template} #{climate_zone}:  #{self.name}: non-integrated economizer per 6.5.1.3 exception a, DX VAV system.")
-      # Exception b, DX units less than 65,000 Btu/hr
+        # Exception b, DX units less than 65,000 Btu/hr
       elsif self.total_cooling_capacity < minimum_capacity_w
         integrated_economizer_required = false
         OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{template} #{climate_zone}:  #{self.name}: non-integrated economizer per 6.5.1.3 exception b, DX system less than #{minimum_capacity_btu_per_hr}Btu/hr.")
@@ -704,30 +715,34 @@ class OpenStudio::Model::AirLoopHVAC
         # Exception c, Systems in climate zones 1,2,3a,4a,5a,5b,6,7,8
         case climate_zone
         when 'ASHRAE 169-2006-1A',
-          'ASHRAE 169-2006-1B',
-          'ASHRAE 169-2006-2A',
-          'ASHRAE 169-2006-2B',
-          'ASHRAE 169-2006-3A',
-          'ASHRAE 169-2006-4A',
-          'ASHRAE 169-2006-5A',
-          'ASHRAE 169-2006-5B',
-          'ASHRAE 169-2006-6A',
-          'ASHRAE 169-2006-6B',
-          'ASHRAE 169-2006-7A',
-          'ASHRAE 169-2006-7B',
-          'ASHRAE 169-2006-8A',
-          'ASHRAE 169-2006-8B'
+            'ASHRAE 169-2006-1B',
+            'ASHRAE 169-2006-2A',
+            'ASHRAE 169-2006-2B',
+            'ASHRAE 169-2006-3A',
+            'ASHRAE 169-2006-4A',
+            'ASHRAE 169-2006-5A',
+            'ASHRAE 169-2006-5B',
+            'ASHRAE 169-2006-6A',
+            'ASHRAE 169-2006-6B',
+            'ASHRAE 169-2006-7A',
+            'ASHRAE 169-2006-7B',
+            'ASHRAE 169-2006-8A',
+            'ASHRAE 169-2006-8B'
           integrated_economizer_required = false
           OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{template} #{climate_zone}:  #{self.name}: non-integrated economizer per 6.5.1.3 exception c, climate zone #{climate_zone}.")
         when 'ASHRAE 169-2006-3B',
-          'ASHRAE 169-2006-3C',
-          'ASHRAE 169-2006-4B',
-          'ASHRAE 169-2006-4C',
-          'ASHRAE 169-2006-5C'
+            'ASHRAE 169-2006-3C',
+            'ASHRAE 169-2006-4B',
+            'ASHRAE 169-2006-4C',
+            'ASHRAE 169-2006-5C'
           integrated_economizer_required = true
         end
       end
     when '90.1-2010', '90.1-2013'
+      integrated_economizer_required = true
+    when 'NECB 2011'
+      # this means that compressor allowed to turn on when economizer is open
+      # (NoLockout); as per 5.2.2.8(3) 
       integrated_economizer_required = true
     end
   
@@ -799,54 +814,54 @@ class OpenStudio::Model::AirLoopHVAC
     when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', '90.1-2007'
       case climate_zone
       when 'ASHRAE 169-2006-1B',
-        'ASHRAE 169-2006-2B',
-        'ASHRAE 169-2006-3B',
-        'ASHRAE 169-2006-3C',
-        'ASHRAE 169-2006-4B',
-        'ASHRAE 169-2006-4C',
-        'ASHRAE 169-2006-5B',
-        'ASHRAE 169-2006-6B',
-        'ASHRAE 169-2006-7A',
-        'ASHRAE 169-2006-7B',
-        'ASHRAE 169-2006-8A',
-        'ASHRAE 169-2006-8B'
+          'ASHRAE 169-2006-2B',
+          'ASHRAE 169-2006-3B',
+          'ASHRAE 169-2006-3C',
+          'ASHRAE 169-2006-4B',
+          'ASHRAE 169-2006-4C',
+          'ASHRAE 169-2006-5B',
+          'ASHRAE 169-2006-6B',
+          'ASHRAE 169-2006-7A',
+          'ASHRAE 169-2006-7B',
+          'ASHRAE 169-2006-8A',
+          'ASHRAE 169-2006-8B'
         prohibited_types = ['FixedEnthalpy']
       when
         'ASHRAE 169-2006-1A',
-        'ASHRAE 169-2006-2A',
-        'ASHRAE 169-2006-3A',
-        'ASHRAE 169-2006-4A'
+          'ASHRAE 169-2006-2A',
+          'ASHRAE 169-2006-3A',
+          'ASHRAE 169-2006-4A'
         prohibited_types = ['DifferentialDryBulb']
       when 
         'ASHRAE 169-2006-5A',
-        'ASHRAE 169-2006-6A',
-        prohibited_types = []
+          'ASHRAE 169-2006-6A',
+          prohibited_types = []
       end
     when  '90.1-2010', '90.1-2013'
       case climate_zone
       when 'ASHRAE 169-2006-1B',
-        'ASHRAE 169-2006-2B',
-        'ASHRAE 169-2006-3B',
-        'ASHRAE 169-2006-3C',
-        'ASHRAE 169-2006-4B',
-        'ASHRAE 169-2006-4C',
-        'ASHRAE 169-2006-5B',
-        'ASHRAE 169-2006-6B',
-        'ASHRAE 169-2006-7A',
-        'ASHRAE 169-2006-7B',
-        'ASHRAE 169-2006-8A',
-        'ASHRAE 169-2006-8B'
+          'ASHRAE 169-2006-2B',
+          'ASHRAE 169-2006-3B',
+          'ASHRAE 169-2006-3C',
+          'ASHRAE 169-2006-4B',
+          'ASHRAE 169-2006-4C',
+          'ASHRAE 169-2006-5B',
+          'ASHRAE 169-2006-6B',
+          'ASHRAE 169-2006-7A',
+          'ASHRAE 169-2006-7B',
+          'ASHRAE 169-2006-8A',
+          'ASHRAE 169-2006-8B'
         prohibited_types = ['FixedEnthalpy']
       when
         'ASHRAE 169-2006-1A',
-        'ASHRAE 169-2006-2A',
-        'ASHRAE 169-2006-3A',
-        'ASHRAE 169-2006-4A'
+          'ASHRAE 169-2006-2A',
+          'ASHRAE 169-2006-3A',
+          'ASHRAE 169-2006-4A'
         prohibited_types = ['FixedDryBulb', 'DifferentialDryBulb']
       when 
         'ASHRAE 169-2006-5A',
-        'ASHRAE 169-2006-6A',
-        prohibited_types = []
+          'ASHRAE 169-2006-6A',
+          prohibited_types = []
       end
     end
     
@@ -873,8 +888,8 @@ class OpenStudio::Model::AirLoopHVAC
     # space_types_served_names.include?('PNNL_Asset_Rating_LowRiseApartment_Space_Type') ||
     # space_types_served_names.include?('PNNL_Asset_Rating_ParkingGarage_Space_Type') ||
     # space_types_served_names.include?('PNNL_Asset_Rating_Warehouse_Space_Type')
-      # OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "For #{self.name}, ERV not applicable because it because it serves parking garage, warehouse, or multifamily.")
-      # return false
+    # OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "For #{self.name}, ERV not applicable because it because it serves parking garage, warehouse, or multifamily.")
+    # return false
     # end
     
     # ERV Not Applicable for AHUs that have DCV
@@ -888,7 +903,6 @@ class OpenStudio::Model::AirLoopHVAC
       controller_mv = controller_oa.controllerMechanicalVentilation
       if controller_mv.demandControlledVentilation == true
         OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "For #{template} #{self.name}, ERV not applicable because DCV enabled.")
-        runner.registerInfo()
         return false
       end
     else
@@ -1062,6 +1076,11 @@ class OpenStudio::Model::AirLoopHVAC
           erv_cfm = 0
         end
       end
+    when 'NECB 2011'
+      # The NECB 2011 requirement is that systems with an exhaust heat content > 150 kW require an HRV
+      # The calculation for this is done below, to modify erv_required 
+      # erv_cfm set to nil here as placeholder, will lead to erv_required = false
+      erv_cfm = nil
     end
     
     # Determine if an ERV is required
@@ -1077,6 +1096,91 @@ class OpenStudio::Model::AirLoopHVAC
       erv_required = true 
     end
   
+    # This code modifies erv_required for NECB 2011
+    # Calculation of exhaust heat content and check whether it is > 150 kW
+    
+    if template == 'NECB 2011'     
+      
+      # get all zones in the model
+      zones = self.thermalZones
+      
+      # initialize counters
+      sum_zone_oa = 0.0
+      sum_zoneoaTimesheatDesignT = 0.0
+      
+      # zone loop
+      zones.each do |zone|
+        
+        # get design heat temperature for each zone; this is equivalent to design exhaust temperature
+        zone_sizing = zone.sizingZone
+        heatDesignTemp = zone_sizing.zoneHeatingDesignSupplyAirTemperature
+
+        # initialize counter
+        zone_oa = 0.0
+        # outdoor defined at space level; get OA flow for all spaces within zone
+        spaces = zone.spaces
+                
+        # space loop
+        spaces.each do |space|
+          if not space.designSpecificationOutdoorAir.empty?             # if empty, don't do anything
+            outdoor_air = space.designSpecificationOutdoorAir.get   
+            
+            # in bTAP, outdoor air specified as outdoor air per person (m3/s/person)
+            oa_flow_per_person = outdoor_air.outdoorAirFlowperPerson
+            num_people = space.peoplePerFloorArea * space.floorArea
+            oa_flow = oa_flow_per_person * num_people     # oa flow for the space
+            zone_oa = zone_oa + oa_flow                   # add up oa flow for all spaces to get zone air flow
+          end 
+          
+        end   # space loop
+        
+        sum_zone_oa = sum_zone_oa + zone_oa              # sum of all zone oa flows to get system oa flow
+        sum_zoneoaTimesheatDesignT = sum_zoneoaTimesheatDesignT + (zone_oa * heatDesignTemp)     # calculated to get oa flow weighted average of design exhaust temperature
+         
+      end   # zone loop
+      
+      # Calculate average exhaust temperature (oa flow weighted average)
+      avg_exhaust_temp = sum_zoneoaTimesheatDesignT / sum_zone_oa              
+      
+      # for debugging/testing     
+#      puts "average exhaust temp = #{avg_exhaust_temp}"
+#      puts "sum_zone_oa = #{sum_zone_oa}"
+       
+      # Get January winter design temperature
+      # get model weather file name
+      weather_file = BTAP::Environment::WeatherFile.new(self.model.weatherFile.get.path.get)
+      
+      # get winter(heating) design temp stored in array
+      # Note that the NECB 2011 specifies using the 2.5% january design temperature
+      # The outdoor temperature used here is the 0.4% heating design temperature of the coldest month, available in stat file
+      outdoor_temp = weather_file.heating_design_info[1]
+      
+#      for debugging/testing
+#      puts "outdoor design temp = #{outdoor_temp}"            
+           
+      # Calculate exhaust heat content
+      exhaust_heat_content = 0.00123 * sum_zone_oa * 1000.0 * (avg_exhaust_temp - outdoor_temp)
+      
+      # for debugging/testing
+#      puts "exhaust heat content = #{exhaust_heat_content}"
+      
+      
+      # Modify erv_required based on exhaust heat content
+      if ( exhaust_heat_content > 150.0 ) then
+        erv_required = true
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "For #{template} #{self.name}, ERV required based on exhaust heat content.") 
+      else
+        erv_required = false
+        OpenStudio::logFree(OpenStudio::Info, "openstudio.standards.AirLoopHVAC", "For #{template} #{self.name}, ERV not required based on exhaust heat content.") 
+      end
+       
+      
+      
+    end   # of NECB 2011 condition
+    
+    # for debugging/testing
+#    puts "erv_required = #{erv_required}"   
+    
     return erv_required
   
   end  
@@ -1813,10 +1917,9 @@ class OpenStudio::Model::AirLoopHVAC
   # @return [Bool] Returns true if successful, false if not
   # @todo see if this impacts the sizing run.
   def set_vav_damper_action(template, climate_zone)
-  
     damper_action = nil
     case template       
-    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004'
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', '90.1-2004', 'NECB 2011'
       damper_action = 'Single Maximum'
     when '90.1-2007', '90.1-2010', '90.1-2013'
       damper_action = 'Dual Maximum'
@@ -1855,7 +1958,7 @@ class OpenStudio::Model::AirLoopHVAC
     # Number of stages is determined by the template
     num_stages = nil
     case template       
-    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004'
+    when 'DOE Ref Pre-1980', 'DOE Ref 1980-2004', 'NECB 2011'
       OpenStudio::logFree(OpenStudio::Info, 'openstudio.standards.AirLoopHVAC', "For #{self.name}: No special economizer controls were modeled.")
       return true
     when '90.1-2004', '90.1-2007'
