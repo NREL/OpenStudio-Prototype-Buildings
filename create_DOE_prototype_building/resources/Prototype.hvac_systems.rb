@@ -2521,8 +2521,6 @@ class OpenStudio::Model::Model
 
   def add_swh_loop(prototype_input, standards, type, ambient_temperature_thermal_zone=nil, building_type=nil)
   
-    puts "Adding water heater type = '#{type}'"
-  
     # Service water heating loop
     service_water_loop = OpenStudio::Model::PlantLoop.new(self)
     service_water_loop.setName("#{type} Service Water Loop")
@@ -2828,9 +2826,7 @@ class OpenStudio::Model::Model
 
   end
 
-  def add_swh_end_uses(prototype_input, standards, swh_loop, type) 
-    
-    puts "Adding water uses type = '#{type}'"
+  def add_swh_end_uses(prototype_input, standards, swh_loop, type)
     
     schedules = standards['schedules']
     
@@ -2873,8 +2869,6 @@ class OpenStudio::Model::Model
 
   def add_swh_end_uses_by_space(building_type, building_vintage, climate_zone, swh_loop, space_type_name, space_name)
     
-    puts "Adding water uses type = '#{space_type_name}'"
-        
     # find the specific space_type properties from standard.json
     search_criteria = {
       'template' => building_vintage,
@@ -3101,26 +3095,103 @@ class OpenStudio::Model::Model
  
   def add_elevator(prototype_input, standards, space)
 
-    return true if prototype_input['building_elevator_power'].nil?
+    return true if prototype_input['number_of_elevators'].nil? || prototype_input['number_of_elevators'] == 0
     
+    vintage = prototype_input['template']
+    num_elevs = prototype_input['number_of_elevators']
+
+    # Lift motor assumptions
+    lift_pwr_w = nil
+    case vintage
+    when  'DOE Ref Pre-1980', 'DOE Ref 1980-2004' 
+      if prototype_input['elevator_type'] == 'Traction'
+        lift_pwr_w = 18537.0
+      elsif prototype_input['elevator_type'] == 'Hydraulic'
+        lift_pwr_w = 14610.0
+      else
+        lift_pwr_w = 14610.0
+        OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Elevator type '#{prototype_input['elevator_type']}', not recognized, will assume Hydraulic elevator, #{lift_pwr_w} W.")
+      end
+    when '90.1-2004', '90.1-2007', '90.1-2010', '90.1-2013' 
+      if prototype_input['elevator_type'] == 'Traction'
+        lift_pwr_w = 20370.0
+      elsif prototype_input['elevator_type'] == 'Hydraulic'
+        lift_pwr_w = 16055.0
+      else
+        lift_pwr_w = 16055.0
+        OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model.Model', "Elevator type '#{prototype_input['elevator_type']}', not recognized, will assume Hydraulic elevator, #{lift_pwr_w} W.")
+      end
+    end
+
+    # Size assumptions
+    length_ft = 6.66 
+    width_ft = 4.25
+    height_ft = 8.0
+    area_ft2 = length_ft * width_ft
+    volume_ft3 = area_ft2 * height_ft
+    
+    # Ventilation assumptions
+    vent_rate_acm = 1 # air changes per minute
+    vent_rate_cfm = volume_ft3 / vent_rate_acm
+    vent_pwr_per_flow_w_per_cfm = 0.33
+    vent_pwr_w = vent_pwr_per_flow_w_per_cfm * vent_rate_cfm    
+    
+    # Lighting assumptions
+    design_ltg_lm_per_ft2 = 30
+    light_loss_factor = 0.75
+    pct_incandescent = 0.7
+    pct_led = 0.3
+    incandescent_efficacy_lm_per_w = 10.0
+    led_efficacy_lm_per_w = 35.0
+    target_ltg_lm_per_ft2 = design_ltg_lm_per_ft2 / light_loss_factor
+    target_ltg_lm = target_ltg_lm_per_ft2 * area_ft2
+    lm_incandescent = target_ltg_lm * pct_incandescent
+    lm_led = target_ltg_lm * pct_led
+    w_incandescent = lm_incandescent / incandescent_efficacy_lm_per_w
+    w_led = lm_led / led_efficacy_lm_per_w
+    lighting_pwr_w = w_incandescent + w_led
+
+    # Elevator lift motor
     elevator_definition = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
-    elevator_definition.setDesignLevel(prototype_input['building_elevator_power'])
+    elevator_definition.setName('Elevator Lift Motor')
+    elevator_definition.setDesignLevel(lift_pwr_w)
 
     elevator_equipment = OpenStudio::Model::ElectricEquipment.new(elevator_definition)
-    elevator_sch = self.add_schedule(prototype_input['building_elevator_schedule'])
+    elevator_equipment.setName("#{num_elevs.round} Elevator Lift Motors")
+    elevator_sch = self.add_schedule(prototype_input['elevator_schedule'])
     elevator_equipment.setSchedule(elevator_sch)
     elevator_equipment.setSpace(space)
-
-    unless prototype_input['building_elevator_fan_power'].nil?
-      elevator_fan_definition = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
-      elevator_fan_definition.setDesignLevel(prototype_input['building_elevator_fan_power'])
-
-      elevator_fan_equipment = OpenStudio::Model::ElectricEquipment.new(elevator_fan_definition)
-      elevator_fan_sch = self.add_schedule(prototype_input['building_elevator_fan_schedule'])
-      elevator_fan_equipment.setSchedule(elevator_fan_sch)
-      elevator_fan_equipment.setSpace(space)
-    end
+    elevator_equipment.setMultiplier(num_elevs)
     
+    # Pre-1980 and 1980-2004 don't have lights or fans
+    return true if vintage == 'DOE Ref Pre-1980' || vintage == 'DOE Ref 1980-2004'  
+    
+    # Elevator fan
+    elevator_fan_definition = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
+    elevator_fan_definition.setName('Elevator Fan')
+    elevator_fan_definition.setDesignLevel(vent_pwr_w)
+
+    elevator_fan_equipment = OpenStudio::Model::ElectricEquipment.new(elevator_fan_definition)
+    elevator_fan_equipment.setName("#{num_elevs.round} Elevator Fans")
+    elevator_fan_sch = self.add_schedule(prototype_input['elevator_fan_schedule'])
+    elevator_fan_equipment.setSchedule(elevator_fan_sch)
+    elevator_fan_equipment.setSpace(space)
+    elevator_fan_equipment.setMultiplier(num_elevs)    
+    
+    # Elevator lights
+    elevator_lights_definition = OpenStudio::Model::ElectricEquipmentDefinition.new(self)
+    elevator_lights_definition.setName('Elevator Lights')
+    elevator_lights_definition.setDesignLevel(lighting_pwr_w)
+
+    elevator_lights_equipment = OpenStudio::Model::ElectricEquipment.new(elevator_lights_definition)
+    elevator_lights_equipment.setName("#{num_elevs.round} Elevator Lights")
+    elevator_lights_sch = self.add_schedule(prototype_input['elevator_fan_schedule'])
+    elevator_lights_equipment.setSchedule(elevator_lights_sch)
+    elevator_lights_equipment.setSpace(space)
+    elevator_lights_equipment.setMultiplier(num_elevs)       
+    
+    return true
+
   end
  
   def add_exhaust_fan(prototype_input, standards, availability_sch_name, flow_rate, flow_fraction_schedule_name, balanced_exhaust_fraction_schedule_name, thermal_zones)
