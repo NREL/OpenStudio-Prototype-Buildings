@@ -52,7 +52,7 @@ class FullHVACTest < MiniTest::Unit::TestCase
     File.open("#{output_folder}/test.log", 'w') do |test_log|  
       #all permutation and combinations. 
       boiler_fueltypes = ["NaturalGas","Electricity","FuelOil#2"]
-      mau_types = [true]
+      mau_types = [true, false]
       mau_heating_coil_types = ["Hot Water", "Electric"]
       baseboard_types = ["Hot Water" , "Electric"]
       model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")

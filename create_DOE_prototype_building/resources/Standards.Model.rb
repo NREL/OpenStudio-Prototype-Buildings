@@ -141,7 +141,7 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_curve_quadratics.json'
     standards_files << 'OpenStudio_Standards_ground_temperatures.json'
     standards_files << 'OpenStudio_Standards_heat_pumps_heating.json'
-    standards_files << 'OpenStudio_Standards_heat_pumps_cooling.json'
+    standards_files << 'OpenStudio_Standards_heat_pumps.json'
     standards_files << 'OpenStudio_Standards_materials.json'
     standards_files << 'OpenStudio_Standards_motors.json'
     standards_files << 'OpenStudio_Standards_prototype_inputs.json'
@@ -149,7 +149,7 @@ class OpenStudio::Model::Model
     standards_files << 'OpenStudio_Standards_space_types.json'
     standards_files << 'OpenStudio_Standards_templates.json'
     standards_files << 'OpenStudio_Standards_unitary_acs.json'
-    standards_files << 'OpenStudio_Standards_unitary_hps.json'
+#    standards_files << 'OpenStudio_Standards_unitary_hps.json'
 
     # Combine the data from the JSON files into a single hash
     standards_hash = {}
