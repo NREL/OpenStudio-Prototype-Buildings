@@ -3104,12 +3104,14 @@ module BTAP
                   fan.setFanPowerCoefficient2(0.00520806)
                   fan.setFanPowerCoefficient3(1.0086242)
                 end
-                htg_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
-                #Ensure hot water loop is updated with coil only if needed. 
-                if ( baseboard_type == "Hot Water" ) || ( heating_coil_type == "Hot Water") 
+
+                if(heating_coil_type == "Hot Water")
+                  htg_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
                   hw_loop.addDemandBranchForComponent(htg_coil)
                 end
-                
+                if(heating_coil_type == "Electric")
+                  htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
+                end
 
                 clg_coil = OpenStudio::Model::CoilCoolingWater.new(model,always_on)
                 chw_loop.addDemandBranchForComponent(clg_coil)
@@ -3154,7 +3156,6 @@ module BTAP
                     reheat_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
                   end
                   
-                  
                   vav_terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(model,always_on,reheat_coil)
                   air_loop.addBranchForZone(zone,vav_terminal.to_StraightComponent)
                   vav_terminal.setZoneMinimumAirFlowMethod("FixedFlowRate")
@@ -3162,6 +3163,21 @@ module BTAP
                   #TODO: schedule based on whether the zone is occupied or not as stipulated in 8.4.4.22 of NECB2011
                   min_flow_rate = 0.002*zone.floorArea
                   vav_terminal.setFixedMinimumAirFlowRate(min_flow_rate) 
+
+                  #Set zone baseboards
+                  if ( baseboard_type == "Electric") then
+                    zone_elec_baseboard = BTAP::Resources::HVAC::Plant::add_elec_baseboard(model)
+                    zone_elec_baseboard.addToThermalZone(zone)
+                  end
+                  if ( baseboard_type == "Hot Water") then
+                    baseboard_coil = BTAP::Resources::HVAC::Plant::add_hw_baseboard_coil(model)
+                    #Connect baseboard coil to hot water loop
+                    hw_loop.addDemandBranchForComponent(baseboard_coil)
+                    zone_baseboard = BTAP::Resources::HVAC::ZoneEquipment::add_zone_baseboard_convective_water(model, always_on, baseboard_coil)
+                    #add zone_baseboard to zone
+                    zone_baseboard.addToThermalZone(zone)
+                  end
+                  
                 end
               end
             end # next story
