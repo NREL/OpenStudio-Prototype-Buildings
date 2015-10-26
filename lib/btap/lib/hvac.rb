@@ -335,16 +335,6 @@ module BTAP
           clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
           clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
 
-          #clg_part_load_ratio = OpenStudio::Model::CurveCubic.new(model)
-          clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
-          #these coefficients are directly from NECB
-          clg_part_load_ratio.setCoefficient1Constant(0.2012301)
-          clg_part_load_ratio.setCoefficient2x(-0.0312175)
-          clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
-          clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
-          clg_part_load_ratio.setMinimumValueofx(0.0)
-          clg_part_load_ratio.setMaximumValueofx(1.0)
-
           # NECB curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)
           clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
           clg_part_load_ratio.setCoefficient1Constant(0.0277)
@@ -2663,13 +2653,9 @@ module BTAP
             # Add DX or hydronic cooling coil
             # TODO: set proper cooling DX COP when sizing data is available
             if(mua_cooling_type == "DX")
-              clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
+              clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,tpfc_clg_availability_sch)
             elsif(mua_cooling_type == "Hydronic")
-              if(fan_coil_type == "FPFC")
-                clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, always_on)
-              elsif(fan_coil_type == "TPFC")
-                clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, tpfc_clg_availability_sch)
-              end
+              clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, tpfc_clg_availability_sch)
               chw_loop.addDemandBranchForComponent(clg_coil)
             end
 
@@ -2695,7 +2681,7 @@ module BTAP
             setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(12.8)
             setpoint_mgr_single_zone_reheat.setMaximumSupplyAirTemperature(13.0)
             setpoint_mgr_single_zone_reheat.addToNode(air_loop.supplyOutletNode)
-
+           
             # Set up FC (ZoneHVAC,cooling coil, heating coil, fan) in each zone
 
             zones.each do |zone| 
