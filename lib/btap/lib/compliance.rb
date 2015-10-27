@@ -1329,7 +1329,7 @@ module BTAP
       def self.necb_autozone_and_autosystem(
           model,
           runner,
-          use_ideal_air_loads = true,
+          use_ideal_air_loads = false,
           boiler_fueltype = "NaturalGas",
           mau_type = true,
           mau_heating_coil_type = "Hot Water",
@@ -1337,7 +1337,8 @@ module BTAP
           chiller_type = "Scroll",
           mua_cooling_type = "DX",
           heating_coil_types_sys3 = "Gas",
-          heating_coil_types_sys4and6 = "Gas",
+          heating_coil_types_sys4 = "Gas",
+          heating_coil_types_sys6 = "Hot Water",
           fan_type = "AF_or_BI_rdg_fancurve" )
         
         #system assignment. 
@@ -1367,7 +1368,7 @@ module BTAP
           return false
         end
         unless ["DX","Hydronic"].include?(mua_cooling_type)
-            BTAP::runner_register("ERROR","mua_cooling_type = #{mua_cooling_type}",runner)
+          BTAP::runner_register("ERROR","mua_cooling_type = #{mua_cooling_type}",runner)
           return false
         end
         
@@ -1386,7 +1387,16 @@ module BTAP
           return false
         end
       
+        unless ["Electric", "Hot Water"].include?(heating_coil_types_sys6)
+          BTAP::runner_register("ERROR","heating_coil_types_sys6 = #{heating_coil_types_sys6}",runner)
+          return false
+        end
         
+        unless ["Electric", "Gas"].include?(heating_coil_types_sys4)
+          BTAP::runner_register("ERROR","heating_coil_types_sys4 = #{heating_coil_types_sys4}",runner)
+          return false
+        end
+
         #some defaults until we figure out how to handle them. (TODO) 
         vented = true
         heated_only = true
@@ -1589,7 +1599,7 @@ module BTAP
             when 5
               BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys5(model, zones, boiler_fueltype, chiller_type, mua_cooling_type)
             when 6
-              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys6(model, zones, boiler_fueltype, heating_coil_types_sys4and6, baseboard_type, chiller_type, fan_type)
+              BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys6(model, zones, boiler_fueltype, heating_coil_types_sys6, baseboard_type, chiller_type, fan_type)
             when 7
               BTAP::Resources::HVAC::HVACTemplates::NECB2011::assign_zones_sys2(model, zones, boiler_fueltype, chiller_type, mua_cooling_type)
             end

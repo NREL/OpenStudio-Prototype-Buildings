@@ -39,8 +39,6 @@ class ApplyNECBRules < BTAP::Measures::OSMeasures::BTAPModelUserScript
     return "ApplyNECBRules"
   end
 
-
-
   #define the arguments that the user will input
   def arguments(model)
     args = OpenStudio::Ruleset::OSArgumentVector.new
@@ -90,7 +88,6 @@ class ApplyNECBRules < BTAP::Measures::OSMeasures::BTAPModelUserScript
         mua_cooling_type = default_fuel_info["mau_cooling_type"].strip
         heating_coil_type_sys3 = default_fuel_info["heating_coil_type_sys_3"].strip
         heating_coil_type_sys4and6 = default_fuel_info["heating_coil_type_sys4and6"].strip
-        puts "YOYO#{heating_coil_type_sys4and6}"
         fan_type = default_fuel_info["fan_type"].strip
         found_defaults = true
       end
@@ -118,26 +115,10 @@ class ApplyNECBRules < BTAP::Measures::OSMeasures::BTAPModelUserScript
     #--HVAC
     BTAP::runner_register("INFO", "Applying NECB HVAC", runner)
     use_ideal_air_loads = false
-    BTAP::Compliance::NECB2011::necb_autozone_and_autosystem(
-      model,
-      runner,
-      use_ideal_air_loads,
-      boiler_fueltype,
-      mau_type,
-      mau_heating_coil_type,
-      baseboard_type,
-      chiller_type,
-      mua_cooling_type,
-      heating_coil_type_sys3,
-      heating_coil_type_sys4and6,
-      fan_type  )
-    
-
-
-
+    BTAP::Compliance::NECB2011::necb_autozone_and_autosystem(model,runner) #default args for now...ideal air system = false. 
 
   end
-  
+
 end #end the measure
 #this allows the measure to be use by the application
 ApplyNECBRules.new.registerWithApplication

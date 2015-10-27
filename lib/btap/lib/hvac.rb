@@ -335,16 +335,6 @@ module BTAP
           clg_energy_input_ratio_f_of_flow.setMinimumValueofx(0.0)
           clg_energy_input_ratio_f_of_flow.setMaximumValueofx(1.0)
 
-          #clg_part_load_ratio = OpenStudio::Model::CurveCubic.new(model)
-          clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
-          #these coefficients are directly from NECB
-          clg_part_load_ratio.setCoefficient1Constant(0.2012301)
-          clg_part_load_ratio.setCoefficient2x(-0.0312175)
-          clg_part_load_ratio.setCoefficient3xPOW2(1.9504979)
-          clg_part_load_ratio.setCoefficient4xPOW3(-1.1205105)
-          clg_part_load_ratio.setMinimumValueofx(0.0)
-          clg_part_load_ratio.setMaximumValueofx(1.0)
-
           # NECB curve modified to take into account how PLF is used in E+, and PLF ranges (> 0.7)
           clg_part_load_ratio = BTAP::Resources::HVAC::Plant::add_cubic_curve(model)
           clg_part_load_ratio.setCoefficient1Constant(0.0277)
@@ -2663,13 +2653,9 @@ module BTAP
             # Add DX or hydronic cooling coil
             # TODO: set proper cooling DX COP when sizing data is available
             if(mua_cooling_type == "DX")
-              clg_coil = OpenStudio::Model::CoilCoolingDXSingleSpeed.new(model)
+              clg_coil = BTAP::Resources::HVAC::Plant::add_onespeed_DX_coil(model,tpfc_clg_availability_sch)
             elsif(mua_cooling_type == "Hydronic")
-              if(fan_coil_type == "FPFC")
-                clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, always_on)
-              elsif(fan_coil_type == "TPFC")
-                clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, tpfc_clg_availability_sch)
-              end
+              clg_coil = OpenStudio::Model::CoilCoolingWater.new(model, tpfc_clg_availability_sch)
               chw_loop.addDemandBranchForComponent(clg_coil)
             end
 
@@ -2695,7 +2681,7 @@ module BTAP
             setpoint_mgr_single_zone_reheat.setMinimumSupplyAirTemperature(12.8)
             setpoint_mgr_single_zone_reheat.setMaximumSupplyAirTemperature(13.0)
             setpoint_mgr_single_zone_reheat.addToNode(air_loop.supplyOutletNode)
-
+           
             # Set up FC (ZoneHVAC,cooling coil, heating coil, fan) in each zone
 
             zones.each do |zone| 
@@ -3104,12 +3090,14 @@ module BTAP
                   fan.setFanPowerCoefficient2(0.00520806)
                   fan.setFanPowerCoefficient3(1.0086242)
                 end
-                htg_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
-                #Ensure hot water loop is updated with coil only if needed. 
-                if ( baseboard_type == "Hot Water" ) || ( heating_coil_type == "Hot Water") 
+
+                if(heating_coil_type == "Hot Water")
+                  htg_coil = OpenStudio::Model::CoilHeatingWater.new(model,always_on)
                   hw_loop.addDemandBranchForComponent(htg_coil)
                 end
-                
+                if(heating_coil_type == "Electric")
+                  htg_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
+                end
 
                 clg_coil = OpenStudio::Model::CoilCoolingWater.new(model,always_on)
                 chw_loop.addDemandBranchForComponent(clg_coil)
@@ -3154,7 +3142,6 @@ module BTAP
                     reheat_coil = OpenStudio::Model::CoilHeatingElectric.new(model,always_on)
                   end
                   
-                  
                   vav_terminal = OpenStudio::Model::AirTerminalSingleDuctVAVReheat.new(model,always_on,reheat_coil)
                   air_loop.addBranchForZone(zone,vav_terminal.to_StraightComponent)
                   vav_terminal.setZoneMinimumAirFlowMethod("FixedFlowRate")
@@ -3162,6 +3149,21 @@ module BTAP
                   #TODO: schedule based on whether the zone is occupied or not as stipulated in 8.4.4.22 of NECB2011
                   min_flow_rate = 0.002*zone.floorArea
                   vav_terminal.setFixedMinimumAirFlowRate(min_flow_rate) 
+
+                  #Set zone baseboards
+                  if ( baseboard_type == "Electric") then
+                    zone_elec_baseboard = BTAP::Resources::HVAC::Plant::add_elec_baseboard(model)
+                    zone_elec_baseboard.addToThermalZone(zone)
+                  end
+                  if ( baseboard_type == "Hot Water") then
+                    baseboard_coil = BTAP::Resources::HVAC::Plant::add_hw_baseboard_coil(model)
+                    #Connect baseboard coil to hot water loop
+                    hw_loop.addDemandBranchForComponent(baseboard_coil)
+                    zone_baseboard = BTAP::Resources::HVAC::ZoneEquipment::add_zone_baseboard_convective_water(model, always_on, baseboard_coil)
+                    #add zone_baseboard to zone
+                    zone_baseboard.addToThermalZone(zone)
+                  end
+                  
                 end
               end
             end # next story

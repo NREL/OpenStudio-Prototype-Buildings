@@ -126,7 +126,7 @@ class FullHVACTest < MiniTest::Unit::TestCase
     
     boiler_fueltypes = ["NaturalGas","Electricity","FuelOil#2",]
     chiller_types = ["Scroll","Centrifugal","Rotary Screw","Reciprocating"]
-    mua_cooling_types = ["Hydronic"]# "DX"]
+    mua_cooling_types = ["Hydronic","DX"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
     #save baseline
@@ -352,7 +352,7 @@ class FullHVACTest < MiniTest::Unit::TestCase
     FileUtils::mkdir_p( output_folder )
     boiler_fueltypes = ["NaturalGas","Electricity","FuelOil#2"]
     chiller_types = ["Scroll","Centrifugal","Rotary Screw","Reciprocating"]
-    mua_cooling_types = ["Hydronic"]#,"DX"]
+    mua_cooling_types = ["Hydronic","DX"]
     model = BTAP::FileIO::load_osm("#{File.dirname(__FILE__)}/5ZoneNoHVAC.osm")
     BTAP::Environment::WeatherFile.new("#{File.dirname(__FILE__)}/../../../weather/CAN_ON_Toronto.716240_CWEC.epw").set_weather_file(model)
     #save baseline
