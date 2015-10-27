@@ -53,13 +53,9 @@ class ApplyNECBRules_test < MiniTest::Unit::TestCase
     ]
     #run the measure with the arguments.
     measure.set_user_arguments_and_apply(model,argument_values_array,runner)
-    
     file_path = "#{output_folder}/#{filename}"
     BTAP::FileIO::save_osm(model, file_path)
     BTAP::runner_register("INFO", "OSM file converted to NECB 2011 rules #{file_path}", runner)
-    
-    
-    
     
     #return condition of measure.
     assert_equal("Success", runner.result.value.valueName)
