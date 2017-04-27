@@ -9,9 +9,9 @@
 # Specify the building types to run.
 bldg_types = ['SchoolSecondary']# 'OfficeLarge']#["HotelLarge", "OfficeSmall", "SchoolSecondary", "HotelLarge"]
 
-# valid options are: Pre1980, Post1980, STD2004, STD2007, STD2010, STD2013
+# valid options are: Pre1980, Post1980, STD2004, STD2007, STD2010, STD2013, New2004
 #vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013",]
-vintages = ["STD2010"]
+vintages = ["New2004"]
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
@@ -65,7 +65,7 @@ bldg_types.each do |bldg_type|
       # Change the bldg_type based on the vintage since the naming
       # conventions are different between Prototype and Reference buildings.
       bldg_type_search = nil
-      if vintage == 'Pre1980' || vintage == 'Post1980'
+      if vintage == 'Pre1980' || vintage == 'Post1980' || vintage == 'New2004'
         case bldg_type
         when 'OfficeSmall'
           bldg_type_search = 'SmallOffice'
@@ -137,7 +137,7 @@ bldg_types.each do |bldg_type|
       # Choose the correct version of EnergyPlus
       ep_tool = nil
       idd_path = nil
-      if vintage == 'Pre1980' || vintage == 'Post1980'
+      if vintage == 'Pre1980' || vintage == 'Post1980' || vintage == 'New2004' 
         ep_tool = ep_72_tool
         idd_path = idd_72_path
       else

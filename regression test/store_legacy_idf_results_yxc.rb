@@ -23,7 +23,7 @@ bldg_types = [
 
 # Specify the vintages you want to run.
 # valid options are: Pre1980, Post1980, STD2004, STD2007, STD2010, STD2013
-vintages = ["Pre1980", "Post1980", "STD2004", "STD2007", "STD2010", "STD2013"]
+vintages = ["Pre1980", "Post1980", "New2004", "STD2004", "STD2007", "STD2010", "STD2013"]
 
 # Specify the climate zones you want to run.
 # for PTool: El Paso, Houston, Chicago, and Baltimore
@@ -68,7 +68,7 @@ bldg_types.sort.each do |bldg_type|
 
 		# Change the bldg_type based on the vintage since the naming
 		# conventions are different between Prototype and Reference buildings.
-		if vintage == "Pre1980" || vintage == "Post1980"
+		if vintage == "Pre1980" || vintage == "Post1980" || vintage == "New2004" 
 		  case bldg_type
 			when "OfficeSmall" #1
 			  bldg_type_search = "SmallOffice"
@@ -131,7 +131,15 @@ bldg_types.sort.each do |bldg_type|
       if OpenStudio.exists(sql_path)
         sql = OpenStudio::SqlFile.new(sql_path)
       else
-        raise "  eplusout.sql not found here: #{sql_path_string}"
+		if vintage == "New2004"
+			if bldg_type ==  "OfficeLarge"
+				raise "  eplusout.sql not found here: #{sql_path_string}"
+			else
+				# DO NOTHING
+			end
+		else
+		  raise "  eplusout.sql not found here: #{sql_path_string}"
+		end
       end
 
       # Record values for all fuel type/end use pairs
@@ -140,7 +148,7 @@ bldg_types.sort.each do |bldg_type|
 
           # Correct the query for differences between EnergyPlus 7.2 and 8.0
           query_fuel_type = fuel_type
-          if (vintage == "Pre1980" || vintage == "Post1980") && fuel_type == "Additional Fuel"
+          if (vintage == "Pre1980" || vintage == "Post1980" || vintage == "New2004") && fuel_type == "Additional Fuel"
             query_fuel_type = "Other Fuel"
           end
 
@@ -184,6 +192,7 @@ bldg_types.sort.each do |bldg_type|
           vintage_map = {
               "Pre1980" => "DOE Ref Pre-1980",
               "Post1980" => "DOE Ref 1980-2004",
+              "New2004" => "DOE Ref 2004-New",
               "STD2004" => "90.1-2004",
               "STD2007" => "90.1-2007",
               "STD2010" => "90.1-2010",

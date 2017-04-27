@@ -6,7 +6,7 @@ require 'find'
 require 'fileutils'
 
 # Make the folder to store results, if it doesn't exist yet
-regression_dir = "C:/Sites/OSM/regression test/regression runs"
+regression_dir = "C:/Sites/OpenStudio-Prototype-Buildings/regression test/regression runs"
 if !Dir.exists?(regression_dir)
   Dir.mkdir regression_dir
 end
@@ -26,8 +26,8 @@ puts "#{bldg_type}-#{vintage}-#{climate_zone}"
 # Change the bldg_type based on the vintage since the naming
 # conventions are different between Prototype and Reference buildings.
 bldg_type_search = nil
-if vintage == "Pre1980" || vintage == "Post1980"
-  idf_file_path = "C:/Sites/OSM/regression test/legacy reference idf files/"
+if vintage == "Pre1980" || vintage == "Post1980" || vintage == "New2004"
+  idf_file_path = "C:/Sites/OpenStudio-Prototype-Buildings/regression test/legacy reference idf files/"
   case bldg_type
     when "OfficeSmall" #1
       bldg_type_search = "SmallOffice"
@@ -74,7 +74,7 @@ if vintage == "Pre1980" || vintage == "Post1980"
       climate_zone = "San.Francisco"
   end
 else
-  idf_file_path = "C:/Sites/OSM/regression test/legacy prototype idf files/"
+  idf_file_path = "C:/Sites/OpenStudio-Prototype-Buildings/regression test/legacy prototype idf files/"
   case climate_zone
     when "El Paso"
       climate_zone = "El.Paso"
@@ -105,7 +105,7 @@ end
 
 # Find the EPW file for this climate zone
 epw_file = nil
-weather_file_path = "C:/Sites/OSM/regression test/weather files/"
+weather_file_path = "C:/Sites/OpenStudio-Prototype-Buildings/regression test/weather files/"
 filenames = Dir.entries(weather_file_path).select {|f| !(File.directory? File.join(weather_file_path, f))}
 filenames.each do |filename|
   path = weather_file_path + filename
@@ -123,7 +123,7 @@ end
 # Choose the correct version of EnergyPlus
 ep_tool = nil
 idd_path = nil
-if vintage == "Pre1980" || vintage == "Post1980"
+if vintage == "Pre1980" || vintage == "Post1980" ||  vintage == "New2004"
   ep_tool = EP_72_PATH
   idd_path = IDD_72_PATH
 else
@@ -132,7 +132,7 @@ else
 end
 
 # Create the output path to store the results of the run
-output_path_string = "C:/Sites/OSM/regression test/Regression Runs/#{bldg_type}.#{vintage}.#{climate_zone}"
+output_path_string = "C:/Sites/regression runs/#{bldg_type}.#{vintage}.#{climate_zone}"
 
 if File.exist? output_path_string
   FileUtils.rm_rf output_path_string
